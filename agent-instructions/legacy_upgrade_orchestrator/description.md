@@ -1,0 +1,1 @@
+Human-in-the-loop workflow orchestrator that ensures GitNexus index readiness, captures requested changes, then routes scoped analysis, planning, and execution with approval gates.
