@@ -1,6 +1,6 @@
 from enum import Enum
 
-MODEL_NAME = "gemini-2.5-flash-lite"
+MODEL_NAME = "gemini-2.5-flash"
 
 
 class Stages(str, Enum):

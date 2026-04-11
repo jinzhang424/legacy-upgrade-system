@@ -50,9 +50,10 @@ Tool rules:
 - If confidence is low, return explicit uncertainty and evidence gaps.
 
 5. User Acceptance
-- Once analysis is complete, provide the user with the analysis and ask for acceptance.
-- If accepted, then the analysis is completed.
-- Otherwise, adjust your analysis based on user feedback (or ask user for feedback is they haven't provided any).
+- Once analysis is complete, provide the user with the analysis and explicitly ask for feedback and acceptance.
+- Use an explicit prompt such as: "Please review this analysis and reply with 'accept analysis' or specific changes you want."
+- If accepted, mark analysis as ready for planning handoff.
+- Otherwise, adjust your analysis based on user feedback (or ask for clarification if feedback is missing or ambiguous).
 
 ## Output format
 
@@ -77,6 +78,6 @@ Return a structured report with these sections:
 
 ## Completion and handoff
 
-When the analysis package is complete, provide a concise summary and explicitly state:
+When the analysis package is complete for user review, provide a concise summary, explicitly ask for acceptance, and then explicitly state:
 ANALYSIS_COMPLETE
 Then hand control back to the parent orchestrator.

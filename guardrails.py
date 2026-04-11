@@ -197,7 +197,22 @@ def enforce_analysis_review_guardrail(
 def require_analysis_approval_before_planning_guardrail(
     callback_context: CallbackContext,
 ) -> Optional[types.Content]:
-    if not _analysis_is_complete(callback_context):
+    user_text = _extract_user_text(callback_context.user_content)
+    analysis_complete = _analysis_is_complete(callback_context)
+
+    if analysis_complete and _is_analysis_revision_request(user_text):
+        callback_context.state[SessionStateKey.ANALYSIS_APPROVED.value] = False
+        callback_context.state[SessionStateKey.CURRENT_STAGE.value] = Stages.ANALYSIS.value
+        return _assistant_text(
+            "Repository analysis changes requested. "
+            "Share the specific analysis updates you want, and I will return to analysis."
+        )
+
+    if analysis_complete and _is_analysis_accepted(user_text):
+        callback_context.state[SessionStateKey.ANALYSIS_APPROVED.value] = True
+        callback_context.state[SessionStateKey.CURRENT_STAGE.value] = Stages.PLANNING.value
+
+    if not analysis_complete:
         callback_context.state[SessionStateKey.CURRENT_STAGE.value] = Stages.ANALYSIS.value
         return _assistant_text(
             "Upgrade planning is blocked until repository analysis reports ANALYSIS_COMPLETE."
@@ -206,8 +221,8 @@ def require_analysis_approval_before_planning_guardrail(
     if not callback_context.state.get(SessionStateKey.ANALYSIS_APPROVED.value):
         callback_context.state[SessionStateKey.CURRENT_STAGE.value] = Stages.ANALYSIS.value
         return _assistant_text(
-            "Repository analysis is awaiting user approval. "
-            "Ask the user to review it, accept it, or request changes before planning."
+            "Repository analysis is waiting for your approval. "
+            "Reply with 'accept analysis' to continue to planning, or describe the analysis changes you want."
         )
 
     callback_context.state[SessionStateKey.CURRENT_STAGE.value] = Stages.PLANNING.value
