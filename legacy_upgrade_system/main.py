@@ -1,18 +1,14 @@
 import asyncio
-from pathlib import Path
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 
+from .agent import legacy_upgrade_orchestrator
+from .data import RESOLVED_REPO_PATH, SessionStateKey, Stages
+
 async def main():
     session_service = InMemorySessionService()
-    
-    # Ask for folder BEFORE starting the agent
-    while True:
-        folder = input("Please enter your project folder path: ").strip()
-        resolved = Path(folder).expanduser().resolve()
-        if resolved.exists() and resolved.is_dir():
-            break
-        print(f"❌ '{folder}' is not a valid directory. Please try again.")
+    resolved = RESOLVED_REPO_PATH
+    print(f"✅ Using PATH_TO_REPO from .env: {resolved}")
 
     # Pre-populate session state with the folder
     session = await session_service.create_session(
