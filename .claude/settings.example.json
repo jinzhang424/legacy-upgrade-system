@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "gitnexus": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "gitnexus",
+        "mcp"
+      ]
+    },
+    "mem0": {
+      "type": "stdio",
+      "command": "mem0-mcp-server",
+      "env": {
+        "MEM0_API_KEY": "your_api_key"
+      }
+    }
+  },
+  "env": {
+    "PATH_TO_REPO": "path_to_repo"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npx gitnexus*)",
+      "Bash(git*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)"
+    ]
+  }
+}

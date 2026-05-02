@@ -1,4 +1,1 @@
-google-adk
-mcp
-python-dotenv
 mem0-mcp-server

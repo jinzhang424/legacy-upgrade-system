@@ -1,44 +1,67 @@
 # Legacy Upgrade System
 
-Multi-agent legacy upgrade orchestrator with GitNexus analysis and Mem0 long-term memory via MCP.
+Multi-agent legacy upgrade pipeline built on Claude Code. Runs entirely inside the Claude Code CLI or VS Code extension — no separate Python process needed.
 
 ## Prerequisites
 
-- Python 3.10+
-- Node.js 22 (required for `npx gitnexus ...` tooling)
-- Google API key for the configured model provider
-- Gitnexus 1.3.11
+- [Claude Code CLI](https://claude.ai/code) or Claude Code VS Code extension
+- Node.js 22 (for `npx gitnexus`)
+- Python 3.10+ (only for the Mem0 MCP server binary)
+- GitNexus 1.3.11: `npm install -g gitnexus@1.3.11`
 
-## Install
+## Setup
 
-```bash
-pip install -r requirements.txt
-```
+1. Install the Mem0 MCP server binary:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Environment
+2. Index the target repository with GitNexus:
+   ```bash
+   npx gitnexus analyze /path/to/your/repo
+   ```
 
-Set these variables in `legacy_upgrade_system/.env` (or repo-root `.env`):
+3. Configure the project — edit `.claude/settings.json` (create from the template below if it doesn't exist):
+   ```json
+   {
+     "mcpServers": {
+       "gitnexus": { "type": "stdio", "command": "npx", "args": ["-y", "gitnexus", "mcp"] },
+       "mem0": {
+         "type": "stdio",
+         "command": "mem0-mcp-server",
+         "env": { "MEM0_API_KEY": "your-mem0-api-key" }
+       }
+     },
+     "env": {
+       "PATH_TO_REPO": "/absolute/path/to/target/repo"
+     },
+     "permissions": {
+       "allow": ["Bash(npx gitnexus*)", "Bash(git*)", "Read(*)", "Write(*)", "Edit(*)"]
+     }
+   }
+   ```
 
-```env
-GOOGLE_API_KEY=...
-LEGACY_UPGRADE_MODEL=gemini-2.5-flash
-PATH_TO_REPO=C:\path\to\target\repository
-```
+   > `.claude/settings.json` is gitignored — it contains your API keys.
 
 ## Run
 
-This has been the primary way I've been running it
+Open Claude Code in this directory and run:
+
 ```
-adk run legacy_upgrade_system
+/upgrade
 ```
 
-You could also try this but I haven't really been using it recently
-```bash
-python -m legacy_upgrade_system.main
-```
+The orchestrator will ask you what upgrade to perform, then guide you through three stages with human-in-the-loop approval gates:
 
-Optional GitNexus probe:
+1. **Analysis** — GitNexus scans the repository and produces an impact report
+2. **Planning** — Claude designs ordered file changes with rollback procedures
+3. **Execution** — Claude applies changes in batches, validating after each batch
 
-```bash
-GITNEXUS_PROBE_QUERY="symbolOrSnippet" python -m legacy_upgrade_system.smoke_preflight
-```
+## Skills
+
+| Skill | Description |
+|-------|-------------|
+| `/upgrade` | Full 3-stage pipeline (recommended entry point) |
+| `/analyze` | Run analysis only — produces an ImpactReport |
+| `/plan` | Run planning only — requires an ImpactReport as input |
+| `/execute` | Run execution only — requires a ChangePlan as input |

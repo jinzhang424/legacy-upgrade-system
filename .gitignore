@@ -1,2 +1,4 @@
-*/test.py
+.claude/settings.json
 .gitnexus
+__pycache__/
+*.pyc
