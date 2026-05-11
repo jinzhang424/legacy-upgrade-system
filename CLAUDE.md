@@ -7,12 +7,9 @@ Multi-agent legacy upgrade pipeline. Run `/upgrade` in Claude Code to start.
 | Skill | Role |
 |-------|------|
 | `/upgrade` | Orchestrator: runs the full 3-stage pipeline with human-in-the-loop gates |
-| `/analyze` | Repository analyzer: produces an ImpactReport via GitNexus |
-| `/plan` | Upgrade planner: produces a ChangePlan from an approved ImpactReport |
-| `/execute` | Upgrade executor: applies a ChangePlan in batches with validation |
 
-The sub-agent skills (`/analyze`, `/plan`, `/execute`) can be run individually but are
-normally invoked automatically by `/upgrade` via the Agent tool.
+The sub-agent skills (analyze/plan/execute) are internal and invoked automatically by
+`/upgrade` via the Agent tool. Only `/upgrade` is exposed as a user command.
 
 ## Configuration
 
@@ -32,6 +29,10 @@ npx gitnexus analyze <PATH_TO_REPO>
 ```
 
 Run this once per repository, or again after large refactors.
+
+## Enforcement and fallback
+
+By default, the pipeline requires both Mem0 and GitNexus. If either system is unavailable, the orchestrator will warn and ask whether to proceed without it. Proceeding without Mem0 skips memory recall/storage. Proceeding without GitNexus forces a fallback analysis with reduced confidence.
 
 ## MCP Tools Available
 

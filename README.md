@@ -57,11 +57,14 @@ The orchestrator will ask you what upgrade to perform, then guide you through th
 2. **Planning** — Claude designs ordered file changes with rollback procedures
 3. **Execution** — Claude applies changes in batches, validating after each batch
 
+## Enforcement and fallback
+
+Mem0 and GitNexus are required by default. If either system is unavailable, the orchestrator will warn and ask whether to proceed without it. Proceeding without Mem0 skips memory recall/storage. Proceeding without GitNexus forces a fallback analysis with reduced confidence.
+
 ## Skills
 
 | Skill | Description |
 |-------|-------------|
-| `/upgrade` | Full 3-stage pipeline (recommended entry point) |
-| `/analyze` | Run analysis only — produces an ImpactReport |
-| `/plan` | Run planning only — requires an ImpactReport as input |
-| `/execute` | Run execution only — requires a ChangePlan as input |
+| `/upgrade` | Full 3-stage pipeline (only user-facing command) |
+
+The analyze/plan/execute stages are internal skills invoked automatically by `/upgrade`.

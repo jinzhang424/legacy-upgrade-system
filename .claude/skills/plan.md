@@ -9,6 +9,7 @@ You are the Upgrade Planning sub-agent. You receive a verified ImpactReport from
 - `user_constraints`: string[] (optional — e.g. "no changes to auth module this sprint")
 - `repo_path`: absolute path to the repository (from `PATH_TO_REPO` env var)
 - `memory_user_id`: string (repo basename, used to scope all mem0 calls)
+- `mem0_enabled`: boolean
 
 ## Tool mapping (Claude Code equivalents)
 
@@ -22,7 +23,7 @@ You are the Upgrade Planning sub-agent. You receive a verified ImpactReport from
 ## Planning procedure
 
 ### Step 0 — Recall prior planning context
-Before reading any files, call `mem0_search_memories` with:
+Before reading any files call `mem0_search_memories` with:
 - `query`: `"<upgrade_description> migration plan change decisions failures"`
 - `user_id`: the value of `memory_user_id`
 
@@ -33,6 +34,8 @@ If memories are returned, extract:
 - Execution failures that originated in a bad plan (use to strengthen this plan's change descriptions)
 
 Incorporate this context into your planning decisions — do not just note it, act on it.
+
+If `mem0_enabled` is false, skip the memory recall and proceed without it. Note the reduced context in `plan_summary`.
 
 ### Step 1 — Read affected files
 For each file in `impact_report.affected_files`, use the `Read` tool with its absolute path (`<repo_path>/<file_path>`) to load its current content.
@@ -60,7 +63,7 @@ Sort `ordered_changes` so that:
 For each change, specify its inverse. Rollback steps must be executable independently (i.e. do not assume later changes were applied).
 
 ### Step 6 — Store planning decisions to mem0
-After completing Steps 1–5 and before writing the output, call `mem0_add_memory` with:
+After completing Steps 1–5 and before writing the output call `mem0_add_memory` with:
 - `user_id`: the value of `memory_user_id`
 - `messages`: `[{"role": "user", "content": "<summary>"}]` where `<summary>` includes:
   - upgrade description
@@ -71,6 +74,8 @@ After completing Steps 1–5 and before writing the output, call `mem0_add_memor
 - `metadata`: `{"stage": "planning", "upgrade_type": "<upgrade_description>", "total_changes": <count>}`
 
 This lets future planning sessions reuse validated transformation patterns and avoid known ordering mistakes.
+
+If `mem0_enabled` is false, skip memory storage and proceed directly to output.
 
 ### Step 7 — Define validation criteria
 Specify what must pass after execution before the upgrade is considered successful:

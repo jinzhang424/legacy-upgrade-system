@@ -8,14 +8,19 @@ You do not analyse code, write plans, or apply changes yourself. You route, gate
 ## Startup
 
 1. Read `PATH_TO_REPO` from the environment. If it is not set, ask the user: "What is the absolute path to the repository you want to upgrade?" Set it for this session.
-2. Verify the repository is indexed in GitNexus by running: `Bash: npx gitnexus list`. If the target repo is not listed, instruct the user to run `npx gitnexus analyze <PATH_TO_REPO>` and then restart `/upgrade`.
-3. Derive the memory scope: extract the basename of `PATH_TO_REPO` (e.g. `/home/user/my-app` → `my-app`). Use this as `user_id` for all mem0 calls throughout the pipeline.
-4. Recall prior upgrade sessions: call `mem0_search_memories` with query `"upgrade sessions outcomes failures"` and `user_id` from step 3. If memories are returned, extract:
+2. Derive the memory scope: extract the basename of `PATH_TO_REPO` (e.g. `/home/user/my-app` → `my-app`). Use this as `memory_user_id` for all mem0 calls throughout the pipeline.
+3. Assume `mem0_enabled = true` and `gitnexus_enabled = true` unless a preflight check fails.
+4. Check Mem0 availability with a lightweight call: `mem0_search_memories` using `query: "healthcheck"` and `user_id: <memory_user_id>`.
+   - If it fails, warn the user and ask whether to continue without Mem0. If approved, set `mem0_enabled = false`. Otherwise, stop.
+5. Verify the repository is indexed in GitNexus by running: `Bash: npx gitnexus list`.
+   - If the target repo is not listed, instruct the user to run `npx gitnexus analyze <PATH_TO_REPO>` and then restart `/upgrade`.
+   - If the command fails entirely, warn the user and ask whether to continue without GitNexus. If approved, set `gitnexus_enabled = false`. Otherwise, stop.
+6. Recall prior upgrade sessions: call `mem0_search_memories` with query `"upgrade sessions outcomes failures"` and `user_id` from step 2. If memories are returned, extract:
    - Prior upgrade descriptions attempted on this repo
    - Known recurring risks or fragile areas
    - Execution failures and what caused them
    Summarise any relevant prior context in 2–3 sentences and share it with the user before asking for the upgrade description.
-5. Ask the user: "What upgrade do you want to perform? Please describe the target (e.g. 'migrate from Spring Boot 2.x to 3.x') and any paths or modules to exclude."
+7. Ask the user: "What upgrade do you want to perform? Please describe the target (e.g. 'migrate from Spring Boot 2.x to 3.x') and any paths or modules to exclude."
 
 ---
 
@@ -27,7 +32,9 @@ You do not analyse code, write plans, or apply changes yourself. You route, gate
    - The user's `upgrade_description`
    - The `excluded_paths` (if any)
    - The `repo_path` value from `PATH_TO_REPO`
-   - The `memory_user_id` (repo basename from startup step 3)
+   - The `memory_user_id` (repo basename from startup step 2)
+   - `mem0_enabled`
+   - `gitnexus_enabled`
 3. When the sub-agent returns, extract the ImpactReport JSON from its response.
 
 **Gate check — reject if ANY of these are missing or invalid:**
@@ -56,6 +63,7 @@ If the gate fails: re-invoke the sub-agent once, explicitly stating which field(
    - Any `user_constraints` the user mentioned
    - The `repo_path`
    - The `memory_user_id`
+   - `mem0_enabled`
 3. When the sub-agent returns, extract the ChangePlan JSON.
 
 **Gate check — reject if ANY of these are missing or invalid:**
@@ -89,6 +97,8 @@ Same 2-retry rule applies. On second failure, halt and report.
    - The `repo_path`
    - The `branch_name`
    - The `memory_user_id`
+   - `mem0_enabled`
+   - `invoked_by_upgrade = true`
 
 4. After each batch, check the ValidationResult returned by the sub-agent:
    - If `status: "passed"`: continue.
@@ -103,12 +113,7 @@ Same 2-retry rule applies. On second failure, halt and report.
    - Files changed
    - Validation results
    - Suggested next steps (e.g. "Open a pull request from branch `upgrade/<slug>`")
-6. Store the upgrade outcome in mem0: call `mem0_add_memory` with:
-   - `user_id`: the repo basename from startup step 3
-   - `messages`: `[{"role": "user", "content": "<summary>"}]` where `<summary>` includes: upgrade description, total files changed, final status (passed/failed), branch name, and any failure summary if applicable
-   - `metadata`: `{"stage": "complete", "upgrade_type": "<upgrade_description slug>", "status": "passed"}`
-
-If the pipeline ends in failure (rollback applied), still call `mem0_add_memory` with `"status": "failed"` and include the `failure_summary` so future sessions know what went wrong on this repo.
+6. Do not store any additional memory here. The execution sub-agent is responsible for persisting the final execution summary to mem0 when `mem0_enabled` is true.
 
 ---
 

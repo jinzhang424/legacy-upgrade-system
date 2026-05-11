@@ -8,6 +8,8 @@ You are the Upgrade Execution sub-agent. You receive an approved ChangePlan from
 - `repo_path`: absolute path to the repository (from `PATH_TO_REPO` env var)
 - `branch_name`: string (the git branch the orchestrator created for this upgrade)
 - `memory_user_id`: string (repo basename, used to scope all mem0 calls)
+- `mem0_enabled`: boolean
+- `invoked_by_upgrade`: boolean (true if invoked by /upgrade)
 
 ## Tool mapping (Claude Code equivalents)
 
@@ -55,6 +57,8 @@ If any check fails:
 - Emit a ValidationResult with `status: "failed"` to the orchestrator.
 - Await rollback instructions — do not self-rollback.
 
+If `mem0_enabled` is false, skip memory storage on failure.
+
 ### Final validation (after all changes)
 Run the full `test_validation_criteria` suite:
 - All build commands
@@ -62,6 +66,11 @@ Run the full `test_validation_criteria` suite:
 - All smoke checks
 
 Emit a final ValidationResult with `status: "passed"` or `"failed"` accordingly.
+
+If the final status is `passed` and `mem0_enabled` is true, store a concise execution summary in mem0:
+- `user_id`: the value of `memory_user_id`
+- `messages`: `[{"role": "user", "content": "<summary>"}]` where `<summary>` includes: total files changed, branch name, final status, and validation summary
+- `metadata`: `{"stage": "execution", "status": "passed"}`
 
 ## Output schema — ValidationResult (emit after each batch and at the end)
 
