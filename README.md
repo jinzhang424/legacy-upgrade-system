@@ -6,42 +6,29 @@ Multi-agent legacy upgrade pipeline built on Claude Code. Runs entirely inside t
 
 - [Claude Code CLI](https://claude.ai/code) or Claude Code VS Code extension
 - Node.js 22 (for `npx gitnexus`)
-- Python 3.10+ (only for the Mem0 MCP server binary)
-- GitNexus 1.3.11: `npm install -g gitnexus@1.3.11`
+- Optional: Python 3.10+ only if you run `mem0-mcp-server` instead of the hosted Mem0 MCP
+- Optional: GitNexus 1.3.11 global install (`npm install -g gitnexus@1.3.11`) if you prefer not to use `npx`
 
 ## Setup
 
-1. Install the Mem0 MCP server binary:
+1. Configure MCP servers (recommended: VS Code / extension):
+   - Copy `.mcp.example.json` to `.mcp.json`.
+   - Set `mcpServers.gitnexus.env.PATH_TO_REPO` to the absolute path of the target repo.
+   - Set `mcpServers.mem0.headers.Authorization` to `Token <your_mem0_token>`.
+   - `.mcp.json` is gitignored.
+
+   If you use the Claude Code CLI, register the same MCP servers.
+
+2. Provide `PATH_TO_REPO` to the orchestrator:
+   - Set it in `.claude/settings.json` under `env`, or in your shell environment before launching Claude Code.
+   - If it is not set, `/upgrade` will prompt for it.
+
+3. Index the target repository with GitNexus:
    ```bash
-   pip install -r requirements.txt
+   npx gitnexus analyze <PATH_TO_REPO>
    ```
 
-2. Index the target repository with GitNexus:
-   ```bash
-   npx gitnexus analyze /path/to/your/repo
-   ```
-
-3. Configure the project — edit `.claude/settings.json` (create from the template below if it doesn't exist):
-   ```json
-   {
-     "mcpServers": {
-       "gitnexus": { "type": "stdio", "command": "npx", "args": ["-y", "gitnexus", "mcp"] },
-       "mem0": {
-         "type": "stdio",
-         "command": "mem0-mcp-server",
-         "env": { "MEM0_API_KEY": "your-mem0-api-key" }
-       }
-     },
-     "env": {
-       "PATH_TO_REPO": "/absolute/path/to/target/repo"
-     },
-     "permissions": {
-       "allow": ["Bash(npx gitnexus*)", "Bash(git*)", "Read(*)", "Write(*)", "Edit(*)"]
-     }
-   }
-   ```
-
-   > `.claude/settings.json` is gitignored — it contains your API keys.
+4. (Optional) Review tool permissions in `.claude/settings.json`.
 
 ## Run
 
@@ -50,6 +37,8 @@ Open Claude Code in this directory and run:
 ```
 /upgrade
 ```
+
+If `PATH_TO_REPO` is not set, the orchestrator will prompt you for it.
 
 The orchestrator will ask you what upgrade to perform, then guide you through three stages with human-in-the-loop approval gates:
 

@@ -30,7 +30,7 @@ Call `mem0_search_memories` with:
 If memories are returned, extract:
 - Files previously flagged as high-risk or tricky on this repo
 - Breaking changes that surprised prior sessions
-- Any confidence gaps noted before (e.g. "dynamic imports in module X were not traceable")
+- Any coverage gaps noted before (e.g. "dynamic imports in module X were not traceable")
 
 Use these findings to prioritise your search — e.g. if a prior session flagged a file as having hidden dependencies, read it first in Step 3.
 
@@ -40,7 +40,7 @@ Run `Bash: npx gitnexus analyze $PATH_TO_REPO` to ensure the index is fresh. Not
 - Configuration files (e.g. pom.xml, build.gradle, package.json, requirements.txt)
 - Entry points and top-level module structure
 
-If `gitnexus_enabled` is false, use the `Read` tool and workspace search (`grep_search`) to map the same items, and note the reduced confidence in `confidence_notes`.
+If `gitnexus_enabled` is false, use the `Read` tool and workspace search (`grep_search`) to map the same items, and note the reduced coverage in `coverage_notes`.
 
 ### Step 2 — Dependency graph
 Use the `gitnexus_cypher` MCP tool to map all internal and external dependencies. For each external dependency relevant to the upgrade:
@@ -48,7 +48,7 @@ Use the `gitnexus_cypher` MCP tool to map all internal and external dependencies
 - Record target version (if known from upgrade_description)
 - Flag any known breaking changes between versions using your knowledge of the ecosystem
 
-If `gitnexus_enabled` is false, approximate the dependency graph using config files and imports discovered via `Read` and `grep_search`, and clearly mark the graph as incomplete in `confidence_notes`.
+If `gitnexus_enabled` is false, approximate the dependency graph using config files and imports discovered via `Read` and `grep_search`, and clearly mark the graph as incomplete in `coverage_notes`.
 
 ### Step 3 — Usage search
 Use `gitnexus_query` to find all code referencing the APIs, classes, or modules that will change. For each usage:
@@ -57,7 +57,7 @@ Use `gitnexus_query` to find all code referencing the APIs, classes, or modules 
 - Classify it as: `direct_usage`, `transitive_dependency`, or `configuration`
 - For any high-impact usage, use the `Read` tool on the absolute file path to inspect the full implementation before concluding analysis.
 
-If `gitnexus_enabled` is false, use `grep_search` plus targeted `Read` calls to find usages. Set `confidence_score` to 0.6 or lower and document gaps in `confidence_notes`.
+If `gitnexus_enabled` is false, use `grep_search` plus targeted `Read` calls to find usages. Document gaps in `coverage_notes`.
 
 ### Step 4 — Compile impact report
 Produce a single ImpactReport JSON object. Do not include commentary outside of this object.
@@ -69,9 +69,9 @@ After compiling the ImpactReport call `mem0_add_memory` with:
   - upgrade description
   - total affected files and high-risk file count
   - list of breaking changes found
-  - any confidence gaps or ambiguities (verbatim from `confidence_notes`)
+  - any coverage gaps or ambiguities (verbatim from `coverage_notes`)
   - names of any files that required special attention (e.g. had hidden transitive dependencies)
-- `metadata`: `{"stage": "analysis", "upgrade_type": "<upgrade_description>", "confidence_score": <score>}`
+- `metadata`: `{"stage": "analysis", "upgrade_type": "<upgrade_description>"}`
 
 This stores institutional knowledge so future analysis sessions on the same repo can prioritise known fragile areas.
 
@@ -100,15 +100,9 @@ If `mem0_enabled` is false, skip memory storage and proceed directly to output.
     "breaking_changes": ["string"],
     "notes": "string"
   },
-  "confidence_score": "number (0.0–1.0)",
-  "confidence_notes": "string (explain any gaps or ambiguities)"
+  "coverage_notes": "string (explain any gaps or ambiguities)"
 }
 ```
-
-## Confidence scoring
-- 1.0: complete coverage, no ambiguity
-- 0.9–0.7: minor gaps (e.g. dynamically loaded modules not traceable)
-- Below 0.7: flag to orchestrator — do not submit, request clarification
 
 ## Rules
 - Exclude any paths listed in `excluded_paths`.

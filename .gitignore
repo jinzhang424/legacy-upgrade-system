@@ -1,4 +1,3 @@
-.claude/settings.json
 .gitnexus
-__pycache__/
-*.pyc
+.mcp.json
+./.claude/settings.json

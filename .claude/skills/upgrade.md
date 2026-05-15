@@ -7,7 +7,7 @@ You do not analyse code, write plans, or apply changes yourself. You route, gate
 
 ## Startup
 
-1. Read `PATH_TO_REPO` from the environment. If it is not set, ask the user: "What is the absolute path to the repository you want to upgrade?" Set it for this session.
+1. Read `PATH_TO_REPO` from the environment. If it is not set, read `.claude/settings.json` and use `env.PATH_TO_REPO` if present. If still not set, read `.mcp.json` and use `mcpServers.gitnexus.env.PATH_TO_REPO` if present. If still not set, ask the user: "What is the absolute path to the repository you want to upgrade?" Set it for this session.
 2. Derive the memory scope: extract the basename of `PATH_TO_REPO` (e.g. `/home/user/my-app` → `my-app`). Use this as `memory_user_id` for all mem0 calls throughout the pipeline.
 3. Assume `mem0_enabled = true` and `gitnexus_enabled = true` unless a preflight check fails.
 4. Check Mem0 availability with a lightweight call: `mem0_search_memories` using `query: "healthcheck"` and `user_id: <memory_user_id>`.
@@ -36,20 +36,27 @@ You do not analyse code, write plans, or apply changes yourself. You route, gate
    - `mem0_enabled`
    - `gitnexus_enabled`
 3. When the sub-agent returns, extract the ImpactReport JSON from its response.
+4. Read the validator skill: use the `Read` tool on `.claude/skills/validator.md` to load its full content.
+5. Spawn the validator sub-agent using the `Agent` tool with a prompt that combines:
+   - The full content of `validator.md`
+   - `agent_type = "analyze"`
+   - `agent_output` = the ImpactReport JSON (or the raw analysis response)
+   - `context` = `{ "upgrade_description": "...", "repo_path": "..." }`
+   Extract the ValidationReport JSON from its response and use the `decision` field.
 
-**Gate check — reject if ANY of these are missing or invalid:**
+**Gate check — reject if ANY of these are missing or invalid or if the validator rejects:**
 - `affected_files` is present and non-empty
 - `dependency_graph` is present
 - `risk_summary` is present
-- `confidence_score` is ≥ 0.7
+- Validator `decision` is `"approved"`
 
-If the gate fails: re-invoke the sub-agent once, explicitly stating which field(s) were missing or which score was too low, and asking it to address those gaps. If it fails a second time, halt and tell the user: "Analysis failed after 2 attempts. Here is the error: [details]. Please check the repository index and try again."
+If the gate fails or the validator rejects: re-invoke the analysis sub-agent once, explicitly stating which field(s) were missing and any validator `rejection_reasons`. Then re-run the validator. If it fails a second time, halt and tell the user: "Analysis failed after 2 attempts. Here is the error: [details]. Please check the repository index and try again."
 
-4. Present a concise, human-readable summary to the user:
+6. Present a concise, human-readable summary to the user:
    - Total affected files, broken down by risk level
    - Key breaking changes identified
-   - Confidence score and any noted gaps
-5. Ask: "Do you approve this analysis and want to proceed to planning?" Wait for explicit approval. If the user requests changes or clarification, re-invoke the analyzer with the additional context.
+   - Coverage notes (if any)
+7. Ask: "Do you approve this analysis and want to proceed to planning?" Wait for explicit approval. If the user requests changes or clarification, re-invoke the analyzer with the additional context, then re-run the validator.
 
 ---
 
@@ -65,20 +72,27 @@ If the gate fails: re-invoke the sub-agent once, explicitly stating which field(
    - The `memory_user_id`
    - `mem0_enabled`
 3. When the sub-agent returns, extract the ChangePlan JSON.
+4. Spawn the validator sub-agent using the `Agent` tool with a prompt that combines:
+   - The full content of `validator.md`
+   - `agent_type = "plan"`
+   - `agent_output` = the ChangePlan JSON (or the raw planning response)
+   - `context` = `{ "upgrade_description": "...", "repo_path": "..." }`
+   Extract the ValidationReport JSON from its response and use the `decision` field.
 
-**Gate check — reject if ANY of these are missing or invalid:**
+**Gate check — reject if ANY of these are missing or invalid or if the validator rejects:**
 - `ordered_changes` is present and non-empty
 - Each entry in `ordered_changes` has: `file_path`, `change_type`, `rationale`, `estimated_risk`
 - `rollback_steps` is present (non-empty list)
 - `test_validation_criteria` is present (non-empty list)
+- Validator `decision` is `"approved"`
 
-Same 2-retry rule applies. On second failure, halt and report.
+If the gate fails or the validator rejects: re-invoke the planning sub-agent once, explicitly stating which field(s) were missing and any validator `rejection_reasons`. Then re-run the validator. If it fails a second time, halt and report.
 
-4. Present a summary to the user:
+5. Present a summary to the user:
    - Total changes, grouped by risk level
    - List of high-risk changes with their rationale
    - `plan_summary` from the plan
-5. Ask: "Do you approve this plan and want to proceed to execution?" Wait for explicit approval.
+6. Ask: "Do you approve this plan and want to proceed to execution?" Wait for explicit approval. If the user requests changes or clarification, re-invoke the planner with the additional context, then re-run the validator.
 
 ---
 
@@ -100,15 +114,21 @@ Same 2-retry rule applies. On second failure, halt and report.
    - `mem0_enabled`
    - `invoked_by_upgrade = true`
 
-4. After each batch, check the ValidationResult returned by the sub-agent:
-   - If `status: "passed"`: continue.
-   - If `status: "failed"`:
+4. After each batch (and after the final ValidationResult), check the ValidationResult returned by the sub-agent:
+   - Run the validator sub-agent with:
+     - The full content of `validator.md`
+     - `agent_type = "execute"`
+     - `agent_output` = the ValidationResult JSON (or the raw execution response)
+     - `context` = `{ "upgrade_description": "...", "repo_path": "..." }`
+     If the validator rejects, ask the executor to re-emit a valid ValidationResult (no re-run of changes), then re-run the validator. If it fails a second time, halt and report.
+   - If `status: "passed"` and the validator approves: continue.
+   - If `status: "failed"` and the validator approves:
      a. Apply rollback: for each step in `change_plan.rollback_steps` (in reverse order, up to the failed batch), use `Bash`, `Edit`, or `Write` as appropriate.
      b. Commit the rollback: `Bash: git -C "<PATH_TO_REPO>" add -A && git -C "<PATH_TO_REPO>" commit -m "rollback: revert batch <n> due to validation failure"`
      c. Notify the user: present the `failure_summary` and rollback outcome.
      d. Halt. Do not re-attempt execution automatically.
 
-5. On full completion (final ValidationResult with `status: "passed"`), present the UpgradeSummary to the user:
+5. On full completion (final ValidationResult with `status: "passed"` and validator approved), present the UpgradeSummary to the user:
    - Branch name and total commits
    - Files changed
    - Validation results
@@ -119,6 +139,7 @@ Same 2-retry rule applies. On second failure, halt and report.
 
 ## Escalation rules
 - If a sub-agent fails to produce valid output after 2 re-invocations, halt the pipeline and report to the user with the full error context.
+- If the validator rejects after 2 attempts to re-emit a valid output, halt the pipeline and report the validator reasons.
 - Never proceed past a gate without explicit user approval or a passing gate check.
 - Never modify code, files, or repository state directly (except for the branch creation and rollback steps above).
 - All user-facing messages must be concise and structured. Use plain language. Flag risks clearly. Never present raw JSON — always summarise it.
