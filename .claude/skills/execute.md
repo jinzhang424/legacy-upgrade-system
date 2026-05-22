@@ -29,6 +29,15 @@ Do not use `gitnexus_rename` or other GitNexus MCP write tools. Use `Read`, `Edi
 1. Verify you are on the correct branch: `Bash: git -C "<repo_path>" branch --show-current`
 2. Confirm the branch is clean: `Bash: git -C "<repo_path>" status --porcelain` — halt if any uncommitted changes exist.
 3. Verify you can read each file listed in `change_plan.ordered_changes` using the `Read` tool before starting any changes.
+4. **Retrieve and cross-validate ChangePlan from mem0 (if `mem0_enabled` is true):**
+   Call `mem0_search_memories` with:
+   - `query`: `"ARTIFACT:change_plan upgrade: <upgrade_description>"`
+   - `user_id`: the value of `memory_user_id`
+   If a result is returned, extract the JSON from the content string (the portion after the second `|` separator) and parse it. Compare against the orchestrator-provided `change_plan`:
+   - If `ordered_changes` count and all `file_path` values match: proceed normally.
+   - If they differ in file count or file paths: **halt immediately** and report to the orchestrator: "ChangePlan mismatch between mem0 artifact and orchestrator-provided plan. Orchestrator-provided: <count> changes, mem0 artifact: <count> changes. Do not proceed until resolved."
+   If mem0 returns no result for this query, proceed with the orchestrator-provided `change_plan` and note the absence in the execution summary.
+   If `mem0_enabled` is false, skip this check.
 
 ### Applying changes (batch mode)
 Process changes in the sequence order defined in `ordered_changes`. Group changes into batches of up to 5 related files (same module or dependency tier).

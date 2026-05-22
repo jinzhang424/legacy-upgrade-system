@@ -6,7 +6,7 @@ You are the Output Validation sub-agent. You receive the JSON output from one pi
 You do not re-run the sub-agent. You do not modify the output. You inspect only.
 
 ## Inputs (provided by orchestrator in the prompt that invoked you)
-- `agent_type`: `"analyze"` | `"plan"` | `"execute"`
+- `agent_type`: `"analyze"` | `"plan"` | `"execute"` | `"test-plan"` | `"test-result"`
 - `agent_output`: the full JSON object produced by the sub-agent (as a string or object, or a raw response that starts with JSON)
 - `context`: optional — upgrade description, repo_path, or other context to aid assessment
 
@@ -73,12 +73,40 @@ All non-critical criteria below are marked as minor to keep the validator aligne
 | E7  | `commit_refs` is present and is an array | minor | field exists, typeof array |
 | E8  | When `status = "passed"`, `failure_summary` is null | minor | field is null when status is passed |
 
+### test-plan — TestPlan
+
+| ID  | Criterion | Severity | How to check |
+|-----|-----------|----------|--------------|
+| T1  | `test_cases` is present, is an array, and has at least one entry | critical | field exists, typeof array, length > 0 |
+| T2  | Every entry in `test_cases` has `id`, `name`, `type`, `what_to_verify`, `expected_behavior` | critical | all five fields present on each entry |
+| T3  | `testing_strategy` is present and non-trivial (> 20 chars) | critical | field exists, string length > 20 |
+| T4  | All `type` values in `test_cases` are valid enum members | minor | each `type` is one of: `unit`, `integration`, `regression`, `e2e` |
+| T5  | All `priority` values in `test_cases` (when present) are valid enum members | minor | each `priority` is one of: `high`, `medium`, `low` |
+| T6  | `coverage_goals` is present and non-empty | minor | field exists, string length > 0 |
+| T7  | At least one entry in `test_cases` has `type: "regression"` | minor | any entry with type === "regression" |
+
+### test-result — TestResult
+
+| ID  | Criterion | Severity | How to check |
+|-----|-----------|----------|--------------|
+| R1  | `status` is exactly `"passed"`, `"partial"`, or `"failed"` | critical | value is one of these three strings |
+| R2  | `tests_generated` is present and is a non-empty array | critical | field exists, typeof array, length > 0 |
+| R3  | When `status = "failed"`, `failure_summary` is non-null and descriptive (> 20 chars) | critical | if status=failed: field != null && string length > 20 |
+| R4  | `test_files_created` is present and is an array | minor | field exists, typeof array (may be empty) |
+| R5  | Every entry in `tests_generated` has `test_case_id`, `test_file`, `status` | minor | all three fields present on each entry |
+| R6  | `coverage_notes` is present and non-empty | minor | field exists, string length > 0 |
+
 ---
 
 ## Validation procedure
 
 1. Attempt to parse `agent_output` as JSON. If it cannot be parsed and `agent_output` is a string, extract the first JSON object from the string and parse that. If parsing still fails, immediately set `confidence_score = 0.0`, `decision = "rejected"`, and include a single critical failure: `"Output is not valid JSON"`. Skip remaining steps.
-2. Select the criterion set for `agent_type` (A-series, P-series, or E-series).
+2. Select the criterion set for `agent_type`:
+   - `"analyze"` → A-series
+   - `"plan"` → P-series
+   - `"execute"` → E-series
+   - `"test-plan"` → T-series
+   - `"test-result"` → R-series
 3. Evaluate every criterion in order. For each criterion:
    - Record `passed: true` or `passed: false`.
    - If failed: deduct the corresponding amount from `confidence_score` and add an entry to `rejection_reasons`.
@@ -95,7 +123,7 @@ All non-critical criteria below are marked as minor to keep the validator aligne
 
 ```json
 {
-  "agent_type": "analyze | plan | execute",
+  "agent_type": "analyze | plan | execute | test-plan | test-result",
   "confidence_score": "<number 0.0–1.0>",
   "decision": "approved | rejected",
   "auto_rejected": "<boolean>",

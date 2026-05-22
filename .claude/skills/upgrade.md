@@ -96,6 +96,38 @@ If the gate fails or the validator rejects: re-invoke the planning sub-agent onc
 
 ---
 
+## Stage 4-A — Test Planning (before execution)
+
+1. Read the test skill: use the `Read` tool on `.claude/skills/test.md` to load its full content.
+2. Spawn the test planning sub-agent (Phase 1) using the `Agent` tool with a prompt that combines:
+   - The full content of `test.md`
+   - `phase: "plan"`
+   - The approved `impact_report` JSON
+   - The approved `change_plan` JSON
+   - The `upgrade_description`
+   - The `repo_path`
+   - The `memory_user_id`
+   - `mem0_enabled`
+3. Extract the TestPlan JSON from the response.
+4. Spawn the validator sub-agent using the `Agent` tool with a prompt that combines:
+   - The full content of `validator.md` (already loaded)
+   - `agent_type = "test-plan"`
+   - `agent_output` = the TestPlan JSON
+   - `context` = `{ "upgrade_description": "...", "repo_path": "..." }`
+   Extract the ValidationReport JSON from its response and use the `decision` field.
+
+**Gate check — reject if any of T1, T2, T3 fail or if the validator rejects:**
+If rejected: re-invoke the test planning sub-agent once with the `rejection_reasons`. Then re-run the validator. If it fails a second time, warn the user: "Test planning failed after 2 attempts — proceeding without a test plan. Tests will not be generated at the end of the pipeline." Set `test_plan = null` and continue to Stage 3.
+
+5. Present an informational summary to the user (no approval required):
+   - Number of test cases by type (unit / integration / regression / e2e)
+   - Testing strategy overview
+   - Coverage goals
+   Then proceed automatically to Stage 3.
+6. Store the approved `test_plan` in session context for use in Stage 4-B.
+
+---
+
 ## Stage 3 — Upgrade Execution
 
 1. Create a working branch. Generate a slug from the upgrade description (lowercase, hyphens, max 40 chars). Run:
@@ -128,12 +160,41 @@ If the gate fails or the validator rejects: re-invoke the planning sub-agent onc
      c. Notify the user: present the `failure_summary` and rollback outcome.
      d. Halt. Do not re-attempt execution automatically.
 
-5. On full completion (final ValidationResult with `status: "passed"` and validator approved), present the UpgradeSummary to the user:
-   - Branch name and total commits
-   - Files changed
-   - Validation results
-   - Suggested next steps (e.g. "Open a pull request from branch `upgrade/<slug>`")
+5. On full completion (final ValidationResult with `status: "passed"` and validator approved), proceed to Stage 4-B before presenting the final summary.
 6. Do not store any additional memory here. The execution sub-agent is responsible for persisting the final execution summary to mem0 when `mem0_enabled` is true.
+
+---
+
+## Stage 4-B — Test Implementation (after execution)
+
+Only run this stage if `test_plan` is non-null (Stage 4-A succeeded).
+
+1. Spawn the test implementation sub-agent (Phase 2) using the `Agent` tool with a prompt that combines:
+   - The full content of `test.md` (already loaded)
+   - `phase: "implement"`
+   - The `test_plan` JSON from Stage 4-A
+   - The `upgrade_description`
+   - The `repo_path`
+   - The `branch_name`
+   - The `memory_user_id`
+   - `mem0_enabled`
+2. Extract the TestResult JSON from the response.
+3. Spawn the validator sub-agent using the `Agent` tool with a prompt that combines:
+   - The full content of `validator.md` (already loaded)
+   - `agent_type = "test-result"`
+   - `agent_output` = the TestResult JSON
+   - `context` = `{ "upgrade_description": "...", "repo_path": "..." }`
+   Extract the ValidationReport and use the `decision` field.
+
+**Gate check — reject if R1 or R2 fail or if the validator rejects:**
+If rejected: re-invoke the implementation sub-agent once with `rejection_reasons`. If it fails again, warn the user: "Test implementation failed after 2 attempts — upgrade was successful but test suite was not generated."
+
+4. Present the combined UpgradeSummary and TestSummary to the user:
+   - **Upgrade:** branch name, total commits, files changed, validation results
+   - **Tests:** test files created, tests passing / failing / skipped, supplementary tests added, coverage notes
+   - **Suggested next steps:** "Open a pull request from branch `upgrade/<slug>`; review generated test suite before merging."
+
+If `test_plan` was null (Stage 4-A failed), present only the UpgradeSummary and note that test generation was skipped.
 
 ---
 

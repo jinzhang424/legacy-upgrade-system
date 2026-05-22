@@ -63,7 +63,9 @@ If `gitnexus_enabled` is false, use `grep_search` plus targeted `Read` calls to 
 Produce a single ImpactReport JSON object. Do not include commentary outside of this object.
 
 ### Step 5 — Store analysis findings to mem0
-After compiling the ImpactReport call `mem0_add_memory` with:
+After compiling the ImpactReport make two `mem0_add_memory` calls:
+
+**Call A — human-readable summary (for future session recall):**
 - `user_id`: the value of `memory_user_id`
 - `messages`: `[{"role": "user", "content": "<summary>"}]` where `<summary>` includes:
   - upgrade description
@@ -73,9 +75,15 @@ After compiling the ImpactReport call `mem0_add_memory` with:
   - names of any files that required special attention (e.g. had hidden transitive dependencies)
 - `metadata`: `{"stage": "analysis", "upgrade_type": "<upgrade_description>"}`
 
-This stores institutional knowledge so future analysis sessions on the same repo can prioritise known fragile areas.
+**Call B — full JSON artifact (for downstream agent retrieval):**
+- `user_id`: the value of `memory_user_id`
+- `messages`: `[{"role": "user", "content": "ARTIFACT:impact_report | upgrade: <upgrade_description> | <stringified ImpactReport JSON>"}]`
+  - Before stringifying, truncate `coverage_notes` to 500 chars if it exceeds that length to keep the payload manageable.
+- `metadata`: `{"stage": "analysis", "artifact": "impact_report", "upgrade_type": "<upgrade_description>"}`
 
-If `mem0_enabled` is false, skip memory storage and proceed directly to output.
+Call A stores institutional knowledge so future analysis sessions can prioritise known fragile areas. Call B stores the full structured artifact so downstream agents (planner, test generator) can retrieve and cross-validate it from mem0.
+
+If `mem0_enabled` is false, skip both memory calls and proceed directly to output.
 
 ## Output schema
 
