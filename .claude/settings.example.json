@@ -1,0 +1,32 @@
+{
+  "env": {
+    "PATH_TO_REPO": "your_path_to_repo"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npx gitnexus*)",
+      "Bash(git*)",
+      "Bash(npm*)",
+      "Bash(pnpm*)",
+      "Bash(yarn*)",
+      "Bash(bun*)",
+      "Bash(node*)",
+      "Bash(mvn*)",
+      "Bash(./mvnw*)",
+      "Bash(gradle*)",
+      "Bash(./gradlew*)",
+      "Bash(dotnet*)",
+      "Bash(pytest*)",
+      "Bash(python*)",
+      "Bash(pip*)",
+      "Bash(poetry*)",
+      "Bash(pipenv*)",
+      "Bash(go*)",
+      "Bash(cargo*)",
+      "Bash(make*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)"
+    ]
+  }
+}

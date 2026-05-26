@@ -1,1 +1,0 @@
-Specialist upgrade-planning agent for legacy modernization: compares migration paths, designs phased plans, supports revision loops, and flags out-of-scope requests for re-analysis.

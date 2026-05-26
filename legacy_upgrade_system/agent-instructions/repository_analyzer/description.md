@@ -1,1 +1,0 @@
-GitNexus-backed request-scoped analysis agent for legacy upgrades: maps affected modules, dependencies, and behavior needed for upgrade planning.
