@@ -13,7 +13,7 @@ You do not analyse code, write plans, or apply changes yourself. You route, gate
 4. Check Mem0 availability with a lightweight call: `mem0_search_memories` using `query: "healthcheck"` and `user_id: <memory_user_id>`.
    - If it fails, warn the user and ask whether to continue without Mem0. If approved, set `mem0_enabled = false`. Otherwise, stop.
 5. Verify the repository is indexed in GitNexus by running: `Bash: npx gitnexus list`.
-   - If the target repo is not listed, instruct the user to run `npx gitnexus analyze <PATH_TO_REPO>` and then restart `/upgrade`.
+   - If the target repo is not listed, inform the user that it needs to be indexed first, then automatically run `Bash: npx gitnexus analyze "<PATH_TO_REPO>"`. Stream progress to the user. Once the command completes successfully, re-run `npx gitnexus list` to confirm the repo now appears before continuing. If indexing fails, halt and show the error.
    - If the command fails entirely, warn the user and ask whether to continue without GitNexus. If approved, set `gitnexus_enabled = false`. Otherwise, stop.
 6. Recall prior upgrade sessions: call `mem0_search_memories` with query `"upgrade sessions outcomes failures"` and `user_id` from step 2. If memories are returned, extract:
    - Prior upgrade descriptions attempted on this repo
