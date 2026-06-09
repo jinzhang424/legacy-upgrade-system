@@ -1,59 +1,74 @@
 # Legacy Upgrade System
 
-Multi-agent legacy upgrade pipeline built on Claude Code. Runs entirely inside the Claude Code CLI or VS Code extension — no separate Python process needed.
+Codex-centered legacy upgrade pipeline for multi-stage repository migrations.
+
+The project exposes one user-facing Codex skill: `upgrade`. It coordinates analysis, planning, test planning, execution, validation, and generated tests with human approval gates between the major stages.
 
 ## Prerequisites
 
-- [Claude Code CLI](https://claude.ai/code) or Claude Code VS Code extension
-- Node.js 22 (for `npx gitnexus`)
-- Optional: Python 3.10+ only if you run `mem0-mcp-server` instead of the hosted Mem0 MCP
-- Optional: GitNexus 1.3.11 global install (`npm install -g gitnexus@1.3.11`) if you prefer not to use `npx`
+- Codex CLI or Codex desktop
+- Node.js 22, for `npx gitnexus`
+- Optional: Python 3.10+ only if you run a local Mem0 MCP server
+- Optional: GitNexus global install if you prefer not to use `npx`
 
 ## Setup
 
-1. Configure MCP servers (recommended: VS Code / extension):
-   - Copy `.mcp.example.json` to `.mcp.json`.
-   - Set `mcpServers.gitnexus.env.PATH_TO_REPO` to the absolute path of the target repo.
-   - Set `mcpServers.mem0.headers.Authorization` to `Token <your_mem0_token>`.
-   - `.mcp.json` is gitignored.
+1. Configure Codex:
 
-   If you use the Claude Code CLI, register the same MCP servers.
+   ```bash
+   copy .codex\config.example.toml .codex\config.toml
+   ```
 
-2. Provide `PATH_TO_REPO` to the orchestrator:
-   - Set it in `.claude/settings.json` under `env`, or in your shell environment before launching Claude Code.
-   - If it is not set, `/upgrade` will prompt for it.
+2. Edit `.codex/config.toml`:
 
-3. Index the target repository with GitNexus:
+   - Set `PATH_TO_REPO` to the absolute path of the repository you want to upgrade.
+   - Set the GitNexus MCP `PATH_TO_REPO` to the same value.
+   - Set the Mem0 authorization header if you want cross-session memory.
+
+   To avoid filesystem approval friction in Codex Desktop, keep target repositories inside this workspace, for example:
+
+   ```text
+   projects\target-repo
+   ```
+
+   Then set both `PATH_TO_REPO` values to that repository's absolute path.
+
+3. Make sure `PATH_TO_REPO` exists and points to a repository directory. The `$upgrade` preflight checks this before Mem0 or GitNexus and stops early if the path is missing.
+
+4. Index the target repository with GitNexus:
+
    ```bash
    npx gitnexus analyze <PATH_TO_REPO>
    ```
 
-4. (Optional) Review tool permissions in `.claude/settings.json`.
+   Run this once per repository, or again after large refactors.
 
 ## Run
 
-Open Claude Code in this directory and run:
+Open Codex in this directory and invoke the repo-scoped skill:
 
+```text
+$upgrade
 ```
-/upgrade
-```
 
-If `PATH_TO_REPO` is not set, the orchestrator will prompt you for it.
+If `PATH_TO_REPO` is not configured, the skill will ask for it. If it is configured but the directory does not exist, the skill will ask you to move or clone the target repository under the workspace, such as `projects\<repo-name>`, and update `.codex/config.toml`.
 
-The orchestrator will ask you what upgrade to perform, then guide you through three stages with human-in-the-loop approval gates:
+## Pipeline
 
-1. **Analysis** — GitNexus scans the repository and produces an impact report
-2. **Planning** — Claude designs ordered file changes with rollback procedures
-3. **Execution** — Claude applies changes in batches, validating after each batch
+1. Analysis: maps affected files, dependency graph, breaking changes, risks, and coverage gaps.
+2. Planning: creates an ordered change plan with rollback steps and validation criteria.
+3. Test planning: designs tests before code is changed, so tests are based on intent rather than the final diff.
+4. Execution: applies changes in validated batches on an `upgrade/<slug>` branch.
+5. Test implementation: implements planned tests and supplementary coverage for uncovered diff hunks.
 
-## Enforcement and fallback
+## Enforcement And Fallback
 
-Mem0 and GitNexus are required by default. If either system is unavailable, the orchestrator will warn and ask whether to proceed without it. Proceeding without Mem0 skips memory recall/storage. Proceeding without GitNexus forces a fallback analysis with reduced confidence.
+Mem0 and GitNexus are expected by default. If either system is unavailable, the skill warns and asks whether to proceed without it. Proceeding without Mem0 skips memory recall/storage. Proceeding without GitNexus uses filesystem analysis with reduced confidence.
 
-## Skills
+## Project Layout
 
-| Skill | Description |
-|-------|-------------|
-| `/upgrade` | Full 3-stage pipeline (only user-facing command) |
-
-The analyze/plan/execute stages are internal skills invoked automatically by `/upgrade`.
+- `AGENTS.md`: Codex instructions loaded for this project.
+- `.agents/skills/upgrade/SKILL.md`: the Codex `upgrade` skill.
+- `.codex/config.example.toml`: sanitized local Codex configuration template.
+- `.codex/config.toml`: local Codex configuration, ignored by Git.
+- `.mcp.example.json`: optional MCP template for tools that still read MCP JSON directly.
