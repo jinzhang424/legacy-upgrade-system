@@ -1,4 +1,5 @@
 .gitnexus
 .mcp.json
 .codex/config.toml
+.codex/upgrade-runs
 projects

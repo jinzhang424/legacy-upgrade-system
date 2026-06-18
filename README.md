@@ -68,7 +68,7 @@ Mem0 and GitNexus are expected by default. If either system is unavailable, the 
 ## Project Layout
 
 - `AGENTS.md`: Codex instructions loaded for this project.
-- `.agents/skills/upgrade/SKILL.md`: the Codex `upgrade` skill.
+- `.codex/skills/upgrade/SKILL.md`: the Codex `upgrade` skill.
 - `.codex/config.example.toml`: sanitized local Codex configuration template.
 - `.codex/config.toml`: local Codex configuration, ignored by Git.
 - `.mcp.example.json`: optional MCP template for tools that still read MCP JSON directly.
