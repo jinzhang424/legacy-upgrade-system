@@ -2,13 +2,12 @@
 
 Codex-centered legacy upgrade pipeline for multi-stage repository migrations.
 
-The project exposes one user-facing Codex skill: `upgrade`. It coordinates analysis, planning, test planning, execution, validation, and generated tests with human approval gates between the major stages.
+The project exposes one user-facing Codex skill: `upgrade`. It coordinates analysis, planning, small smoke/integration test generation, execution, and one final validation/repair pass with human approval gates between the major stages.
 
 ## Prerequisites
 
 - Codex CLI or Codex desktop
 - Node.js 22, for `npx gitnexus`
-- Optional: Python 3.10+ only if you run a local Mem0 MCP server
 - Optional: GitNexus global install if you prefer not to use `npx`
 
 ## Setup
@@ -23,7 +22,6 @@ The project exposes one user-facing Codex skill: `upgrade`. It coordinates analy
 
    - Set `PATH_TO_REPO` to the absolute path of the repository you want to upgrade.
    - Set the GitNexus MCP `PATH_TO_REPO` to the same value.
-   - Set the Mem0 authorization header if you want cross-session memory.
 
    To avoid filesystem approval friction in Codex Desktop, keep target repositories inside this workspace, for example:
 
@@ -33,7 +31,7 @@ The project exposes one user-facing Codex skill: `upgrade`. It coordinates analy
 
    Then set both `PATH_TO_REPO` values to that repository's absolute path.
 
-3. Make sure `PATH_TO_REPO` exists and points to a repository directory. The `$upgrade` preflight checks this before Mem0 or GitNexus and stops early if the path is missing.
+3. Make sure `PATH_TO_REPO` exists and points to a repository directory. The `$upgrade` preflight checks this before GitNexus and stops early if the path is missing.
 
 4. Index the target repository with GitNexus:
 
@@ -55,15 +53,15 @@ If `PATH_TO_REPO` is not configured, the skill will ask for it. If it is configu
 
 ## Pipeline
 
-1. Analysis: maps affected files, dependency graph, breaking changes, risks, and coverage gaps.
-2. Planning: creates an ordered change plan with rollback steps and validation criteria.
-3. Test planning: designs tests before code is changed, so tests are based on intent rather than the final diff.
-4. Execution: applies changes in validated batches on an `upgrade/<slug>` branch.
-5. Test implementation: implements planned tests and supplementary coverage for uncovered diff hunks.
+1. Analysis: maps affected files, dependency graph, risks, and exact line ranges for upgrade-relevant issues.
+2. Planning: creates a line-aware change plan and writes `change-plan.json` with all validation metadata.
+3. Test generation: creates a small set of smoke and integration tests, then records them in `change-plan.json`.
+4. Execution: applies planned changes on an `upgrade/<slug>` branch and creates one final commit.
+5. Final validation/repair: reads only `change-plan.json`, checks git diff alignment, runs build commands and tests, fixes plan-related build/test failures when possible, and amends the final upgrade commit.
 
 ## Enforcement And Fallback
 
-Mem0 and GitNexus are expected by default. If either system is unavailable, the skill warns and asks whether to proceed without it. Proceeding without Mem0 skips memory recall/storage. Proceeding without GitNexus uses filesystem analysis with reduced confidence.
+GitNexus is expected by default for line-aware analysis. If GitNexus is unavailable, the skill warns and asks whether to proceed without it. Proceeding without GitNexus uses filesystem analysis with reduced confidence.
 
 ## Project Layout
 
