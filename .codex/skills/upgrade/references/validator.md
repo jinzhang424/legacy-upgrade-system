@@ -24,6 +24,7 @@ Read only `change_plan_path` from the artifact directory. Do not read `impact-re
 | Inspect changed files | `Bash: git -C "<repo_path>" diff --name-only <base>...HEAD` |
 | Inspect changed content | `Bash: git -C "<repo_path>" diff <base>...HEAD -- <path>` |
 | Build/compile | Commands from `validation.build_commands` |
+| Run startup checks | Commands from `validation.startup_commands` |
 | Run tests | Commands from `validation.existing_test_commands` and `validation.generated_test_commands` |
 | Content checks | Targeted file reads for `validation.content_checks` |
 | Apply validation repairs | Native edit/write tools |
@@ -44,9 +45,13 @@ Use `validation.base_branch_candidates` if present; otherwise try `main`, then `
 Run git diff against the selected base branch:
 
 - Changed file list must be non-empty.
-- Changed files must align with `planned_files` and `ordered_changes`.
+- Changed files must align with `planned_files`, `ordered_changes`, `expected_dependency_changes`, and generated files recorded in `validation.generated_test_files`.
 - Dependency/config files listed in `expected_dependency_changes` must have relevant diff hunks.
 - Unexpected files must be reported and count against the confidence score unless clearly generated test files listed in `validation.generated_test_files`.
+- Inspect changed content only for files that are changed and are listed in `ordered_changes`, `expected_dependency_changes`, `validation.generated_test_files`, or `validation.content_checks`.
+- Do not read every planned file merely because it appears in `planned_files`; use the changed-file list as the first filter.
+- Do not treat an unchanged planned file as missing when its ChangePlan entry was review-only, conditional, or did not require a concrete diff hunk. Report it as informational instead.
+- Keep diff inspection bounded. If the changed-file set is too large to inspect completely, inspect dependency/config files, content-check files, generated test files, and the highest-risk changed source files first, then record the remaining files as uninspected rather than reading broad unrelated content.
 
 ### Step 4 - Verify content checks
 
@@ -60,14 +65,15 @@ For each entry in `validation.content_checks`, read the target file and verify:
 Run commands in this order:
 
 1. `validation.build_commands`
-2. `validation.existing_test_commands`
-3. `validation.generated_test_commands`
+2. `validation.startup_commands`
+3. `validation.existing_test_commands`
+4. `validation.generated_test_commands`
 
 Capture command, outcome, exit status, and truncated output for each. If a command is missing for a category, record it as skipped with a reason.
 
 ### Step 6 - Repair plan-related failures
 
-If any build or test command fails, attempt up to 2 repair rounds.
+If any build, startup, or test command fails, attempt up to 3 repair rounds.
 
 In each repair round:
 
@@ -95,9 +101,10 @@ Reject for any critical failure:
 - Diff does not touch any planned file.
 - Required dependency/config changes are missing.
 - Any build command fails.
+- Any required startup command fails.
 - Any generated smoke or integration test command fails.
 - Required content checks fail.
-- A build or test failure remains after repair attempts.
+- A build, startup, or test failure remains after repair attempts.
 - A required repair would touch files unrelated to the ChangePlan.
 
 Approve only when the diff aligns with the plan and all available build/test/content checks pass.
@@ -128,7 +135,7 @@ Write `artifact_dir/validation-report.json` and return the same JSON:
   ],
   "command_results": [
     {
-      "type": "build | existing_test | generated_test",
+      "type": "build | startup | existing_test | generated_test",
       "command": "string",
       "outcome": "passed | failed | skipped",
       "exit_status": "number",

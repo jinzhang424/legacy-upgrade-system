@@ -1,0 +1,197 @@
+﻿{
+    "decision":  "approved",
+    "confidence_score":  0.86,
+    "base_ref":  "main",
+    "git_diff_summary":  {
+                             "changed_files":  [
+                                                   ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                   ".gitignore",
+                                                   "AGENTS.md",
+                                                   "CLAUDE.md",
+                                                   "tv-radio-frontend/app-media.js",
+                                                   "tv-radio-frontend/app.js",
+                                                   "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                   "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                   "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                   "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                   "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                   "tv-radio-frontend/db-provider.js",
+                                                   "tv-radio-frontend/handlebars-partials.js",
+                                                   "tv-radio-frontend/logger.js",
+                                                   "tv-radio-frontend/media/generic-media.js",
+                                                   "tv-radio-frontend/media/programme-media.js",
+                                                   "tv-radio-frontend/media/title-thumbnails.js",
+                                                   "tv-radio-frontend/media/unisat-thumbnails.js",
+                                                   "tv-radio-frontend/metrics.js",
+                                                   "tv-radio-frontend/package-lock.json",
+                                                   "tv-radio-frontend/package.json",
+                                                   "tv-radio-frontend/request-common.js",
+                                                   "tv-radio-frontend/shared/media-access.js",
+                                                   "tv-radio-frontend/test/upgrade-integration.test.js",
+                                                   "tv-radio-frontend/test/upgrade-smoke.test.js",
+                                                   "tv-radio-frontend/usage-monitoring.js"
+                                               ],
+                             "planned_files_touched":  [
+                                                           "tv-radio-frontend/app-media.js",
+                                                           "tv-radio-frontend/app.js",
+                                                           "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                           "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                           "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                           "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                           "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                           "tv-radio-frontend/db-provider.js",
+                                                           "tv-radio-frontend/handlebars-partials.js",
+                                                           "tv-radio-frontend/logger.js",
+                                                           "tv-radio-frontend/media/generic-media.js",
+                                                           "tv-radio-frontend/media/programme-media.js",
+                                                           "tv-radio-frontend/media/title-thumbnails.js",
+                                                           "tv-radio-frontend/media/unisat-thumbnails.js",
+                                                           "tv-radio-frontend/metrics.js",
+                                                           "tv-radio-frontend/package.json",
+                                                           "tv-radio-frontend/request-common.js",
+                                                           "tv-radio-frontend/shared/media-access.js",
+                                                           "tv-radio-frontend/usage-monitoring.js"
+                                                       ],
+                             "unexpected_files":  [
+                                                      ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                      ".gitignore",
+                                                      "AGENTS.md",
+                                                      "CLAUDE.md"
+                                                  ],
+                             "missing_planned_files":  [
+
+                                                       ],
+                             "dependency_changes_verified":  [
+                                                                 "tv-radio-frontend/package.json async 3.2.6",
+                                                                 "tv-radio-frontend/package.json body-parser 2.3.0",
+                                                                 "tv-radio-frontend/package.json express 5.2.1",
+                                                                 "tv-radio-frontend/package.json gc-stats removed with guarded metrics fallback",
+                                                                 "tv-radio-frontend/package.json handlebars 4.7.9",
+                                                                 "tv-radio-frontend/package.json influx 5.12.0",
+                                                                 "tv-radio-frontend/package.json memcached 2.2.2",
+                                                                 "tv-radio-frontend/package.json minimist 1.2.8",
+                                                                 "tv-radio-frontend/package.json moment 2.30.1",
+                                                                 "tv-radio-frontend/package.json mongodb 7.3.0",
+                                                                 "tv-radio-frontend/package.json nodemailer 9.0.1",
+                                                                 "tv-radio-frontend/package.json on-finished 2.4.1",
+                                                                 "tv-radio-frontend/package.json request 2.88.2",
+                                                                 "tv-radio-frontend/package.json send 1.2.1",
+                                                                 "tv-radio-frontend/package.json sharp 0.35.2",
+                                                                 "tv-radio-frontend/package.json socket.io-client 4.8.3",
+                                                                 "tv-radio-frontend/package.json uglify-js 3.19.3",
+                                                                 "tv-radio-frontend/package.json uuid removed; crypto.randomUUID used",
+                                                                 "tv-radio-frontend/package.json walk 2.3.15",
+                                                                 "tv-radio-frontend/package.json winston 3.19.0",
+                                                                 "tv-radio-frontend/package.json winston-logstash 2.0.5",
+                                                                 "tv-radio-frontend/package-lock.json generated dependency lockfile present"
+                                                             ],
+                             "dependency_changes_missing":  [
+
+                                                            ]
+                         },
+    "content_check_results":  [
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required dependency strings present; prohibited legacy dependency strings and git URLs absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/db-provider.js",
+                                      "outcome":  "passed",
+                                      "detail":  "MongoClient.connect, insertOne, and updateOne present; prohibited legacy insert/update calls absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/logger.js",
+                                      "outcome":  "passed",
+                                      "detail":  "createLogger present; old winston.Logger constructor absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/request-common.js",
+                                      "outcome":  "passed",
+                                      "detail":  "Buffer.from present; new Buffer and uuid.v4 absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/metrics.js",
+                                      "outcome":  "passed",
+                                      "detail":  "enableGarbageCollectionReporting present."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                      "outcome":  "passed",
+                                      "detail":  "randomUUID and /public/viewer/ present; uuid require, uuid.v4, and legacy /public/viewer/* substring absent after repair."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/usage-monitoring.js",
+                                      "outcome":  "passed",
+                                      "detail":  "/media/access/ present; legacy /media/access/* substring absent after repair."
+                                  }
+                              ],
+    "command_results":  [
+                            {
+                                "type":  "build",
+                                "command":  "node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p = Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -WorkingDirectory (Get-Location) -PassThru -WindowStyle Hidden; try { Start-Sleep -Seconds 12; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -ErrorAction SilentlyContinue; exit 0 } finally { if ($p -and -not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } }\"",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "",
+                                "outcome":  "skipped",
+                                "exit_status":  0,
+                                "output":  "No existing_test_commands declared in change-plan.json."
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "node test\\\\upgrade-smoke.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "upgrade smoke checks passed"
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "node test\\\\upgrade-integration.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "upgrade integration checks passed"
+                            }
+                        ],
+    "repairs_applied":  [
+                            {
+                                "file_path":  "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                "reason":  "Plan content check rejected legacy /public/viewer/* substring after Express 5 wildcard migration.",
+                                "summary":  "Changed options route from /public/viewer/*path to /public/viewer/{*path}."
+                            },
+                            {
+                                "file_path":  "tv-radio-frontend/usage-monitoring.js",
+                                "reason":  "Plan content check rejected legacy /media/access/* substring after Express 5 wildcard migration.",
+                                "summary":  "Changed options route from /media/access/*path to /media/access/{*path}."
+                            }
+                        ],
+    "repair_rounds":  1,
+    "final_commit_ref":  "3874441",
+    "rejection_reasons":  [
+
+                          ],
+    "recommendations":  [
+                            "Review unexpected non-plan root files in the branch diff: .claude GitNexus skill docs, .gitignore, AGENTS.md, and CLAUDE.md.",
+                            "No tv-radio-admin files were changed or executed during validation."
+                        ]
+}

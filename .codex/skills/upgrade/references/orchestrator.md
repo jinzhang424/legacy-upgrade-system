@@ -23,6 +23,10 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - If the command fails entirely, warn the user and ask whether to continue without GitNexus. If approved, set `gitnexus_enabled = false`. Otherwise, stop.
    - If the command succeeds, set `gitnexus_enabled = true`.
 6. Ask the user: "What upgrade do you want to perform? Please describe the target (e.g. 'migrate from Spring Boot 2.x to 3.x') and any paths or modules to exclude."
+7. Ask the user: "How should this application be compiled, started, or smoke-tested after the upgrade? Provide the exact commands and working directories for each important module. If you are unsure, say so and the planner will infer best-effort commands from manifests and scripts."
+   - Record the answer as `user_validation_commands`.
+   - Preserve command working directories exactly as the user gives them.
+   - If the user is unsure or provides no commands, set `user_validation_commands = []` and require the planner to document inferred commands or validation gaps in `change-plan.json`.
 
 ---
 
@@ -64,6 +68,7 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - `impact_report_path`
    - `upgrade_description`
    - Any `user_constraints`
+   - `user_validation_commands`
    - `repo_path`
    - `artifact_dir`
 3. The planning sub-agent must write the full plan to `artifact_dir/change-plan.json` and return only:
@@ -120,7 +125,8 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - `artifact_dir`
    - `invoked_by_upgrade = true`
 4. The execution sub-agent must apply all planned changes, create one commit after all changes are complete, write `artifact_dir/execution-result.json`, and return a concise execution summary.
-5. If execution reports failure, halt and present the failure summary. Do not run final validation.
+5. The execution sub-agent must run the bounded pre-validator commands declared in `change-plan.json` before creating the execution commit. These commands are intended to catch compile/startup/runtime load failures early, but final validation remains authoritative.
+6. If execution reports failure, halt and present the failure summary. Do not run final validation.
 
 ---
 

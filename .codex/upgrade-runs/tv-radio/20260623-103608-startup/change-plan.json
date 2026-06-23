@@ -1,0 +1,960 @@
+﻿{
+    "upgrade_description":  "Upgrade any outdated dependencies in the repo. User validation command: run `node app.js` in `tv-radio-frontend`. Do not run any code in `tv-radio-admin`.",
+    "ordered_changes":  [
+                            {
+                                "sequence":  1,
+                                "file_path":  "tv-radio-frontend/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "This is the frontend npm manifest for the only runtime validation target. It already contains a user change replacing the internal memcached SSH Git URL with npm `2.2.0`; preserve that intent while upgrading dependencies.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  25,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, body-parser, express, gc-stats, handlebars, influx, memcached, minimist, moment, mongodb, nodemailer, on-finished, request, send, sharp, socket.io-client, uglify-js, uuid, walk, winston, winston-logstash"
+                                                  }
+                                              ],
+                                "change_description":  "Update only the `dependencies` object in `tv-radio-frontend/package.json`. Use the analyzer target versions for direct dependency upgrades: async 3.2.6, body-parser 2.3.0, express 5.2.1, handlebars 4.7.9, influx 5.12.0, memcached 2.2.2, minimist 1.2.8, moment 2.30.1, mongodb 7.3.0, nodemailer 9.0.1, on-finished 2.4.1, request 2.88.2, send 1.2.1, sharp 0.35.2, socket.io-client 4.8.3, uglify-js 3.19.3, walk 2.3.15, winston 3.19.0, and winston-logstash 2.0.5. Remove `uuid` if the code changes below replace all uuid usage with Node `crypto.randomUUID`. Keep `gc-stats` only if it can install and load on the target Node version; otherwise remove it and keep garbage collection metrics disabled gracefully in `metrics.js`. Do not add or edit any `tv-radio-admin` manifest.",
+                                "validation_evidence":  [
+                                                            "`package.json` contains no internal SSH Git URL for memcached and declares `memcached` from npm.",
+                                                            "No dependency entries remain at the old versions listed in the ImpactReport unless a compatibility decision is explicitly documented by the executor.",
+                                                            "If `uuid` or `gc-stats` are removed, the source changes below contain their replacements or graceful fallbacks."
+                                                        ]
+                            },
+                            {
+                                "sequence":  2,
+                                "file_path":  "tv-radio-frontend/app.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "The required startup command loads this file. It imports and exercises Express, body-parser, Handlebars, Socket.IO client, UglifyJS, and async.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  16,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "express, body-parser, minimist, handlebars, socket.io-client, uglify-js, async"
+                                                  },
+                                                  {
+                                                      "start_line":  21,
+                                                      "end_line":  21,
+                                                      "symbol_or_pattern":  "bodyParser.json()",
+                                                      "matched_api":  "body-parser"
+                                                  },
+                                                  {
+                                                      "start_line":  42,
+                                                      "end_line":  50,
+                                                      "symbol_or_pattern":  "handlebars.compile and require.extensions",
+                                                      "matched_api":  "handlebars"
+                                                  },
+                                                  {
+                                                      "start_line":  80,
+                                                      "end_line":  87,
+                                                      "symbol_or_pattern":  "socketioClient(...), async.series",
+                                                      "matched_api":  "socket.io-client, async"
+                                                  },
+                                                  {
+                                                      "start_line":  152,
+                                                      "end_line":  191,
+                                                      "symbol_or_pattern":  "express.static, uglify.minify, response.send",
+                                                      "matched_api":  "express, uglify-js"
+                                                  }
+                                              ],
+                                "change_description":  "Keep CommonJS style. Replace `socketioClient(config.ADMIN_NOTIFICATION.server)` with a compatibility call that works with Socket.IO client 4.x CommonJS exports, e.g. resolve `io` from `require(\u0027socket.io-client\u0027)` when present before connecting. Keep `bodyParser.json()` unless runtime validation shows Express 5/body-parser 2 incompatibility. Update `uglify.minify(concatJS, ...)` for UglifyJS 3 by checking `ug.error` after minification and logging/throwing it before routes send `ug.code` or `ug.map`; preserve the current `process.chdir` behavior around `content/javascript`. Do not weaken or remove the `/libs`, `/src`, `/libs/client.js`, or `/libs/client.js.map` routes.",
+                                "validation_evidence":  [
+                                                            "Bounded `node app.js` stays alive until terminated.",
+                                                            "No `TypeError` occurs during module load or initial route setup.",
+                                                            "The code still contains `/libs` static route and generated `/libs/client.js` handlers."
+                                                        ]
+                            },
+                            {
+                                "sequence":  3,
+                                "file_path":  "tv-radio-frontend/app-media.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "This secondary frontend entry point uses the same Socket.IO client connection pattern and should not be left incompatible after upgrading the shared dependency.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "express, minimist, socket.io-client"
+                                                  },
+                                                  {
+                                                      "start_line":  42,
+                                                      "end_line":  42,
+                                                      "symbol_or_pattern":  "socketioClient(config.ADMIN_NOTIFICATION.server)",
+                                                      "matched_api":  "socket.io-client"
+                                                  }
+                                              ],
+                                "change_description":  "Apply the same Socket.IO client 4.x CommonJS compatibility used in `app.js`: resolve the callable connection function from the module export and use it for `config.ADMIN_NOTIFICATION.server`. Do not add an executor validation command for this file unless it can be bounded and does not run admin code.",
+                                "validation_evidence":  [
+                                                            "No legacy direct call remains if the imported Socket.IO client module is no longer callable.",
+                                                            "The change mirrors the `app.js` connection helper or pattern."
+                                                        ]
+                            },
+                            {
+                                "sequence":  4,
+                                "file_path":  "tv-radio-frontend/db-provider.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "MongoDB driver 7.x no longer supports the same callback-oriented driver surface used by this file.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  3,
+                                                      "symbol_or_pattern":  "require(\"mongodb\"), mongo.MongoClient, mongo.ReadPreference",
+                                                      "matched_api":  "mongodb"
+                                                  },
+                                                  {
+                                                      "start_line":  64,
+                                                      "end_line":  64,
+                                                      "symbol_or_pattern":  "MongoClient.connect(settings.connectString, options, callback)",
+                                                      "matched_api":  "mongodb"
+                                                  },
+                                                  {
+                                                      "start_line":  90,
+                                                      "end_line":  116,
+                                                      "symbol_or_pattern":  "collection.insert/update/aggregate callbacks",
+                                                      "matched_api":  "mongodb"
+                                                  }
+                                              ],
+                                "change_description":  "Refactor only this provider layer so callers can remain callback-based. In `DBProvider.connect`, use `MongoClient.connect(settings.connectString, options).then(...)` and pass a `DBProvider` containing the database handle expected by existing methods; if modern `MongoClient.connect` returns a client rather than a db, select the db from `settings.database`, `settings.dbName`, or the database name embedded in `settings.connectString`, and retain the client so `closeConnection` can close it. Replace `collection.insert` with `insertOne` for single records or `insertMany` for arrays while preserving callback arguments. Replace `collection.update` with `updateOne(selector, record, options)`. Replace `collection.aggregate(pipeline, {readPreference: ReadPreference.NEAREST}, completion)` with a cursor `toArray` flow using the same read preference. Preserve all exported method names and callback completion behavior.",
+                                "validation_evidence":  [
+                                                            "Existing call sites do not need to change their DBProvider callback API.",
+                                                            "`MongoClient.connect(..., ..., callback)`, `collection.insert(`, and `collection.update(` no longer appear in `db-provider.js`.",
+                                                            "Connection failures still call the supplied completion callback with an error."
+                                                        ]
+                            },
+                            {
+                                "sequence":  5,
+                                "file_path":  "tv-radio-frontend/logger.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "The current file uses Winston 1.x constructors and a logstash transport installed by side effect.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\u0027winston\u0027), require(\u0027winston-logstash\u0027)",
+                                                      "matched_api":  "winston, winston-logstash"
+                                                  },
+                                                  {
+                                                      "start_line":  23,
+                                                      "end_line":  33,
+                                                      "symbol_or_pattern":  "new (winston.Logger)",
+                                                      "matched_api":  "winston"
+                                                  },
+                                                  {
+                                                      "start_line":  41,
+                                                      "end_line":  118,
+                                                      "symbol_or_pattern":  "Logstash monkey patches and new winston.transports.Logstash",
+                                                      "matched_api":  "winston-logstash"
+                                                  }
+                                              ],
+                                "change_description":  "Migrate logger construction to Winston 3 using `winston.createLogger({ levels, transports })` where custom client levels are required, and use `new winston.transports.Console(...)` instead of the old wrapped constructor. Load the logstash transport in the way required by `winston-logstash` 2.x; if it does not attach `winston.transports.Logstash`, import the transport class from the package and instantiate that. Preserve exported names `logger`, `access`, `clientErrors`, `accessEvent`, and `EventTimer`. Review the monkey patches against the 2.x transport instance; keep queue limiting and type metadata only if the same instance fields/methods exist, otherwise guard the patches so startup never fails when logstash is unavailable or has changed internals.",
+                                "validation_evidence":  [
+                                                            "`new (winston.Logger)` no longer appears.",
+                                                            "Startup does not fail while creating console or logstash transports.",
+                                                            "`exports.logger`, `exports.access`, and `exports.clientErrors` remain defined."
+                                                        ]
+                            },
+                            {
+                                "sequence":  6,
+                                "file_path":  "tv-radio-frontend/metrics.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Metrics initialization is loaded at startup and uses both the Influx client and deprecated native `gc-stats`.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require(\"influx\"), require(\"async\"), require(\u0027gc-stats\u0027)",
+                                                      "matched_api":  "influx, async, gc-stats"
+                                                  }
+                                              ],
+                                "change_description":  "Make metrics startup tolerant of modern dependencies. Create the Influx client using the current package API while retaining support for the legacy callable export if present. Wrap `require(\u0027gc-stats\u0027)` in a guarded load or remove it entirely if the manifest drops `gc-stats`; `enableGarbageCollectionReporting` must return without throwing when GC metrics are unavailable. Keep `async.queue` callback behavior compatible with async 3. Do not change exported metric names or public function names.",
+                                "validation_evidence":  [
+                                                            "`node app.js` does not fail if `gc-stats` is unavailable or incompatible.",
+                                                            "The Influx client initialization does not throw when `config.METRICS` is absent.",
+                                                            "Existing metrics export names are preserved."
+                                                        ]
+                            },
+                            {
+                                "sequence":  7,
+                                "file_path":  "tv-radio-frontend/cache-provider.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Memcached is a direct runtime client and the user already changed its source to the npm package.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\"memcached\"), new Memcached(...)",
+                                                      "matched_api":  "memcached"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the npm `memcached` client construction pattern unless the upgraded package rejects the existing options. Preserve `Memcached.config.poolSize = 64` and `new Memcached(config.CACHE.settings.server, config.CACHE.settings.options || undefined)`. If runtime validation surfaces option incompatibility, adapt only the option object passed at line 6 and keep exported `get`, `set`, and related cache methods unchanged.",
+                                "validation_evidence":  [
+                                                            "The manifest keeps `memcached` on npm and not an internal Git URL.",
+                                                            "Cache provider module load does not throw during startup."
+                                                        ]
+                            },
+                            {
+                                "sequence":  8,
+                                "file_path":  "tv-radio-frontend/handlebars-partials.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Startup compiles partials with Handlebars and discovers them with `walk`.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require(\u0027walk\u0027).walk",
+                                                      "matched_api":  "walk"
+                                                  },
+                                                  {
+                                                      "start_line":  43,
+                                                      "end_line":  43,
+                                                      "symbol_or_pattern":  "handlebars.compile(handlebars.partials[partial])",
+                                                      "matched_api":  "handlebars"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the `walk` import if `walk@2.3.15` preserves `.walk`. Guard `precompilePartialHelper` so it only compiles string partials; Handlebars 4 may store compiled partial functions, and recompiling a function should be avoided. Preserve the partial registration API consumed by `app.js` and content modules.",
+                                "validation_evidence":  [
+                                                            "Partial registration during startup does not throw.",
+                                                            "No existing exported helper method is removed."
+                                                        ]
+                            },
+                            {
+                                "sequence":  9,
+                                "file_path":  "tv-radio-frontend/content/feedback/client-feedback.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Feedback code imports uuid, nodemailer, async, request, and Handlebars; Nodemailer and uuid require source changes for modern versions.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  13,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "handlebars, nodemailer, uuid, async, request"
+                                                  },
+                                                  {
+                                                      "start_line":  594,
+                                                      "end_line":  628,
+                                                      "symbol_or_pattern":  "nodemailer.createTransport, transport.sendMail",
+                                                      "matched_api":  "nodemailer"
+                                                  },
+                                                  {
+                                                      "start_line":  659,
+                                                      "end_line":  659,
+                                                      "symbol_or_pattern":  "request(requestOptions, callback)",
+                                                      "matched_api":  "request"
+                                                  }
+                                              ],
+                                "change_description":  "Replace the `uuid` import with Node `crypto.randomUUID` or a local `newUUID()` wrapper and update all `uuid.v4()` calls in this file. Update Nodemailer transport creation for 9.x: keep SMTP host from `config.EMAIL.smtpServer`, include `debug: true` only if still supported, handle `sendMail` callback `(err, info)`, call `done(err)` on failure, and call `transport.close()` only after send completion. Leave `request` in place but upgrade it to 2.88.2 unless the executor chooses a scoped replacement; if replacing, preserve `proxy`, `tunnel`, `json`, and query string behavior for reCAPTCHA.",
+                                "validation_evidence":  [
+                                                            "No `require(\"uuid\")` or `uuid.v4()` remains in this file if `uuid` is removed from the manifest.",
+                                                            "Nodemailer send completion propagates errors instead of silently ignoring them.",
+                                                            "reCAPTCHA verification still calls the supplied completion callback on success and failure."
+                                                        ]
+                            },
+                            {
+                                "sequence":  10,
+                                "file_path":  "tv-radio-frontend/request-common.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "This shared request helper imports uuid and uses deprecated Buffer construction.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  1,
+                                                      "symbol_or_pattern":  "require(\"uuid\")",
+                                                      "matched_api":  "uuid"
+                                                  },
+                                                  {
+                                                      "start_line":  78,
+                                                      "end_line":  78,
+                                                      "symbol_or_pattern":  "new Buffer(redirectURL)",
+                                                      "matched_api":  "Node.js Buffer runtime"
+                                                  },
+                                                  {
+                                                      "start_line":  119,
+                                                      "end_line":  134,
+                                                      "symbol_or_pattern":  "uuid.v4()",
+                                                      "matched_api":  "uuid"
+                                                  }
+                                              ],
+                                "change_description":  "Replace the uuid dependency with Node `crypto.randomUUID` or a local wrapper preserving uppercase/lowercase expectations at call sites. Replace `new Buffer(redirectURL)` with `Buffer.from(redirectURL)`. Preserve exported function names and URL/auth behavior.",
+                                "validation_evidence":  [
+                                                            "`new Buffer(` no longer appears in `request-common.js`.",
+                                                            "No `require(\"uuid\")` or `uuid.v4()` remains here if `uuid` is removed from the manifest."
+                                                        ]
+                            },
+                            {
+                                "sequence":  11,
+                                "file_path":  "tv-radio-frontend/shared/media-access.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Shared media access helper uses uuid-generated access codes.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  98,
+                                                      "end_line":  98,
+                                                      "symbol_or_pattern":  "uuid.v4().toUpperCase()",
+                                                      "matched_api":  "uuid"
+                                                  },
+                                                  {
+                                                      "start_line":  288,
+                                                      "end_line":  288,
+                                                      "symbol_or_pattern":  "uuid.v4().toUpperCase()",
+                                                      "matched_api":  "uuid"
+                                                  }
+                                              ],
+                                "change_description":  "Replace uuid usage with `crypto.randomUUID().toUpperCase()` or an equivalent local wrapper. Ensure any top-level uuid import in this file is removed. Keep generated access code casing uppercase.",
+                                "validation_evidence":  [
+                                                            "Access code generation still uppercases the generated value.",
+                                                            "No `uuid.v4()` remains in this file if `uuid` is removed from the manifest."
+                                                        ]
+                            },
+                            {
+                                "sequence":  12,
+                                "file_path":  "tv-radio-frontend/media/generic-media.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Media streaming response lifecycle uses `on-finished` and Express request helpers.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  7,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(\u0027on-finished\u0027)",
+                                                      "matched_api":  "on-finished"
+                                                  },
+                                                  {
+                                                      "start_line":  303,
+                                                      "end_line":  311,
+                                                      "symbol_or_pattern":  "request.get(...)",
+                                                      "matched_api":  "express request"
+                                                  }
+                                              ],
+                                "change_description":  "Keep `on-finished` usage if the 2.4.1 API remains compatible. Review the `request.get(...)` calls against Express 5 request APIs; if they depend on removed aliases, replace with `request.header(...)` or direct properties while preserving current media range/header behavior.",
+                                "validation_evidence":  [
+                                                            "No startup error occurs while requiring generic media handlers.",
+                                                            "Any changed Express request helper keeps the same header/key lookup semantics."
+                                                        ]
+                            },
+                            {
+                                "sequence":  13,
+                                "file_path":  "tv-radio-frontend/media/title-thumbnails.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Sharp is a native dependency with a large version jump and callback behavior is a likely change point.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\u0027sharp\u0027)",
+                                                      "matched_api":  "sharp"
+                                                  },
+                                                  {
+                                                      "start_line":  77,
+                                                      "end_line":  77,
+                                                      "symbol_or_pattern":  "sharp(file).resize(...).toFormat(\u0027jpeg\u0027).toBuffer(callback)",
+                                                      "matched_api":  "sharp"
+                                                  }
+                                              ],
+                                "change_description":  "Update the Sharp pipeline to a promise-compatible form while retaining callback output to callers. Keep `sharp(file).resize(...).toFormat(\u0027jpeg\u0027)`; call `.toBuffer().then(function(buffer) { ... }).catch(callback)` if the old callback signature fails on 0.35.2. Preserve response content type and error callback behavior around the existing line 77 pipeline.",
+                                "validation_evidence":  [
+                                                            "No callback-only `toBuffer(function` pattern remains here if Sharp 0.35 rejects it.",
+                                                            "The thumbnail callback still receives JPEG buffer data on success."
+                                                        ]
+                            },
+                            {
+                                "sequence":  14,
+                                "file_path":  "tv-radio-frontend/media/unisat-thumbnails.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "This file uses the same Sharp callback pipeline as title thumbnails.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\u0027sharp\u0027)",
+                                                      "matched_api":  "sharp"
+                                                  },
+                                                  {
+                                                      "start_line":  75,
+                                                      "end_line":  75,
+                                                      "symbol_or_pattern":  "sharp(file).resize(...).toFormat(\u0027jpeg\u0027).toBuffer(callback)",
+                                                      "matched_api":  "sharp"
+                                                  }
+                                              ],
+                                "change_description":  "Apply the same Sharp 0.35 promise-to-callback adaptation used for `title-thumbnails.js`, preserving the existing resize dimensions, jpeg output, and callback semantics.",
+                                "validation_evidence":  [
+                                                            "Sharp processing remains a JPEG buffer pipeline.",
+                                                            "Error handling still reaches the existing callback path."
+                                                        ]
+                            },
+                            {
+                                "sequence":  15,
+                                "file_path":  "tv-radio-frontend/media/programme-media.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "This file uses the same Sharp callback pipeline as the other thumbnail/media modules.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\u0027sharp\u0027)",
+                                                      "matched_api":  "sharp"
+                                                  },
+                                                  {
+                                                      "start_line":  76,
+                                                      "end_line":  76,
+                                                      "symbol_or_pattern":  "sharp(file).resize(...).toFormat(\u0027jpeg\u0027).toBuffer(callback)",
+                                                      "matched_api":  "sharp"
+                                                  }
+                                              ],
+                                "change_description":  "Apply the same Sharp 0.35 promise-to-callback adaptation used for `title-thumbnails.js`, preserving the existing resize dimensions, jpeg output, and callback semantics.",
+                                "validation_evidence":  [
+                                                            "Sharp processing remains a JPEG buffer pipeline.",
+                                                            "Error handling still reaches the existing callback path."
+                                                        ]
+                            },
+                            {
+                                "sequence":  16,
+                                "file_path":  "tv-radio-frontend/content/unisat/client-unisat.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "This route module imports uuid and registers Handlebars/Moment helpers loaded by `app.js` startup.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  13,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "handlebars, moment, uuid, async"
+                                                  },
+                                                  {
+                                                      "start_line":  685,
+                                                      "end_line":  752,
+                                                      "symbol_or_pattern":  "handlebars.registerHelper and moment(...)",
+                                                      "matched_api":  "handlebars, moment"
+                                                  }
+                                              ],
+                                "change_description":  "Replace uuid imports/usages with Node `crypto.randomUUID` or a local wrapper. Keep Handlebars helper registration names unchanged. Review helpers that return HTML strings; if Handlebars 4 escaping changes visible output, wrap intentionally raw HTML returns with `new handlebars.SafeString(...)` only where the existing behavior intentionally returned HTML.",
+                                "validation_evidence":  [
+                                                            "No uuid dependency usage remains if `uuid` is removed from the manifest.",
+                                                            "Existing helper names in the affected range still register."
+                                                        ]
+                            },
+                            {
+                                "sequence":  17,
+                                "file_path":  "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Main TV/radio routes import uuid and register a large set of Handlebars/Moment helpers.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  7,
+                                                      "end_line":  17,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "handlebars, moment, uuid, async"
+                                                  },
+                                                  {
+                                                      "start_line":  397,
+                                                      "end_line":  408,
+                                                      "symbol_or_pattern":  "app.get(...)",
+                                                      "matched_api":  "express"
+                                                  },
+                                                  {
+                                                      "start_line":  1121,
+                                                      "end_line":  1415,
+                                                      "symbol_or_pattern":  "handlebars.registerHelper and moment(...)",
+                                                      "matched_api":  "handlebars, moment"
+                                                  }
+                                              ],
+                                "change_description":  "Replace uuid imports/usages with Node `crypto.randomUUID` or a local wrapper. Keep all Express route paths and handler argument order unchanged for Express 5. Keep Handlebars helper names unchanged; use `handlebars.SafeString` only for helpers in the affected range that intentionally return HTML and regress due to Handlebars 4 escaping behavior.",
+                                "validation_evidence":  [
+                                                            "No uuid dependency usage remains if `uuid` is removed from the manifest.",
+                                                            "Route declarations around lines 397-408 still use the same URL patterns.",
+                                                            "The helper block still registers the existing helper names."
+                                                        ]
+                            },
+                            {
+                                "sequence":  18,
+                                "file_path":  "tv-radio-frontend/content/homepage/client-homepage.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Homepage route imports uuid and uses async/Handlebars/Moment during startup.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  3,
+                                                      "end_line":  9,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "handlebars, moment, async"
+                                                  },
+                                                  {
+                                                      "start_line":  24,
+                                                      "end_line":  45,
+                                                      "symbol_or_pattern":  "async.series, async.parallel",
+                                                      "matched_api":  "async"
+                                                  },
+                                                  {
+                                                      "start_line":  111,
+                                                      "end_line":  172,
+                                                      "symbol_or_pattern":  "handlebars.registerHelper and moment(...).format",
+                                                      "matched_api":  "handlebars, moment"
+                                                  }
+                                              ],
+                                "change_description":  "Replace the `uuid` import at line 11 with Node `crypto.randomUUID` or remove it if unused after inspection. Keep async 3 callback orchestration in `async.series` and `async.parallel`; do not convert this module to promises. Keep Handlebars helper names and Moment formatting strings unchanged.",
+                                "validation_evidence":  [
+                                                            "No unused or broken uuid import remains.",
+                                                            "Homepage helper registration still runs during startup."
+                                                        ]
+                            },
+                            {
+                                "sequence":  19,
+                                "file_path":  "tv-radio-frontend/content/tv-radio/client-discovery.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Discovery routes use Handlebars and Moment helper/date formatting logic.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require(\"moment\"), require(\"handlebars\")",
+                                                      "matched_api":  "moment, handlebars"
+                                                  },
+                                                  {
+                                                      "start_line":  265,
+                                                      "end_line":  369,
+                                                      "symbol_or_pattern":  "handlebars.registerHelper and moment(...).format",
+                                                      "matched_api":  "handlebars, moment"
+                                                  }
+                                              ],
+                                "change_description":  "Keep Moment formatting strings unchanged for 2.30.1. Keep the `discovery-search-settings-to-json` helper name and JSON output unchanged. No code change is required unless Handlebars 4 or Moment validation exposes a runtime incompatibility.",
+                                "validation_evidence":  [
+                                                            "The discovery helper still registers under `discovery-search-settings-to-json`.",
+                                                            "Date display still uses the existing Moment format strings."
+                                                        ]
+                            },
+                            {
+                                "sequence":  20,
+                                "file_path":  "tv-radio-frontend/content/javascript/carousel.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Browser carousel code calls the vendored Velocity API directly.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  21,
+                                                      "end_line":  22,
+                                                      "symbol_or_pattern":  ".velocity(...)",
+                                                      "matched_api":  "velocity"
+                                                  },
+                                                  {
+                                                      "start_line":  238,
+                                                      "end_line":  274,
+                                                      "symbol_or_pattern":  ".velocity(...)",
+                                                      "matched_api":  "velocity"
+                                                  }
+                                              ],
+                                "change_description":  "If vendored Velocity is upgraded, keep these calls compatible with the selected browser asset. Preserve animation targets, `queue`, `duration`, `complete`, opacity, visibility, and left-position behavior. Do not rewrite carousel behavior unless required by a Velocity API incompatibility.",
+                                "validation_evidence":  [
+                                                            "Velocity calls still target the same column and button sets.",
+                                                            "No carousel animation option is dropped without an executor note."
+                                                        ]
+                            },
+                            {
+                                "sequence":  21,
+                                "file_path":  "tv-radio-frontend/static/libs",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "The app serves vendored browser dependencies from this directory outside npm manifest control.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  154,
+                                                      "end_line":  154,
+                                                      "symbol_or_pattern":  "app.use(\"/libs\", express.static(__dirname + \u0027/static/libs/\u0027))",
+                                                      "matched_api":  "vendored browser dependencies"
+                                                  }
+                                              ],
+                                "change_description":  "Inventory and upgrade vendored assets only when their dependent code remains compatible. At minimum record the versions of `jquery-1.11.2`, `handlebars-v3.0.0`, `velocity-1.2.2`, `moment-with-langs`, `bootstrap`, `dash.all`, `shaka`, and player-related files. If replacing assets, keep served filenames stable or update every corresponding template/script reference in the impacted frontend files. Treat this as high-risk because no browser smoke command was supplied.",
+                                "validation_evidence":  [
+                                                            "The `/libs` static route in `app.js` still points to `static/libs`.",
+                                                            "Any renamed vendored file has all frontend references updated.",
+                                                            "If assets are not upgraded, executor documents the compatibility reason in execution notes."
+                                                        ]
+                            },
+                            {
+                                "sequence":  22,
+                                "file_path":  "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "User-approved scope expansion after the bounded startup check exposed an Express 5 anonymous wildcard route error in this file; the same file also imports uuid even though the approved dependency plan removes direct uuid usage.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  10,
+                                                      "end_line":  11,
+                                                      "symbol_or_pattern":  "uuid = require(\"uuid\")",
+                                                      "matched_api":  "uuid"
+                                                  },
+                                                  {
+                                                      "start_line":  30,
+                                                      "end_line":  30,
+                                                      "symbol_or_pattern":  "express.options(\"/public/viewer/*\", ...)",
+                                                      "matched_api":  "Express 5 path-to-regexp wildcard route"
+                                                  },
+                                                  {
+                                                      "start_line":  59,
+                                                      "end_line":  59,
+                                                      "symbol_or_pattern":  "uuid.v4().toUpperCase()",
+                                                      "matched_api":  "uuid.v4"
+                                                  },
+                                                  {
+                                                      "start_line":  76,
+                                                      "end_line":  76,
+                                                      "symbol_or_pattern":  "uuid.v4().toUpperCase()",
+                                                      "matched_api":  "uuid.v4"
+                                                  },
+                                                  {
+                                                      "start_line":  91,
+                                                      "end_line":  91,
+                                                      "symbol_or_pattern":  "uuid.v4().toUpperCase()",
+                                                      "matched_api":  "uuid.v4"
+                                                  }
+                                              ],
+                                "change_description":  "Replace the direct uuid dependency with Node crypto.randomUUID and update all local uuid.v4().toUpperCase() calls to randomUUID().toUpperCase(). Convert the Express 5-incompatible anonymous wildcard route /public/viewer/* to a named wildcard form accepted by path-to-regexp while preserving the public viewer CORS options handler and route prefix.",
+                                "validation_evidence":  [
+                                                            "node --check app.js passes",
+                                                            "bounded node app.js startup no longer exits with PathError for /public/viewer/*",
+                                                            "content check confirms no uuid require or uuid.v4 remains in client-public-viewer.js"
+                                                        ]
+                            },
+                            {
+                                "sequence":  23,
+                                "file_path":  "tv-radio-frontend/usage-monitoring.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "User-approved scope expansion after bounded startup exposed an Express 5 anonymous wildcard route error in the usage monitoring CORS route.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  274,
+                                                      "end_line":  274,
+                                                      "symbol_or_pattern":  "express.options(\"/media/access/*\", ...)",
+                                                      "matched_api":  "Express 5 path-to-regexp wildcard route"
+                                                  }
+                                              ],
+                                "change_description":  "Convert the Express 5-incompatible anonymous wildcard OPTIONS route /media/access/* to a named wildcard form accepted by path-to-regexp while preserving the public access CORS options handler and route prefix.",
+                                "validation_evidence":  [
+                                                            "node --check app.js passes",
+                                                            "bounded node app.js startup no longer exits with PathError for /media/access/*",
+                                                            "content check confirms /media/access/* anonymous wildcard is gone"
+                                                        ]
+                            }
+                        ],
+    "planned_files":  [
+                          "tv-radio-frontend/package.json",
+                          "tv-radio-frontend/app.js",
+                          "tv-radio-frontend/app-media.js",
+                          "tv-radio-frontend/db-provider.js",
+                          "tv-radio-frontend/logger.js",
+                          "tv-radio-frontend/metrics.js",
+                          "tv-radio-frontend/cache-provider.js",
+                          "tv-radio-frontend/handlebars-partials.js",
+                          "tv-radio-frontend/content/feedback/client-feedback.js",
+                          "tv-radio-frontend/request-common.js",
+                          "tv-radio-frontend/shared/media-access.js",
+                          "tv-radio-frontend/media/generic-media.js",
+                          "tv-radio-frontend/media/title-thumbnails.js",
+                          "tv-radio-frontend/media/unisat-thumbnails.js",
+                          "tv-radio-frontend/media/programme-media.js",
+                          "tv-radio-frontend/content/unisat/client-unisat.js",
+                          "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                          "tv-radio-frontend/content/homepage/client-homepage.js",
+                          "tv-radio-frontend/content/tv-radio/client-discovery.js",
+                          "tv-radio-frontend/content/javascript/carousel.js",
+                          "tv-radio-frontend/static/libs",
+                          "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                          "tv-radio-frontend/usage-monitoring.js"
+                      ],
+    "expected_dependency_changes":  [
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "body-parser",
+                                            "from_version":  "1.9.0",
+                                            "to_version":  "2.3.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "express",
+                                            "from_version":  "4.9.5",
+                                            "to_version":  "5.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "gc-stats",
+                                            "from_version":  "^1.0.0",
+                                            "to_version":  "1.4.1 or removed with guarded metrics fallback"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "handlebars",
+                                            "from_version":  "3.0.0",
+                                            "to_version":  "4.7.9"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "influx",
+                                            "from_version":  "4.0.0",
+                                            "to_version":  "5.12.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "memcached",
+                                            "from_version":  "2.2.0",
+                                            "to_version":  "2.2.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "moment",
+                                            "from_version":  "2.10.2",
+                                            "to_version":  "2.30.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "mongodb",
+                                            "from_version":  "^2.0.0",
+                                            "to_version":  "7.3.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "nodemailer",
+                                            "from_version":  "1.4.0",
+                                            "to_version":  "9.0.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "on-finished",
+                                            "from_version":  "^2.2.0",
+                                            "to_version":  "2.4.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "request",
+                                            "from_version":  "^2.87.0",
+                                            "to_version":  "2.88.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "send",
+                                            "from_version":  "0.12.2",
+                                            "to_version":  "1.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "sharp",
+                                            "from_version":  "^0.14.1",
+                                            "to_version":  "0.35.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "socket.io-client",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "4.8.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "uglify-js",
+                                            "from_version":  "^2.4.17",
+                                            "to_version":  "3.19.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "uuid",
+                                            "from_version":  "2.0.1",
+                                            "to_version":  "removed; use Node crypto.randomUUID"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "walk",
+                                            "from_version":  "^2.3.9",
+                                            "to_version":  "2.3.15"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "winston",
+                                            "from_version":  "^1.0.1",
+                                            "to_version":  "3.19.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "winston-logstash",
+                                            "from_version":  "^0.3.0",
+                                            "to_version":  "2.0.5"
+                                        }
+                                    ],
+    "validation":  {
+                       "base_branch_candidates":  [
+                                                      "main",
+                                                      "master"
+                                                  ],
+                       "executor_check_commands":  [
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "npm.cmd install --no-audit --no-fund",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  600,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "node --check app.js",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p = Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -WorkingDirectory (Get-Location) -PassThru -WindowStyle Hidden; try { Start-Sleep -Seconds 12; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -ErrorAction SilentlyContinue; exit 0 } finally { if ($p -and -not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } }\"",
+                                                           "purpose":  "startup",
+                                                           "timeout_seconds":  25,
+                                                           "required":  true
+                                                       }
+                                                   ],
+                       "build_commands":  [
+                                              "node --check app.js"
+                                          ],
+                       "startup_commands":  [
+                                                "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p = Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -WorkingDirectory (Get-Location) -PassThru -WindowStyle Hidden; try { Start-Sleep -Seconds 12; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -ErrorAction SilentlyContinue; exit 0 } finally { if ($p -and -not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } }\""
+                                            ],
+                       "existing_test_commands":  [
+
+                                                  ],
+                       "generated_test_commands":  [
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "node test\\upgrade-smoke.test.js",
+                                                           "purpose":  "generated-smoke",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "node test\\upgrade-integration.test.js",
+                                                           "purpose":  "generated-integration",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       }
+                                                   ],
+                       "generated_test_files":  [
+                                                    "tv-radio-frontend/test/upgrade-smoke.test.js",
+                                                    "tv-radio-frontend/test/upgrade-integration.test.js"
+                                                ],
+                       "content_checks":  [
+                                              {
+                                                  "file_path":  "tv-radio-frontend/package.json",
+                                                  "must_contain":  [
+                                                                       "\"express\": \"5.2.1\"",
+                                                                       "\"mongodb\": \"7.3.0\"",
+                                                                       "\"winston\": \"3.19.0\"",
+                                                                       "\"socket.io-client\": \"4.8.3\"",
+                                                                       "\"memcached\": \"2.2.2\""
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "git+ssh",
+                                                                           "github:",
+                                                                           "\"express\": \"4.9.5\"",
+                                                                           "\"mongodb\": \"^2.0.0\"",
+                                                                           "\"winston\": \"^1.0.1\"",
+                                                                           "\"socket.io-client\": \"1.1.0\""
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/db-provider.js",
+                                                  "must_contain":  [
+                                                                       "MongoClient.connect",
+                                                                       "insertOne",
+                                                                       "updateOne"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "collection(table).insert(",
+                                                                           "collection(table).update("
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/logger.js",
+                                                  "must_contain":  [
+                                                                       "createLogger"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "new (winston.Logger)"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/request-common.js",
+                                                  "must_contain":  [
+                                                                       "Buffer.from"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "new Buffer(",
+                                                                           "uuid.v4()"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/metrics.js",
+                                                  "must_contain":  [
+                                                                       "enableGarbageCollectionReporting"
+                                                                   ],
+                                                  "must_not_contain":  [
+
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                  "must_contain":  [
+                                                                       "randomUUID",
+                                                                       "/public/viewer/"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "require(\"uuid\")",
+                                                                           "uuid.v4",
+                                                                           "/public/viewer/*"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/usage-monitoring.js",
+                                                  "must_contain":  [
+                                                                       "/media/access/"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "/media/access/*"
+                                                                       ]
+                                              }
+                                          ],
+                       "success_criteria":  [
+                                                "All planned edits are limited to `tv-radio-frontend` files and optional package-lock output in `tv-radio-frontend`; no `tv-radio-admin` code is run or edited.",
+                                                "Existing user changes are preserved, especially the move away from an internal SSH Git URL for `memcached`.",
+                                                "`npm.cmd install --no-audit --no-fund` succeeds in `tv-radio-frontend` after manifest changes.",
+                                                "`node --check app.js` succeeds in `tv-radio-frontend`.",
+                                                "The bounded startup equivalent of user command `node app.js` runs in `tv-radio-frontend`, stays alive for the configured window, and is terminated cleanly.",
+                                                "`node test\\upgrade-smoke.test.js` succeeds in `tv-radio-frontend` and confirms the planned dependency versions, startup-critical route setup, Winston 3 logger construction, and guarded GC metrics loading.",
+                                                "`node test\\upgrade-integration.test.js` succeeds in `tv-radio-frontend` and confirms MongoDB 7 provider migration, uuid replacement, Buffer.from redirect encoding, uppercase media access code generation, and Sharp promise-to-callback adaptations.",
+                                                "The final diff contains expected dependency/config changes and source compatibility changes for the major-version APIs listed in this plan."
+                                            ]
+                   },
+    "rollback_strategy":  "Revert the single final execution commit created by the executor.",
+    "planning_notes":  "ImpactReport was treated as authoritative. Source inspection was limited to the reported frontend ranges plus small surrounding context and a `static/libs` filename inventory; no whole source file was intentionally read except the small `package.json` manifest. `tv-radio-admin` was not inspected for execution planning and no admin commands are declared. No package lockfile exists in `tv-radio-frontend` at planning time; `npm install` may create `package-lock.json` as an executor side effect required for dependency setup. If the executor intentionally adds that lockfile, it is a validation-relevant generated dependency artifact, not a source scope expansion. The bounded startup command is the required user validation command `node app.js` wrapped to avoid hanging; `node --check app.js` is only an additional compile check and does not replace startup validation. Latest dependency target versions come from the ImpactReport/npm metadata captured by the analyzer. `request` and `gc-stats` are deprecated; this plan allows a scoped fallback/removal for `gc-stats` because it is native/deprecated and startup metrics should degrade gracefully. Vendored browser libraries are high-risk because no browser smoke command was provided. Scope expansion approved by user after execution startup failure: added tv-radio-frontend/content/public-viewer/client-public-viewer.js for Express 5 wildcard route migration and uuid removal. Scope expansion approved by user after resumed execution startup failure: added tv-radio-frontend/usage-monitoring.js for Express 5 wildcard route migration.",
+    "plan_summary":  "Plan upgrades the frontend npm manifest, preserves the existing memcached npm change, migrates the high-risk CommonJS dependency touchpoints loaded by `node app.js`, and validates with frontend-only install, syntax check, and bounded startup smoke. Scope expansion adds public-viewer Express 5 wildcard and uuid migration discovered by bounded startup. Scope expansion adds usage-monitoring Express 5 wildcard migration discovered by bounded startup."
+}

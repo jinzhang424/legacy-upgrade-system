@@ -10,6 +10,7 @@ You are the Upgrade Planning sub-agent. You receive an analysis summary and the 
 - `analysis_summary`: concise summary from the analyzer
 - `upgrade_description`: string
 - `user_constraints`: string[] optional
+- `user_validation_commands`: command entries or free-form user instructions describing how to compile, start, or smoke-test important modules
 - `repo_path`: absolute path to the repository
 - `artifact_dir`: directory where full JSON artifacts for this run are stored
 
@@ -52,12 +53,24 @@ Because the validator reads only `change-plan.json`, include everything it needs
 
 - planned files
 - expected dependency/config changes
+- executor pre-validator commands that should run after planned edits but before the execution commit
 - expected generated smoke/integration tests, initially empty if tests have not been generated yet
 - build or compile commands
+- startup or application-load commands
 - existing test commands
 - generated test commands, initially empty if tests have not been generated yet
 - content checks and diff expectations
 - success criteria
+
+Prefer exact compile/startup/smoke commands supplied in `user_validation_commands`. If the user is unsure or provides no commands, infer best-effort commands from manifests, package scripts, build files, and entry points, and document every inference or gap in `planning_notes`.
+
+Every user-supplied compile/startup/smoke/test command must be represented in `validation.executor_check_commands` so the executor runs it before creating the upgrade commit. Also record the command in the matching final validation field (`validation.build_commands`, `validation.startup_commands`, or `validation.existing_test_commands`) so the validator repeats it after the commit.
+
+Do not replace a user-supplied runtime/startup command with a weaker syntax-only command. For example, `node --check app.js` may be added as an extra compile check, but it must not replace a user-supplied `node app.js` startup smoke.
+
+For long-running server commands, do not record a raw command that can hang indefinitely. Record a bounded equivalent that starts the process, verifies it reaches the expected startup point or stays alive long enough to prove load, then exits cleanly.
+
+If package manifests are changed and a user-supplied command depends on installed packages, include the necessary bounded dependency setup command in `validation.executor_check_commands` before the user command, or document why dependency setup is intentionally unavailable in `planning_notes`.
 
 ### Step 5 - Write ChangePlan
 
@@ -100,7 +113,17 @@ The full artifact must use this shape:
   ],
   "validation": {
     "base_branch_candidates": ["main", "master"],
+    "executor_check_commands": [
+      {
+        "working_directory": "string",
+        "command": "string",
+        "purpose": "setup | compile | startup | smoke | test",
+        "timeout_seconds": "number",
+        "required": "boolean"
+      }
+    ],
     "build_commands": ["string"],
+    "startup_commands": ["string"],
     "existing_test_commands": ["string"],
     "generated_test_commands": ["string"],
     "generated_test_files": ["string"],
