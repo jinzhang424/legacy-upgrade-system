@@ -24,13 +24,35 @@ The orchestrator must provide these ImpactReport slices: `high_risk`, `direct_us
 
 If these slices are insufficient to produce an unambiguous plan, load additional medium/low-risk slices or the full artifact from `impact_report_manifest_entry.artifact_path` before final output. Do not emit a final ChangePlan with insufficient artifact coverage.
 
+## Progressive Search Escalation Protocol
+
+Any source file inspection beyond reusing existing digests must follow these gates in order. A gate may not be skipped; any skip must be recorded as a deviation with justification in the relevant file-context digest.
+
+**Gate 1 — Inventory** (`rg -l` / `gitnexus_query` returning file names only)
+Produces a candidate file list. If ≤ 10 files: proceed directly to Gate 3. If > 10 files: Gate 2 must complete before any file content is read.
+
+**Gate 2 — Classify** (`rg -c` / GitNexus group queries to narrow by match density, directory, or module)
+Drop files below the relevance threshold. Write a partial digest of the surviving file set. Release raw Gate 1 and Gate 2 output — only the narrowed file list carries forward.
+
+**Gate 3 — Targeted line windows** (`rg -n` on the narrowed set, or targeted `Read` ranges around relevant symbols)
+Write a digest entry for each file inspected. Release raw output immediately after writing the digest.
+
+**Gate 4 — Full read (justified escalation only)**
+Allowed only when a specific trigger is met: high-risk classification, ambiguous result from Gate 3, or direct-usage finding requiring full context. Write the `full_file_reason` to the digest **before** the full read executes.
+
+**Write-and-forget:** After completing each gate, all pending digests must be written and raw tool outputs must be released before the next gate begins.
+
+**Shell safety rules (apply at every gate):**
+1. Never inline a regex containing parentheses, pipes, or quotes inside a double-quoted PowerShell argument. Use single-quoted patterns or `--fixed-strings`, or write the pattern to a temp file and pass `-f <file>` to `rg`.
+2. Always scope searches to the relevant subset of the repo. Add exclusions on every directory-wide search: `-g '!*.min.js' -g '!node_modules' -g '!**/vendor/**' -g '!**/libs/**' -g '!**/dist/**'`.
+3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach.
+4. Batch read-only lookups that target the same step. Issue one combined read where the tool supports it.
+
 ## Procedure
 
 1. If `mem0_enabled` is true, search prior memories with query `"<upgrade_description> migration plan change decisions failures"`. Act on relevant lessons.
-2. Consume analyzer file-context digests before reading source files again.
-3. If a digest exists and `last_observed_hash` still matches the current file, reuse the digest instead of rereading source.
-4. When extra context is needed, read targeted symbol/range windows first. Full-file reads are allowed only for high-risk, direct-usage, configuration, or ambiguous files and must update the digest with `full_file_reason`.
-5. Do not bulk parallel-read multiple large source files.
+2. Consume analyzer file-context digests before reading source files again. If a digest exists and `last_observed_hash` still matches the current file, reuse the digest instead of rereading source.
+3. When extra context is needed beyond available digests, follow the Progressive Search Escalation Protocol above.
 6. Research breaking changes using authoritative knowledge available to you and map them to affected files.
 7. Design exact ordered changes, rollback steps, and validation criteria.
 8. Write the full ChangePlan to `<run_artifact_dir>/change-plan.json`.
@@ -45,41 +67,7 @@ If these slices are insufficient to produce an unambiguous plan, load additional
 
 ## Output Schema
 
-Write and return a ChangePlan JSON object:
-
-```json
-{
-  "ordered_changes": [
-    {
-      "sequence": "number",
-      "file_path": "string",
-      "change_type": "modify | delete | create",
-      "estimated_risk": "low | medium | high",
-      "rationale": "string",
-      "change_description": "string",
-      "rollback_description": "string"
-    }
-  ],
-  "rollback_steps": ["string"],
-  "test_validation_criteria": [
-    {
-      "type": "build | test | file_exists | content_check | smoke",
-      "command_or_check": "string",
-      "expected_outcome": "string"
-    }
-  ],
-  "plan_summary": "string",
-  "artifact_coverage": {
-    "artifact_refs": ["impact_report"],
-    "slices_loaded": ["high_risk", "direct_usage", "configuration", "breaking_changes", "coverage_notes", "dependency_summary"],
-    "file_context_refs": ["file-context/<digest>.json"],
-    "full_artifact_loaded": false,
-    "deferred_items": "number",
-    "confidence": "sufficient",
-    "reason": "string"
-  }
-}
-```
+Schema: read from `.codex/skills/upgrade/schemas/change-plan.schema.json` before writing the artifact. The artifact must conform to that schema.
 
 ## Rules
 

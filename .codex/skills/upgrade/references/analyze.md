@@ -24,6 +24,30 @@ You are the Repository Analysis sub-agent. Produce a precise, complete ImpactRep
 | `gitnexus_search_usages(query)` | `gitnexus_query` MCP tool |
 | `gitnexus_read_file(path)` | Native `Read` tool with absolute path (`<repo_path>/<file_path>`) |
 
+## Progressive Search Escalation Protocol
+
+Every search or file inspection in this stage must follow these four gates in order. A gate may not be skipped; any skip must be recorded as a deviation with justification in the relevant file-context digest.
+
+**Gate 1 — Inventory** (`rg -l` / `gitnexus_query` returning file names only)
+Produces a candidate file list. If ≤ 10 files: proceed directly to Gate 3. If > 10 files: Gate 2 must complete before any file content is read.
+
+**Gate 2 — Classify** (`rg -c` / GitNexus group queries to narrow by match density, directory, or module)
+Drop files below the relevance threshold. Write a partial digest of the surviving file set. Release raw Gate 1 and Gate 2 output — only the narrowed file list carries forward.
+
+**Gate 3 — Targeted line windows** (`rg -n` on the narrowed set, or targeted `Read` ranges around relevant symbols)
+Write a digest entry for each file inspected. Release raw output immediately after writing the digest.
+
+**Gate 4 — Full read (justified escalation only)**
+Allowed only when a specific trigger is met: high-risk classification, ambiguous result from Gate 3, or direct-usage finding requiring full context. Write the `full_file_reason` to the digest **before** the full read executes.
+
+**Write-and-forget:** After completing each gate, all pending digests must be written and raw tool outputs must be released before the next gate begins.
+
+**Shell safety rules (apply at every gate):**
+1. Never inline a regex containing parentheses, pipes, or quotes inside a double-quoted PowerShell argument. Use single-quoted patterns or `--fixed-strings`, or write the pattern to a temp file and pass `-f <file>` to `rg`.
+2. Always scope searches to the relevant subset of the repo. Add exclusions on every directory-wide search: `-g '!*.min.js' -g '!node_modules' -g '!**/vendor/**' -g '!**/libs/**' -g '!**/dist/**'`.
+3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach rather than re-escaping the same inline pattern.
+4. Batch read-only lookups that target the same step. If a step needs several sibling files, issue one combined read where the tool supports it.
+
 ## Procedure
 
 1. If `mem0_enabled` is true, search prior memories with query `"<upgrade_description> analysis risks affected files breaking changes"`. Use lessons to prioritise inspection.
@@ -69,41 +93,7 @@ Each inspected file digest must use this shape:
 
 ## Output Schema
 
-Write and return an ImpactReport JSON object:
-
-```json
-{
-  "affected_files": [
-    {
-      "file_path": "string",
-      "change_type": "modify | delete | create",
-      "usage_type": "direct_usage | transitive_dependency | configuration",
-      "risk_level": "low | medium | high",
-      "reason": "string"
-    }
-  ],
-  "dependency_graph": {
-    "nodes": [{ "id": "string", "version": "string", "type": "internal | external" }],
-    "edges": [{ "from": "string", "to": "string", "relationship": "string" }]
-  },
-  "risk_summary": {
-    "total_affected_files": "number",
-    "high_risk_count": "number",
-    "breaking_changes": ["string"],
-    "notes": "string"
-  },
-  "coverage_notes": "string",
-  "artifact_coverage": {
-    "artifact_refs": [],
-    "slices_loaded": [],
-    "file_context_refs": ["file-context/<digest>.json"],
-    "full_artifact_loaded": false,
-    "deferred_items": 0,
-    "confidence": "sufficient",
-    "reason": "Analysis produced the full source artifact, all mandatory downstream slices, and file-context digests for inspected files."
-  }
-}
-```
+Schema: read from `.codex/skills/upgrade/schemas/impact-report.schema.json` before writing the artifact. The artifact must conform to that schema.
 
 ## Rules
 

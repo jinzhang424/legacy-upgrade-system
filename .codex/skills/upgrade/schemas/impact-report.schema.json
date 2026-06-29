@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ImpactReport",
+  "type": "object",
+  "required": ["affected_files", "dependency_graph", "risk_summary", "coverage_notes", "artifact_coverage"],
+  "properties": {
+    "affected_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file_path", "change_type", "usage_type", "risk_level", "reason"],
+        "properties": {
+          "file_path": { "type": "string" },
+          "change_type": { "type": "string", "enum": ["modify", "delete", "create"] },
+          "usage_type": { "type": "string", "enum": ["direct_usage", "transitive_dependency", "configuration"] },
+          "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "dependency_graph": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "version", "type"],
+            "properties": {
+              "id": { "type": "string" },
+              "version": { "type": "string" },
+              "type": { "type": "string", "enum": ["internal", "external"] }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "relationship"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "relationship": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "risk_summary": {
+      "type": "object",
+      "required": ["total_affected_files", "high_risk_count", "breaking_changes", "notes"],
+      "properties": {
+        "total_affected_files": { "type": "number" },
+        "high_risk_count": { "type": "number" },
+        "breaking_changes": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      }
+    },
+    "coverage_notes": { "type": "string" },
+    "artifact_coverage": {
+      "type": "object",
+      "required": ["artifact_refs", "slices_loaded", "file_context_refs", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "properties": {
+        "artifact_refs": { "type": "array", "items": { "type": "string" } },
+        "slices_loaded": { "type": "array", "items": { "type": "string" } },
+        "file_context_refs": { "type": "array", "items": { "type": "string" } },
+        "full_artifact_loaded": { "type": "boolean" },
+        "deferred_items": { "type": "number" },
+        "confidence": { "type": "string", "enum": ["sufficient", "insufficient"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

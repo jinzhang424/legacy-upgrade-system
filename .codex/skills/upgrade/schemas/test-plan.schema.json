@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TestPlan",
+  "type": "object",
+  "required": ["test_cases", "testing_strategy", "coverage_goals", "framework_recommendations", "artifact_coverage"],
+  "properties": {
+    "test_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "priority", "target_file", "what_to_verify", "expected_behavior", "rationale"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string", "enum": ["unit", "integration", "regression", "e2e"] },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+          "target_file": { "type": "string" },
+          "what_to_verify": { "type": "string" },
+          "expected_behavior": { "type": "string" },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "testing_strategy": { "type": "string" },
+    "coverage_goals": { "type": "string" },
+    "framework_recommendations": { "type": "string" },
+    "artifact_coverage": {
+      "type": "object",
+      "required": ["artifact_refs", "slices_loaded", "file_context_refs", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "properties": {
+        "artifact_refs": { "type": "array", "items": { "type": "string" } },
+        "slices_loaded": { "type": "array", "items": { "type": "string" } },
+        "file_context_refs": { "type": "array", "items": { "type": "string" } },
+        "full_artifact_loaded": { "type": "boolean" },
+        "deferred_items": { "type": "number" },
+        "confidence": { "type": "string", "enum": ["sufficient", "insufficient"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

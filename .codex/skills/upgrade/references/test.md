@@ -26,6 +26,29 @@ Implementation inputs:
 - `test_plan_manifest_entry`, `test_plan_summary`, and mandatory TestPlan slices
 - `branch_name`: branch where execution applied changes
 
+## Progressive Search Escalation Protocol (Phase 1)
+
+Every test-file search or source inspection in Phase 1 must follow these gates in order. A gate may not be skipped; any skip must be recorded as a deviation with justification in the relevant file-context digest.
+
+**Gate 1 — Inventory** (`rg -l` scoped to conventional test locations first: `test/`, `tests/`, `spec/`, `__tests__/`, `*.test.*`, `*.spec.*`; fall back to repo-wide only if none found)
+Produces a candidate file list. If ≤ 10 files: proceed directly to Gate 3. If > 10 files: Gate 2 must complete before any file content is read.
+
+**Gate 2 — Classify** (`rg -c` to narrow by match density or test type)
+Drop files below the relevance threshold. Write a partial digest of the surviving file set. Release raw Gate 1 and Gate 2 output — only the narrowed file list carries forward.
+
+**Gate 3 — Targeted line windows** (targeted `Read` ranges around representative test sections)
+Write a framework/style digest for each file inspected. Release raw output immediately after writing. Reuse unchanged digests across retries.
+
+**Gate 4 — Full read (justified escalation only)**
+Allowed only when a specific trigger is met: ambiguous framework detection, or no usable representative section found in Gate 3. Write the `full_file_reason` to the digest **before** the full read executes.
+
+**Write-and-forget:** After completing each gate, all pending digests must be written and raw tool outputs must be released before the next gate begins.
+
+**Shell safety rules (apply at every gate):**
+1. Never inline a regex containing parentheses, pipes, or quotes inside a double-quoted PowerShell argument. Use single-quoted patterns or `--fixed-strings`, or write the pattern to a temp file and pass `-f <file>` to `rg`.
+2. Exclude vendored/build output on every search: `-g '!node_modules' -g '!dist' -g '!build'`.
+3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach.
+
 ## Phase 1 - Test Planning
 
 Mandatory ImpactReport slices: `high_risk`, `direct_usage`, `configuration`, `breaking_changes`, `coverage_notes`, and `dependency_summary`.
@@ -52,34 +75,7 @@ Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`,
 
 ### Phase 1 Output Schema - TestPlan
 
-```json
-{
-  "test_cases": [
-    {
-      "id": "TC001",
-      "name": "string",
-      "type": "unit | integration | regression | e2e",
-      "priority": "high | medium | low",
-      "target_file": "string",
-      "what_to_verify": "string",
-      "expected_behavior": "string",
-      "rationale": "string"
-    }
-  ],
-  "testing_strategy": "string",
-  "coverage_goals": "string",
-  "framework_recommendations": "string",
-  "artifact_coverage": {
-    "artifact_refs": ["impact_report", "change_plan"],
-    "slices_loaded": ["high_risk", "direct_usage", "configuration", "breaking_changes", "coverage_notes", "dependency_summary", "planned_high_risk_changes", "validation_criteria", "rollback_summary"],
-    "file_context_refs": ["file-context/<digest>.json"],
-    "full_artifact_loaded": false,
-    "deferred_items": "number",
-    "confidence": "sufficient",
-    "reason": "string"
-  }
-}
-```
+Schema: read from `.codex/skills/upgrade/schemas/test-plan.schema.json` before writing the artifact. The artifact must conform to that schema.
 
 ## Phase 2 - Test Implementation
 
@@ -94,45 +90,7 @@ Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`,
 
 ### Phase 2 Output Schema - TestResult
 
-```json
-{
-  "status": "passed | partial | failed",
-  "tests_generated": [
-    {
-      "test_case_id": "TC001",
-      "test_file": "string",
-      "test_name": "string",
-      "status": "implemented | skipped | failed_to_implement",
-      "skip_reason": "string or null"
-    }
-  ],
-  "supplementary_tests": [
-    {
-      "test_file": "string",
-      "test_name": "string",
-      "reason": "string"
-    }
-  ],
-  "test_files_created": ["string"],
-  "coverage_notes": "string",
-  "run_results": {
-    "total": "number",
-    "passing": "number",
-    "failing": "number",
-    "skipped": "number"
-  },
-  "failure_summary": "string or null",
-  "artifact_coverage": {
-    "artifact_refs": ["test_plan"],
-    "slices_loaded": ["high_priority_tests", "regression_tests", "framework_recommendations"],
-    "file_context_refs": ["file-context/<digest>.json"],
-    "full_artifact_loaded": false,
-    "deferred_items": "number",
-    "confidence": "sufficient",
-    "reason": "string"
-  }
-}
-```
+Schema: read from `.codex/skills/upgrade/schemas/test-result.schema.json` before writing the artifact. The artifact must conform to that schema.
 
 ## Rules
 

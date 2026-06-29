@@ -117,17 +117,45 @@ Supported `agent_type` values are `analyze`, `plan`, `test-plan`, `execute`, and
 
 Optional LLM semantic validation is allowed only after deterministic validation. The semantic prompt may include only the artifact summary, high-signal slices, and deterministic validator findings. Do not pass full artifacts or `validator.md` into routine validator sub-agent calls.
 
+**Artifact read restriction:** The orchestrator must never read a full artifact JSON. All orchestrator-level operations — user summaries, validation gate checks, stage handoffs — use only `summary_path` and named slice files. The deterministic validator script reads the full artifact from disk independently; its output is a pass/fail result, not the artifact content. If a gate check requires confirming artifact contents, read the relevant slice file, not `artifact_path`.
+
 Retry prompts must include only failed deterministic criteria, the prior artifact path, loaded slice names, relevant file-context paths, and the corrected output contract.
 
 ## Token Accounting
 
 When token usage is available, record approximate before/after prompt sizes for analysis, planning, test planning, execution, and validation in `.codex/upgrade-runs/<run_id>/summaries/token-accounting.json`. If exact token counts are unavailable, record character counts and note that they are estimates.
 
+Per batch, also record:
+- `shell_call_count` and `failed_shell_call_count` (syntax/parser errors count as failed).
+- `largest_tool_output_chars` for the batch, with the command that produced it.
+
+If `failed_shell_call_count > 0` for a batch, the batch's ValidationResult must note the failing command pattern in `failure_summary` (even on overall `status: "passed"`) so the run's close-out summary can surface it for the next pipeline iteration.
+
+## Compaction Checkpoints
+
+Compact the conversation proactively at the following points, rather than waiting for
+context-window pressure to force it:
+
+1. **Before every human-approval gate** (end of Stage 1, end of Stage 2, end of execution, end of Stage 4-B) — regardless of current context size. Approval gates are exactly where multi-minute-to-multi-hour idle gaps happen, and the prompt cache is short-lived (on the order of minutes). The longer the context is when a pause starts, the more expensive the eventual resume becomes once the cache has expired.
+2. **After each execution batch's ValidationResult is written and validated.** Once a batch's findings are durably on disk under `validation-results/` and `file-context/`, the conversation does not need to retain the raw tool-call transcript that produced them — only the artifact paths and summary.
+3. **At a soft mid-stage threshold of ~50-60% of `model_context_window`**, even outside the checkpoints above, if a single stage is producing unusually long tool-call sequences (e.g. repeated search retries).
+4. **Every 10 tool calls within a single stage**, regardless of context size: write all pending digests, then check approximate context usage. If usage exceeds 35%, compact before the next tool call. If usage is below 35%, continue but record the check in `token-accounting.json`.
+
+When compacting at any of these checkpoints, preserve in the retained context:
+- The current `run_id`, `run_artifact_dir`, and `memory_user_id`.
+- The manifest entries and summary paths for all artifacts produced so far.
+- The current stage/batch position and `branch_name`.
+- Any pending approval question awaiting a user response.
+
+Do not rely on compaction to preserve exact file contents, hashes, or line ranges —
+those must already be persisted via the File Context Protocol's digests before
+compaction occurs. If a stage is about to compact and has inspected a file that has no
+digest yet, write the digest first.
+
 ## Stage 1 - Repository Analysis
 
-1. Read `.codex/skills/upgrade/references/analyze.md`.
-2. Spawn the analysis sub-agent with only runtime facts: `upgrade_description`, `excluded_paths`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `gitnexus_enabled`, the File Context Protocol, and the output contract.
-3. Require the analyzer to write `impact-report.json`, its summary, mandatory slices, and the manifest entry.
+1. Spawn the analysis sub-agent with only runtime facts: `upgrade_description`, `excluded_paths`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `gitnexus_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/analyze.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `analyze.md`.
+2. Require the analyzer to write `impact-report.json`, its summary, mandatory slices, and the manifest entry.
 4. Run deterministic validation with `agent_type = "analyze"` against the written `impact-report.json`.
 5. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `affected_files`, `dependency_graph`, or `risk_summary` is missing.
 6. If validation fails, re-invoke the analyzer once with only failed criteria and artifact references. If it fails twice, halt and report.
@@ -135,8 +163,8 @@ When token usage is available, record approximate before/after prompt sizes for 
 
 ## Stage 2 - Upgrade Planning
 
-1. Read `.codex/skills/upgrade/references/plan.md`.
-2. Spawn the planner with the ImpactReport manifest entry, summary, mandatory slices, relevant file-context digests, prior relevant failure memories, `upgrade_description`, `user_constraints`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, and `mem0_enabled`.
+1. Before spawning the planner, compute the approximate token size of the planned handoff (manifest entry + summary + mandatory slices + relevant file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
+2. Spawn the planner with the ImpactReport manifest entry, summary, mandatory slices (or condensed handoff path), relevant file-context digests, prior relevant failure memories, `upgrade_description`, `user_constraints`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/plan.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `plan.md`.
 3. Mandatory ImpactReport slices: `high_risk`, `direct_usage`, `configuration`, `breaking_changes`, `coverage_notes`, and `dependency_summary`.
 4. Require the planner to write `change-plan.json`, its summary, planned high-risk changes, validation criteria, rollback summary, execution batch slices, and the manifest entry.
 5. Run deterministic validation with `agent_type = "plan"` against `change-plan.json`.
@@ -146,8 +174,8 @@ When token usage is available, record approximate before/after prompt sizes for 
 
 ## Stage 4-A - Test Planning
 
-1. Read `.codex/skills/upgrade/references/test.md`.
-2. Spawn the test planning sub-agent with `phase: "plan"`, the ImpactReport and ChangePlan manifest entries, summaries, mandatory slices, relevant source and test file-context digests, `upgrade_description`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, and `mem0_enabled`.
+1. Before spawning the test planner, compute the approximate token size of the planned handoff (ImpactReport and ChangePlan manifest entries + summaries + mandatory slices + file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-test-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
+2. Spawn the test planning sub-agent with `phase: "plan"`, the ImpactReport and ChangePlan manifest entries, summaries, mandatory slices (or condensed handoff path), relevant source and test file-context digests, `upgrade_description`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/test.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `test.md`.
 3. Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`, `rollback_summary`, and all `batch_*` summaries.
 4. Require the test planner to write `test-plan.json`, its summary, high-priority test, regression test, framework recommendation slices, and the manifest entry.
 5. Run deterministic validation with `agent_type = "test-plan"` against `test-plan.json`.
@@ -156,8 +184,8 @@ When token usage is available, record approximate before/after prompt sizes for 
 ## Stage 3 - Upgrade Execution
 
 1. Create or switch to `upgrade/<slug>`. Do not require a fully clean branch solely because unrelated untracked files exist; execution preflight classifies worktree state per batch.
-2. Read `.codex/skills/upgrade/references/execute.md`.
-3. Invoke the executor one batch at a time. Each prompt receives the ChangePlan manifest entry, `batch_<n>` slice, `validation_criteria` slice, `rollback_summary` slice, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `invoked_by_upgrade = true`.
+2. Before spawning each executor batch, compute the approximate token size of the planned handoff (`batch_<n>` slice + `validation_criteria` slice + `rollback_summary` slice + relevant file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-execute-batch-<n>.json` under `<run_artifact_dir>/summaries/` that condenses it to fit within budget. Pass the condensed handoff path; the sub-agent loads additional slices on demand.
+3. Invoke the executor one batch at a time. Each prompt receives the ChangePlan manifest entry, `batch_<n>` slice (or condensed handoff path), `validation_criteria` slice, `rollback_summary` slice, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `invoked_by_upgrade = true`, and `stage_reference_path: .codex/skills/upgrade/references/execute.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `execute.md`.
 4. The executor may load additional batch slices or the full `change-plan.json` only when needed for dependency ordering, validation context, or rollback safety.
 5. After each batch and final validation, require a ValidationResult artifact under `validation-results/` and run deterministic validation with `agent_type = "execute"`.
 6. If a passed result validates, continue. If a failed result validates, apply rollback using the ChangePlan rollback summary/full artifact as needed, stage only rolled-back paths with exact pathspecs, verify the cached diff path set, commit rollback, notify the user, and halt. If the ValidationResult itself is invalid, ask the executor to re-emit a valid result without re-running changes.
@@ -167,7 +195,8 @@ When token usage is available, record approximate before/after prompt sizes for 
 
 Only run this stage if `test_plan` is non-null.
 
-1. Spawn the test implementation sub-agent with `phase: "implement"`, the TestPlan manifest entry, summary, high-priority/regression/framework slices, `upgrade_description`, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, and `mem0_enabled`.
+1. Before spawning the test implementation sub-agent, compute the approximate token size of the planned handoff (TestPlan manifest entry + summary + high-priority/regression/framework slices). If the total exceeds 6,000 tokens, write a `handoff-summary-test-implement.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path; the sub-agent loads additional slices on demand.
+2. Spawn the test implementation sub-agent with `phase: "implement"`, the TestPlan manifest entry, summary, high-priority/regression/framework slices (or condensed handoff path), `upgrade_description`, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/test.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `test.md`.
 2. The agent may load full `test-plan.json` if required to implement all non-skipped test cases.
 3. Extract and persist `test-result.json`, then run deterministic validation with `agent_type = "test-result"`.
 4. If validation fails, re-invoke once with failed criteria. If it fails again, warn that the upgrade succeeded but generated tests were not validated.
@@ -181,3 +210,8 @@ Only run this stage if `test_plan` is non-null.
 - Never modify repository state directly except branch creation and rollback steps defined here.
 - Never use broad staging such as `git add -A` or `git add .` for upgrade or rollback commits.
 - Keep user-facing messages concise, structured, and free of raw JSON.
+- If a stage or batch is resumed after an interruption (artifact write aborted, session
+  restarted, or idle gap longer than 30 minutes), do not reload full upstream artifacts
+  from scratch. Re-read only `manifest.json` and the specific summary/slice files needed
+  to confirm what was already committed or validated, then continue from the next
+  unfinished step.

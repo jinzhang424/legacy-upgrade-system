@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ValidationResult",
+  "type": "object",
+  "required": ["batch_sequence", "status", "changes_applied", "validation_results", "commit_refs", "baseline_status", "baseline_untracked_files", "staged_paths", "artifact_coverage"],
+  "properties": {
+    "batch_sequence": { "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["final"] }] },
+    "status": { "type": "string", "enum": ["passed", "failed"] },
+    "changes_applied": { "type": "array", "items": { "type": "string" } },
+    "validation_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion_type", "command_or_check", "outcome", "output"],
+        "properties": {
+          "criterion_type": { "type": "string" },
+          "command_or_check": { "type": "string" },
+          "outcome": { "type": "string", "enum": ["passed", "failed"] },
+          "output": { "type": "string" }
+        }
+      }
+    },
+    "failure_summary": { "type": ["string", "null"] },
+    "commit_refs": { "type": "array", "items": { "type": "string" } },
+    "baseline_status": { "type": "array", "items": { "type": "string" } },
+    "baseline_untracked_files": { "type": "array", "items": { "type": "string" } },
+    "staged_paths": { "type": "array", "items": { "type": "string" } },
+    "artifact_coverage": {
+      "type": "object",
+      "required": ["artifact_refs", "slices_loaded", "file_context_refs", "baseline_untracked_files", "baseline_status_recorded", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "properties": {
+        "artifact_refs": { "type": "array", "items": { "type": "string" } },
+        "slices_loaded": { "type": "array", "items": { "type": "string" } },
+        "file_context_refs": { "type": "array", "items": { "type": "string" } },
+        "baseline_untracked_files": { "type": "array", "items": { "type": "string" } },
+        "baseline_status_recorded": { "type": "boolean" },
+        "full_artifact_loaded": { "type": "boolean" },
+        "deferred_items": { "type": "number" },
+        "confidence": { "type": "string", "enum": ["sufficient", "insufficient"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

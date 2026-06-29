@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TestResult",
+  "type": "object",
+  "required": ["status", "tests_generated", "supplementary_tests", "test_files_created", "coverage_notes", "run_results", "artifact_coverage"],
+  "properties": {
+    "status": { "type": "string", "enum": ["passed", "partial", "failed"] },
+    "tests_generated": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["test_case_id", "test_file", "test_name", "status"],
+        "properties": {
+          "test_case_id": { "type": "string" },
+          "test_file": { "type": "string" },
+          "test_name": { "type": "string" },
+          "status": { "type": "string", "enum": ["implemented", "skipped", "failed_to_implement"] },
+          "skip_reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "supplementary_tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["test_file", "test_name", "reason"],
+        "properties": {
+          "test_file": { "type": "string" },
+          "test_name": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "test_files_created": { "type": "array", "items": { "type": "string" } },
+    "coverage_notes": { "type": "string" },
+    "run_results": {
+      "type": "object",
+      "required": ["total", "passing", "failing", "skipped"],
+      "properties": {
+        "total": { "type": "number" },
+        "passing": { "type": "number" },
+        "failing": { "type": "number" },
+        "skipped": { "type": "number" }
+      }
+    },
+    "failure_summary": { "type": ["string", "null"] },
+    "artifact_coverage": {
+      "type": "object",
+      "required": ["artifact_refs", "slices_loaded", "file_context_refs", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "properties": {
+        "artifact_refs": { "type": "array", "items": { "type": "string" } },
+        "slices_loaded": { "type": "array", "items": { "type": "string" } },
+        "file_context_refs": { "type": "array", "items": { "type": "string" } },
+        "full_artifact_loaded": { "type": "boolean" },
+        "deferred_items": { "type": "number" },
+        "confidence": { "type": "string", "enum": ["sufficient", "insufficient"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

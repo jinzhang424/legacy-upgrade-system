@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ChangePlan",
+  "type": "object",
+  "required": ["ordered_changes", "rollback_steps", "test_validation_criteria", "plan_summary", "artifact_coverage"],
+  "properties": {
+    "ordered_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sequence", "file_path", "change_type", "estimated_risk", "rationale", "change_description", "rollback_description"],
+        "properties": {
+          "sequence": { "type": "number" },
+          "file_path": { "type": "string" },
+          "change_type": { "type": "string", "enum": ["modify", "delete", "create"] },
+          "estimated_risk": { "type": "string", "enum": ["low", "medium", "high"] },
+          "rationale": { "type": "string" },
+          "change_description": { "type": "string" },
+          "rollback_description": { "type": "string" }
+        }
+      }
+    },
+    "rollback_steps": { "type": "array", "items": { "type": "string" } },
+    "test_validation_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "command_or_check", "expected_outcome"],
+        "properties": {
+          "type": { "type": "string", "enum": ["build", "test", "file_exists", "content_check", "smoke"] },
+          "command_or_check": { "type": "string" },
+          "expected_outcome": { "type": "string" }
+        }
+      }
+    },
+    "plan_summary": { "type": "string" },
+    "artifact_coverage": {
+      "type": "object",
+      "required": ["artifact_refs", "slices_loaded", "file_context_refs", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "properties": {
+        "artifact_refs": { "type": "array", "items": { "type": "string" } },
+        "slices_loaded": { "type": "array", "items": { "type": "string" } },
+        "file_context_refs": { "type": "array", "items": { "type": "string" } },
+        "full_artifact_loaded": { "type": "boolean" },
+        "deferred_items": { "type": "number" },
+        "confidence": { "type": "string", "enum": ["sufficient", "insufficient"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}
