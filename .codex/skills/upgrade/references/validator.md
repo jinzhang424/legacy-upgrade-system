@@ -65,11 +65,11 @@ For each entry in `validation.content_checks`, read the target file and verify:
 Run commands in this order:
 
 1. `validation.build_commands`
-2. `validation.startup_commands`
+2. `validation.startup_commands` — for each entry, after the bounded command exits with code 0, probe the corresponding `validation.startup_health_check_urls` entry with an HTTP GET (retry every 2 seconds for up to 30 seconds). If the URL does not return a status below 500, record the startup as `health_check_outcome: failed` even though the process survived. A process staying alive without binding to its port is not a pass.
 3. `validation.existing_test_commands`
 4. `validation.generated_test_commands`
 
-Capture command, outcome, exit status, and truncated output for each. If a command is missing for a category, record it as skipped with a reason.
+Capture command, outcome, exit status, truncated output, and `health_check_outcome` for each. If a command is missing for a category, record it as skipped with a reason. If `startup_health_check_urls` has no entry for a given startup command (or the entry is an empty string), record `health_check_outcome: skipped` and note the gap.
 
 ### Step 6 - Repair plan-related failures
 
@@ -102,6 +102,7 @@ Reject for any critical failure:
 - Required dependency/config changes are missing.
 - Any build command fails.
 - Any required startup command fails.
+- Any startup command's HTTP health check does not respond (health_check_outcome: failed) after retries.
 - Any generated smoke or integration test command fails.
 - Required content checks fail.
 - A build, startup, or test failure remains after repair attempts.

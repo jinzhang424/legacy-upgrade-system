@@ -27,6 +27,10 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - Record the answer as `user_validation_commands`.
    - Preserve command working directories exactly as the user gives them.
    - If the user is unsure or provides no commands, set `user_validation_commands = []` and require the planner to document inferred commands or validation gaps in `change-plan.json`.
+8. For each startup command identified in step 7, ask: "What port does <module> listen on, and what URL path should respond when it is ready (for example `/` or `/health`)?"
+   - Record answers as `user_health_check_urls`: a list of `{ startup_command, port, path }` entries.
+   - If the user is unsure for a given module, the planner must infer the port from config files and `app.js` argument defaults, and document every inference in `planning_notes`.
+   - If no startup commands were given in step 7, skip this question and set `user_health_check_urls = []`.
 
 ---
 
@@ -69,6 +73,7 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - `upgrade_description`
    - Any `user_constraints`
    - `user_validation_commands`
+   - `user_health_check_urls`
    - `repo_path`
    - `artifact_dir`
 3. The planning sub-agent must write the full plan to `artifact_dir/change-plan.json` and return only:

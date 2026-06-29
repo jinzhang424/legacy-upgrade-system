@@ -59,6 +59,10 @@ Rules:
 7. Do not broaden scope, rewrite unrelated modules, or chase failures outside the ChangePlan. If that is required, report execution failure and leave the working tree as-is.
 8. After each repair, re-run the failed command first. If it passes, continue with the remaining executor check commands.
 9. Record command outcomes and repairs in `execution-result.json`, including per-command repair attempt counts and total repair rounds used.
+10. For every startup command that has a `health_check_url`: after the bounded command exits with code 0, probe the URL with an HTTP GET. If it does not return a status below 500, the startup is a health-check failure even though the command exit code was 0. Record `health_check_outcome` as `failed`.
+11. For a health-check failure, attempt up to 3 additional repair rounds. These are separate from the 3 per-command execution repair rounds and do not count against the 8-round total cap. Apply repairs only when the root cause is clearly plan-related (e.g. a port or DB config changed by the upgrade). Re-run the full bounded startup command (including its HTTP probe) after each health-check repair.
+12. If the health check still fails after 3 health-check repair rounds, record `health_check_outcome: failed` and stop with execution failure.
+13. Record `health_check_url`, `health_check_outcome` (`passed | failed | skipped`), and `health_check_repair_rounds` in the corresponding `executor_check_results` entry.
 
 The executor check is an early feedback loop only. Final validation must still run after the commit.
 
@@ -101,7 +105,10 @@ The full artifact must use this shape:
       "outcome": "passed | failed | skipped",
       "exit_status": "number",
       "output": "string",
-      "repair_attempts": "number"
+      "repair_attempts": "number",
+      "health_check_url": "string",
+      "health_check_outcome": "passed | failed | skipped",
+      "health_check_repair_rounds": "number"
     }
   ],
   "executor_repairs_applied": [

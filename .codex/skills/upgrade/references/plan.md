@@ -68,7 +68,11 @@ Every user-supplied compile/startup/smoke/test command must be represented in `v
 
 Do not replace a user-supplied runtime/startup command with a weaker syntax-only command. For example, `node --check app.js` may be added as an extra compile check, but it must not replace a user-supplied `node app.js` startup smoke.
 
-For long-running server commands, do not record a raw command that can hang indefinitely. Record a bounded equivalent that starts the process, verifies it reaches the expected startup point or stays alive long enough to prove load, then exits cleanly.
+For long-running server commands, do not record a raw command that can hang indefinitely. Record a bounded equivalent that starts the process in the background capturing stdout and stderr, polls the `health_check_url` until it responds or `timeout_seconds` elapses, then kills the process and exits. Exit with code 0 only if the URL returned an HTTP status below 500. A process that stays alive without binding to its port must not be reported as passed.
+
+For every command with `purpose: startup`, set `health_check_url` to `http://localhost:<PORT><PATH>`. Derive the port from `user_health_check_urls` when provided; otherwise inspect config files (e.g. `config.js`, `shared-config.js`) and `app.js` defaults, and document the inference in `planning_notes`. A startup entry with no `health_check_url` is a validation gap that must be documented in `planning_notes`.
+
+Also record the same health check URL in `validation.startup_health_check_urls` at the index matching its `startup_commands` entry so the validator can re-probe it after the commit.
 
 If package manifests are changed and a user-supplied command depends on installed packages, include the necessary bounded dependency setup command in `validation.executor_check_commands` before the user command, or document why dependency setup is intentionally unavailable in `planning_notes`.
 
@@ -119,11 +123,13 @@ The full artifact must use this shape:
         "command": "string",
         "purpose": "setup | compile | startup | smoke | test",
         "timeout_seconds": "number",
-        "required": "boolean"
+        "required": "boolean",
+        "health_check_url": "string (required when purpose is startup)"
       }
     ],
     "build_commands": ["string"],
     "startup_commands": ["string"],
+    "startup_health_check_urls": ["string (parallel to startup_commands; empty string if no check)"],
     "existing_test_commands": ["string"],
     "generated_test_commands": ["string"],
     "generated_test_files": ["string"],
