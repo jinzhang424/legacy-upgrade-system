@@ -48,6 +48,10 @@ Allowed only when a specific trigger is met: ambiguous framework detection, or n
 1. Never inline a regex containing parentheses, pipes, or quotes inside a double-quoted PowerShell argument. Use single-quoted patterns or `--fixed-strings`, or write the pattern to a temp file and pass `-f <file>` to `rg`.
 2. Exclude vendored/build output on every search: `-g '!node_modules' -g '!dist' -g '!build'`.
 3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach.
+4. Batch read-only lookups that target the same step. Issue one combined read where the tool supports it.
+5. Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/<gate>-<n>.txt`, and record that path in the nearest pending file-context digest. Never paste multi-hundred-line outputs into the conversation.
+
+**Per-stage tool-call budget (Phase 1):** After every 10 tool calls within this phase, write all pending digests and check approximate context usage. If it exceeds 35%, compact before continuing.
 
 ## Phase 1 - Test Planning
 
@@ -76,6 +80,27 @@ Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`,
 ### Phase 1 Output Schema - TestPlan
 
 Schema: read from `.codex/skills/upgrade/schemas/test-plan.schema.json` before writing the artifact. The artifact must conform to that schema.
+
+## Progressive Search Escalation Protocol (Phase 2)
+
+Every diff-hunk or source inspection in Phase 2 must follow these gates in order. A gate may not be skipped; any skip must be recorded with justification in the relevant file-context digest.
+
+**Gate 1 — Inventory** (`git diff --name-only` against the pre-execution base commit to get the changed file list; if ≤ 10 files proceed directly to Gate 3)
+
+**Gate 2 — Classify** (`rg -c` on the narrowed set to rank files by change density or patch hunk count)
+Drop files below the relevance threshold. Release raw Gate 1 and Gate 2 output — only the narrowed file list carries forward.
+
+**Gate 3 — Targeted hunk windows** (targeted `Read` ranges around individual diff hunks, or `git diff -U5 -- <file>` for small files)
+Write or update a file-context digest entry for each file inspected. Release raw output immediately after writing the digest.
+
+**Gate 4 — Full read (justified escalation only)**
+Allowed only when a hunk spans more than 50 lines or the surrounding context is ambiguous. Write the `full_file_reason` to the digest **before** the full read executes.
+
+**Write-and-forget:** After completing each gate, all pending digests must be written and raw tool outputs must be released before the next gate begins.
+
+**Shell safety rules (Phase 2):** Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/<gate>-<n>.txt`, and record that path in the nearest pending file-context digest. Never paste large diff or test outputs into the conversation.
+
+**Per-stage tool-call budget (Phase 2):** After every 10 tool calls within this phase, write all pending digests and check approximate context usage. If it exceeds 35%, compact before continuing.
 
 ## Phase 2 - Test Implementation
 

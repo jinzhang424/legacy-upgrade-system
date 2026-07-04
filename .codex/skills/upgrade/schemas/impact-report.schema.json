@@ -61,7 +61,7 @@
     "coverage_notes": { "type": "string" },
     "artifact_coverage": {
       "type": "object",
-      "required": ["artifact_refs", "slices_loaded", "file_context_refs", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "required": ["artifact_refs", "slices_loaded", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
       "properties": {
         "artifact_refs": { "type": "array", "items": { "type": "string" } },
         "slices_loaded": { "type": "array", "items": { "type": "string" } },

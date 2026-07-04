@@ -47,6 +47,9 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 2. Always scope searches to the relevant subset of the repo. Add exclusions on every directory-wide search: `-g '!*.min.js' -g '!node_modules' -g '!**/vendor/**' -g '!**/libs/**' -g '!**/dist/**'`.
 3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach.
 4. Batch read-only lookups that target the same step. Issue one combined read where the tool supports it.
+5. Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/<gate>-<n>.txt`, and record that path in the nearest pending file-context digest or in a standalone entry. Never paste multi-hundred-line outputs into the conversation.
+
+**Per-stage tool-call budget:** After every 10 tool calls within this stage, write all pending digests and check approximate context usage. If it exceeds 35%, compact before continuing.
 
 ## Procedure
 

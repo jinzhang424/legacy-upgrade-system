@@ -155,20 +155,24 @@ digest yet, write the digest first.
 ## Stage 1 - Repository Analysis
 
 1. Spawn the analysis sub-agent with only runtime facts: `upgrade_description`, `excluded_paths`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `gitnexus_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/analyze.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `analyze.md`.
+   > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
+   > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/impact-report.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing impact-report.json" — do NOT fall through to deterministic validation or re-invoke.
 2. Require the analyzer to write `impact-report.json`, its summary, mandatory slices, and the manifest entry.
 4. Run deterministic validation with `agent_type = "analyze"` against the written `impact-report.json`.
-5. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `affected_files`, `dependency_graph`, or `risk_summary` is missing.
+5. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `affected_files`, `dependency_graph`, `risk_summary`, or `coverage_notes` is missing.
 6. If validation fails, re-invoke the analyzer once with only failed criteria and artifact references. If it fails twice, halt and report.
 7. Present a concise human summary and ask whether the user approves proceeding to planning.
 
 ## Stage 2 - Upgrade Planning
 
-1. Before spawning the planner, compute the approximate token size of the planned handoff (manifest entry + summary + mandatory slices + relevant file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
+1. Before spawning the planner, compute the approximate token size of the planned handoff (manifest entry + summary + mandatory slices + relevant file-context digests). Estimate as `Math.ceil(JSON.stringify(payload).length / 4)` (1 token ≈ 4 characters); apply this same formula for all handoff budget checks in later stages. If the total exceeds 6,000 tokens, write a `handoff-summary-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
 2. Spawn the planner with the ImpactReport manifest entry, summary, mandatory slices (or condensed handoff path), relevant file-context digests, prior relevant failure memories, `upgrade_description`, `user_constraints`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/plan.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `plan.md`.
+   > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
+   > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/change-plan.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing change-plan.json" — do NOT fall through to deterministic validation or re-invoke.
 3. Mandatory ImpactReport slices: `high_risk`, `direct_usage`, `configuration`, `breaking_changes`, `coverage_notes`, and `dependency_summary`.
 4. Require the planner to write `change-plan.json`, its summary, planned high-risk changes, validation criteria, rollback summary, execution batch slices, and the manifest entry.
 5. Run deterministic validation with `agent_type = "plan"` against `change-plan.json`.
-6. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `ordered_changes`, `rollback_steps`, or `test_validation_criteria` is missing or empty.
+6. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `ordered_changes`, `rollback_steps`, `test_validation_criteria`, or `plan_summary` is missing or empty.
 7. If validation fails, re-invoke the planner once with only failed criteria and artifact references. If it fails twice, halt and report.
 8. Present a concise plan summary and ask whether the user approves proceeding to execution.
 
@@ -176,6 +180,8 @@ digest yet, write the digest first.
 
 1. Before spawning the test planner, compute the approximate token size of the planned handoff (ImpactReport and ChangePlan manifest entries + summaries + mandatory slices + file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-test-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
 2. Spawn the test planning sub-agent with `phase: "plan"`, the ImpactReport and ChangePlan manifest entries, summaries, mandatory slices (or condensed handoff path), relevant source and test file-context digests, `upgrade_description`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/test.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `test.md`.
+   > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
+   > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/test-plan.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing test-plan.json" — do NOT fall through to deterministic validation or re-invoke.
 3. Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`, `rollback_summary`, and all `batch_*` summaries.
 4. Require the test planner to write `test-plan.json`, its summary, high-priority test, regression test, framework recommendation slices, and the manifest entry.
 5. Run deterministic validation with `agent_type = "test-plan"` against `test-plan.json`.
@@ -186,6 +192,8 @@ digest yet, write the digest first.
 1. Create or switch to `upgrade/<slug>`. Do not require a fully clean branch solely because unrelated untracked files exist; execution preflight classifies worktree state per batch.
 2. Before spawning each executor batch, compute the approximate token size of the planned handoff (`batch_<n>` slice + `validation_criteria` slice + `rollback_summary` slice + relevant file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-execute-batch-<n>.json` under `<run_artifact_dir>/summaries/` that condenses it to fit within budget. Pass the condensed handoff path; the sub-agent loads additional slices on demand.
 3. Invoke the executor one batch at a time. Each prompt receives the ChangePlan manifest entry, `batch_<n>` slice (or condensed handoff path), `validation_criteria` slice, `rollback_summary` slice, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `invoked_by_upgrade = true`, and `stage_reference_path: .codex/skills/upgrade/references/execute.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `execute.md`.
+   > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
+   > **Artifact pre-check:** after the Agent tool returns, verify the expected `<run_artifact_dir>/validation-results/execute-<n>.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing its ValidationResult" — do NOT fall through to deterministic validation or re-invoke.
 4. The executor may load additional batch slices or the full `change-plan.json` only when needed for dependency ordering, validation context, or rollback safety.
 5. After each batch and final validation, require a ValidationResult artifact under `validation-results/` and run deterministic validation with `agent_type = "execute"`.
 6. If a passed result validates, continue. If a failed result validates, apply rollback using the ChangePlan rollback summary/full artifact as needed, stage only rolled-back paths with exact pathspecs, verify the cached diff path set, commit rollback, notify the user, and halt. If the ValidationResult itself is invalid, ask the executor to re-emit a valid result without re-running changes.
@@ -197,10 +205,59 @@ Only run this stage if `test_plan` is non-null.
 
 1. Before spawning the test implementation sub-agent, compute the approximate token size of the planned handoff (TestPlan manifest entry + summary + high-priority/regression/framework slices). If the total exceeds 6,000 tokens, write a `handoff-summary-test-implement.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path; the sub-agent loads additional slices on demand.
 2. Spawn the test implementation sub-agent with `phase: "implement"`, the TestPlan manifest entry, summary, high-priority/regression/framework slices (or condensed handoff path), `upgrade_description`, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/test.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `test.md`.
+   > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
+   > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/test-result.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing test-result.json" — do NOT fall through to deterministic validation or re-invoke.
 2. The agent may load full `test-plan.json` if required to implement all non-skipped test cases.
 3. Extract and persist `test-result.json`, then run deterministic validation with `agent_type = "test-result"`.
 4. If validation fails, re-invoke once with failed criteria. If it fails again, warn that the upgrade succeeded but generated tests were not validated.
-5. Present the combined upgrade and test summary. If test planning failed, present the upgrade summary and state that test generation was skipped.
+5. Proceed to Stage 5 to generate the environment setup and run guide. If test planning failed (`test_plan = null`), still proceed to Stage 5 — the run guide will note that test generation was skipped and will omit test result counts.
+
+## Stage 5 - Environment Setup and Run Guide
+
+Run this stage inline — do not spawn a sub-agent. All required data is in memory or in slice files already on disk.
+
+1. **Collect from existing artifacts.** Read the following files (never read full artifact JSON):
+   - `<run_artifact_dir>/summaries/change-plan-summary.json` — for `plan_summary`.
+   - `<run_artifact_dir>/slices/change-plan-validation-criteria.json` — for build, test, and smoke commands.
+   - `<run_artifact_dir>/summaries/test-plan-summary.json` — for `framework_recommendations` and `coverage_goals`. Skip if `test_plan = null`.
+   - `<run_artifact_dir>/summaries/test-result-summary.json` — for `test_files_created` and `run_results`. Skip if `test_plan = null`.
+
+2. **Detect runtime and install command.** Probe the repo in this order; stop at the first match:
+   a. Read `<repo_path>/package.json` (targeted: `engines`, `scripts`, `name` keys only). If present, runtime is Node.js; note `engines.node` version if available. Install command is `npm install`, unless `<repo_path>/yarn.lock` exists (check with Glob), in which case use `yarn install`. If multiple `package.json` files exist across subdirectories (Glob `**/package.json`), note that `npm install` must be run in each module directory.
+   b. Check `<repo_path>/requirements.txt`. If present, runtime is Python; install is `pip install -r requirements.txt`.
+   c. Check `<repo_path>/pyproject.toml`. If present, read lines 1–15 to detect `[tool.poetry]`; use `poetry install` if found, otherwise `pip install -e .`.
+   d. Check `<repo_path>/go.mod`. If present, runtime is Go; install is `go mod download`.
+   e. If none match, record runtime as "not determinable from standard manifests" and omit an install command.
+
+3. **Detect start command.** In priority order:
+   a. Use `type: "smoke"` or `type: "build"` entries from `change-plan-validation-criteria.json` — these are the planner's canonical run commands.
+   b. Fall back to `scripts.start` or `scripts.dev` from the relevant `package.json`.
+   c. If neither is available, write "Start command not detected — consult application documentation."
+
+4. **Detect test command.** In priority order:
+   a. Use `type: "test"` entries from `change-plan-validation-criteria.json`.
+   b. Fall back to `framework_recommendations` from `test-plan-summary.json`, constructing the standard invocation (e.g. `npx jest`, `npm test`, `python -m pytest`).
+   c. List every path in `test_files_created` from `test-result-summary.json` as individual runnable targets.
+   d. If `test_plan = null`, write "Test generation was skipped — no test command available."
+
+5. **Detect required environment variables.**
+   a. Read `<repo_path>/.env.example` (targeted: first 60 lines). Extract variable names (lines of the form `VAR_NAME=` or `VAR_NAME=example_value`) without values.
+   b. If absent, check `<repo_path>/.env.sample` with the same targeted read.
+   c. If neither exists, write "No `.env.example` found — consult application configuration for required variables."
+
+6. **Write `<run_artifact_dir>/run-guide.md`.** Plain markdown with these sections in order:
+   - `## Environment Setup` — runtime version, install command, environment variables table (Name | Description; Description is empty when unknown).
+   - `## Run the Application` — start command in a fenced code block.
+   - `## Run the Tests` — test command in a fenced code block, then a bulleted list of `test_files_created` paths (omit section if `test_plan = null`).
+   - `## Upgrade Summary` — `plan_summary` text verbatim, then test result counts: total / passing / failing / skipped (omit counts if `test_plan = null`).
+
+7. **Add a `run_guide` entry to `<run_artifact_dir>/manifest.json`** with `artifact_path` pointing to `run-guide.md`, `summary_path: null`, `slices: {}`, and `producer_stage: "run-guide"`. The deterministic validator is never called for this artifact type.
+
+8. **Present the run guide content to the user** as the final pipeline message (same markdown as written to `run-guide.md`). Precede it with: "Upgrade pipeline complete. Branch: `<branch_name>`. All artifacts are under `<run_artifact_dir>/`."
+
+9. **Compact the conversation.** Retain in context: `run_id`, `run_artifact_dir`, `branch_name`, and the manifest path.
+
+10. **Emit token-accounting summary.** Read `<run_artifact_dir>/summaries/token-accounting.json` if it exists. Present a compact table of per-stage estimates with columns: Stage | Approx input chars | Approx output chars | Shell calls | Largest tool output chars. Label it "Token accounting (character-based estimates):". If the file is absent or contains no entries, write "Token accounting not recorded for this run."
 
 ## Escalation Rules
 

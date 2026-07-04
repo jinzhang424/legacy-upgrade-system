@@ -55,6 +55,7 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 2. Always scope searches to the current batch's files or directories. Add exclusions on every directory-wide search: `-g '!*.min.js' -g '!node_modules' -g '!**/vendor/**' -g '!**/libs/**' -g '!**/dist/**'`.
 3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach.
 4. Batch read-only lookups that target the same step. Issue one combined read where the tool supports it.
+5. Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/batch-<n>-<step>.txt`, and record that path in the nearest pending file-context digest or ValidationResult `failure_summary`. Never paste large build logs or test output into the conversation.
 
 ## Procedure
 
@@ -77,6 +78,7 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
    - If any unrelated path is staged, unstage only the staged paths for this batch with `git -C "<repo_path>" restore --staged -- <pathspecs...>` and halt.
    - If no paths are staged, halt with a failed ValidationResult explaining that the batch produced no staged changes.
 9. Commit the batch atomically. The commit must contain only the staged subset verified in step 8.
+9a. After committing, mark each patched file's digest as stale: for every file in the committed batch, update its entry under `<file_context_dir>/` by setting `last_observed_hash` to `"stale-post-patch-batch-<n>"`. This prevents test implementation and any subsequent stage from reusing a pre-patch digest.
 10. Run the relevant subset of validation criteria, following the Shell & Search Conventions above. For the final executor invocation, run the full validation criteria suite. Validation searches must be scoped to files touched in the current batch (or, for the final pass, files touched across all batches) — never to the whole repository.
 11. Write a ValidationResult JSON artifact under `<run_artifact_dir>/validation-results/`.
 12. If `mem0_enabled` is true, store concise execution success/failure lessons and artifact pointer metadata only. Prefer `text` with metadata. Do not store exact artifact payloads or pasted source in Mem0.
