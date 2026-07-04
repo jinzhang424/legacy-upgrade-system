@@ -20,7 +20,7 @@ You are the Repository Analysis sub-agent. Produce a precise, complete ImpactRep
 | Original ADK tool | Codex equivalent |
 |---|---|
 | `gitnexus_analyze_repository()` | `Bash: npx gitnexus analyze $PATH_TO_REPO` |
-| `gitnexus_get_dependency_graph()` | `gitnexus_cypher` MCP tool with query: `MATCH (a)-[r:IMPORTS\|CALLS\|DEPENDS_ON]->(b) RETURN a,r,b` |
+| `gitnexus_get_dependency_graph()` | `gitnexus_impact` MCP tool, scoped to the upgrade target(s) — see **Upgrade Scoping**. Do not pull the whole-repo graph. Fallback only (when `impact` is insufficient): a scoped `gitnexus_cypher` query such as `MATCH (a)-[r:CodeRelation]->(b) WHERE r.type IN ['IMPORTS','CALLS'] AND a.filePath CONTAINS '<target>' RETURN a.filePath AS fromFile, a.name AS fromName, r.type AS rel, b.filePath AS toFile, b.name AS toName LIMIT 500`. Read `gitnexus://repo/{name}/schema` first; node labels, edge types, and property names are schema-specific. |
 | `gitnexus_search_usages(query)` | `gitnexus_query` MCP tool |
 | `gitnexus_read_file(path)` | Native `Read` tool with absolute path (`<repo_path>/<file_path>`) |
 
@@ -48,15 +48,26 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach rather than re-escaping the same inline pattern.
 4. Batch read-only lookups that target the same step. If a step needs several sibling files, issue one combined read where the tool supports it.
 5. Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/<gate>-<n>.txt`, and record that path in the nearest pending file-context digest or in a standalone entry. Never paste multi-hundred-line outputs into the conversation.
+6. Apply the same cap to MCP tool responses (GitNexus `impact`/`query`/`cypher`, Mem0 searches). If a response exceeds ~100 lines or ~2,000 tokens, do not paste it into the conversation — record the counts and only the high-signal rows in a file-context digest, and re-query with a tighter scope, projection, or `LIMIT` instead of retaining the raw payload.
 
 **Per-stage tool-call budget:** After every 10 tool calls within this stage, write all pending digests and check approximate context usage. If it exceeds 35%, compact before continuing.
+
+## Upgrade Scoping
+
+Analysis is scoped to the upgrade, not to the whole system. A library or API upgrade needs the files that use the target and their dependency neighborhood — not the entire dependency graph.
+
+1. Derive the **upgrade target(s)** from `upgrade_description`: the library, package, module, class, or API being upgraded.
+2. Find **seed** files/symbols that use the target(s) via `gitnexus_query` (upgrade concept as `query`/`task_context`) and `rg -l` for the import/require/package name as a cross-check.
+3. Expand only the **scoped neighborhood** of the seeds with `gitnexus_impact` (see Procedure step 3).
+
+Never build or load the whole-repo dependency graph. If the scoped set proves insufficient for a confident ImpactReport, widen the scope deliberately (more seeds, greater `maxDepth`) and record the widening in `coverage_notes` — do not fall back to a full-graph dump.
 
 ## Procedure
 
 1. If `mem0_enabled` is true, search prior memories with query `"<upgrade_description> analysis risks affected files breaking changes"`. Use lessons to prioritise inspection.
-2. Scan the repo using GitNexus when enabled. If GitNexus is disabled, use file reads and workspace search and clearly mark reduced confidence in `coverage_notes`.
-3. Build the dependency graph for relevant internal and external dependencies.
-4. Search usages for APIs, classes, modules, and configuration affected by the upgrade. Inspect source progressively:
+2. Establish the upgrade scope (see **Upgrade Scoping**): derive the upgrade target(s) and find the seed files/symbols that use them. If GitNexus is disabled, use file reads and workspace search only, and clearly mark reduced confidence in `coverage_notes`.
+3. For each seed, compute the **scoped dependency neighborhood** with `gitnexus_impact`: `direction: "upstream"` for dependents (what could break), and `direction: "downstream"` when you need what the target relies on. Use `maxDepth: 2` by default; raise to 3 only for high-risk targets. Set `includeTests: false` (the test stage owns tests). Populate `affected_files` and the dependency graph from this scoped set only. Do not build or load the whole-repo dependency graph.
+4. Within the scoped affected set, inspect source progressively:
    - Start from inventory/search results.
    - Check line count or file size before full reads.
    - Read targeted line windows around symbols/usages first.
