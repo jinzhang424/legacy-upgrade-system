@@ -14,12 +14,52 @@ You do not analyse code, write plans, or apply changes yourself. You route, gate
    - If it is outside the approved workspace and filesystem access is unavailable, request access. If access is not granted, halt and ask the user to move or clone the repository under `projects/<repo-name>`.
 3. Derive `memory_user_id` from the basename of `PATH_TO_REPO`. Use this for all Mem0 calls.
 4. Generate `run_id` as `<YYYY-MM-DD>-<upgrade-slug>` after the user provides the upgrade description. Store runtime artifacts under `.codex/upgrade-runs/<run_id>/`.
-5. Preflight artifact directory permissions before spawning any stage. Create or verify these directories: `.codex/upgrade-runs/<run_id>/`, `summaries/`, `slices/`, `validation-results/`, and `file-context/`. If the directories cannot be created or written, halt before invoking sub-agents.
+5. Preflight artifact directory permissions before spawning any stage. Create or verify these directories: `.codex/upgrade-runs/<run_id>/`, `summaries/`, `slices/`, `validation-results/`, `file-context/`, `checkpoints/`, and `shell-logs/` (run-gate.js creates `validation-results/evidence/` and Stage 4-A creates `harness/` themselves). If the directories cannot be created or written, halt before invoking sub-agents.
 6. Assume `mem0_enabled = true` and `gitnexus_enabled = true` unless a preflight check fails.
-7. Check Mem0 availability with `mem0_search_memories` using `query: "healthcheck"` and `user_id: <memory_user_id>`. If it fails, warn the user and ask whether to continue without Mem0. If approved, set `mem0_enabled = false`; otherwise stop.
+7. Recall prior upgrade sessions with a single `mem0_search_memories` call using query `"upgrade sessions outcomes failures"` and `user_id: <memory_user_id>`. This one call is both the availability check and the recall — it is the **only** `search_memories` call permitted in the entire run, for any agent. Summarise relevant prior risks, fragile areas, and execution failures in 2-3 sentences and discard the raw response. If the call fails, warn the user and ask whether to continue without Mem0. If approved, set `mem0_enabled = false`; otherwise stop.
 8. Verify the repository is indexed in GitNexus by running `Bash: npx gitnexus list`. If the target repo is not listed, tell the user it must be indexed and run `Bash: npx gitnexus analyze "<PATH_TO_REPO>"`. Re-run `npx gitnexus list` to confirm. If indexing fails, halt and show the error. If GitNexus fails entirely, warn the user and ask whether to continue without GitNexus. Retain only the final success/failure line (and error text on failure) from `npx gitnexus analyze`; do not keep full indexing output in context.
-9. Recall prior upgrade sessions using `mem0_search_memories` with query `"upgrade sessions outcomes failures"` and the repo `memory_user_id`. Summarise relevant prior risks, fragile areas, and execution failures in 2-3 sentences.
+9. Check whether `<repo_path>/upgrade.config.json` exists (Glob, do not read it yet) and record `upgrade_config_present`. This file is the repo's validation contract (see `schemas/upgrade-config.schema.json`): install/build/test/start commands, health URL, smoke routes, services, env. If present, read it once and keep its parsed content for stage handoffs. If absent, Stage 1 will propose one and you will confirm it with the user after the analysis gate.
 10. Ask the user what upgrade to perform and which paths or modules to exclude.
+
+## Spawn Protocol — Inline Briefs
+
+Each stage has a compact runtime brief under `.codex/skills/upgrade/references/briefs/`:
+
+| Stage | Brief |
+|---|---|
+| 1 Analysis | `briefs/analyze-brief.md` |
+| 2 Planning | `briefs/plan-brief.md` |
+| 4-A Test Planning | `briefs/test-plan-brief.md` |
+| 3 Execution | `briefs/execute-brief.md` |
+| 4-B Test Implementation | `briefs/test-implement-brief.md` |
+
+When spawning a stage sub-agent, read the brief (they are ≤ ~2KB) and **inline it verbatim at the top of the spawn prompt**, followed by the runtime facts for that stage. Do not tell sub-agents to read any file under `references/` or `schemas/` — the brief already contains the schema constraints that matter for that stage's artifact. The long `references/<stage>.md` documents are human appendices; no agent reads them at runtime.
+
+## Checkpoint & Resume
+
+Stage agents maintain `<artifact>.draft.json` and `<run_artifact_dir>/checkpoints/<stage>-progress.json` (completed step ids) as they work; create the `checkpoints/` directory during startup preflight.
+
+If a sub-agent disconnects, times out, or returns without its final artifact but a draft or progress file exists on disk, do **not** restart the stage from scratch. Re-spawn with the same brief plus a `resume_from_checkpoint` block listing: the draft path, the progress path, the completed step ids, and the instruction "continue from the first incomplete step; do not redo completed steps or re-apply committed changes." Only when no draft and no progress file exist may the stage be restarted from scratch.
+
+## Batched Shell Work
+
+For any repo/artifact state check (branch, porcelain status, last commit, expected artifacts present), run exactly one command:
+
+```text
+node .codex/skills/upgrade/scripts/repo-status.js --repo "<repo_path>" --run-dir "<run_artifact_dir>"
+```
+
+Never issue separate `git status` / `git branch` / `git log` / `ls` calls for information this blob already contains. One call per checkpoint, maximum.
+
+The deterministic validator is always invoked as this exact one-liner (its JSON report goes to stdout and its exit code is 0 only on approval — no output-capture gymnastics):
+
+```text
+node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js <agent_type> <artifact_path>
+```
+
+## Stage Budgets
+
+Soft per-stage tool-call budgets: analysis ≤ 25, planning ≤ 15, test planning ≤ 25 (includes harness build + baseline run), execution ≤ 30 per batch, test implementation ≤ 20, orchestrator ≤ 15 shell commands per stage boundary. Each brief instructs the agent to report its tool-call count in its final message. After each stage, record `{ stage, reported_tool_calls, budget, over_budget }` in a `stage_metrics` array in `<run_artifact_dir>/manifest.json` so regressions are visible run-over-run. Budgets are soft: an overrun never blocks the pipeline, but it must be recorded.
 
 ## Progressive Artifact Protocol
 
@@ -61,7 +101,7 @@ Every final stage output must include:
   "artifact_coverage": {
     "artifact_refs": ["impact_report"],
     "slices_loaded": ["high_risk", "direct_usage"],
-    "file_context_refs": ["file-context/tv-radio-admin-Common-directdb-mongo.js.json"],
+    "file_context_refs": ["file-context/src-providers-db-provider.js.json"],
     "full_artifact_loaded": false,
     "deferred_items": 0,
     "confidence": "sufficient",
@@ -87,23 +127,28 @@ File context digest shape:
 
 ```json
 {
-  "file_path": "tv-radio-admin/Common/directdb-mongo.js",
+  "file_path": "src/providers/db-provider.js",
   "line_count": 812,
   "read_mode": "full | targeted",
-  "full_file_reason": "high-risk direct MongoDB API migration",
-  "symbols_or_sections_inspected": ["connect", "findAndModify usage", "GridStore usage"],
+  "full_file_reason": "high-risk direct usage of the upgrade-target API",
+  "symbols_or_sections_inspected": ["connect", "deprecated API usage sites"],
   "relevant_ranges": ["120-210", "390-460"],
   "summary": "Concise behavior and migration-relevant notes.",
-  "risks": ["Uses deprecated MongoDB APIs"],
+  "risks": ["Uses APIs removed in the target library version"],
   "last_observed_hash": "sha256-or-tool-provided-hash"
 }
 ```
 
 If `read_mode` is `"targeted"`, `full_file_reason` must be `null`. If `read_mode` is `"full"`, `full_file_reason` must explain why a full read was necessary.
 
-## Mem0 Schema
+## Mem0 — Orchestrator Only
 
-Use the actual available Mem0 tool schema. Prefer `text` for `mem0_add_memory`/`add_memory` storage payloads, with metadata for stage, artifact type, run id, and local artifact path. Use `messages` only if the available tool explicitly requires or benefits from conversation-shaped input. Never store exact artifact JSON or pasted source files in Mem0.
+Mem0 is orchestrator-owned. Sub-agents make **no** Mem0 calls and are not given `memory_user_id`/`mem0_enabled` (their briefs forbid it; `add_memory` was never reliably exposed to them and per-stage searches cost more than they returned). The entire run uses exactly two Mem0 calls:
+
+1. **One `search_memories`** at startup (Startup step 7).
+2. **One `add_memory`** at run end (Stage 5), storing a human-readable run summary: outcome, per-stage lessons harvested from the sub-agents' final messages and `failure_summary` fields, fragile areas, and the `run_artifact_dir` pointer.
+
+Prefer `text` payloads with metadata for stage, artifact type, run id, and local artifact path. Never store exact artifact JSON or pasted source files in Mem0.
 
 ## Validation Protocol
 
@@ -114,6 +159,14 @@ node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js <agent_type> <ar
 ```
 
 Supported `agent_type` values are `analyze`, `plan`, `test-plan`, `execute`, and `test-result`. Write each validation report to `.codex/upgrade-runs/<run_id>/validation-results/<agent_type>-<attempt>.json`.
+
+**Fixer-first on failure.** When deterministic validation fails, do not spawn a correction agent. Run the mechanical fixer, which repairs safe schema violations in place (E8 failure_summary-vs-status, A7 count mismatch, type coercions) and re-validates:
+
+```text
+node .codex/skills/upgrade/scripts/fix-upgrade-artifact.js <agent_type> <artifact_path>
+```
+
+Exit 0 means the artifact now validates approved — continue as if validation had passed on first attempt. Exit 1 means substantive criteria still fail (its JSON output lists `still_failing`); only then re-invoke the producing agent once, per the stage's retry rule, with only the still-failing criteria and artifact references. Never spawn an agent for a violation the fixer already resolved.
 
 Optional LLM semantic validation is allowed only after deterministic validation. The semantic prompt may include only the artifact summary, high-signal slices, and deterministic validator findings. Do not pass full artifacts or `validator.md` into routine validator sub-agent calls.
 
@@ -129,7 +182,7 @@ Per batch, also record:
 - `shell_call_count` and `failed_shell_call_count` (syntax/parser errors count as failed).
 - `largest_tool_output_chars` for the batch, with the command that produced it.
 
-If `failed_shell_call_count > 0` for a batch, the batch's ValidationResult must note the failing command pattern in `failure_summary` (even on overall `status: "passed"`) so the run's close-out summary can surface it for the next pipeline iteration.
+If `failed_shell_call_count > 0` for a batch, the batch's ValidationResult must note the failing command pattern in its `notes` field so the run's close-out summary can surface it for the next pipeline iteration. Never put it in `failure_summary` on a passed result — validator rule E8 requires `failure_summary: null` when `status` is `"passed"`.
 
 ## Compaction Checkpoints
 
@@ -154,49 +207,50 @@ digest yet, write the digest first.
 
 ## Stage 1 - Repository Analysis
 
-1. Spawn the analysis sub-agent with only runtime facts: `upgrade_description`, `excluded_paths`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `gitnexus_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/analyze.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `analyze.md`.
+1. Spawn the analysis sub-agent with `briefs/analyze-brief.md` inlined verbatim (see Spawn Protocol), followed by only runtime facts: `upgrade_description`, `excluded_paths`, `repo_path`, `run_id`, `run_artifact_dir`, `gitnexus_enabled`, `upgrade_config_present`, and the 2-3 sentence prior-lessons summary from Startup step 7. Do not pass Mem0 identifiers and do not reference `analyze.md`.
    > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
    > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/impact-report.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing impact-report.json" — do NOT fall through to deterministic validation or re-invoke.
 2. Require the analyzer to write `impact-report.json`, its summary, mandatory slices, and the manifest entry.
-4. Run deterministic validation with `agent_type = "analyze"` against the written `impact-report.json`.
-5. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `affected_files`, `dependency_graph`, `risk_summary`, or `coverage_notes` is missing.
-6. If validation fails, re-invoke the analyzer once with only failed criteria and artifact references. If it fails twice, halt and report.
+3. Run deterministic validation with `agent_type = "analyze"` against the written `impact-report.json`.
+4. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `affected_files`, `dependency_graph`, `risk_summary`, or `coverage_notes` is missing.
+5. If validation fails after the fixer, re-invoke the analyzer once with only failed criteria and artifact references. If it fails twice, halt and report.
+6. **Validation contract gate (once per repo):** if `upgrade_config_present` was false, read `<run_artifact_dir>/upgrade.config.proposed.json` and present it to the user for confirmation or edits. On approval, write the confirmed content to `<repo_path>/upgrade.config.json` (this write is explicitly permitted despite the no-repo-modification rule) and keep the parsed content for stage handoffs. If the analyzer could not propose one and the user cannot supply the fields, warn that the harness and boot/smoke gates will be skipped this run and record that in the manifest.
 7. Present a concise human summary and ask whether the user approves proceeding to planning.
 
 ## Stage 2 - Upgrade Planning
 
 1. Before spawning the planner, compute the approximate token size of the planned handoff (manifest entry + summary + mandatory slices + relevant file-context digests). Estimate as `Math.ceil(JSON.stringify(payload).length / 4)` (1 token ≈ 4 characters); apply this same formula for all handoff budget checks in later stages. If the total exceeds 6,000 tokens, write a `handoff-summary-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
-2. Spawn the planner with the ImpactReport manifest entry, summary, mandatory slices (or condensed handoff path), relevant file-context digests, prior relevant failure memories, `upgrade_description`, `user_constraints`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/plan.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `plan.md`.
+2. Spawn the planner with `briefs/plan-brief.md` inlined verbatim (see Spawn Protocol), followed by the ImpactReport manifest entry, summary, mandatory slices (or condensed handoff path), relevant file-context digest paths, the prior-lessons summary, `upgrade_description`, `user_constraints`, the confirmed upgrade.config.json content, `repo_path`, `run_id`, and `run_artifact_dir`. Do not pass Mem0 identifiers and do not reference `plan.md`.
    > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
    > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/change-plan.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing change-plan.json" — do NOT fall through to deterministic validation or re-invoke.
 3. Mandatory ImpactReport slices: `high_risk`, `direct_usage`, `configuration`, `breaking_changes`, `coverage_notes`, and `dependency_summary`.
 4. Require the planner to write `change-plan.json`, its summary, planned high-risk changes, validation criteria, rollback summary, execution batch slices, and the manifest entry.
 5. Run deterministic validation with `agent_type = "plan"` against `change-plan.json`.
 6. Gate check rejects if any critical deterministic criterion fails, if `artifact_coverage.confidence` is not `"sufficient"`, or if `ordered_changes`, `rollback_steps`, `test_validation_criteria`, or `plan_summary` is missing or empty.
-7. If validation fails, re-invoke the planner once with only failed criteria and artifact references. If it fails twice, halt and report.
+7. If validation fails after the fixer, re-invoke the planner once with only failed criteria and artifact references. If it fails twice, halt and report.
 8. Present a concise plan summary and ask whether the user approves proceeding to execution.
 
 ## Stage 4-A - Test Planning
 
 1. Before spawning the test planner, compute the approximate token size of the planned handoff (ImpactReport and ChangePlan manifest entries + summaries + mandatory slices + file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-test-plan.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path instead of the full slice list; the sub-agent loads additional slices on demand.
-2. Spawn the test planning sub-agent with `phase: "plan"`, the ImpactReport and ChangePlan manifest entries, summaries, mandatory slices (or condensed handoff path), relevant source and test file-context digests, `upgrade_description`, `repo_path`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/test.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `test.md`.
+2. Spawn the test planning sub-agent with `briefs/test-plan-brief.md` inlined verbatim (see Spawn Protocol), followed by the ImpactReport and ChangePlan manifest entries, summaries, mandatory slices (or condensed handoff path), relevant source and test file-context digest paths, `upgrade_description`, the confirmed upgrade.config.json content, `repo_path`, `run_id`, and `run_artifact_dir`. Do not pass Mem0 identifiers and do not reference `test.md`.
    > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
    > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/test-plan.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing test-plan.json" — do NOT fall through to deterministic validation or re-invoke.
 3. Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`, `rollback_summary`, and all `batch_*` summaries.
-4. Require the test planner to write `test-plan.json`, its summary, high-priority test, regression test, framework recommendation slices, and the manifest entry.
-5. Run deterministic validation with `agent_type = "test-plan"` against `test-plan.json`.
-6. If validation fails twice, warn the user that test planning failed and set `test_plan = null`. Otherwise, present an informational summary and continue automatically to execution.
+4. Require the test planner to write `test-plan.json`, its summary, high-priority test, regression test, framework recommendation slices, the manifest entry, **and the runnable harness**: `<run_artifact_dir>/harness/run.js` plus `<run_artifact_dir>/harness/baseline.json` produced by running the harness once against the unchanged repo. The harness — not executor judgment — is what Stage 3 gates run against.
+5. Run deterministic validation with `agent_type = "test-plan"` against `test-plan.json`. Then verify `harness/run.js` and `harness/baseline.json` exist (one repo-status.js call covers both). If the harness or baseline is missing, treat it as a validation failure and re-invoke once with a `resume_from_checkpoint` block — the test plan artifacts already on disk must not be regenerated.
+6. If validation fails twice, warn the user that test planning failed and set `test_plan = null`; execution then falls back to install/syntax/test_cmd gates only, and this degradation must be stated in the final summary. Otherwise, present an informational summary and continue automatically to execution. Stage 4-A must fully complete (including baseline) before any Stage 3 agent is spawned.
 
 ## Stage 3 - Upgrade Execution
 
 1. Create or switch to `upgrade/<slug>`. Do not require a fully clean branch solely because unrelated untracked files exist; execution preflight classifies worktree state per batch.
 2. Before spawning each executor batch, compute the approximate token size of the planned handoff (`batch_<n>` slice + `validation_criteria` slice + `rollback_summary` slice + relevant file-context digests). If the total exceeds 6,000 tokens, write a `handoff-summary-execute-batch-<n>.json` under `<run_artifact_dir>/summaries/` that condenses it to fit within budget. Pass the condensed handoff path; the sub-agent loads additional slices on demand.
-3. Invoke the executor one batch at a time. Each prompt receives the ChangePlan manifest entry, `batch_<n>` slice (or condensed handoff path), `validation_criteria` slice, `rollback_summary` slice, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, `invoked_by_upgrade = true`, and `stage_reference_path: .codex/skills/upgrade/references/execute.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `execute.md`.
+3. Invoke the executor one batch at a time. Each prompt receives `briefs/execute-brief.md` inlined verbatim (see Spawn Protocol), followed by the ChangePlan manifest entry, `batch_<n>` slice (or condensed handoff path), `validation_criteria` slice, `rollback_summary` slice, the confirmed upgrade.config.json content, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, and `invoked_by_upgrade = true`. Do not pass Mem0 identifiers and do not reference `execute.md`.
    > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
    > **Artifact pre-check:** after the Agent tool returns, verify the expected `<run_artifact_dir>/validation-results/execute-<n>.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing its ValidationResult" — do NOT fall through to deterministic validation or re-invoke.
 4. The executor may load additional batch slices or the full `change-plan.json` only when needed for dependency ordering, validation context, or rollback safety.
-5. After each batch and final validation, require a ValidationResult artifact under `validation-results/` and run deterministic validation with `agent_type = "execute"`.
-6. If a passed result validates, continue. If a failed result validates, apply rollback using the ChangePlan rollback summary/full artifact as needed, stage only rolled-back paths with exact pathspecs, verify the cached diff path set, commit rollback, notify the user, and halt. If the ValidationResult itself is invalid, ask the executor to re-emit a valid result without re-running changes.
+5. After each batch and final validation, require a ValidationResult artifact under `validation-results/` and run deterministic validation with `agent_type = "execute"`. The validator's E12 rule independently verifies the evidence files under `validation-results/evidence/execute-<n>/` — a `passed` result whose gates were not actually run (or whose evidence was deleted) is rejected automatically; there is nothing extra for you to inspect.
+6. If a passed result validates, continue. If a failed result validates, apply rollback using the ChangePlan rollback summary/full artifact as needed, stage only rolled-back paths with exact pathspecs, verify the cached diff path set, commit rollback, notify the user, and halt. If the ValidationResult itself is invalid, run the fixer first (see Validation Protocol); only if it cannot resolve the violations, ask the executor to re-emit a valid result without re-running changes.
 7. On final `status: "passed"` with deterministic approval, proceed to Stage 4-B before the final user summary.
 
 ## Stage 4-B - Test Implementation
@@ -204,68 +258,49 @@ digest yet, write the digest first.
 Only run this stage if `test_plan` is non-null.
 
 1. Before spawning the test implementation sub-agent, compute the approximate token size of the planned handoff (TestPlan manifest entry + summary + high-priority/regression/framework slices). If the total exceeds 6,000 tokens, write a `handoff-summary-test-implement.json` under `<run_artifact_dir>/summaries/` that condenses the mandatory slices to fit within budget. Pass the condensed handoff path; the sub-agent loads additional slices on demand.
-2. Spawn the test implementation sub-agent with `phase: "implement"`, the TestPlan manifest entry, summary, high-priority/regression/framework slices (or condensed handoff path), `upgrade_description`, `repo_path`, `branch_name`, `run_id`, `run_artifact_dir`, `memory_user_id`, `mem0_enabled`, and `stage_reference_path: .codex/skills/upgrade/references/test.md`. The sub-agent reads its reference file as its first action. The orchestrator must not read `test.md`.
+2. Spawn the test implementation sub-agent with `briefs/test-implement-brief.md` inlined verbatim (see Spawn Protocol), followed by the TestPlan manifest entry, summary, high-priority/regression/framework slices (or condensed handoff path), `upgrade_description`, `repo_path`, `branch_name`, `run_id`, and `run_artifact_dir`. Do not pass Mem0 identifiers and do not reference `test.md`.
    > **Synchronous invocation required:** do NOT set `run_in_background` on this Agent call. Wait for the Agent tool to return before proceeding to the next step.
    > **Artifact pre-check:** after the Agent tool returns, verify `<run_artifact_dir>/test-result.json` exists (Glob or Read). If it is absent, halt immediately and report "Sub-agent returned without writing test-result.json" — do NOT fall through to deterministic validation or re-invoke.
-2. The agent may load full `test-plan.json` if required to implement all non-skipped test cases.
-3. Extract and persist `test-result.json`, then run deterministic validation with `agent_type = "test-result"`.
-4. If validation fails, re-invoke once with failed criteria. If it fails again, warn that the upgrade succeeded but generated tests were not validated.
-5. Proceed to Stage 5 to generate the environment setup and run guide. If test planning failed (`test_plan = null`), still proceed to Stage 5 — the run guide will note that test generation was skipped and will omit test result counts.
+3. The agent may load full `test-plan.json` if required to implement all non-skipped test cases.
+4. Extract and persist `test-result.json`, then run deterministic validation with `agent_type = "test-result"`.
+5. If validation fails after the fixer, re-invoke once with failed criteria. If it fails again, warn that the upgrade succeeded but generated tests were not validated.
+6. Proceed to Stage 5 to generate the run guide. If test planning failed (`test_plan = null`), still proceed to Stage 5 — the run guide will note that test generation was skipped and will omit test result counts.
 
-## Stage 5 - Environment Setup and Run Guide
+## Stage 5 - Run Guide
 
-Run this stage inline — do not spawn a sub-agent. All required data is in memory or in slice files already on disk.
+Run this stage inline — do not spawn a sub-agent. All required data is in memory or in slice files already on disk. The user's environment (dependencies, runtime, config) is already set up — do not probe manifests or infer install commands.
 
 1. **Collect from existing artifacts.** Read the following files (never read full artifact JSON):
    - `<run_artifact_dir>/summaries/change-plan-summary.json` — for `plan_summary`.
-   - `<run_artifact_dir>/slices/change-plan-validation-criteria.json` — for build, test, and smoke commands.
-   - `<run_artifact_dir>/summaries/test-plan-summary.json` — for `framework_recommendations` and `coverage_goals`. Skip if `test_plan = null`.
    - `<run_artifact_dir>/summaries/test-result-summary.json` — for `test_files_created` and `run_results`. Skip if `test_plan = null`.
 
-2. **Detect runtime and install command.** Probe the repo in this order; stop at the first match:
-   a. Read `<repo_path>/package.json` (targeted: `engines`, `scripts`, `name` keys only). If present, runtime is Node.js; note `engines.node` version if available. Install command is `npm install`, unless `<repo_path>/yarn.lock` exists (check with Glob), in which case use `yarn install`. If multiple `package.json` files exist across subdirectories (Glob `**/package.json`), note that `npm install` must be run in each module directory.
-   b. Check `<repo_path>/requirements.txt`. If present, runtime is Python; install is `pip install -r requirements.txt`.
-   c. Check `<repo_path>/pyproject.toml`. If present, read lines 1–15 to detect `[tool.poetry]`; use `poetry install` if found, otherwise `pip install -e .`.
-   d. Check `<repo_path>/go.mod`. If present, runtime is Go; install is `go mod download`.
-   e. If none match, record runtime as "not determinable from standard manifests" and omit an install command.
+2. **Ask the user how to run the project and its tests.** Ask directly, e.g.: "How do you normally run this project, and how do you run its tests?" Do not probe `package.json`, `.env.example`, or other manifests to guess this.
 
-3. **Detect start command.** In priority order:
-   a. Use `type: "smoke"` or `type: "build"` entries from `change-plan-validation-criteria.json` — these are the planner's canonical run commands.
-   b. Fall back to `scripts.start` or `scripts.dev` from the relevant `package.json`.
-   c. If neither is available, write "Start command not detected — consult application documentation."
-
-4. **Detect test command.** In priority order:
-   a. Use `type: "test"` entries from `change-plan-validation-criteria.json`.
-   b. Fall back to `framework_recommendations` from `test-plan-summary.json`, constructing the standard invocation (e.g. `npx jest`, `npm test`, `python -m pytest`).
-   c. List every path in `test_files_created` from `test-result-summary.json` as individual runnable targets.
-   d. If `test_plan = null`, write "Test generation was skipped — no test command available."
-
-5. **Detect required environment variables.**
-   a. Read `<repo_path>/.env.example` (targeted: first 60 lines). Extract variable names (lines of the form `VAR_NAME=` or `VAR_NAME=example_value`) without values.
-   b. If absent, check `<repo_path>/.env.sample` with the same targeted read.
-   c. If neither exists, write "No `.env.example` found — consult application configuration for required variables."
-
-6. **Write `<run_artifact_dir>/run-guide.md`.** Plain markdown with these sections in order:
-   - `## Environment Setup` — runtime version, install command, environment variables table (Name | Description; Description is empty when unknown).
-   - `## Run the Application` — start command in a fenced code block.
-   - `## Run the Tests` — test command in a fenced code block, then a bulleted list of `test_files_created` paths (omit section if `test_plan = null`).
+3. **Write `<run_artifact_dir>/run-guide.md`.** Plain markdown with these sections in order:
+   - `## Run the Application` — the command the user gave, in a fenced code block.
+   - `## Run the Tests` — the command the user gave, in a fenced code block, then a bulleted list of `test_files_created` paths (omit section if `test_plan = null`).
    - `## Upgrade Summary` — `plan_summary` text verbatim, then test result counts: total / passing / failing / skipped (omit counts if `test_plan = null`).
 
-7. **Add a `run_guide` entry to `<run_artifact_dir>/manifest.json`** with `artifact_path` pointing to `run-guide.md`, `summary_path: null`, `slices: {}`, and `producer_stage: "run-guide"`. The deterministic validator is never called for this artifact type.
+4. **Add a `run_guide` entry to `<run_artifact_dir>/manifest.json`** with `artifact_path` pointing to `run-guide.md`, `summary_path: null`, `slices: {}`, and `producer_stage: "run-guide"`. The deterministic validator is never called for this artifact type.
 
-8. **Present the run guide content to the user** as the final pipeline message (same markdown as written to `run-guide.md`). Precede it with: "Upgrade pipeline complete. Branch: `<branch_name>`. All artifacts are under `<run_artifact_dir>/`."
+5. **Present the run guide content to the user** as the final pipeline message (same markdown as written to `run-guide.md`). Precede it with: "Upgrade pipeline complete. Branch: `<branch_name>`. All artifacts are under `<run_artifact_dir>/`."
 
-9. **Compact the conversation.** Retain in context: `run_id`, `run_artifact_dir`, `branch_name`, and the manifest path.
+6. **Write the single run-end memory.** If `mem0_enabled`, make the run's one `add_memory` call (see Mem0 — Orchestrator Only): a `text` payload with run outcome, per-stage lessons harvested from sub-agent final messages and any `failure_summary` fields, fragile areas for future runs, and the `run_artifact_dir` pointer, with metadata `{ run_id, repo: memory_user_id, stage: "run-end" }`.
 
-10. **Emit token-accounting summary.** Read `<run_artifact_dir>/summaries/token-accounting.json` if it exists. Present a compact table of per-stage estimates with columns: Stage | Approx input chars | Approx output chars | Shell calls | Largest tool output chars. Label it "Token accounting (character-based estimates):". If the file is absent or contains no entries, write "Token accounting not recorded for this run."
+7. **Compact the conversation.** Retain in context: `run_id`, `run_artifact_dir`, `branch_name`, and the manifest path.
+
+8. **Emit token-accounting summary.** Read `<run_artifact_dir>/summaries/token-accounting.json` if it exists. Present a compact table of per-stage estimates with columns: Stage | Approx input chars | Approx output chars | Shell calls | Largest tool output chars. Label it "Token accounting (character-based estimates):". If the file is absent or contains no entries, write "Token accounting not recorded for this run."
 
 ## Escalation Rules
 
 - If a sub-agent fails to produce valid output after 2 attempts, halt and report the failed criteria and artifact paths.
+- On a sub-agent disconnect or timeout, always attempt Checkpoint & Resume before counting the attempt as failed; a restart-from-scratch without first checking for drafts/progress files is a protocol violation.
+- Deterministic artifact violations go to `fix-upgrade-artifact.js` first; spawning an agent for a violation the fixer can resolve is a protocol violation.
 - Never proceed past a human approval gate without explicit approval.
 - Never proceed past a deterministic validation gate with critical failures.
-- Never modify repository state directly except branch creation and rollback steps defined here.
+- Never modify repository state directly except branch creation, rollback steps defined here, and writing the user-confirmed `<repo_path>/upgrade.config.json` after the Stage 1 gate.
 - Never use broad staging such as `git add -A` or `git add .` for upgrade or rollback commits.
+- The auto-approved tools in `.codex/rules/upgrade-pipeline.rules` (`rg`, `git`, `npx gitnexus`, `npm test`/`npm run`/`npm ci`, `npx jest`, `python -m pytest`, `node --check`, and the pipeline scripts: validator, fixer, repo-status, run-gate, boot-smoke) and the auto-approved MCP tools (`gitnexus_query`/`cypher`/`impact`, `mem0_add_memory`/`search_memories`) are approved only for use inside `repo_path`, the run artifact dir, or the documented scratch-copy location. Before invoking any of them with a path, working directory, or target outside `repo_path`, halt and ask the user for explicit approval — do not treat the pre-approval as covering out-of-repo use.
 - Keep user-facing messages concise, structured, and free of raw JSON.
 - If a stage or batch is resumed after an interruption (artifact write aborted, session
   restarted, or idle gap longer than 30 minutes), do not reload full upstream artifacts

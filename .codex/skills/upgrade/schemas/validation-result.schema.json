@@ -16,11 +16,19 @@
           "criterion_type": { "type": "string" },
           "command_or_check": { "type": "string" },
           "outcome": { "type": "string", "enum": ["passed", "failed"] },
-          "output": { "type": "string" }
+          "output": { "type": "string" },
+          "evidence_path": {
+            "type": "string",
+            "description": "Workspace-relative path to the run-gate.js evidence JSON for this gate. Mandatory (enforced by validator rule E12) when the overall status is passed."
+          }
         }
       }
     },
     "failure_summary": { "type": ["string", "null"] },
+    "notes": {
+      "type": "string",
+      "description": "Non-fatal commentary (e.g. failed-shell-call patterns on a passed batch). This is where E8-violating failure_summary text on passed results is moved."
+    },
     "commit_refs": { "type": "array", "items": { "type": "string" } },
     "baseline_status": { "type": "array", "items": { "type": "string" } },
     "baseline_untracked_files": { "type": "array", "items": { "type": "string" } },

@@ -49,11 +49,20 @@ const validPlan = {
   artifact_coverage: coverage(["impact_report"], ["high_risk", "direct_usage"])
 };
 
+// E12 requires passed execute artifacts to reference real evidence files.
+const evidenceDir = path.join(tmp, "evidence", "execute-1");
+fs.mkdirSync(evidenceDir, { recursive: true });
+fs.writeFileSync(path.join(evidenceDir, "test.log"), "ok\n");
+fs.writeFileSync(path.join(evidenceDir, "test.json"), JSON.stringify({
+  gate: "test", stage: "execute-1", command: "npm test", exit_code: 0, log_path: "test.log"
+}));
+const evidencePath = path.join(evidenceDir, "test.json");
+
 const validExecute = {
   batch_sequence: 1,
   status: "passed",
   changes_applied: ["src/a.js"],
-  validation_results: [{ criterion_type: "test", command_or_check: "npm test", outcome: "passed", output: "ok" }],
+  validation_results: [{ criterion_type: "test", command_or_check: "npm test", outcome: "passed", output: "ok", evidence_path: evidencePath }],
   failure_summary: null,
   commit_refs: ["abc123"],
   baseline_status: ["?? .claude/settings.json"],
@@ -119,6 +128,39 @@ assert.strictEqual(validate("execute", write("execute-stages-unrelated.json", ex
 
 const invalidTestResultStatus = { ...validTestResult, status: "done" };
 assert.strictEqual(validate("test-result", write("invalid-test-result-status.json", invalidTestResultStatus)).decision, "rejected");
+
+// E12: passed without any evidence_path is rejected.
+const executeNoEvidence = {
+  ...validExecute,
+  validation_results: [{ criterion_type: "test", command_or_check: "npm test", outcome: "passed", output: "ok" }]
+};
+const noEvidenceReport = validate("execute", write("execute-no-evidence.json", executeNoEvidence));
+assert.strictEqual(noEvidenceReport.decision, "rejected");
+assert(noEvidenceReport.rejection_reasons.some((reason) => reason.startsWith("E12:")));
+
+// E12: evidence with a nonzero exit code is rejected.
+fs.writeFileSync(path.join(evidenceDir, "failing.json"), JSON.stringify({ gate: "harness", exit_code: 1, log_path: "test.log" }));
+const executeFailingEvidence = {
+  ...validExecute,
+  validation_results: [{ ...validExecute.validation_results[0], evidence_path: path.join(evidenceDir, "failing.json") }]
+};
+assert.strictEqual(validate("execute", write("execute-failing-evidence.json", executeFailingEvidence)).decision, "rejected");
+
+// E12: deleting the evidence log invalidates a previously approved artifact.
+const validExecuteFile = write("valid-execute-log-check.json", validExecute);
+assert.strictEqual(validate("execute", validExecuteFile).decision, "approved");
+fs.unlinkSync(path.join(evidenceDir, "test.log"));
+assert.strictEqual(validate("execute", validExecuteFile).decision, "rejected");
+fs.writeFileSync(path.join(evidenceDir, "test.log"), "ok\n");
+
+// Failed results do not require evidence (agents must be able to report failure).
+const failedExecuteWithSummary = {
+  ...validExecute,
+  status: "failed",
+  validation_results: [{ criterion_type: "test", command_or_check: "npm test", outcome: "failed", output: "boom" }],
+  failure_summary: "npm test failed with 3 assertion errors in provider tests."
+};
+assert.strictEqual(validate("execute", write("failed-execute-with-summary.json", failedExecuteWithSummary)).decision, "approved");
 
 assert.strictEqual(validate("execute", write("valid-execute.json", validExecute)).decision, "approved");
 assert.strictEqual(validate("test-result", write("valid-test-result.json", validTestResult)).decision, "approved");

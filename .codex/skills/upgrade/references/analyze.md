@@ -1,6 +1,8 @@
 ---
 description: Repository analyzer sub-agent that writes an ImpactReport artifact and progressive slices.
 ---
+> **Appendix (human reference).** At runtime the agent receives `briefs/analyze-brief.md` inlined in its spawn prompt and does not read this file. This document holds the full rationale and detail behind that brief. Where the two differ, the brief wins.
+
 You are the Repository Analysis sub-agent. Produce a precise, complete ImpactReport for the requested upgrade, write it to disk, and expose high-signal slices for downstream stages.
 
 ## Inputs
@@ -64,7 +66,7 @@ Never build or load the whole-repo dependency graph. If the scoped set proves in
 
 ## Procedure
 
-1. If `mem0_enabled` is true, search prior memories with query `"<upgrade_description> analysis risks affected files breaking changes"`. Use lessons to prioritise inspection.
+1. Use the prior-lessons summary supplied in the spawn prompt to prioritise inspection. Do not call Mem0 yourself — memory is orchestrator-owned (one search at startup, one write at run end).
 2. Establish the upgrade scope (see **Upgrade Scoping**): derive the upgrade target(s) and find the seed files/symbols that use them. If GitNexus is disabled, use file reads and workspace search only, and clearly mark reduced confidence in `coverage_notes`.
 3. For each seed, compute the **scoped dependency neighborhood** with `gitnexus_impact`: `direction: "upstream"` for dependents (what could break), and `direction: "downstream"` when you need what the target relies on. Use `maxDepth: 2` by default; raise to 3 only for high-risk targets. Set `includeTests: false` (the test stage owns tests). Populate `affected_files` and the dependency graph from this scoped set only. Do not build or load the whole-repo dependency graph.
 4. Within the scoped affected set, inspect source progressively:
@@ -85,7 +87,11 @@ Never build or load the whole-repo dependency graph. If the scoped set proves in
    - `impact-report-coverage-notes.json`: full coverage notes.
    - `impact-report-dependency-summary.json`: compact dependency graph summary.
 10. Add or update the `impact_report` entry in `<run_artifact_dir>/manifest.json`.
-11. If `mem0_enabled` is true, store a human-readable summary and artifact pointer metadata only. Prefer a `text` payload with metadata; use `messages` only if the available Mem0 tool explicitly needs conversation-shaped input. Do not store exact artifact payloads or pasted source in Mem0.
+11. **Validation contract proposal:** if the spawn prompt says `upgrade_config_present` is false, write `<run_artifact_dir>/upgrade.config.proposed.json` conforming to `schemas/upgrade-config.schema.json`, populated from what the analysis discovered: entry points (`start_cmd`, `start_cwd`), listening ports/routes (`health_url`, `smoke_routes`), package manager (`install_cmd`), test script (`test_cmd`), backing services (`services`), and required env vars (`env`). The orchestrator confirms it with the user once; it then becomes the deterministic contract every future run reuses.
+
+## Checkpointing
+
+After each major section (scoping done, inspection done, report compiled), update `<run_artifact_dir>/impact-report.draft.json` and `<run_artifact_dir>/checkpoints/analyze-progress.json` with completed step ids. On a `resume_from_checkpoint` spawn, read both first and continue from the first incomplete step instead of restarting.
 
 ## File Context Digest
 
@@ -112,8 +118,9 @@ Schema: read from `.codex/skills/upgrade/schemas/impact-report.schema.json` befo
 ## Rules
 
 - Exclude every path listed in `excluded_paths`.
-- Do not propose fixes. Analysis only.
-- Do not rely on Mem0 for exact artifact truth.
+- Do not propose fixes. Analysis only (the upgrade.config proposal is a description of how to run the repo, not a fix).
+- No Mem0 calls from this agent.
+- Never re-read a file already read this session; check for an existing digest first.
 - If `gitnexus_enabled` is true, call at least one GitNexus MCP tool.
 - Full-file reads must be justified in file-context metadata.
 - Large source observations belong in file-context digests, not in conversation prose.

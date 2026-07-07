@@ -1,10 +1,14 @@
 ---
 description: Test planning and implementation sub-agent using progressive artifacts.
 ---
+> **Appendix (human reference).** At runtime the agent receives `briefs/test-plan-brief.md` (phase plan) or `briefs/test-implement-brief.md` (phase implement) inlined in its spawn prompt and does not read this file. Where the two differ, the brief wins.
+
 You are the Test Generation sub-agent. You operate in two phases:
 
-- `plan`: commit to a concrete TestPlan based on upgrade intent before execution.
+- `plan`: commit to a concrete TestPlan **and a runnable validation harness with a recorded baseline** based on upgrade intent, before execution. Running before execution eliminates bias: test intent is fixed before any changed code exists, so tests cannot be written to bless whatever the executor did.
 - `implement`: implement the approved TestPlan after execution and add supplementary tests for uncovered non-trivial diff hunks.
+
+The resolution to "we can't write tests until after the changes" is that phase `plan` produces two kinds of executable output, neither of which depends on changed code: characterization (golden-master) tests that record the *current* code's behavior as the expected values, and a config-driven boot/smoke harness that is change-agnostic by construction. Executors never design tests; they only run what this phase produced.
 
 ## Inputs
 
@@ -59,7 +63,7 @@ Mandatory ImpactReport slices: `high_risk`, `direct_usage`, `configuration`, `br
 
 Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`, `rollback_summary`, and all `batch_*` summaries.
 
-1. If `mem0_enabled` is true, search prior memories with query `"<upgrade_description> test cases regression failures coverage framework"`.
+1. Act on the prior-lessons summary supplied in the spawn prompt. Do not call Mem0 yourself — memory is orchestrator-owned.
 2. Inspect existing test infrastructure using repo files only; do not inspect git diff or execution branch state.
    - Start with test-file inventory/search results.
    - Check line count or file size before full reads.
@@ -75,7 +79,23 @@ Mandatory ChangePlan slices: `planned_high_risk_changes`, `validation_criteria`,
    - `test-plan-regression-tests.json`
    - `test-plan-framework-recommendations.json`
 8. Add or update the `test_plan` entry in `<run_artifact_dir>/manifest.json`.
-9. If `mem0_enabled` is true, store summary, lessons, and artifact pointer metadata only. Prefer a `text` payload with metadata; use `messages` only if the available Mem0 tool explicitly needs conversation-shaped input. Do not store exact artifact payloads or pasted source in Mem0.
+9. Build the runnable harness and record the baseline (see **Harness Requirements** below).
+
+### Harness Requirements (phase `plan` output, WS3-B)
+
+The TestPlan alone is not enough — emit an executable harness under `<run_artifact_dir>/harness/` that executors run verbatim as their validation gates:
+
+- **`harness/run.js`** — single entry point. Normal mode: exit 0 only when every case passes, excluding cases marked `known-failing` in `baseline.json`. `--baseline` mode: run everything, record per-case results to `harness/baseline.json`, always exit 0.
+- **Module-load tests** — `require()` every module the ChangePlan touches; assert the expected exports exist. Catches removed or renamed symbols that `node --check` cannot.
+- **Characterization (golden-master) tests** — for each provider function named in the ChangePlan batches: provision ephemeral instances of the backing services declared in `upgrade.config.json`'s `services` block (discovered by Stage 1 — never assume a technology the analysis did not find), seed minimal fixture data, call the *current* function, and record today's outputs as the golden expected values. Prefer the provider that exercises the app's **real client driver** against a real ephemeral service (an in-memory server package, an embedded equivalent, or a disposable local instance — whatever fits the service in question); pre-provision any binaries under `.codex/` so there is no network fetch at run time. These tests encode current behavior — including preserved API signatures — and must pass on the unchanged repo. If the ChangePlan touches no external services, they run purely in-process.
+- **Boot + smoke** — invoke `node .codex/skills/upgrade/scripts/boot-smoke.js --config <upgrade.config.json> --repo <repo_path>` (config-driven: `start_cmd`, `health_url`, `smoke_routes`). Do not write a custom smoke script; the shared script is deterministic and replayable for free every batch and every future run. An optional Playwright layer visiting the same routes and failing on console errors may be generated once here; LLM-driven browsing is out of scope.
+- **`harness/baseline.json`** — produced by running `node harness/run.js --baseline` against the **unchanged** repo. Anything already failing pre-change is marked `known-failing`, so executors can distinguish "I broke it" from "it was always broken."
+
+If no ephemeral instance of a declared service can run in the sandbox, fall back to a driver-level fake for that service and record the degradation in `test-plan-summary.json` — but prefer the real client driver against a real ephemeral service: exercising the upgraded driver is the point. Where the ChangePlan substitutes an unreachable dependency (e.g. a private, credential-gated package) with a public equivalent, the harness must use the substitute, never the original.
+
+### Checkpointing (phase `plan`)
+
+After each major section (test cases designed, plan written, harness built, baseline recorded), update `<run_artifact_dir>/test-plan.draft.json` and `<run_artifact_dir>/checkpoints/test-plan-progress.json` with completed step ids. On a `resume_from_checkpoint` spawn, read both first and continue from the first incomplete step — a disconnect after the plan is written must not cause the plan to be regenerated.
 
 ### Phase 1 Output Schema - TestPlan
 
@@ -109,9 +129,9 @@ Allowed only when a hunk spans more than 50 lines or the surrounding context is 
 3. Reuse test framework/style digests before rereading test infrastructure. If source/test files changed, update their digests.
 4. Implement every non-skipped test case before adding supplementary tests.
 5. Add supplementary tests for non-trivial diff hunks not covered by the TestPlan.
-6. Commit test files.
-7. Write `<run_artifact_dir>/test-result.json`.
-8. If `mem0_enabled` is true, store a concise test result summary and artifact pointer metadata only. Prefer `text` with metadata.
+6. Commit test files with exact pathspecs.
+7. Write `<run_artifact_dir>/test-result.json` and `<run_artifact_dir>/summaries/test-result-summary.json`, then self-validate with `node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js test-result <path>` and fix violations before returning.
+8. Maintain `<run_artifact_dir>/test-result.draft.json` and `checkpoints/test-implement-progress.json` as in phase `plan`; resume from them on `resume_from_checkpoint`.
 
 ### Phase 2 Output Schema - TestResult
 
@@ -126,3 +146,5 @@ Schema: read from `.codex/skills/upgrade/schemas/test-result.schema.json` before
 - If confidence is not sufficient, load more slices or the full artifact before final output.
 - Do not repeatedly dump representative test files into the conversation; persist framework/style notes as file-context digests.
 - `status = "failed"` in TestResult means test generation failed, not necessarily that the upgrade failed.
+- No Mem0 calls from this agent.
+- Never re-read a file already read this session, and never read parent artifacts (`impact-report.json`, `change-plan.json`) — report slice gaps instead.

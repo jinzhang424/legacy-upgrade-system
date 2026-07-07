@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require("fs");
+const path = require("path");
 
 function result(id, criterion, severity, passed, detail = "") {
   return { criterion_id: id, criterion, severity, passed, detail: passed ? "" : detail };
@@ -131,6 +132,28 @@ function validateTestPlan(data) {
   return criteria;
 }
 
+// An evidence record is valid when the referenced JSON exists, was produced by
+// run-gate.js (has a numeric exit_code), recorded success, and its log file
+// still exists. Evidence paths are workspace-root-relative or absolute.
+function evidenceOk(entry) {
+  if (!hasString(entry.evidence_path)) return false;
+  const evidencePath = path.resolve(entry.evidence_path);
+  let evidence;
+  try {
+    evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8"));
+  } catch (_) {
+    return false;
+  }
+  if (typeof evidence.exit_code !== "number" || evidence.exit_code !== 0) return false;
+  if (evidence.log_path !== undefined) {
+    const logPath = path.isAbsolute(evidence.log_path)
+      ? evidence.log_path
+      : path.join(path.dirname(evidencePath), evidence.log_path);
+    if (!fs.existsSync(logPath)) return false;
+  }
+  return true;
+}
+
 function validateExecute(data) {
   const criteria = [];
   const results = data.validation_results;
@@ -146,6 +169,13 @@ function validateExecute(data) {
   criteria.push(result("E9", "`baseline_status` is present and is an array", "critical", Array.isArray(data.baseline_status), "`baseline_status` must record git status --porcelain=v1 lines from execution start."));
   criteria.push(result("E10", "`baseline_untracked_files` is present and is an array", "critical", Array.isArray(data.baseline_untracked_files), "`baseline_untracked_files` must record pre-existing untracked paths from execution start."));
   criteria.push(result("E11", "`staged_paths` is present and is a subset of `changes_applied`", "critical", Array.isArray(data.staged_paths) && Array.isArray(data.changes_applied) && data.staged_paths.every((item) => data.changes_applied.includes(item)), "`staged_paths` must contain only files from changes_applied/current batch."));
+  criteria.push(result(
+    "E12",
+    "Passed results reference verifiable gate evidence",
+    "critical",
+    status !== "passed" || (Array.isArray(results) && results.length > 0 && results.every(evidenceOk)),
+    "When status is passed, every validation_results entry must carry an evidence_path pointing to an existing run-gate.js evidence JSON with exit_code 0 and an intact log file. Self-reported outcomes without evidence are rejected."
+  ));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }

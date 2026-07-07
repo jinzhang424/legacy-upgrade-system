@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UpgradeConfig",
+  "description": "Per-target-repo validation contract at projects/<repo>/upgrade.config.json. Confirmed once by the user, then reused deterministically by every run: Stage 4-A's harness and the executor's install/boot/smoke gates are driven by this file, never by per-run guesses.",
+  "type": "object",
+  "required": ["install_cmd", "health_url", "smoke_routes"],
+  "properties": {
+    "install_cmd": {
+      "type": "string",
+      "description": "Real dependency install command, e.g. \"npm ci\". Never a --dry-run."
+    },
+    "build_cmd": {
+      "type": ["string", "null"],
+      "description": "Build command, or null if the repo has no build step."
+    },
+    "test_cmd": {
+      "type": ["string", "null"],
+      "description": "The repo's own test command, e.g. \"npm test\". Null if the repo has no test suite."
+    },
+    "start_cmd": {
+      "type": "string",
+      "description": "Command that boots the application, e.g. \"node app.js\"."
+    },
+    "start_cwd": {
+      "type": ["string", "null"],
+      "description": "Directory to run start_cmd from, relative to the repo root. Null/omitted means the repo root."
+    },
+    "health_url": {
+      "type": "string",
+      "description": "URL polled by boot-smoke.js to decide the app is up, e.g. \"http://localhost:3000/\"."
+    },
+    "smoke_routes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Routes (paths relative to the health_url origin) requested by the smoke gate; any non-2xx/3xx response fails the gate."
+    },
+    "error_strings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional literal strings whose presence in a smoke-route response body fails the gate (e.g. a template error banner)."
+    },
+    "services": {
+      "type": "object",
+      "description": "Backing services the app needs, as discovered by Stage 1 analysis — never assumed in advance. Keys are service names (database, cache, queue, search index, ...); values are the provisioning strategy the harness uses: an ephemeral/in-memory provider exercising the real client driver (preferred), \"container\" for a disposable local instance, \"external:<url>\" for an existing instance, or \"fake\" as a last-resort driver-level substitute.",
+      "additionalProperties": { "type": "string" }
+    },
+    "env": {
+      "type": "object",
+      "description": "Environment variables set for install/boot/test gates, e.g. { \"NODE_ENV\": \"test\" }. Connection strings for provisioned services are injected by the harness at runtime under the variable names the app actually reads.",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

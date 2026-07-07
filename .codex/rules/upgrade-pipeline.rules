@@ -1,0 +1,95 @@
+prefix_rule(
+    pattern = ["git", "-C"],
+    decision = "allow",
+    justification = "Repo-scoped git ops used by the execute/rollback stages: checkout -b, add --, diff --cached, commit -m, status --porcelain, restore --staged (see execute.md).",
+)
+
+prefix_rule(
+    pattern = ["git", "diff"],
+    decision = "allow",
+    justification = "Read-only diff inspection used by the test-planning inventory and hunk gates (see test.md).",
+)
+
+prefix_rule(
+    pattern = ["npx", "gitnexus"],
+    decision = "allow",
+    justification = "GitNexus index status/analyze checks run at orchestrator startup and in analyze.md.",
+)
+
+prefix_rule(
+    pattern = ["node", ".codex/skills/upgrade/scripts/validate-upgrade-artifact.js"],
+    decision = "allow",
+    justification = "Deterministic artifact validator invoked after every stage (see orchestrator.md Validation Protocol).",
+)
+
+prefix_rule(
+    pattern = ["node", ".codex/skills/upgrade/scripts/fix-upgrade-artifact.js"],
+    decision = "allow",
+    justification = "Mechanical artifact fixer run by the orchestrator before any correction-agent spawn (see orchestrator.md Validation Protocol, fixer-first).",
+)
+
+prefix_rule(
+    pattern = ["node", ".codex/skills/upgrade/scripts/repo-status.js"],
+    decision = "allow",
+    justification = "Single-call repo/artifact status blob replacing separate git status/branch/log calls (see orchestrator.md Batched Shell Work).",
+)
+
+prefix_rule(
+    pattern = ["node", ".codex/skills/upgrade/scripts/run-gate.js"],
+    decision = "allow",
+    justification = "Evidence-recording gate runner; wraps executor validation commands (install/syntax/harness/boot-smoke/test) so E12 evidence exists (see execute.md Validation Gates).",
+)
+
+prefix_rule(
+    pattern = ["node", ".codex/skills/upgrade/scripts/boot-smoke.js"],
+    decision = "allow",
+    justification = "Config-driven boot + smoke-route gate defined by upgrade.config.json (see test.md Harness Requirements and execute.md Validation Gates).",
+)
+
+prefix_rule(
+    pattern = ["node", "--check"],
+    decision = "allow",
+    justification = "Cheap per-file syntax gate on changed files (see execute.md Validation Gates).",
+)
+
+prefix_rule(
+    pattern = ["npm", "ci"],
+    decision = "allow",
+    justification = "Real dependency install gate from upgrade.config.json install_cmd; --dry-run installs are banned as validation evidence (see execute.md Validation Gates).",
+)
+
+# --- Repo-scoped search and build/test tooling ---
+# All rules below are granted on the condition (enforced procedurally in
+# orchestrator.md's Escalation Rules) that the command's target/working
+# directory is inside repo_path. Any use of these tools outside repo_path
+# is not covered and must be presented to the user for explicit approval.
+
+prefix_rule(
+    pattern = ["rg"],
+    decision = "allow",
+    justification = "Read-only search used by the Gate 1-3 progressive search escalation in analyze/plan/test/execute (see references/*.md). Must be scoped to repo_path with the mandatory exclusion globs from each stage's Shell safety rules.",
+)
+
+prefix_rule(
+    pattern = ["npm", "test"],
+    decision = "allow",
+    justification = "Validation-criteria test command invoked by the executor (see execute.md Tool Mapping: run_tests).",
+)
+
+prefix_rule(
+    pattern = ["npm", "run"],
+    decision = "allow",
+    justification = "Build/smoke validation-criteria commands (e.g. npm run build) invoked by the executor (see execute.md Tool Mapping: run_tests).",
+)
+
+prefix_rule(
+    pattern = ["npx", "jest"],
+    decision = "allow",
+    justification = "Detected test runner invocation from validation_criteria/framework_recommendations (execute.md, test.md).",
+)
+
+prefix_rule(
+    pattern = ["python", "-m", "pytest"],
+    decision = "allow",
+    justification = "Detected Python test runner invocation from validation_criteria/framework_recommendations (execute.md, test.md).",
+)

@@ -15,8 +15,23 @@ args = [
 [mcp_servers.gitnexus.env]
 PATH_TO_REPO = 'C:\path\to\legacy-upgrade-system\projects\target-repo'
 
+[mcp_servers.gitnexus.tools.query]
+approval_mode = "auto"
+
+[mcp_servers.gitnexus.tools.cypher]
+approval_mode = "auto"
+
+[mcp_servers.gitnexus.tools.impact]
+approval_mode = "auto"
+
 [mcp_servers.mem0]
 url = "https://mcp.mem0.ai/mcp/"
 
 [mcp_servers.mem0.http_headers]
 Authorization = "Token your_mem0_token_here"
+
+[mcp_servers.mem0.tools.add_memory]
+approval_mode = "auto"
+
+[mcp_servers.mem0.tools.search_memories]
+approval_mode = "auto"
