@@ -54,6 +54,7 @@ Allowed only when a specific trigger is met: ambiguous framework detection, or n
 3. One retry maximum on a shell syntax error. Fall back immediately to the temp-file pattern approach.
 4. Batch read-only lookups that target the same step. Issue one combined read where the tool supports it.
 5. Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/<gate>-<n>.txt`, and record that path in the nearest pending file-context digest. Never paste multi-hundred-line outputs into the conversation.
+6. Bulk enumeration commands and the baseline harness run (`node harness/run.js --baseline`) must redirect stdout to `<run_artifact_dir>/shell-logs/<name>.log` in the same command; read back only the rows you need and write the digest in the same turn — raw bulk output never enters context.
 
 **Per-stage tool-call budget (Phase 1):** After every 10 tool calls within this phase, write all pending digests and check approximate context usage. If it exceeds 35%, compact before continuing.
 
@@ -99,7 +100,7 @@ After each major section (test cases designed, plan written, harness built, base
 
 ### Phase 1 Output Schema - TestPlan
 
-Schema: read from `.codex/skills/upgrade/schemas/test-plan.schema.json` before writing the artifact. The artifact must conform to that schema.
+Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/test-plan.schema.json`. The brief inlines the enforced constraints — sub-agents never read schema files at runtime; this reference is for maintainers.
 
 ## Progressive Search Escalation Protocol (Phase 2)
 
@@ -130,12 +131,12 @@ Allowed only when a hunk spans more than 50 lines or the surrounding context is 
 4. Implement every non-skipped test case before adding supplementary tests.
 5. Add supplementary tests for non-trivial diff hunks not covered by the TestPlan.
 6. Commit test files with exact pathspecs.
-7. Write `<run_artifact_dir>/test-result.json` and `<run_artifact_dir>/summaries/test-result-summary.json`, then self-validate with `node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js test-result <path>` and fix violations before returning.
+7. Write `<run_artifact_dir>/test-result.json` and `<run_artifact_dir>/summaries/test-result-summary.json`, then self-validate with `node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js test-result <path> --out <run_artifact_dir>/validation-results/test-result-<attempt>.json` (full report in the file, one summary line on stdout) and fix violations before returning.
 8. Maintain `<run_artifact_dir>/test-result.draft.json` and `checkpoints/test-implement-progress.json` as in phase `plan`; resume from them on `resume_from_checkpoint`.
 
 ### Phase 2 Output Schema - TestResult
 
-Schema: read from `.codex/skills/upgrade/schemas/test-result.schema.json` before writing the artifact. The artifact must conform to that schema.
+Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/test-result.schema.json`. The brief inlines the enforced constraints — sub-agents never read schema files at runtime; this reference is for maintainers.
 
 ## Rules
 

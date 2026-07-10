@@ -11,8 +11,8 @@ TASK
    - Boot+smoke: invoke `node .codex/skills/upgrade/scripts/boot-smoke.js --config <config> --repo <repo_path>`; never write your own smoke script.
 3. Baseline: run `node harness/run.js --baseline` on the UNCHANGED repo; write `harness/baseline.json`, marking already-failing cases `known-failing`.
 
-HARD CONSTRAINTS (validator): `test_cases` non-empty, each with id, name, type(unit|integration|regression|e2e), what_to_verify, expected_behavior; ≥1 regression case; `testing_strategy` >20 chars; `coverage_goals` non-empty; `artifact_coverage` confidence "sufficient".
+HARD CONSTRAINTS (validator): `test_cases` non-empty, each with id, name, type(unit|integration|regression|e2e), target_file, what_to_verify, expected_behavior (optional priority must be high|medium|low); ≥1 regression case; `testing_strategy` >20 chars; `coverage_goals` and `framework_recommendations` non-empty; `artifact_coverage` confidence "sufficient".
 
-DISCIPLINE: never re-read a file already read; targeted `rg -n -C 3` windows only; retained output ≤100 lines (overflow → `shell-logs/`); no Mem0.
+DISCIPLINE: never re-read a file already read; targeted `rg -n -C 3` windows only; retained output ≤100 lines (overflow → `shell-logs/`); no Mem0. Bulk enumeration commands and the baseline harness run (`node harness/run.js --baseline`) must redirect stdout to `shell-logs/<name>.log` in the same command; read back only the rows you need and write the digest in the same turn — raw bulk output never enters context.
 CHECKPOINT: update `test-plan.draft.json` + `checkpoints/test-plan-progress.json` after each section; on `resume_from_checkpoint` continue from first incomplete step — never restart.
 BUDGET: soft cap 25 tool calls (harness + baseline included). Final message: 2–3 sentences + artifact paths + tool-call count.

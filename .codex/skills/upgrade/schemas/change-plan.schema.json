@@ -27,7 +27,7 @@
         "type": "object",
         "required": ["type", "command_or_check", "expected_outcome"],
         "properties": {
-          "type": { "type": "string", "enum": ["build", "test", "file_exists", "content_check", "smoke"] },
+          "type": { "type": "string", "enum": ["install", "syntax", "harness", "boot-smoke", "test"] },
           "command_or_check": { "type": "string" },
           "expected_outcome": { "type": "string" }
         }

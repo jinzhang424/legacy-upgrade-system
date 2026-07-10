@@ -7,7 +7,7 @@ TASK
 2. Map breaking changes to affected files. Design ordered changes grouped into execution batches, rollback steps, and validation criteria. Validation criteria must map to executable gates — install (`install_cmd` from upgrade.config.json), harness run, boot+smoke, repo `test_cmd` — not prose checks.
 3. Write: `change-plan.json`, `summaries/change-plan-summary.json`, `slices/change-plan-{planned-high-risk-changes,validation-criteria,rollback-summary}.json`, `slices/change-plan-batch-<n>.json` per batch, and the manifest entry.
 
-HARD CONSTRAINTS (deterministic validator): `ordered_changes` non-empty with unique `sequence` values; each entry has file_path, change_type, estimated_risk(low|medium|high), rationale, change_description > 30 chars, rollback_description; no duplicate (file_path, change_type) pairs; `rollback_steps` and `test_validation_criteria` non-empty (each criterion: type, command_or_check, expected_outcome); `plan_summary` > 20 chars; `artifact_coverage` confidence "sufficient".
+HARD CONSTRAINTS (deterministic validator): `ordered_changes` non-empty with unique `sequence` values; each entry has file_path, change_type(modify|delete|create), estimated_risk(low|medium|high), rationale, change_description > 30 chars, rollback_description; no duplicate (file_path, change_type) pairs; `rollback_steps` and `test_validation_criteria` non-empty (each criterion: type(install|syntax|harness|boot-smoke|test), command_or_check, expected_outcome); `plan_summary` > 20 chars; `artifact_coverage` confidence "sufficient".
 
 READ DISCIPLINE: never re-read a file already read this session; cap retained shell output at 100 lines (overflow → `shell-logs/`); no Mem0 calls — the orchestrator owns memory.
 

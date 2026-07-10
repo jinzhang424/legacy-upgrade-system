@@ -6,7 +6,11 @@
   "properties": {
     "batch_sequence": { "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["final"] }] },
     "status": { "type": "string", "enum": ["passed", "failed"] },
-    "changes_applied": { "type": "array", "items": { "type": "string" } },
+    "changes_applied": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Repo-relative forward-slash file paths exactly as printed by `git diff --cached --name-only`, optionally plus planned batch files that needed no edit (same format). Never prose descriptions or plan IDs — validator rule E11 requires staged_paths to be an exact-string subset of this array."
+    },
     "validation_results": {
       "type": "array",
       "items": {
@@ -32,16 +36,18 @@
     "commit_refs": { "type": "array", "items": { "type": "string" } },
     "baseline_status": { "type": "array", "items": { "type": "string" } },
     "baseline_untracked_files": { "type": "array", "items": { "type": "string" } },
-    "staged_paths": { "type": "array", "items": { "type": "string" } },
+    "staged_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Repo-relative forward-slash file paths exactly as printed by `git diff --cached --name-only` before commit — the same capture that populates changes_applied. Never prose descriptions."
+    },
     "artifact_coverage": {
       "type": "object",
-      "required": ["artifact_refs", "slices_loaded", "baseline_untracked_files", "baseline_status_recorded", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
+      "required": ["artifact_refs", "slices_loaded", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
       "properties": {
         "artifact_refs": { "type": "array", "items": { "type": "string" } },
         "slices_loaded": { "type": "array", "items": { "type": "string" } },
         "file_context_refs": { "type": "array", "items": { "type": "string" } },
-        "baseline_untracked_files": { "type": "array", "items": { "type": "string" } },
-        "baseline_status_recorded": { "type": "boolean" },
         "full_artifact_loaded": { "type": "boolean" },
         "deferred_items": { "type": "number" },
         "confidence": { "type": "string", "enum": ["sufficient", "insufficient"] },

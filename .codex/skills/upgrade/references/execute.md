@@ -76,14 +76,14 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 6. Apply only the changes in the provided batch slice. Do not modify files outside the batch unless the full ChangePlan explicitly requires the file for this batch.
 7. Stage only exact current batch paths with `git -C "<repo_path>" add -- <batch-file-1> <batch-file-2> ...`.
 8. Verify the staged diff before committing:
-   - Run `git -C "<repo_path>" diff --cached --name-only`.
+   - Run `git -C "<repo_path>" diff --cached --name-only` once and capture its output — this exact capture also populates `staged_paths` and `changes_applied` in step 11.
    - Every staged path must be in the current batch path set.
    - If any unrelated path is staged, unstage only the staged paths for this batch with `git -C "<repo_path>" restore --staged -- <pathspecs...>` and halt.
    - If no paths are staged, halt with a failed ValidationResult explaining that the batch produced no staged changes.
 9. Commit the batch atomically. The commit must contain only the staged subset verified in step 8.
 9a. After committing, mark each patched file's digest as stale: for every file in the committed batch, update its entry under `<file_context_dir>/` by setting `last_observed_hash` to `"stale-post-patch-batch-<n>"`. This prevents test implementation and any subsequent stage from reusing a pre-patch digest.
 10. Run the evidence-based validation gates (see **Validation Gates** below) — one pass, after the final edit; nothing re-runs post-commit. For the final executor invocation, run the full gate suite across all batches' touched files.
-11. Write a ValidationResult JSON artifact under `<run_artifact_dir>/validation-results/`, with an `evidence_path` on every `validation_results` entry.
+11. Write a ValidationResult JSON artifact under `<run_artifact_dir>/validation-results/`, with an `evidence_path` on every `validation_results` entry. Populate both `staged_paths` and `changes_applied` from the step-8 capture verbatim — repo-relative forward-slash paths exactly as printed by `git diff --cached --name-only`. `changes_applied` may be a superset (planned batch files that needed no edit, in the same path format), but must never contain prose descriptions or plan IDs; commentary about the changes belongs in `notes`.
 12. Self-validate before finishing (see **Validate Before Finish** below).
 
 ## Validation Gates (evidence-based)
@@ -109,13 +109,13 @@ The gate runner records command, exit code, and full log; the deterministic vali
 Before returning, run:
 
 ```text
-node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js execute <run_artifact_dir>/validation-results/execute-<n>.json
+node .codex/skills/upgrade/scripts/validate-upgrade-artifact.js execute <run_artifact_dir>/validation-results/execute-<n>.json --out <run_artifact_dir>/validation-results/execute-<n>-attempt-<k>.json
 ```
 
-Fix every reported violation and re-run until the decision is `approved` (or the artifact honestly reports `status: "failed"` and validates as such). Common violations, fixable one-shot:
+The full validation report goes to the `--out` file; stdout is a single summary line (`decision`, `confidence_score`, `report_path`, and a `failed` list on rejection). Fix every reported violation and re-run until the decision is `approved` (or the artifact honestly reports `status: "failed"` and validates as such). Common violations, fixable one-shot:
 
 - **E8** — `failure_summary` must be `null` when `status` is `"passed"`; move any commentary into a `notes` field.
-- **E11** — `staged_paths` must be a subset of `changes_applied`.
+- **E11** — `staged_paths` must be an exact-string subset of `changes_applied`; both fields hold repo-relative forward-slash paths from the same step-8 `git diff --cached --name-only` capture, never prose descriptions or plan IDs.
 - **E12** — every `validation_results` entry needs an `evidence_path` (from run-gate.js output) whose evidence JSON exists with `exit_code: 0` when status is passed.
 - **E3** — a failed status needs a `failure_summary` longer than 20 characters.
 - **COVERAGE** — `artifact_coverage` must be complete with `confidence: "sufficient"`.
@@ -134,7 +134,7 @@ Update `<run_artifact_dir>/checkpoints/execute-<n>-progress.json` (completed ste
 
 ## Output Schema - ValidationResult
 
-Schema: read from `.codex/skills/upgrade/schemas/validation-result.schema.json` before writing the artifact. The artifact must conform to that schema.
+Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/validation-result.schema.json`. The brief inlines the enforced constraints — sub-agents never read schema files at runtime; this reference is for maintainers.
 
 ## Rules
 

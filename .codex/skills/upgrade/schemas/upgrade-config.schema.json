@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "UpgradeConfig",
-  "description": "Per-target-repo validation contract at projects/<repo>/upgrade.config.json. Confirmed once by the user, then reused deterministically by every run: Stage 4-A's harness and the executor's install/boot/smoke gates are driven by this file, never by per-run guesses.",
+  "description": "Per-target-repo validation contract at <repo_path>/upgrade.config.json. Confirmed once by the user, then reused deterministically by every run: Stage 4-A's harness and the executor's install/boot/smoke gates are driven by this file, never by per-run guesses.",
   "type": "object",
-  "required": ["install_cmd", "health_url", "smoke_routes"],
+  "required": ["install_cmd", "start_cmd", "health_url", "smoke_routes"],
   "properties": {
     "install_cmd": {
       "type": "string",

@@ -76,7 +76,7 @@ After each major section (changes ordered, batches sliced, rollback designed), u
 
 ## Output Schema
 
-Schema: read from `.codex/skills/upgrade/schemas/change-plan.schema.json` before writing the artifact. The artifact must conform to that schema.
+Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/change-plan.schema.json`. The brief inlines the enforced constraints — sub-agents never read schema files at runtime; this reference is for maintainers.
 
 ## Rules
 

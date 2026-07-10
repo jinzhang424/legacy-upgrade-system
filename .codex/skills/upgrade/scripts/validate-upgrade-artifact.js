@@ -58,7 +58,18 @@ function validateAnalyze(data) {
   ));
 
   const graph = data.dependency_graph;
-  criteria.push(result("A5", "`dependency_graph` contains both `nodes` and `edges` arrays", "minor", isObject(graph) && Array.isArray(graph.nodes) && Array.isArray(graph.edges), "`dependency_graph.nodes` and `dependency_graph.edges` must both be arrays."));
+  const nodeTypes = new Set(["internal", "external"]);
+  criteria.push(result(
+    "A5",
+    "`dependency_graph` contains valid `nodes` and `edges` arrays",
+    "minor",
+    isObject(graph) &&
+      Array.isArray(graph.nodes) &&
+      Array.isArray(graph.edges) &&
+      graph.nodes.every((node) => isObject(node) && hasString(node.id) && hasString(node.version) && nodeTypes.has(node.type)) &&
+      graph.edges.every((edge) => isObject(edge) && hasString(edge.from) && hasString(edge.to) && hasString(edge.relationship)),
+    "`dependency_graph.nodes` and `dependency_graph.edges` must be arrays; every node needs id, version, and type (internal|external); every edge needs from, to, and relationship."
+  ));
 
   const risk = data.risk_summary;
   criteria.push(result(
@@ -89,25 +100,27 @@ function validatePlan(data) {
   criteria.push(result("P3", "`test_validation_criteria` is present and has at least one entry", "critical", Array.isArray(validation) && validation.length > 0, "`test_validation_criteria` must be a non-empty array."));
 
   const riskLevels = new Set(["low", "medium", "high"]);
+  const changeTypes = new Set(["modify", "delete", "create"]);
   criteria.push(result(
     "P4",
-    "Every entry in `ordered_changes` has required gate fields",
+    "Every entry in `ordered_changes` has required gate fields and valid enum values",
     "critical",
     Array.isArray(ordered) && ordered.every((entry) =>
       isObject(entry) &&
       hasString(entry.file_path) &&
-      hasString(entry.change_type) &&
+      changeTypes.has(entry.change_type) &&
       riskLevels.has(entry.estimated_risk) &&
       hasString(entry.rationale)
     ),
-    "One or more ordered changes is missing file_path, change_type, estimated_risk, or rationale."
+    "One or more ordered changes is missing file_path, change_type (modify|delete|create), estimated_risk, or rationale."
   ));
 
   const sequences = Array.isArray(ordered) ? ordered.map((entry) => entry.sequence) : [];
   const sequenceValues = sequences.filter((value) => value !== undefined && value !== null);
   criteria.push(result("P5", "`sequence` values in `ordered_changes` are present and unique", "critical", Array.isArray(ordered) && sequenceValues.length === ordered.length && new Set(sequenceValues.map(String)).size === ordered.length, "`sequence` values must be present and unique."));
   criteria.push(result("P6", "Each ordered change includes specific descriptions", "minor", Array.isArray(ordered) && ordered.every((entry) => typeof entry.change_description === "string" && entry.change_description.length > 30 && hasString(entry.rollback_description)), "One or more ordered changes has an insufficient change_description or missing rollback_description."));
-  criteria.push(result("P7", "Every validation criterion has required fields", "minor", Array.isArray(validation) && validation.every((entry) => isObject(entry) && hasString(entry.type) && hasString(entry.command_or_check) && hasString(entry.expected_outcome)), "One or more validation criteria is missing type, command_or_check, or expected_outcome."));
+  const criterionTypes = new Set(["install", "syntax", "harness", "boot-smoke", "test"]);
+  criteria.push(result("P7", "Every validation criterion has required fields and a valid gate type", "minor", Array.isArray(validation) && validation.every((entry) => isObject(entry) && criterionTypes.has(entry.type) && hasString(entry.command_or_check) && hasString(entry.expected_outcome)), "One or more validation criteria is missing command_or_check, expected_outcome, or a valid type (install|syntax|harness|boot-smoke|test)."));
   criteria.push(result("P8", "`plan_summary` is present and non-trivial (> 20 chars)", "minor", typeof data.plan_summary === "string" && data.plan_summary.length > 20, "`plan_summary` must be a non-trivial string."));
   const pairs = Array.isArray(ordered) ? ordered.map((entry) => `${entry.file_path}\u0000${entry.change_type}`) : [];
   criteria.push(result("P9", "No two entries share the same `(file_path, change_type)` pair", "minor", new Set(pairs).size === pairs.length, "Two or more ordered changes share the same file_path and change_type pair."));
@@ -122,12 +135,13 @@ function validateTestPlan(data) {
   const priorities = new Set(["high", "medium", "low"]);
 
   criteria.push(result("T1", "`test_cases` is present, is an array, and has at least one entry", "critical", Array.isArray(cases) && cases.length > 0, "`test_cases` must be a non-empty array."));
-  criteria.push(result("T2", "Every test case has required fields", "critical", Array.isArray(cases) && cases.every((entry) => isObject(entry) && hasString(entry.id) && hasString(entry.name) && hasString(entry.type) && hasString(entry.what_to_verify) && hasString(entry.expected_behavior)), "One or more test cases is missing id, name, type, what_to_verify, or expected_behavior."));
+  criteria.push(result("T2", "Every test case has required fields", "critical", Array.isArray(cases) && cases.every((entry) => isObject(entry) && hasString(entry.id) && hasString(entry.name) && hasString(entry.type) && hasString(entry.target_file) && hasString(entry.what_to_verify) && hasString(entry.expected_behavior)), "One or more test cases is missing id, name, type, target_file, what_to_verify, or expected_behavior."));
   criteria.push(result("T3", "`testing_strategy` is present and non-trivial (> 20 chars)", "critical", typeof data.testing_strategy === "string" && data.testing_strategy.length > 20, "`testing_strategy` must be a non-trivial string."));
   criteria.push(result("T4", "All `type` values are valid enum members", "critical", Array.isArray(cases) && cases.every((entry) => types.has(entry.type)), "One or more test cases has an invalid type."));
   criteria.push(result("T5", "All optional `priority` values are valid enum members", "minor", Array.isArray(cases) && cases.every((entry) => entry.priority === undefined || priorities.has(entry.priority)), "One or more test cases has an invalid priority."));
   criteria.push(result("T6", "`coverage_goals` is present and non-empty", "minor", hasString(data.coverage_goals), "`coverage_goals` must be a non-empty string."));
   criteria.push(result("T7", "At least one test case is a regression test", "minor", Array.isArray(cases) && cases.some((entry) => entry.type === "regression"), "At least one regression test case is required."));
+  criteria.push(result("T8", "`framework_recommendations` is present and non-empty", "minor", hasString(data.framework_recommendations), "`framework_recommendations` must be a non-empty string."));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }
@@ -168,7 +182,7 @@ function validateExecute(data) {
   criteria.push(result("E8", "Passed results have null failure_summary", "minor", status !== "passed" || data.failure_summary === null, "`failure_summary` must be null when status is passed."));
   criteria.push(result("E9", "`baseline_status` is present and is an array", "critical", Array.isArray(data.baseline_status), "`baseline_status` must record git status --porcelain=v1 lines from execution start."));
   criteria.push(result("E10", "`baseline_untracked_files` is present and is an array", "critical", Array.isArray(data.baseline_untracked_files), "`baseline_untracked_files` must record pre-existing untracked paths from execution start."));
-  criteria.push(result("E11", "`staged_paths` is present and is a subset of `changes_applied`", "critical", Array.isArray(data.staged_paths) && Array.isArray(data.changes_applied) && data.staged_paths.every((item) => data.changes_applied.includes(item)), "`staged_paths` must contain only files from changes_applied/current batch."));
+  criteria.push(result("E11", "`staged_paths` is present and is a subset of `changes_applied`", "critical", Array.isArray(data.staged_paths) && Array.isArray(data.changes_applied) && data.staged_paths.every((item) => data.changes_applied.includes(item)), "`staged_paths` must be an exact-string subset of `changes_applied`; both hold repo-relative forward-slash paths as printed by `git diff --cached --name-only`, never prose descriptions or plan IDs."));
   criteria.push(result(
     "E12",
     "Passed results reference verifiable gate evidence",
@@ -189,8 +203,10 @@ function validateTestResult(data) {
   criteria.push(result("R2", "`tests_generated` is present and is a non-empty array", "critical", Array.isArray(generated) && generated.length > 0, "`tests_generated` must be a non-empty array."));
   criteria.push(result("R3", "Failed results include a descriptive failure summary", "critical", status !== "failed" || (typeof data.failure_summary === "string" && data.failure_summary.length > 20), "`failure_summary` must be descriptive when status is failed."));
   criteria.push(result("R4", "`test_files_created` is present and is an array", "minor", Array.isArray(data.test_files_created), "`test_files_created` must be an array."));
-  criteria.push(result("R5", "Every generated test entry has required fields and valid status", "minor", Array.isArray(generated) && generated.every((entry) => isObject(entry) && hasString(entry.test_case_id) && hasString(entry.test_file) && generatedStatuses.has(entry.status)), "One or more generated test entries is missing test_case_id, test_file, or a valid status."));
+  criteria.push(result("R5", "Every generated test entry has required fields and valid status", "minor", Array.isArray(generated) && generated.every((entry) => isObject(entry) && hasString(entry.test_case_id) && hasString(entry.test_file) && hasString(entry.test_name) && generatedStatuses.has(entry.status)), "One or more generated test entries is missing test_case_id, test_file, test_name, or a valid status."));
   criteria.push(result("R6", "`coverage_notes` is present and non-empty", "minor", hasString(data.coverage_notes), "`coverage_notes` must be a non-empty string."));
+  criteria.push(result("R7", "`supplementary_tests` is present with complete entries", "minor", Array.isArray(data.supplementary_tests) && data.supplementary_tests.every((entry) => isObject(entry) && hasString(entry.test_file) && hasString(entry.test_name) && hasString(entry.reason)), "`supplementary_tests` must be an array whose entries have test_file, test_name, and reason."));
+  criteria.push(result("R8", "`run_results` reports numeric totals", "minor", isObject(data.run_results) && typeof data.run_results.total === "number" && typeof data.run_results.passing === "number" && typeof data.run_results.failing === "number" && typeof data.run_results.skipped === "number", "`run_results` must be an object with numeric total, passing, failing, and skipped."));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }
@@ -237,6 +253,14 @@ function buildReport(agentType, criteria) {
 }
 
 function validate(agentType, artifactPath) {
+  // A missing artifact is a distinct outcome from a corrupt one: the orchestrator
+  // gate halts on MISSING (sub-agent never wrote its artifact) instead of retrying.
+  if (!fs.existsSync(artifactPath)) {
+    return buildReport(agentType, [
+      result("MISSING", "Artifact file exists", "critical", false, `Artifact file not found: ${artifactPath}`)
+    ]);
+  }
+
   let parsed;
   try {
     parsed = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
@@ -255,15 +279,41 @@ function validate(agentType, artifactPath) {
   }
 }
 
+// With --out <path>, the full report JSON is written to <path> and stdout is a
+// single compact line: {decision, confidence_score, report_path[, failed]} —
+// enough for gate checks and retry prompts without the report transiting context.
 if (require.main === module) {
-  const [,, agentType, artifactPath] = process.argv;
-  if (!agentType || !artifactPath) {
-    console.error("Usage: node validate-upgrade-artifact.js <agent_type> <artifact_path>");
+  const args = process.argv.slice(2);
+  const outIndex = args.indexOf("--out");
+  let outPath = null;
+  if (outIndex !== -1) {
+    outPath = args[outIndex + 1];
+    args.splice(outIndex, 2);
+  }
+  const [agentType, artifactPath] = args;
+  if (!agentType || !artifactPath || (outIndex !== -1 && !outPath)) {
+    console.error("Usage: node validate-upgrade-artifact.js <agent_type> <artifact_path> [--out <report_path>]");
     process.exit(2);
   }
 
   const report = validate(agentType, artifactPath);
-  console.log(JSON.stringify(report, null, 2));
+  if (outPath) {
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, JSON.stringify(report, null, 2) + "\n");
+    const summary = {
+      decision: report.decision,
+      confidence_score: report.confidence_score,
+      report_path: outPath
+    };
+    if (report.decision !== "approved") {
+      summary.failed = report.criteria_results
+        .filter((item) => !item.passed)
+        .map((item) => ({ id: item.criterion_id, severity: item.severity, detail: item.detail }));
+    }
+    console.log(JSON.stringify(summary));
+  } else {
+    console.log(JSON.stringify(report, null, 2));
+  }
   process.exit(report.decision === "approved" ? 0 : 1);
 }
 

@@ -8,7 +8,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "type", "priority", "target_file", "what_to_verify", "expected_behavior", "rationale"],
+        "required": ["id", "name", "type", "target_file", "what_to_verify", "expected_behavior"],
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
