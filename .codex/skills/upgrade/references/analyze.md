@@ -51,7 +51,7 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 4. Batch read-only lookups that target the same step. If a step needs several sibling files, issue one combined read where the tool supports it.
 5. Cap any shell output that exceeds 100 lines: retain the first 50 and last 20 lines in context, write the full output to `<run_artifact_dir>/shell-logs/<gate>-<n>.txt`, and record that path in the nearest pending file-context digest or in a standalone entry. Never paste multi-hundred-line outputs into the conversation.
 6. Apply the same cap to MCP tool responses (GitNexus `impact`/`query`/`cypher`, Mem0 searches). If a response exceeds ~100 lines or ~2,000 tokens, do not paste it into the conversation — record the counts and only the high-signal rows in a file-context digest, and re-query with a tighter scope, projection, or `LIMIT` instead of retaining the raw payload.
-7. Bulk enumeration commands (`npm outdated`, `npm audit`, dependency listings) must redirect stdout to `<run_artifact_dir>/shell-logs/<name>.log` in the same command that runs them — the raw output never enters context at all. Read back only the rows needed and write the digest in the same turn.
+7. Bulk enumeration commands (dependency and outdated-package listings, e.g. `npm outdated`, `pip list --outdated`, audit reports) must redirect stdout to `<run_artifact_dir>/shell-logs/<name>.log` in the same command that runs them — the raw output never enters context at all. Read back only the rows needed and write the digest in the same turn.
 
 **Per-stage tool-call budget:** After every 10 tool calls within this stage, write all pending digests and check approximate context usage. If it exceeds 35%, compact before continuing.
 
@@ -78,17 +78,19 @@ Never build or load the whole-repo dependency graph. If the scoped set proves in
    - Do not bulk parallel-read multiple large source files.
 5. After every targeted or full inspection that informs the report, write or update a digest in `<file_context_dir>/`. Include `full_file_reason` for every full-file read.
 6. Before rereading a file, reuse an existing digest when `last_observed_hash` still matches the current file.
-7. Compile the full ImpactReport and write it to `<run_artifact_dir>/impact-report.json`.
-8. Write `<run_artifact_dir>/summaries/impact-report-summary.json`.
-9. Write these mandatory slices under `<run_artifact_dir>/slices/`:
+7. Build the `dependency_migration_matrix`: one entry per dependency the upgrade changes (upgraded, removed, or replaced), recording every direct import/call site with the search evidence that found it, or — when a dependency genuinely has no direct usage — a `no_usage_justification` (> 20 chars) naming the exact searches run. Every usage-site file_path must also appear in `affected_files` (validator criteria A9/A10). Rationale: a usage site that is never named in a slice can never be planned for — broad breaking-change prose ("Influx/Winston logging") does not survive the summary+slice handoff to the planner, so call sites must be named here with evidence.
+8. Compile the full ImpactReport and write it to `<run_artifact_dir>/impact-report.json`.
+9. Write `<run_artifact_dir>/summaries/impact-report-summary.json`.
+10. Write these mandatory slices under `<run_artifact_dir>/slices/`:
    - `impact-report-high-risk.json`: all high-risk affected file entries.
    - `impact-report-direct-usage.json`: all direct usage entries.
    - `impact-report-configuration.json`: all configuration entries.
    - `impact-report-breaking-changes.json`: all breaking changes from `risk_summary`.
    - `impact-report-coverage-notes.json`: full coverage notes.
    - `impact-report-dependency-summary.json`: compact dependency graph summary.
-10. Add or update the `impact_report` entry in `<run_artifact_dir>/manifest.json`.
-11. **Validation contract proposal:** if the spawn prompt says `upgrade_config_present` is false, write `<run_artifact_dir>/upgrade.config.proposed.json` conforming to `schemas/upgrade-config.schema.json`, populated from what the analysis discovered: entry points (`start_cmd`, `start_cwd`), listening ports/routes (`health_url`, `smoke_routes`), package manager (`install_cmd`), test script (`test_cmd`), backing services (`services`), and required env vars (`env`). The orchestrator confirms it with the user once; it then becomes the deterministic contract every future run reuses.
+   - `impact-report-migration-matrix.json`: the full `dependency_migration_matrix` (slice key `migration_matrix`). The plan gate (P10) reads this slice deterministically to enforce coverage.
+11. Add or update the `impact_report` entry in `<run_artifact_dir>/manifest.json`.
+12. **Validation contract proposal:** if the spawn prompt says `upgrade_config_present` is false, write `<run_artifact_dir>/upgrade.config.proposed.json` conforming to `schemas/upgrade-config.schema.json`, populated from what the analysis discovered: entry points (`start_cmd`, `start_cwd`), listening ports/routes (`health_url`, `smoke_routes`), test script (`test_cmd`), backing services (`services`), and required env vars (`env`). The orchestrator confirms it with the user once; it then becomes the deterministic contract every future run reuses.
 
 ## Checkpointing
 
@@ -115,6 +117,8 @@ Each inspected file digest must use this shape:
 ## Output Schema
 
 Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/impact-report.schema.json`. The brief inlines the enforced constraints — sub-agents never read schema files at runtime; this reference is for maintainers.
+
+`dependency_migration_matrix` is required and enforced by critical criteria A9 (entry completeness: dependency, from_version, to_version, evidence-backed `direct_usage_sites`, or a > 20 char `no_usage_justification` when empty) and A10 (every usage-site file_path must also appear in `affected_files`).
 
 ## Rules
 

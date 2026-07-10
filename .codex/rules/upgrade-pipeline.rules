@@ -37,7 +37,7 @@ prefix_rule(
 prefix_rule(
     pattern = ["node", ".codex/skills/upgrade/scripts/run-gate.js"],
     decision = "allow",
-    justification = "Evidence-recording gate runner; wraps executor validation commands (install/syntax/harness/boot-smoke/test) so E12 evidence exists (see execute.md Validation Gates).",
+    justification = "Evidence-recording gate runner; wraps executor validation commands (syntax/harness/boot-smoke/test) so E12 evidence exists (see execute.md Validation Gates).",
 )
 
 prefix_rule(
@@ -50,12 +50,6 @@ prefix_rule(
     pattern = ["node", "--check"],
     decision = "allow",
     justification = "Cheap per-file syntax gate on changed files (see execute.md Validation Gates).",
-)
-
-prefix_rule(
-    pattern = ["npm", "ci"],
-    decision = "allow",
-    justification = "Real dependency install gate from upgrade.config.json install_cmd; --dry-run installs are banned as validation evidence (see execute.md Validation Gates).",
 )
 
 # --- Repo-scoped search and build/test tooling ---

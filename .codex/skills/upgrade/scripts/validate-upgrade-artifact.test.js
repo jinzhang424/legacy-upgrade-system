@@ -26,6 +26,15 @@ function coverage(refs = ["impact_report"], slices = ["high_risk"]) {
   };
 }
 
+const migrationMatrix = [{
+  dependency: "express",
+  from_version: "3.21.2",
+  to_version: "4.18.2",
+  direct_usage_sites: [{ file_path: "src/a.js", api_or_symbol: "express(), app.configure", evidence: "rg -n \"require('express')\" -> src/a.js:1" }],
+  required_changes: "Replace app.configure blocks with direct middleware registration.",
+  no_usage_justification: null
+}];
+
 const validAnalyze = {
   affected_files: [{ file_path: "src/a.js", change_type: "modify", usage_type: "direct_usage", risk_level: "high", reason: "Uses changed API." }],
   dependency_graph: {
@@ -34,8 +43,14 @@ const validAnalyze = {
   },
   risk_summary: { total_affected_files: 1, high_risk_count: 1, breaking_changes: ["API changed"], notes: "High risk path." },
   coverage_notes: "Repository scan covered all relevant fixtures.",
+  dependency_migration_matrix: migrationMatrix,
   artifact_coverage: coverage()
 };
+
+// P10 reads the migration-matrix slice from slices/ next to the plan artifact;
+// plan fixtures are written into tmp, so the slice lives at tmp/slices/.
+fs.mkdirSync(path.join(tmp, "slices"), { recursive: true });
+fs.writeFileSync(path.join(tmp, "slices", "impact-report-migration-matrix.json"), JSON.stringify(migrationMatrix, null, 2));
 
 const validPlan = {
   ordered_changes: [{
@@ -50,7 +65,11 @@ const validPlan = {
   rollback_steps: ["Restore src/a.js"],
   test_validation_criteria: [{ type: "test", command_or_check: "npm test", expected_outcome: "passes" }],
   plan_summary: "Updates the direct API usage and validates it with the existing test suite.",
-  artifact_coverage: coverage(["impact_report"], ["high_risk", "direct_usage"])
+  migration_coverage: [{
+    dependency: "express",
+    site_mappings: [{ file_path: "src/a.js", ordered_change_sequences: [1], no_change_reason: null }]
+  }],
+  artifact_coverage: coverage(["impact_report"], ["high_risk", "direct_usage", "migration_matrix"])
 };
 
 const validTestPlan = {
@@ -169,6 +188,91 @@ assert(badChangeTypeReport.rejection_reasons.some((reason) => reason.startsWith(
 
 const planBadCriterionType = { ...validPlan, test_validation_criteria: [{ ...validPlan.test_validation_criteria[0], type: "file_exists" }] };
 assert(validate("plan", write("plan-bad-criterion-type.json", planBadCriterionType)).criteria_results.some((item) => item.criterion_id === "P7" && !item.passed));
+
+// A9: missing matrix, and an entry with zero sites and no justification.
+const analyzeNoMatrix = { ...validAnalyze };
+delete analyzeNoMatrix.dependency_migration_matrix;
+const noMatrixReport = validate("analyze", write("analyze-no-matrix.json", analyzeNoMatrix));
+assert.strictEqual(noMatrixReport.decision, "rejected");
+assert(noMatrixReport.rejection_reasons.some((reason) => reason.startsWith("A9:")));
+
+const analyzeUnjustifiedEmptySites = {
+  ...validAnalyze,
+  dependency_migration_matrix: [{ ...migrationMatrix[0], direct_usage_sites: [], no_usage_justification: null }]
+};
+const emptySitesReport = validate("analyze", write("analyze-unjustified-empty-sites.json", analyzeUnjustifiedEmptySites));
+assert.strictEqual(emptySitesReport.decision, "rejected");
+assert(emptySitesReport.rejection_reasons.some((reason) => reason.startsWith("A9:")));
+
+// An evidence-backed justification makes an empty site list valid.
+const analyzeJustifiedEmptySites = {
+  ...validAnalyze,
+  dependency_migration_matrix: [{
+    ...migrationMatrix[0],
+    direct_usage_sites: [],
+    no_usage_justification: "No direct usage: rg -n \"require('express')\" and rg -n \"from 'express'\" across src/ returned no matches."
+  }]
+};
+assert.strictEqual(validate("analyze", write("analyze-justified-empty-sites.json", analyzeJustifiedEmptySites)).decision, "approved");
+
+// A10: a usage site whose file is absent from affected_files.
+const analyzeSiteNotAffected = {
+  ...validAnalyze,
+  dependency_migration_matrix: [{
+    ...migrationMatrix[0],
+    direct_usage_sites: [{ file_path: "src/metrics.js", api_or_symbol: "writePoints", evidence: "rg -n \"require('influx')\" -> src/metrics.js:3" }]
+  }]
+};
+const siteNotAffectedReport = validate("analyze", write("analyze-site-not-affected.json", analyzeSiteNotAffected));
+assert.strictEqual(siteNotAffectedReport.decision, "rejected");
+assert(siteNotAffectedReport.rejection_reasons.some((reason) => reason.startsWith("A10:")));
+
+// P10/P11: valid coverage passes against the matrix slice in tmp/slices/.
+assert.strictEqual(validate("plan", write("valid-plan-coverage.json", validPlan)).decision, "approved");
+
+// P10: a matrix usage site absent from migration_coverage.
+const planUncoveredSite = { ...validPlan, migration_coverage: [] };
+const uncoveredReport = validate("plan", write("plan-uncovered-site.json", planUncoveredSite));
+assert.strictEqual(uncoveredReport.decision, "rejected");
+assert(uncoveredReport.rejection_reasons.some((reason) => reason.startsWith("P10:") && reason.includes("src/a.js")));
+
+// P11: mapping citing a sequence that does not exist in ordered_changes.
+const planPhantomSequence = {
+  ...validPlan,
+  migration_coverage: [{ dependency: "express", site_mappings: [{ file_path: "src/a.js", ordered_change_sequences: [99], no_change_reason: null }] }]
+};
+const phantomSequenceReport = validate("plan", write("plan-phantom-sequence.json", planPhantomSequence));
+assert.strictEqual(phantomSequenceReport.decision, "rejected");
+assert(phantomSequenceReport.rejection_reasons.some((reason) => reason.startsWith("P11:")));
+
+// P11: mapping citing a sequence whose ordered change targets a different file.
+const planMismatchedFile = {
+  ...validPlan,
+  ordered_changes: [validPlan.ordered_changes[0], {
+    ...validPlan.ordered_changes[0], sequence: 2, file_path: "package.json",
+    change_description: "Bump the express dependency range in package.json to the upgraded major version."
+  }],
+  migration_coverage: [{ dependency: "express", site_mappings: [{ file_path: "src/a.js", ordered_change_sequences: [2], no_change_reason: null }] }]
+};
+const mismatchedFileReport = validate("plan", write("plan-mismatched-file.json", planMismatchedFile));
+assert.strictEqual(mismatchedFileReport.decision, "rejected");
+assert(mismatchedFileReport.rejection_reasons.some((reason) => reason.startsWith("P11:")));
+
+// P11: a substantive no_change_reason is a valid alternative to sequences.
+const planNoChangeReason = {
+  ...validPlan,
+  migration_coverage: [{ dependency: "express", site_mappings: [{ file_path: "src/a.js", ordered_change_sequences: [], no_change_reason: "Call site only uses APIs that are unchanged between these versions." }] }]
+};
+assert.strictEqual(validate("plan", write("plan-no-change-reason.json", planNoChangeReason)).decision, "approved");
+
+// P10: a plan artifact with no sibling matrix slice fails with a MISSING-slice detail.
+const noSliceDir = path.join(tmp, "no-slice-run");
+fs.mkdirSync(noSliceDir, { recursive: true });
+const noSlicePlanPath = path.join(noSliceDir, "change-plan.json");
+fs.writeFileSync(noSlicePlanPath, JSON.stringify(validPlan, null, 2));
+const noSliceReport = validate("plan", noSlicePlanPath);
+assert.strictEqual(noSliceReport.decision, "rejected");
+assert(noSliceReport.rejection_reasons.some((reason) => reason.startsWith("P10:") && reason.includes("did not produce the matrix slice")));
 
 const testResultBadRunResults = { ...validTestResult, run_results: { total: 2, passing: "2", failing: 0, skipped: 0 } };
 assert(validate("test-result", write("test-result-bad-run-results.json", testResultBadRunResults)).criteria_results.some((item) => item.criterion_id === "R8" && !item.passed));

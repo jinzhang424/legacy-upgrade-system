@@ -94,15 +94,16 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 node .codex/skills/upgrade/scripts/run-gate.js --run-dir <run_artifact_dir> --stage execute-<n> --gate <name> [--cwd <dir>] -- <command>
 ```
 
-1. **install** — the real `install_cmd` from `upgrade.config.json` (e.g. `npm ci`). Never `--dry-run`. If sandbox/OneDrive constraints block installing in place (OneDrive sync corrupts heavy `node_modules` churn), copy the repo to a scratch location outside OneDrive (e.g. `%LOCALAPPDATA%\upgrade-scratch\<run_id>`), applying any dependency substitutions the ChangePlan defines for unreachable packages, install there with `--cwd` pointing at the scratch copy, using the pre-warmed cache at `.codex/npm-cache`.
-2. **syntax** — `node --check` on each changed file (cheap; keep it).
-3. **harness** — `node <run_artifact_dir>/harness/run.js`. Exit 0 means no regressions beyond `baseline.json` `known-failing` entries.
-4. **boot-smoke** — `node .codex/skills/upgrade/scripts/boot-smoke.js --config <upgrade.config.json> --repo <repo_path>`, required when the batch touches runtime code paths.
-5. **repo-test** — the repo's own `test_cmd` from `upgrade.config.json`, if defined.
+1. **syntax** — a cheap per-file syntax check on each changed file, with the checker picked by file extension: `node --check` for `.js`/`.mjs`/`.cjs`, `python -m py_compile` for `.py` (extend the same pattern for other languages with a cheap checker; every check still runs through run-gate.js). Files with no known cheap checker are **skipped, not failed** — do not fabricate a `validation_results` entry for them (E12 requires evidence per entry); record the skip and its reason in the ValidationResult `notes`.
+2. **harness** — `node <run_artifact_dir>/harness/run.js`. Exit 0 means no regressions beyond `baseline.json` `known-failing` entries.
+3. **boot-smoke** — `node .codex/skills/upgrade/scripts/boot-smoke.js --config <upgrade.config.json> --repo <repo_path>`, required when the batch touches runtime code paths.
+4. **repo-test** — the repo's own `test_cmd` from `upgrade.config.json`, if defined.
+
+The pipeline never performs dependency installs — the user's environment is already set up.
 
 The gate runner records command, exit code, and full log; the deterministic validator (rule E12) independently re-checks that evidence before a `passed` artifact is accepted, so a gate that was never run cannot be self-certified.
 
-**Self-authored mocks are banned as validation evidence.** Do not write your own test scripts, stubs, or mocks and cite them in the ValidationResult. Only Stage 4-A harness results and upgrade.config.json-defined commands count. If the harness is missing (test planning failed), run gates 1, 2, and 5 only and record the degradation in the ValidationResult.
+**Self-authored mocks are banned as validation evidence.** Do not write your own test scripts, stubs, or mocks and cite them in the ValidationResult. Only Stage 4-A harness results and upgrade.config.json-defined commands count. If the harness is missing (test planning failed), run the **syntax** and **repo-test** gates only and record the degradation in the ValidationResult.
 
 ## Validate Before Finish
 

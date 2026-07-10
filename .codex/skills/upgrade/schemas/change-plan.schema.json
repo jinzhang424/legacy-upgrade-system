@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ChangePlan",
   "type": "object",
-  "required": ["ordered_changes", "rollback_steps", "test_validation_criteria", "plan_summary", "artifact_coverage"],
+  "required": ["ordered_changes", "rollback_steps", "test_validation_criteria", "plan_summary", "migration_coverage", "artifact_coverage"],
   "properties": {
     "ordered_changes": {
       "type": "array",
@@ -27,13 +27,35 @@
         "type": "object",
         "required": ["type", "command_or_check", "expected_outcome"],
         "properties": {
-          "type": { "type": "string", "enum": ["install", "syntax", "harness", "boot-smoke", "test"] },
+          "type": { "type": "string", "enum": ["syntax", "harness", "boot-smoke", "test"] },
           "command_or_check": { "type": "string" },
           "expected_outcome": { "type": "string" }
         }
       }
     },
     "plan_summary": { "type": "string" },
+    "migration_coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dependency", "site_mappings"],
+        "properties": {
+          "dependency": { "type": "string" },
+          "site_mappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["file_path"],
+              "properties": {
+                "file_path": { "type": "string" },
+                "ordered_change_sequences": { "type": "array", "items": { "type": "number" } },
+                "no_change_reason": { "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    },
     "artifact_coverage": {
       "type": "object",
       "required": ["artifact_refs", "slices_loaded", "full_artifact_loaded", "deferred_items", "confidence", "reason"],

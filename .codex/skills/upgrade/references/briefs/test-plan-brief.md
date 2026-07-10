@@ -6,7 +6,7 @@ TASK
 1. Design test cases from the slices; write `test-plan.json`, `summaries/test-plan-summary.json`, `slices/test-plan-{high-priority-tests,regression-tests,framework-recommendations}.json`, manifest entry.
 2. Build a RUNNABLE harness under `<run_artifact_dir>/harness/` — executors only run it, they never design tests:
    - `run.js` single entry: exit 0 = pass; `--baseline` mode records results and always exits 0; normal mode fails only on regressions vs `baseline.json` known-failing entries.
-   - Module-load tests: `require()` every module the ChangePlan touches; assert expected exports.
+   - Module-load tests: load each touched module with the target language's own loader (`require()`/`import` for Node, `python -c "import x"` for Python); assert expected symbols. `run.js` stays a Node entry point but its cases shell out to the target repo's own toolchain.
    - Characterization tests: call CURRENT provider functions against ephemeral instances of the services declared in upgrade.config.json `services` (real client driver, pre-provisioned binaries under `.codex/` — never assume a technology analysis didn't find); record today's outputs as golden values. They must pass on the unchanged repo. Driver-level fakes only if no ephemeral service can run; record the degradation.
    - Boot+smoke: invoke `node .codex/skills/upgrade/scripts/boot-smoke.js --config <config> --repo <repo_path>`; never write your own smoke script.
 3. Baseline: run `node harness/run.js --baseline` on the UNCHANGED repo; write `harness/baseline.json`, marking already-failing cases `known-failing`.

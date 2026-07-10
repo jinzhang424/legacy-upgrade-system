@@ -85,11 +85,66 @@ function validateAnalyze(data) {
   ));
   criteria.push(result("A7", "`risk_summary.total_affected_files` equals the actual length of `affected_files`", "minor", Array.isArray(affected) && isObject(risk) && risk.total_affected_files === affected.length, "`risk_summary.total_affected_files` does not match `affected_files.length`."));
   criteria.push(result("A8", "`coverage_notes` is present and contains a meaningful explanation (> 10 chars)", "minor", typeof data.coverage_notes === "string" && data.coverage_notes.length > 10, "`coverage_notes` must be a meaningful string."));
+
+  const matrix = data.dependency_migration_matrix;
+  criteria.push(result(
+    "A9",
+    "`dependency_migration_matrix` names every changed dependency's usage sites with evidence, or justifies finding none",
+    "critical",
+    Array.isArray(matrix) && matrix.length > 0 && matrix.every((entry) =>
+      isObject(entry) &&
+      hasString(entry.dependency) &&
+      hasString(entry.from_version) &&
+      hasString(entry.to_version) &&
+      Array.isArray(entry.direct_usage_sites) &&
+      entry.direct_usage_sites.every((site) => isObject(site) && hasString(site.file_path) && hasString(site.api_or_symbol) && hasString(site.evidence)) &&
+      (entry.direct_usage_sites.length > 0 || (typeof entry.no_usage_justification === "string" && entry.no_usage_justification.length > 20))
+    ),
+    "`dependency_migration_matrix` must be a non-empty array with one entry per changed dependency; each entry needs dependency, from_version, to_version, and direct_usage_sites (each site: file_path, api_or_symbol, evidence), plus either at least one usage site or a no_usage_justification > 20 chars naming the searches that found none."
+  ));
+
+  const affectedPaths = new Set(Array.isArray(affected) ? affected.map((entry) => isObject(entry) ? entry.file_path : undefined) : []);
+  const matrixEntries = Array.isArray(matrix) ? matrix : [];
+  criteria.push(result(
+    "A10",
+    "Every migration-matrix usage site also appears in `affected_files`",
+    "critical",
+    matrixEntries.every((entry) =>
+      !isObject(entry) || !Array.isArray(entry.direct_usage_sites) ||
+      entry.direct_usage_sites.every((site) => !isObject(site) || affectedPaths.has(site.file_path))
+    ),
+    "One or more `dependency_migration_matrix` usage sites has a file_path that is missing from `affected_files` — a named call site can never drop out of the affected list."
+  ));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }
 
-function validatePlan(data) {
+// Reads the analyzer's migration-matrix slice from the run dir that holds the
+// plan artifact (slices/ is a sibling of change-plan.json, same resolution
+// pattern as evidenceOk). Returns { matrix } or { error } — never throws.
+function readMigrationMatrixSlice(artifactPath) {
+  if (!hasString(artifactPath)) {
+    return { error: "No artifact path available to locate slices/impact-report-migration-matrix.json." };
+  }
+  const slicePath = path.join(path.dirname(path.resolve(artifactPath)), "slices", "impact-report-migration-matrix.json");
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(slicePath, "utf8"));
+  } catch (_) {
+    return { error: `Migration-matrix slice not readable at ${slicePath} — the analysis stage did not produce the matrix slice.` };
+  }
+  const matrix = Array.isArray(parsed)
+    ? parsed
+    : isObject(parsed) && Array.isArray(parsed.dependency_migration_matrix)
+      ? parsed.dependency_migration_matrix
+      : null;
+  if (matrix === null) {
+    return { error: `Migration-matrix slice at ${slicePath} is not a dependency_migration_matrix array.` };
+  }
+  return { matrix };
+}
+
+function validatePlan(data, artifactPath) {
   const criteria = [];
   const ordered = data.ordered_changes;
   const rollback = data.rollback_steps;
@@ -119,11 +174,62 @@ function validatePlan(data) {
   const sequenceValues = sequences.filter((value) => value !== undefined && value !== null);
   criteria.push(result("P5", "`sequence` values in `ordered_changes` are present and unique", "critical", Array.isArray(ordered) && sequenceValues.length === ordered.length && new Set(sequenceValues.map(String)).size === ordered.length, "`sequence` values must be present and unique."));
   criteria.push(result("P6", "Each ordered change includes specific descriptions", "minor", Array.isArray(ordered) && ordered.every((entry) => typeof entry.change_description === "string" && entry.change_description.length > 30 && hasString(entry.rollback_description)), "One or more ordered changes has an insufficient change_description or missing rollback_description."));
-  const criterionTypes = new Set(["install", "syntax", "harness", "boot-smoke", "test"]);
-  criteria.push(result("P7", "Every validation criterion has required fields and a valid gate type", "minor", Array.isArray(validation) && validation.every((entry) => isObject(entry) && criterionTypes.has(entry.type) && hasString(entry.command_or_check) && hasString(entry.expected_outcome)), "One or more validation criteria is missing command_or_check, expected_outcome, or a valid type (install|syntax|harness|boot-smoke|test)."));
+  const criterionTypes = new Set(["syntax", "harness", "boot-smoke", "test"]);
+  criteria.push(result("P7", "Every validation criterion has required fields and a valid gate type", "minor", Array.isArray(validation) && validation.every((entry) => isObject(entry) && criterionTypes.has(entry.type) && hasString(entry.command_or_check) && hasString(entry.expected_outcome)), "One or more validation criteria is missing command_or_check, expected_outcome, or a valid type (syntax|harness|boot-smoke|test)."));
   criteria.push(result("P8", "`plan_summary` is present and non-trivial (> 20 chars)", "minor", typeof data.plan_summary === "string" && data.plan_summary.length > 20, "`plan_summary` must be a non-trivial string."));
   const pairs = Array.isArray(ordered) ? ordered.map((entry) => `${entry.file_path}\u0000${entry.change_type}`) : [];
   criteria.push(result("P9", "No two entries share the same `(file_path, change_type)` pair", "minor", new Set(pairs).size === pairs.length, "Two or more ordered changes share the same file_path and change_type pair."));
+
+  const slice = readMigrationMatrixSlice(artifactPath);
+  const coverageEntries = Array.isArray(data.migration_coverage) ? data.migration_coverage : [];
+  const coveredPairs = new Set();
+  for (const entry of coverageEntries) {
+    if (!isObject(entry) || !Array.isArray(entry.site_mappings)) continue;
+    for (const mapping of entry.site_mappings) {
+      if (isObject(mapping)) coveredPairs.add(`${entry.dependency} ${mapping.file_path}`);
+    }
+  }
+  const uncovered = [];
+  for (const entry of slice.matrix || []) {
+    if (!isObject(entry) || !Array.isArray(entry.direct_usage_sites)) continue;
+    for (const site of entry.direct_usage_sites) {
+      if (isObject(site) && !coveredPairs.has(`${entry.dependency} ${site.file_path}`)) {
+        uncovered.push(`(${entry.dependency}, ${site.file_path})`);
+      }
+    }
+  }
+  criteria.push(result(
+    "P10",
+    "`migration_coverage` covers every (dependency, usage-site) pair in the migration-matrix slice",
+    "critical",
+    Array.isArray(data.migration_coverage) && slice.matrix !== undefined && uncovered.length === 0,
+    slice.error || (!Array.isArray(data.migration_coverage)
+      ? "`migration_coverage` must be an array with one entry per migration-matrix dependency."
+      : `Uncovered migration-matrix usage sites: ${uncovered.join(", ")}.`)
+  ));
+
+  const changeBySequence = new Map();
+  for (const entry of Array.isArray(ordered) ? ordered : []) {
+    if (isObject(entry)) changeBySequence.set(String(entry.sequence), entry);
+  }
+  criteria.push(result(
+    "P11",
+    "Every `migration_coverage` site mapping cites matching ordered changes or a substantive no_change_reason",
+    "critical",
+    coverageEntries.every((entry) =>
+      isObject(entry) && Array.isArray(entry.site_mappings) && entry.site_mappings.every((mapping) => {
+        if (!isObject(mapping) || !hasString(mapping.file_path)) return false;
+        if (Array.isArray(mapping.ordered_change_sequences) && mapping.ordered_change_sequences.length > 0) {
+          return mapping.ordered_change_sequences.every((sequence) => {
+            const change = changeBySequence.get(String(sequence));
+            return change !== undefined && change.file_path === mapping.file_path;
+          });
+        }
+        return typeof mapping.no_change_reason === "string" && mapping.no_change_reason.length > 20;
+      })
+    ),
+    "Every migration_coverage site mapping must list ordered_change_sequences that exist in ordered_changes with the same file_path, or carry a no_change_reason > 20 chars."
+  ));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }
@@ -211,9 +317,9 @@ function validateTestResult(data) {
   return criteria;
 }
 
-function criteriaFor(type, data) {
+function criteriaFor(type, data, artifactPath) {
   if (type === "analyze") return validateAnalyze(data);
-  if (type === "plan") return validatePlan(data);
+  if (type === "plan") return validatePlan(data, artifactPath);
   if (type === "test-plan") return validateTestPlan(data);
   if (type === "execute") return validateExecute(data);
   if (type === "test-result") return validateTestResult(data);
@@ -271,7 +377,7 @@ function validate(agentType, artifactPath) {
   }
 
   try {
-    return buildReport(agentType, criteriaFor(agentType, parsed));
+    return buildReport(agentType, criteriaFor(agentType, parsed, artifactPath));
   } catch (error) {
     return buildReport(agentType, [
       result("TYPE", "Agent type is supported", "critical", false, error.message)

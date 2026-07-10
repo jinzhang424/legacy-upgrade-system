@@ -1,25 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "UpgradeConfig",
-  "description": "Per-target-repo validation contract at <repo_path>/upgrade.config.json. Confirmed once by the user, then reused deterministically by every run: Stage 4-A's harness and the executor's install/boot/smoke gates are driven by this file, never by per-run guesses.",
+  "description": "Per-target-repo validation contract at <repo_path>/upgrade.config.json. Confirmed once by the user, then reused deterministically by every run: Stage 4-A's harness and the executor's boot/smoke/test gates are driven by this file, never by per-run guesses.",
   "type": "object",
-  "required": ["install_cmd", "start_cmd", "health_url", "smoke_routes"],
+  "required": ["start_cmd", "health_url", "smoke_routes"],
   "properties": {
-    "install_cmd": {
-      "type": "string",
-      "description": "Real dependency install command, e.g. \"npm ci\". Never a --dry-run."
-    },
     "build_cmd": {
       "type": ["string", "null"],
       "description": "Build command, or null if the repo has no build step."
     },
     "test_cmd": {
       "type": ["string", "null"],
-      "description": "The repo's own test command, e.g. \"npm test\". Null if the repo has no test suite."
+      "description": "The repo's own test command, e.g. \"npm test\" or \"pytest\". Null if the repo has no test suite."
     },
     "start_cmd": {
       "type": "string",
-      "description": "Command that boots the application, e.g. \"node app.js\"."
+      "description": "Command that boots the application, e.g. \"node app.js\" or \"python app.py\"."
     },
     "start_cwd": {
       "type": ["string", "null"],
@@ -46,7 +42,7 @@
     },
     "env": {
       "type": "object",
-      "description": "Environment variables set for install/boot/test gates, e.g. { \"NODE_ENV\": \"test\" }. Connection strings for provisioned services are injected by the harness at runtime under the variable names the app actually reads.",
+      "description": "Environment variables set for boot/test gates, e.g. { \"NODE_ENV\": \"test\" }. Connection strings for provisioned services are injected by the harness at runtime under the variable names the app actually reads.",
       "additionalProperties": { "type": "string" }
     }
   }

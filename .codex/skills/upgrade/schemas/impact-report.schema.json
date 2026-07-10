@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ImpactReport",
   "type": "object",
-  "required": ["affected_files", "dependency_graph", "risk_summary", "coverage_notes", "artifact_coverage"],
+  "required": ["affected_files", "dependency_graph", "risk_summary", "coverage_notes", "dependency_migration_matrix", "artifact_coverage"],
   "properties": {
     "affected_files": {
       "type": "array",
@@ -59,6 +59,32 @@
       }
     },
     "coverage_notes": { "type": "string" },
+    "dependency_migration_matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dependency", "from_version", "to_version", "direct_usage_sites"],
+        "properties": {
+          "dependency": { "type": "string" },
+          "from_version": { "type": "string" },
+          "to_version": { "type": "string" },
+          "direct_usage_sites": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["file_path", "api_or_symbol", "evidence"],
+              "properties": {
+                "file_path": { "type": "string" },
+                "api_or_symbol": { "type": "string" },
+                "evidence": { "type": "string" }
+              }
+            }
+          },
+          "required_changes": { "type": ["string", "null"] },
+          "no_usage_justification": { "type": ["string", "null"] }
+        }
+      }
+    },
     "artifact_coverage": {
       "type": "object",
       "required": ["artifact_refs", "slices_loaded", "full_artifact_loaded", "deferred_items", "confidence", "reason"],
