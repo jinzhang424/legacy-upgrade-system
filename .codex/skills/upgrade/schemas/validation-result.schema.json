@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ValidationResult",
   "type": "object",
-  "required": ["batch_sequence", "status", "changes_applied", "validation_results", "commit_refs", "baseline_status", "baseline_untracked_files", "staged_paths", "artifact_coverage"],
+  "required": ["batch_sequence", "status", "changes_applied", "validation_results", "commit_refs", "baseline_status", "baseline_untracked_files", "staged_paths", "signature_changes", "artifact_coverage"],
   "properties": {
     "batch_sequence": { "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["final"] }] },
     "status": { "type": "string", "enum": ["passed", "failed"] },
@@ -40,6 +40,21 @@
       "type": "array",
       "items": { "type": "string" },
       "description": "Repo-relative forward-slash file paths exactly as printed by `git diff --cached --name-only` before commit — the same capture that populates changes_applied. Never prose descriptions."
+    },
+    "signature_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "symbol", "old_signature", "new_signature", "reason"],
+        "properties": {
+          "file": { "type": "string" },
+          "symbol": { "type": "string" },
+          "old_signature": { "type": "string" },
+          "new_signature": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      },
+      "description": "Every exported symbol whose public shape this batch changed (callback→promise, parameter changes, renames). Empty array when none. Mirrored to slices/execute-<n>-signature-changes.json so Stage 4-B implements tests against the real post-upgrade signatures."
     },
     "artifact_coverage": {
       "type": "object",

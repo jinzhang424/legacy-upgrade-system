@@ -87,3 +87,15 @@ prefix_rule(
     decision = "allow",
     justification = "Detected Python test runner invocation from validation_criteria/framework_recommendations (execute.md, test.md).",
 )
+
+prefix_rule(
+    pattern = ["npm", "install", "--save-dev"],
+    decision = "allow",
+    justification = "Stage 4-B dev-dependency installs of well-known test frameworks and standard test-support libraries (in-memory service packages included), inside repo_path only (see orchestrator.md Escalation Rules and test.md Phase 2). No other stage installs dependencies.",
+)
+
+prefix_rule(
+    pattern = ["pip", "install"],
+    decision = "allow",
+    justification = "Stage 4-B dev-dependency installs, Python equivalent of npm install --save-dev, inside repo_path only (see orchestrator.md Escalation Rules and test.md Phase 2). No other stage installs dependencies.",
+)

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "TestResult",
   "type": "object",
-  "required": ["status", "tests_generated", "supplementary_tests", "test_files_created", "coverage_notes", "run_results", "artifact_coverage"],
+  "required": ["status", "tests_generated", "supplementary_tests", "test_files_created", "coverage_notes", "run_results", "dependencies_added", "artifact_coverage"],
   "properties": {
     "status": { "type": "string", "enum": ["passed", "partial", "failed"] },
     "tests_generated": {
@@ -42,6 +42,24 @@
         "failing": { "type": "number" },
         "skipped": { "type": "number" }
       }
+    },
+    "dependencies_added": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "dev"],
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "dev": { "type": "boolean" }
+        }
+      },
+      "description": "Packages installed for test implementation (test frameworks, standard in-memory service libraries), committed with the test files. Empty array when none."
+    },
+    "failure_origin": {
+      "type": "string",
+      "enum": ["generated_test", "source_change", "environment"],
+      "description": "Set when status is partial or failed: whose output caused the failure, so the orchestrator routes recovery to the responsible agent (source_change → executor patch invocation)."
     },
     "failure_summary": { "type": ["string", "null"] },
     "artifact_coverage": {

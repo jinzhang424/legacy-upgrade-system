@@ -1,4 +1,4 @@
-﻿---
+---
 name: "upgrade"
 description: "Full Codex-centered legacy upgrade pipeline with human-in-the-loop gates (analysis -> planning -> execution). Recommended entry point."
 ---

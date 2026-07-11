@@ -8,13 +8,32 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "type", "target_file", "what_to_verify", "expected_behavior"],
+        "required": ["id", "name", "type", "target_file", "target_symbol", "io_spec", "existing_coverage", "action", "what_to_verify", "expected_behavior"],
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
           "type": { "type": "string", "enum": ["unit", "integration", "regression", "e2e"] },
           "priority": { "type": "string", "enum": ["high", "medium", "low"] },
           "target_file": { "type": "string" },
+          "target_symbol": {
+            "type": "string",
+            "description": "The exported symbol under test. Assertions target this symbol's own exported behavior — never the argument shape, call convention, or internals of a dependency being upgraded."
+          },
+          "io_spec": {
+            "type": "object",
+            "required": ["inputs", "expected_output"],
+            "properties": {
+              "inputs": { "type": "string", "description": "Data description of the inputs passed to the exported symbol." },
+              "expected_output": { "type": "string", "description": "Data description of the expected result/observable effect." }
+            },
+            "description": "Input/output spec against the module's exported contract. Must be non-empty for action \"write\" cases (validator rule T9)."
+          },
+          "existing_coverage": {
+            "type": "string",
+            "enum": ["none", "partial", "sufficient"],
+            "description": "Coverage the repo's existing test suite already provides for this target. \"sufficient\" implies action \"skip\" (validator rule T10)."
+          },
+          "action": { "type": "string", "enum": ["write", "skip"] },
           "what_to_verify": { "type": "string" },
           "expected_behavior": { "type": "string" },
           "rationale": { "type": "string" }

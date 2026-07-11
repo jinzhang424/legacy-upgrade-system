@@ -74,10 +74,22 @@ const validPlan = {
 
 const validTestPlan = {
   test_cases: [
-    { id: "TC001", name: "keeps provider behavior", type: "regression", priority: "high", target_file: "src/a.js", what_to_verify: "Existing provider output is unchanged.", expected_behavior: "Golden values match the pre-upgrade baseline." },
-    { id: "TC002", name: "module loads", type: "unit", priority: "medium", target_file: "src/a.js", what_to_verify: "Module exports still load.", expected_behavior: "require succeeds with the expected exports." }
+    {
+      id: "TC001", name: "keeps provider behavior", type: "regression", priority: "high",
+      target_file: "src/a.js", target_symbol: "getItems",
+      io_spec: { inputs: "a seeded collection with two items and a filter of {active: true}", expected_output: "an array containing only the active item, resolved from the exported function" },
+      existing_coverage: "none", action: "write",
+      what_to_verify: "Exported provider output is unchanged for known inputs.", expected_behavior: "The exported contract returns the same data before and after the upgrade."
+    },
+    {
+      id: "TC002", name: "covered helper is skipped", type: "unit", priority: "medium",
+      target_file: "src/a.js", target_symbol: "formatItem",
+      io_spec: { inputs: "", expected_output: "" },
+      existing_coverage: "sufficient", action: "skip",
+      what_to_verify: "Existing suite already covers this symbol.", expected_behavior: "No new test needed; repo suite passes."
+    }
   ],
-  testing_strategy: "Characterization tests against golden baselines plus module-load checks.",
+  testing_strategy: "I/O-spec tests against exported module contracts, scoped to coverage gaps, plus module-load checks.",
   coverage_goals: "All high-risk changed files covered by at least one case.",
   framework_recommendations: "Reuse the repo's existing test framework.",
   artifact_coverage: coverage(["impact_report", "change_plan"], ["planned_high_risk_changes", "validation_criteria"])
@@ -102,6 +114,7 @@ const validExecute = {
   baseline_status: ["?? .claude/settings.json"],
   baseline_untracked_files: [".claude/settings.json"],
   staged_paths: ["src/a.js"],
+  signature_changes: [{ file: "src/a.js", symbol: "connectDb", old_signature: "connectDb(url, cb)", new_signature: "connectDb(url) -> Promise<Db>", reason: "Driver v4 removed the callback API." }],
   artifact_coverage: coverage(["change_plan"], ["batch_1", "validation_criteria", "rollback_summary"])
 };
 
@@ -112,6 +125,8 @@ const validTestResult = {
   test_files_created: ["test/a.test.js", "test/extra.test.js"],
   coverage_notes: "Core behavior covered.",
   run_results: { total: 2, passing: 2, failing: 0, skipped: 0 },
+  dependencies_added: [{ name: "mongodb-memory-server", version: "9.1.6", dev: true }],
+  failure_origin: "generated_test",
   failure_summary: null,
   artifact_coverage: coverage(["test_plan"], ["high_priority_tests"])
 };
@@ -180,6 +195,17 @@ assert(badCaseTypeReport.rejection_reasons.some((reason) => reason.startsWith("T
 const testPlanNoRegression = { ...validTestPlan, test_cases: [validTestPlan.test_cases[1]] };
 const noRegressionReport = validate("test-plan", write("test-plan-no-regression.json", testPlanNoRegression));
 assert(noRegressionReport.criteria_results.some((item) => item.criterion_id === "T7" && !item.passed));
+
+// T9: a write-action case with an empty io_spec is rejected.
+const testPlanEmptyIoSpec = { ...validTestPlan, test_cases: [{ ...validTestPlan.test_cases[0], io_spec: { inputs: "", expected_output: "" } }] };
+const emptyIoSpecReport = validate("test-plan", write("test-plan-empty-io-spec.json", testPlanEmptyIoSpec));
+assert.strictEqual(emptyIoSpecReport.decision, "rejected");
+assert(emptyIoSpecReport.rejection_reasons.some((reason) => reason.startsWith("T9:")));
+
+// T10 is minor: sufficient existing coverage with action "write" is flagged but not auto-rejected.
+const testPlanSufficientWrite = { ...validTestPlan, test_cases: [{ ...validTestPlan.test_cases[0], existing_coverage: "sufficient" }, validTestPlan.test_cases[1]] };
+const sufficientWriteReport = validate("test-plan", write("test-plan-sufficient-write.json", testPlanSufficientWrite));
+assert(sufficientWriteReport.criteria_results.some((item) => item.criterion_id === "T10" && !item.passed));
 
 const planBadChangeType = { ...validPlan, ordered_changes: [{ ...validPlan.ordered_changes[0], change_type: "update" }] };
 const badChangeTypeReport = validate("plan", write("plan-bad-change-type.json", planBadChangeType));
@@ -277,6 +303,23 @@ assert(noSliceReport.rejection_reasons.some((reason) => reason.startsWith("P10:"
 const testResultBadRunResults = { ...validTestResult, run_results: { total: 2, passing: "2", failing: 0, skipped: 0 } };
 assert(validate("test-result", write("test-result-bad-run-results.json", testResultBadRunResults)).criteria_results.some((item) => item.criterion_id === "R8" && !item.passed));
 
+// R9 is minor: a malformed dependencies_added entry is flagged.
+const testResultBadDeps = { ...validTestResult, dependencies_added: [{ name: "vitest" }] };
+assert(validate("test-result", write("test-result-bad-deps.json", testResultBadDeps)).criteria_results.some((item) => item.criterion_id === "R9" && !item.passed));
+
+// R10 is minor: an invalid failure_origin is flagged; an absent one is fine.
+const testResultBadOrigin = { ...validTestResult, failure_origin: "flaky_test" };
+assert(validate("test-result", write("test-result-bad-origin.json", testResultBadOrigin)).criteria_results.some((item) => item.criterion_id === "R10" && !item.passed));
+const testResultNoOrigin = { ...validTestResult };
+delete testResultNoOrigin.failure_origin;
+assert.strictEqual(validate("test-result", write("test-result-no-origin.json", testResultNoOrigin)).decision, "approved");
+
+// E13 is minor: a malformed signature_changes entry is flagged; an empty array is fine.
+const executeBadSignature = { ...validExecute, signature_changes: [{ file: "src/a.js", symbol: "connectDb" }] };
+assert(validate("execute", write("execute-bad-signature.json", executeBadSignature)).criteria_results.some((item) => item.criterion_id === "E13" && !item.passed));
+const executeNoSignatureChanges = { ...validExecute, signature_changes: [] };
+assert.strictEqual(validate("execute", write("execute-empty-signature.json", executeNoSignatureChanges)).decision, "approved");
+
 // E12: passed without any evidence_path is rejected.
 const executeNoEvidence = {
   ...validExecute,
@@ -353,6 +396,24 @@ assert(fixLine.applied.includes("E8"));
 assert.strictEqual(fixLine.decision, "approved");
 assert.strictEqual(JSON.parse(fs.readFileSync(fixOutPath, "utf8")).decision, "approved");
 assert.strictEqual(JSON.parse(fs.readFileSync(e8Artifact, "utf8")).failure_summary, null);
+
+// Fixer E13: a missing signature_changes array defaults to [].
+const e13Clone = JSON.parse(JSON.stringify(validExecute));
+delete e13Clone.signature_changes;
+const e13Artifact = write("cli-e13-execute.json", e13Clone);
+const cliFixE13 = spawnSync(process.execPath, [fixerCli, "execute", e13Artifact], { encoding: "utf8" });
+assert.strictEqual(cliFixE13.status, 0);
+assert(JSON.parse(cliFixE13.stdout).applied.includes("E13"));
+assert.deepStrictEqual(JSON.parse(fs.readFileSync(e13Artifact, "utf8")).signature_changes, []);
+
+// Fixer R9: a missing dependencies_added array defaults to [].
+const r9Clone = JSON.parse(JSON.stringify(validTestResult));
+delete r9Clone.dependencies_added;
+const r9Artifact = write("cli-r9-test-result.json", r9Clone);
+const cliFixR9 = spawnSync(process.execPath, [fixerCli, "test-result", r9Artifact], { encoding: "utf8" });
+assert.strictEqual(cliFixR9.status, 0);
+assert(JSON.parse(cliFixR9.stdout).applied.includes("R9"));
+assert.deepStrictEqual(JSON.parse(fs.readFileSync(r9Artifact, "utf8")).dependencies_added, []);
 
 // A nonexistent artifact path yields a single critical MISSING criterion, not a parse error.
 const missingReport = validate("execute", path.join(tmp, "does-not-exist.json"));

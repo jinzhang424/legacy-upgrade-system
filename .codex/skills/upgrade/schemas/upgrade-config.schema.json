@@ -37,7 +37,7 @@
     },
     "services": {
       "type": "object",
-      "description": "Backing services the app needs, as discovered by Stage 1 analysis — never assumed in advance. Keys are service names (database, cache, queue, search index, ...); values are the provisioning strategy the harness uses: an ephemeral/in-memory provider exercising the real client driver (preferred), \"container\" for a disposable local instance, \"external:<url>\" for an existing instance, or \"fake\" as a last-resort driver-level substitute.",
+      "description": "Backing services the app needs, as discovered by Stage 1 analysis — never assumed in advance. Keys are service names (database, cache, queue, search index, ...); values are the provisioning strategy for boot/test gates and Stage 4-B service-backed tests: an ephemeral/in-memory provider exercising the real client driver (preferred, e.g. a standard in-memory test library for the stack), \"container\" for a disposable local instance, or \"external:<url>\" for an existing instance.",
       "additionalProperties": { "type": "string" }
     },
     "env": {

@@ -239,15 +239,19 @@ function validateTestPlan(data) {
   const cases = data.test_cases;
   const types = new Set(["unit", "integration", "regression", "e2e"]);
   const priorities = new Set(["high", "medium", "low"]);
+  const coverageLevels = new Set(["none", "partial", "sufficient"]);
+  const actions = new Set(["write", "skip"]);
 
   criteria.push(result("T1", "`test_cases` is present, is an array, and has at least one entry", "critical", Array.isArray(cases) && cases.length > 0, "`test_cases` must be a non-empty array."));
-  criteria.push(result("T2", "Every test case has required fields", "critical", Array.isArray(cases) && cases.every((entry) => isObject(entry) && hasString(entry.id) && hasString(entry.name) && hasString(entry.type) && hasString(entry.target_file) && hasString(entry.what_to_verify) && hasString(entry.expected_behavior)), "One or more test cases is missing id, name, type, target_file, what_to_verify, or expected_behavior."));
+  criteria.push(result("T2", "Every test case has required fields and valid enum values", "critical", Array.isArray(cases) && cases.every((entry) => isObject(entry) && hasString(entry.id) && hasString(entry.name) && hasString(entry.type) && hasString(entry.target_file) && hasString(entry.target_symbol) && isObject(entry.io_spec) && typeof entry.io_spec.inputs === "string" && typeof entry.io_spec.expected_output === "string" && coverageLevels.has(entry.existing_coverage) && actions.has(entry.action) && hasString(entry.what_to_verify) && hasString(entry.expected_behavior)), "One or more test cases is missing id, name, type, target_file, target_symbol, io_spec {inputs, expected_output}, existing_coverage (none|partial|sufficient), action (write|skip), what_to_verify, or expected_behavior."));
   criteria.push(result("T3", "`testing_strategy` is present and non-trivial (> 20 chars)", "critical", typeof data.testing_strategy === "string" && data.testing_strategy.length > 20, "`testing_strategy` must be a non-trivial string."));
   criteria.push(result("T4", "All `type` values are valid enum members", "critical", Array.isArray(cases) && cases.every((entry) => types.has(entry.type)), "One or more test cases has an invalid type."));
   criteria.push(result("T5", "All optional `priority` values are valid enum members", "minor", Array.isArray(cases) && cases.every((entry) => entry.priority === undefined || priorities.has(entry.priority)), "One or more test cases has an invalid priority."));
   criteria.push(result("T6", "`coverage_goals` is present and non-empty", "minor", hasString(data.coverage_goals), "`coverage_goals` must be a non-empty string."));
   criteria.push(result("T7", "At least one test case is a regression test", "minor", Array.isArray(cases) && cases.some((entry) => entry.type === "regression"), "At least one regression test case is required."));
   criteria.push(result("T8", "`framework_recommendations` is present and non-empty", "minor", hasString(data.framework_recommendations), "`framework_recommendations` must be a non-empty string."));
+  criteria.push(result("T9", "Every action:\"write\" case has a non-empty io_spec", "critical", Array.isArray(cases) && cases.every((entry) => !isObject(entry) || entry.action !== "write" || (isObject(entry.io_spec) && hasString(entry.io_spec.inputs) && hasString(entry.io_spec.expected_output))), "Every test case with action \"write\" must have non-empty io_spec.inputs and io_spec.expected_output — data-level specs are what Stage 4-B implements."));
+  criteria.push(result("T10", "Cases with sufficient existing coverage are skipped", "minor", Array.isArray(cases) && cases.every((entry) => !isObject(entry) || entry.existing_coverage !== "sufficient" || entry.action === "skip"), "`existing_coverage: \"sufficient\"` requires `action: \"skip\"` — do not plan new tests for a target the repo's suite already covers."));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }
@@ -290,6 +294,13 @@ function validateExecute(data) {
   criteria.push(result("E10", "`baseline_untracked_files` is present and is an array", "critical", Array.isArray(data.baseline_untracked_files), "`baseline_untracked_files` must record pre-existing untracked paths from execution start."));
   criteria.push(result("E11", "`staged_paths` is present and is a subset of `changes_applied`", "critical", Array.isArray(data.staged_paths) && Array.isArray(data.changes_applied) && data.staged_paths.every((item) => data.changes_applied.includes(item)), "`staged_paths` must be an exact-string subset of `changes_applied`; both hold repo-relative forward-slash paths as printed by `git diff --cached --name-only`, never prose descriptions or plan IDs."));
   criteria.push(result(
+    "E13",
+    "`signature_changes` records public API shape changes with well-formed entries",
+    "minor",
+    Array.isArray(data.signature_changes) && data.signature_changes.every((entry) => isObject(entry) && hasString(entry.file) && hasString(entry.symbol) && hasString(entry.old_signature) && hasString(entry.new_signature) && hasString(entry.reason)),
+    "`signature_changes` must be an array (empty allowed); each entry needs file, symbol, old_signature, new_signature, and reason so Stage 4-B can target the real post-upgrade signatures."
+  ));
+  criteria.push(result(
     "E12",
     "Passed results reference verifiable gate evidence",
     "critical",
@@ -313,6 +324,8 @@ function validateTestResult(data) {
   criteria.push(result("R6", "`coverage_notes` is present and non-empty", "minor", hasString(data.coverage_notes), "`coverage_notes` must be a non-empty string."));
   criteria.push(result("R7", "`supplementary_tests` is present with complete entries", "minor", Array.isArray(data.supplementary_tests) && data.supplementary_tests.every((entry) => isObject(entry) && hasString(entry.test_file) && hasString(entry.test_name) && hasString(entry.reason)), "`supplementary_tests` must be an array whose entries have test_file, test_name, and reason."));
   criteria.push(result("R8", "`run_results` reports numeric totals", "minor", isObject(data.run_results) && typeof data.run_results.total === "number" && typeof data.run_results.passing === "number" && typeof data.run_results.failing === "number" && typeof data.run_results.skipped === "number", "`run_results` must be an object with numeric total, passing, failing, and skipped."));
+  criteria.push(result("R9", "`dependencies_added` is present with well-formed entries", "minor", Array.isArray(data.dependencies_added) && data.dependencies_added.every((entry) => isObject(entry) && hasString(entry.name) && hasString(entry.version) && typeof entry.dev === "boolean"), "`dependencies_added` must be an array (empty allowed); each entry needs name, version, and boolean dev."));
+  criteria.push(result("R10", "`failure_origin`, when present, is a valid enum value", "minor", data.failure_origin === undefined || data.failure_origin === "generated_test" || data.failure_origin === "source_change" || data.failure_origin === "environment", "`failure_origin` must be generated_test, source_change, or environment — the orchestrator routes recovery to the responsible agent by this value."));
   criteria.push(validateArtifactCoverage(data));
   return criteria;
 }

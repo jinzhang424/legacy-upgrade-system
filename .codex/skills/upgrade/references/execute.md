@@ -83,7 +83,7 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 9. Commit the batch atomically. The commit must contain only the staged subset verified in step 8.
 9a. After committing, mark each patched file's digest as stale: for every file in the committed batch, update its entry under `<file_context_dir>/` by setting `last_observed_hash` to `"stale-post-patch-batch-<n>"`. This prevents test implementation and any subsequent stage from reusing a pre-patch digest.
 10. Run the evidence-based validation gates (see **Validation Gates** below) — one pass, after the final edit; nothing re-runs post-commit. For the final executor invocation, run the full gate suite across all batches' touched files.
-11. Write a ValidationResult JSON artifact under `<run_artifact_dir>/validation-results/`, with an `evidence_path` on every `validation_results` entry. Populate both `staged_paths` and `changes_applied` from the step-8 capture verbatim — repo-relative forward-slash paths exactly as printed by `git diff --cached --name-only`. `changes_applied` may be a superset (planned batch files that needed no edit, in the same path format), but must never contain prose descriptions or plan IDs; commentary about the changes belongs in `notes`.
+11. Write a ValidationResult JSON artifact under `<run_artifact_dir>/validation-results/`, with an `evidence_path` on every `validation_results` entry. Populate both `staged_paths` and `changes_applied` from the step-8 capture verbatim — repo-relative forward-slash paths exactly as printed by `git diff --cached --name-only`. `changes_applied` may be a superset (planned batch files that needed no edit, in the same path format), but must never contain prose descriptions or plan IDs; commentary about the changes belongs in `notes`. Record `signature_changes` — one `{file, symbol, old_signature, new_signature, reason}` entry for every exported symbol whose public shape this batch changed (callback→promise, parameter changes, renames), an empty array when none — and write the same array to `<run_artifact_dir>/slices/execute-<n>-signature-changes.json`. Stage 4-B implements its tests against these recorded signatures (the TestPlan was written pre-execution assuming preserved contracts), and the orchestrator hands the slice paths over without reading the full artifact.
 12. Self-validate before finishing (see **Validate Before Finish** below).
 
 ## Validation Gates (evidence-based)
@@ -99,9 +99,11 @@ node .codex/skills/upgrade/scripts/run-gate.js --run-dir <run_artifact_dir> --st
 3. **boot-smoke** — `node .codex/skills/upgrade/scripts/boot-smoke.js --config <upgrade.config.json> --repo <repo_path>`, required when the batch touches runtime code paths.
 4. **repo-test** — the repo's own `test_cmd` from `upgrade.config.json`, if defined.
 
-The pipeline never performs dependency installs — the user's environment is already set up.
+The executor never performs dependency installs — the user's environment is already set up. (Only Stage 4-B may install test dev-dependencies; see test.md Phase 2.)
 
 The gate runner records command, exit code, and full log; the deterministic validator (rule E12) independently re-checks that evidence before a `passed` artifact is accepted, so a gate that was never run cannot be self-certified.
+
+**On gate failure, patch-and-recover before reporting failure.** Diagnose the root cause. If it lies within this batch's file scope, patch it and re-run only the failed gate — at most 2 patch attempts per gate; record each attempt (gate, diagnosis, files patched) in `notes` and stage the patched files with the batch. If the root cause is outside batch scope, or both attempts fail, emit `status: "failed"` with a `failure_summary` describing the attempts made and stop (see orchestrator.md Failure Recovery — rollback happens only after these in-run attempts are exhausted).
 
 **Self-authored mocks are banned as validation evidence.** Do not write your own test scripts, stubs, or mocks and cite them in the ValidationResult. Only Stage 4-A harness results and upgrade.config.json-defined commands count. If the harness is missing (test planning failed), run the **syntax** and **repo-test** gates only and record the degradation in the ValidationResult.
 
@@ -144,7 +146,7 @@ Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/valid
 - Pre-existing unrelated untracked files must remain untouched and uncommitted.
 - Untracked files that overlap planned create/modify paths are blocking.
 - Tracked dirty files are blocking because they can change runtime behavior and validation results.
-- Never continue past failed validation. Emit a failed ValidationResult and wait for orchestrator rollback instructions.
+- Never continue past failed validation. After in-scope patch attempts are exhausted (≤ 2 per gate, recorded in `notes`), emit a failed ValidationResult and wait for orchestrator rollback instructions.
 - Never guess when a change description is ambiguous. Emit a failed ValidationResult with a clarification-focused `failure_summary`.
 - Keep commits atomic to the batch.
 - Never use `git add -A`, `git add .`, or any broad staging command for upgrade or rollback commits.

@@ -62,6 +62,22 @@ const FIXERS = {
     data.risk_summary.total_affected_files = data.affected_files.length;
     return true;
   },
+  // Missing signature_changes defaults to the explicit "no public shape changes" record.
+  E13(data) {
+    if (data.signature_changes === undefined) {
+      data.signature_changes = [];
+      return true;
+    }
+    return false;
+  },
+  // Missing dependencies_added defaults to the explicit "no packages installed" record.
+  R9(data) {
+    if (data.dependencies_added === undefined) {
+      data.dependencies_added = [];
+      return true;
+    }
+    return false;
+  },
   // Invalid optional priority enum: drop the field, preserving the raw value in a note field.
   T5(data) {
     const priorities = new Set(["high", "medium", "low"]);
