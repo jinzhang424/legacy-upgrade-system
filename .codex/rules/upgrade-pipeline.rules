@@ -37,13 +37,13 @@ prefix_rule(
 prefix_rule(
     pattern = ["node", ".codex/skills/upgrade/scripts/run-gate.js"],
     decision = "allow",
-    justification = "Evidence-recording gate runner; wraps executor validation commands (syntax/harness/boot-smoke/test) so E12 evidence exists (see execute.md Validation Gates).",
+    justification = "Evidence-recording gate runner; wraps executor validation commands (syntax/harness/test) and the orchestrator's final boot-smoke gate so E12 evidence exists (see execute.md Validation Gates, orchestrator.md Stage 3).",
 )
 
 prefix_rule(
     pattern = ["node", ".codex/skills/upgrade/scripts/boot-smoke.js"],
     decision = "allow",
-    justification = "Config-driven boot + smoke-route gate defined by upgrade.config.json (see test.md Harness Requirements and execute.md Validation Gates).",
+    justification = "Config-driven boot + smoke script defined by upgrade.config.json; the orchestrator's final application gate, run once after all batches, plus one Stage 4-A baseline record (see orchestrator.md Stage 3 and test.md Harness Requirements).",
 )
 
 prefix_rule(

@@ -82,7 +82,7 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
    - If no paths are staged, halt with a failed ValidationResult explaining that the batch produced no staged changes.
 9. Commit the batch atomically. The commit must contain only the staged subset verified in step 8.
 9a. After committing, mark each patched file's digest as stale: for every file in the committed batch, update its entry under `<file_context_dir>/` by setting `last_observed_hash` to `"stale-post-patch-batch-<n>"`. This prevents test implementation and any subsequent stage from reusing a pre-patch digest.
-10. Run the evidence-based validation gates (see **Validation Gates** below) — one pass, after the final edit; nothing re-runs post-commit. For the final executor invocation, run the full gate suite across all batches' touched files.
+10. Run the evidence-based validation gates (see **Validation Gates** below) — one pass, after the final edit; nothing re-runs post-commit. For the final executor invocation, run the full gate suite across all batches' touched files — the suite never includes boot-smoke; the final application gate is orchestrator-owned and runs after this invocation's result validates.
 11. Write a ValidationResult JSON artifact under `<run_artifact_dir>/validation-results/`, with an `evidence_path` on every `validation_results` entry. Populate both `staged_paths` and `changes_applied` from the step-8 capture verbatim — repo-relative forward-slash paths exactly as printed by `git diff --cached --name-only`. `changes_applied` may be a superset (planned batch files that needed no edit, in the same path format), but must never contain prose descriptions or plan IDs; commentary about the changes belongs in `notes`. Record `signature_changes` — one `{file, symbol, old_signature, new_signature, reason}` entry for every exported symbol whose public shape this batch changed (callback→promise, parameter changes, renames), an empty array when none — and write the same array to `<run_artifact_dir>/slices/execute-<n>-signature-changes.json`. Stage 4-B implements its tests against these recorded signatures (the TestPlan was written pre-execution assuming preserved contracts), and the orchestrator hands the slice paths over without reading the full artifact.
 12. Self-validate before finishing (see **Validate Before Finish** below).
 
@@ -96,8 +96,10 @@ node .codex/skills/upgrade/scripts/run-gate.js --run-dir <run_artifact_dir> --st
 
 1. **syntax** — a cheap per-file syntax check on each changed file, with the checker picked by file extension: `node --check` for `.js`/`.mjs`/`.cjs`, `python -m py_compile` for `.py` (extend the same pattern for other languages with a cheap checker; every check still runs through run-gate.js). Files with no known cheap checker are **skipped, not failed** — do not fabricate a `validation_results` entry for them (E12 requires evidence per entry); record the skip and its reason in the ValidationResult `notes`.
 2. **harness** — `node <run_artifact_dir>/harness/run.js`. Exit 0 means no regressions beyond `baseline.json` `known-failing` entries.
-3. **boot-smoke** — `node .codex/skills/upgrade/scripts/boot-smoke.js --config <upgrade.config.json> --repo <repo_path>`, required when the batch touches runtime code paths.
-4. **repo-test** — the repo's own `test_cmd` from `upgrade.config.json`, if defined.
+
+The repo's own `test_cmd` is **not** a separate gate: the harness already runs it as a baseline-aware case, so a standalone re-run would re-fail on pre-existing baseline failures (e.g. a repo with no test script at all) and block every batch regardless of what the plan does.
+
+The executor never boots the application — mid-upgrade boot failures are expected with partially-migrated dependencies, so no per-batch gate runs the app. The orchestrator runs the shared boot-smoke script exactly once, as a final application gate after the last batch's ValidationResult validates (see orchestrator.md Stage 3).
 
 The executor never performs dependency installs — the user's environment is already set up. (Only Stage 4-B may install test dev-dependencies; see test.md Phase 2.)
 
@@ -105,7 +107,7 @@ The gate runner records command, exit code, and full log; the deterministic vali
 
 **On gate failure, patch-and-recover before reporting failure.** Diagnose the root cause. If it lies within this batch's file scope, patch it and re-run only the failed gate — at most 2 patch attempts per gate; record each attempt (gate, diagnosis, files patched) in `notes` and stage the patched files with the batch. If the root cause is outside batch scope, or both attempts fail, emit `status: "failed"` with a `failure_summary` describing the attempts made and stop (see orchestrator.md Failure Recovery — rollback happens only after these in-run attempts are exhausted).
 
-**Self-authored mocks are banned as validation evidence.** Do not write your own test scripts, stubs, or mocks and cite them in the ValidationResult. Only Stage 4-A harness results and upgrade.config.json-defined commands count. If the harness is missing (test planning failed), run the **syntax** and **repo-test** gates only and record the degradation in the ValidationResult.
+**Self-authored mocks are banned as validation evidence.** Do not write your own test scripts, stubs, or mocks and cite them in the ValidationResult. Only Stage 4-A harness results and upgrade.config.json-defined commands count. If the harness is missing (test planning failed), run the **syntax** gate plus the config `test_cmd` directly (when defined) and record the degradation in the ValidationResult — this degraded path is the only place `test_cmd` runs outside the harness.
 
 ## Validate Before Finish
 

@@ -90,7 +90,7 @@ Never build or load the whole-repo dependency graph. If the scoped set proves in
    - `impact-report-dependency-summary.json`: compact dependency graph summary.
    - `impact-report-migration-matrix.json`: the full `dependency_migration_matrix` (slice key `migration_matrix`). The plan gate (P10) reads this slice deterministically to enforce coverage.
 11. Add or update the `impact_report` entry in `<run_artifact_dir>/manifest.json`.
-12. **Validation contract proposal:** if the spawn prompt says `upgrade_config_present` is false, write `<run_artifact_dir>/upgrade.config.proposed.json` conforming to `schemas/upgrade-config.schema.json`, populated from what the analysis discovered: entry points (`start_cmd`, `start_cwd`), listening ports/routes (`health_url`, `smoke_routes`), test script (`test_cmd`), backing services (`services`), and required env vars (`env`). The orchestrator confirms it with the user once; it then becomes the deterministic contract every future run reuses.
+12. **Validation contract proposal:** if the spawn prompt says `upgrade_config_present` is false, write `<run_artifact_dir>/upgrade.config.proposed.json` conforming to `schemas/upgrade-config.schema.json`, populated from what the analysis discovered: entry points (`start_cmd`, `start_cwd`), listening ports/routes (`health_url`, `smoke_routes`), test script (`test_cmd` — only when a runnable test command is verified to exist, such as a `scripts.test` manifest entry or equivalent runner config; omit the field rather than propose a guessed command), backing services (`services`), and required env vars (`env`). The orchestrator confirms it with the user once; it then becomes the deterministic contract every future run reuses.
 
 ## Checkpointing
 

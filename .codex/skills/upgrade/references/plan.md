@@ -60,7 +60,7 @@ Allowed only when a specific trigger is met: high-risk classification, ambiguous
 2. Consume analyzer file-context digests before reading source files again. If a digest exists and `last_observed_hash` still matches the current file, reuse the digest instead of rereading source.
 3. When extra context is needed beyond available digests, follow the Progressive Search Escalation Protocol above.
 6. Research breaking changes using authoritative knowledge available to you and map them to affected files.
-7. Design exact ordered changes, rollback steps, and validation criteria. Validation criteria must map to the pipeline's executable gates — the per-file syntax check, the Stage 4-A harness run, boot+smoke, and the repo's `test_cmd` — not prose or judgment checks; executors may only cite evidence from these gates.
+7. Design exact ordered changes, rollback steps, and validation criteria. Validation criteria must map to the pipeline's executable gates, not prose or judgment checks; executors may only cite evidence from these gates. Per-batch gates are the per-file syntax check and the Stage 4-A harness run; the repo's `test_cmd` runs inside the harness as a baseline-aware case, never as a standalone per-batch criterion (a suite broken at baseline must not block batches). A boot-smoke criterion describes the orchestrator's run-level final application gate only — run once after all batches complete — and must not be assigned to individual batches.
 8. For every entry in the `migration_matrix` slice, map each usage site to specific ordered changes or record a `no_change_reason` (> 20 chars); emit `migration_coverage` in the ChangePlan — one entry per matrix dependency with `site_mappings` of `{file_path, ordered_change_sequences, no_change_reason}`. The plan gate enforces this deterministically: P10 rejects when any (dependency, usage-site file_path) pair from the matrix slice is missing from `migration_coverage`; P11 rejects when a mapping cites sequences that do not exist in `ordered_changes` or whose file_path differs.
 9. Write the full ChangePlan to `<run_artifact_dir>/change-plan.json`.
 10. Write `<run_artifact_dir>/summaries/change-plan-summary.json`.
@@ -86,7 +86,7 @@ Schema: the artifact contract is defined by `.codex/skills/upgrade/schemas/chang
 - Do not plan changes outside the ImpactReport scope without flagging the scope expansion in `plan_summary`.
 - Every `change_description` must be specific enough for batch execution.
 - `migration_coverage` must account for every (dependency, usage-site) pair in the `migration_matrix` slice (critical criteria P10/P11 — a coverage gap blocks the plan).
-- Batch ordering: the dependency manifest version bump for X must be in the same batch as, or a later batch than, the code changes migrating X's usage sites — every batch must remain bootable.
+- Batch ordering: the dependency manifest version bump for X must be in the same batch as, or a later batch than, the code changes migrating X's usage sites — every batch must leave touched modules loadable and the test suite runnable (booting is not a per-batch invariant; the application boots once at the orchestrator's final gate).
 - If confidence is not sufficient, load more slices or the full ImpactReport before final output.
 - Reuse unchanged file-context digests across retries and do not paste source excerpts into retry prompts.
 - No Mem0 calls from this agent.

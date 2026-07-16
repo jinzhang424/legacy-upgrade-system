@@ -8,10 +8,10 @@ TASK
 3. Build the SLIM harness under `<run_artifact_dir>/harness/` — executors only run it:
    - `run.js` single entry: exit 0 = pass; `--baseline` records results, always exits 0; normal mode fails only on regressions vs `baseline.json` known-failing entries.
    - Module-load cases: load each touched module with the language's own loader (`require()`/`import`, `python -c "import x"`); assert expected symbols. `run.js` stays a Node entry; cases shell out to the repo's toolchain.
-   - Boot+smoke: `node .codex/skills/upgrade/scripts/boot-smoke.js --config <config> --repo <repo_path>`; never write your own smoke script.
    - Repo test suite: one case running the repo's own test command (config `test_cmd` or detected runner) when one exists.
+   - NO boot/smoke case — the application is never run per batch; the orchestrator runs the shared boot-smoke script once after all batches.
    BANNED: characterization/golden-master cases, `Module._load`/import-hook interception, hand-rolled fakes or stubs of any dependency, assertions on arguments passed to third-party libraries.
-4. Baseline: run `node harness/run.js --baseline` on the UNCHANGED repo; write `harness/baseline.json`, marking already-failing cases `known-failing`.
+4. Baseline: run `node harness/run.js --baseline` on the UNCHANGED repo; write `harness/baseline.json`, marking already-failing cases `known-failing`. Also run `node .codex/skills/upgrade/scripts/boot-smoke.js --config <config> --repo <repo_path>` once (skip if config lacks start_cmd/health_url) and record its result in `baseline.json` as a `baseline_boot` data field — NOT a harness case; the orchestrator's final gate uses it to tell "upgrade broke boot" from "never booted".
 5. PATCH-AND-RECOVER: if the harness/baseline errors mechanically (script bug, bad path, runner not found), fix the harness and re-run the baseline — max 2 patch attempts — before returning; never return a harness that cannot execute.
 
 HARD CONSTRAINTS (validator): `test_cases` non-empty, each with id, name, type(unit|integration|regression|e2e), target_file, target_symbol, io_spec{inputs,expected_output}, existing_coverage(none|partial|sufficient), action(write|skip), what_to_verify, expected_behavior (optional priority high|medium|low); action "write" ⇒ non-empty io_spec.inputs AND expected_output; existing_coverage "sufficient" ⇒ action "skip"; ≥1 regression case; `testing_strategy` >20 chars; `coverage_goals` and `framework_recommendations` non-empty; `artifact_coverage` confidence "sufficient".

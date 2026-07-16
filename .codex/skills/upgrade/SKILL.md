@@ -16,7 +16,7 @@ Do not flatten or bypass the stage instructions.
 - `references/{analyze,plan,test,execute}.md` - human appendices behind the briefs; **not** loaded by agents at runtime
 - `references/validator.md` - output validation agent
 - `scripts/` - deterministic helpers: validate-upgrade-artifact.js, fix-upgrade-artifact.js, repo-status.js, run-gate.js, boot-smoke.js
-- `schemas/upgrade-config.schema.json` - per-repo validation contract (`<repo>/upgrade.config.json`) driving boot/smoke/test gates
+- `schemas/upgrade-config.schema.json` - per-repo validation contract (`<repo>/upgrade.config.json`) driving the test gates and the final boot/smoke gate
 
 ## Command Template
 
