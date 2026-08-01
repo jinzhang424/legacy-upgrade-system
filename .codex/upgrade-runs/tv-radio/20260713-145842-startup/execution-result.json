@@ -1,0 +1,325 @@
+﻿{
+    "status":  "passed",
+    "branch_name":  "upgrade/upgrade-any-outdated-dependencies-found",
+    "commit_ref":  "485c538",
+    "files_changed":  [
+                          "tv-radio-admin/Admin/API/admin-media-scan.js",
+                          "tv-radio-admin/Admin/API/admin-unisat.js",
+                          "tv-radio-admin/Admin/API/admin-usage.js",
+                          "tv-radio-admin/Admin/API/package-lock.json",
+                          "tv-radio-admin/Admin/Interface/index.html",
+                          "tv-radio-admin/CLI/chapman.js",
+                          "tv-radio-admin/CLI/package-lock.json",
+                          "tv-radio-admin/Common/directdb-mongo.js",
+                          "tv-radio-admin/Common/package-lock.json",
+                          "tv-radio-admin/Common/package.json",
+                          "tv-radio-admin/Export/package-lock.json",
+                          "tv-radio-admin/Ingest/package-lock.json",
+                          "tv-radio-admin/Ingest/package.json",
+                          "tv-radio-admin/Search/build.js",
+                          "tv-radio-admin/Search/package-lock.json",
+                          "tv-radio-frontend/app.js",
+                          "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                          "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                          "tv-radio-frontend/content/unisat/client-unisat.js",
+                          "tv-radio-frontend/db-provider.js",
+                          "tv-radio-frontend/media/generic-media.js",
+                          "tv-radio-frontend/metrics.js",
+                          "tv-radio-frontend/package-lock.json",
+                          "tv-radio-frontend/package.json",
+                          "tv-radio-frontend/usage-monitoring.js"
+                      ],
+    "changes_applied":  [
+                            "Updated package manifests to the ChangePlan dependency targets that still differed from the approved expected_dependency_changes.",
+                            "Created package-lock.json files by running npm install in each planned package directory.",
+                            "Replaced removed MongoDB Buffer and promise callback edge cases in planned MongoDB provider files.",
+                            "Converted planned cron object constructor call sites to CronJob.from for cron 4 compatibility.",
+                            "Migrated planned Influx client construction and writePoints usage to InfluxDB/writePoints(points).",
+                            "Updated frontend UglifyJS sourceMap options for uglify-js 3.",
+                            "Updated the admin interface Socket.IO browser client script to the Socket.IO 4 server-served client path.",
+                            "Applied user-approved scope expansion for usage-monitoring.js by replacing the /media/access/* options route with an Express 5-compatible regex route.",
+                            "Repaired planned Express 5 wildcard routes in frontend content, generic media, and usage monitoring modules.",
+                            "Repaired async 3 callback and empty-index progress behavior needed for the corrected Chapman smoke command."
+                        ],
+    "changes_skipped":  [
+
+                        ],
+    "executor_check_results":  [
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "added 134 packages in 6s",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "up to date in 714ms",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "added 17 packages in 3s",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Export",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "up to date in 731ms",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Ingest",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "changed 5 packages in 2s",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "added 2 packages in 2s",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                       "command":  "npm.cmd install --no-audit --no-fund",
+                                       "purpose":  "setup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "added 187 packages in 16s; npm emitted deprecation warnings for fluent-ffmpeg, har-validator, gc-stats, uuid@3.4.0, and request",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                       "command":  "node --check app.js",
+                                       "purpose":  "compile",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                       "command":  "node --check app.js",
+                                       "purpose":  "compile",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+                                       "command":  "node --check directdb-mongo.js",
+                                       "purpose":  "compile",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                       "command":  "node --check db-provider.js",
+                                       "purpose":  "compile",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                       "command":  "node --check logger.js",
+                                       "purpose":  "compile",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "",
+                                       "repair_attempts":  0,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                       "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process -FilePath node -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u00278080\u0027,\u0027--verbose\u0027,\u0027--interface\u0027) -PassThru -WindowStyle Hidden; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Seconds 1 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                       "purpose":  "startup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "Passed after repairs. Earlier failures were Callback was already called in directdb-mongo.js and missing config.UNISAT_IMPORT guards in admin-unisat.js.",
+                                       "repair_attempts":  3,
+                                       "health_check_url":  "http://localhost:8080/",
+                                       "health_check_outcome":  "passed",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                       "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process -FilePath node -ArgumentList @(\u0027app.js\u0027) -PassThru -WindowStyle Hidden; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Seconds 1 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                       "purpose":  "startup",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "Passed after user-approved scope expansion repaired Express 5 wildcard route /media/access/* in tv-radio-frontend/usage-monitoring.js.",
+                                       "repair_attempts":  3,
+                                       "health_check_url":  "http://localhost:8082/",
+                                       "health_check_outcome":  "passed",
+                                       "health_check_repair_rounds":  0
+                                   },
+                                   {
+                                       "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                       "command":  "node chapman.js index --verbose",
+                                       "purpose":  "test",
+                                       "outcome":  "passed",
+                                       "exit_status":  0,
+                                       "output":  "Re-indexing Titles; Re-indexing 0 titles completed successfully. Re-indexing Programmes; Re-indexing 0 programmes completed successfully. Re-indexing Playlists; Re-indexing 0 playlists completed successfully. Re-indexing UniSat records; Re-indexing 0 UniSat records completed successfully. [INFO/INDEX-BUILD] Search index rebuild has completed.",
+                                       "repair_attempts":  4,
+                                       "health_check_url":  "",
+                                       "health_check_outcome":  "skipped",
+                                       "health_check_repair_rounds":  0
+                                   }
+                               ],
+    "executor_repairs_applied":  [
+                                     {
+                                         "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                         "reason":  "Admin startup failed after MongoDB 7 migration because promise catch captured downstream callback exceptions and called the async callback twice.",
+                                         "summary":  "Changed MongoClient.connect promise rejection handling to the two-argument then form so only connection errors call the async task callback.",
+                                         "command":  "admin API startup health check",
+                                         "repair_round":  1
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-frontend/db-provider.js",
+                                         "reason":  "Same MongoDB 7 callback safety issue existed in the planned frontend DB provider migration.",
+                                         "summary":  "Changed MongoClient.connect promise rejection handling to the two-argument then form.",
+                                         "command":  "admin API startup health check",
+                                         "repair_round":  1
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-admin/Admin/API/admin-unisat.js",
+                                         "reason":  "Admin startup failed in planned admin-unisat.js when sample config omitted UNISAT_IMPORT.",
+                                         "summary":  "Guarded config.UNISAT_IMPORT.baseFilePath access.",
+                                         "command":  "admin API startup health check",
+                                         "repair_round":  2
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-admin/Admin/API/admin-unisat.js",
+                                         "reason":  "Admin startup failed in planned admin-unisat.js when schedule defaults read config.UNISAT_IMPORT.",
+                                         "summary":  "Added local unisatImportConfig default object for autoSchedule and scheduleInterval.",
+                                         "command":  "admin API startup health check",
+                                         "repair_round":  3
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                         "reason":  "Frontend startup failed after Express 5 migration on string wildcard route /search/*.",
+                                         "summary":  "Replaced affected search wildcard routes with regex routes.",
+                                         "command":  "frontend startup health check",
+                                         "repair_round":  4
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-frontend/content/unisat/client-unisat.js",
+                                         "reason":  "Frontend startup could hit Express 5 string wildcard routes in planned UniSat content module.",
+                                         "summary":  "Replaced affected ondemand wildcard routes with regex routes.",
+                                         "command":  "frontend startup health check",
+                                         "repair_round":  4
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                         "reason":  "Frontend startup could hit Express 5 string wildcard options route in planned public viewer module.",
+                                         "summary":  "Replaced affected public viewer options wildcard route with regex route.",
+                                         "command":  "frontend startup health check",
+                                         "repair_round":  4
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-frontend/media/generic-media.js",
+                                         "reason":  "Frontend startup failed after Express 5 migration on adaptive media segment wildcard routes.",
+                                         "summary":  "Replaced affected HLS/DASH segment and CORS wildcard routes with regex routes while preserving params for streaming handlers.",
+                                         "command":  "frontend startup health check",
+                                         "repair_round":  5
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-frontend/usage-monitoring.js",
+                                         "reason":  "Frontend startup failed after Express 5 migration on /media/access/* and the user approved a ChangePlan scope expansion for this file.",
+                                         "summary":  "Replaced express.options(\"/media/access/*\", ...) with a regex route preserving the /media/access/ prefix match.",
+                                         "command":  "frontend startup health check",
+                                         "repair_round":  6
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                         "reason":  "Corrected Chapman smoke command hit the same MongoDB 7 promise catch callback-safety issue in countForTable.",
+                                         "summary":  "Changed countForTable countDocuments rejection handling to the two-argument then form.",
+                                         "command":  "node chapman.js index --verbose",
+                                         "repair_round":  7
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-admin/Search/build.js",
+                                         "reason":  "Corrected Chapman smoke command exposed async 3 callback behavior where error callbacks must return before continuing.",
+                                         "summary":  "Returned immediately after countForTable errors in the index count series.",
+                                         "command":  "node chapman.js index --verbose",
+                                         "repair_round":  8
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-admin/CLI/chapman.js",
+                                         "reason":  "Corrected Chapman smoke command ran against an empty smoke database and pace rejects zero totals.",
+                                         "summary":  "Skipped pace progress bar creation when the section total is zero.",
+                                         "command":  "node chapman.js index --verbose",
+                                         "repair_round":  9
+                                     },
+                                     {
+                                         "file_path":  "tv-radio-admin/Search/build.js",
+                                         "reason":  "Corrected Chapman smoke command timed out processing empty index sections.",
+                                         "summary":  "Short-circuited zero-record index sections with successful section completion messages.",
+                                         "command":  "node chapman.js index --verbose",
+                                         "repair_round":  10
+                                     }
+                                 ],
+    "executor_repair_rounds":  10,
+    "failure_summary":  "",
+    "execution_notes":  "Committed one execution commit with message upgrade: upgrade-any-outdated-dependencies-found. The corrected Chapman smoke command was run from tv-radio-admin/CLI and passed after narrow planned-file repairs."
+}
