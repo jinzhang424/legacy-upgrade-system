@@ -1,0 +1,518 @@
+﻿{
+    "decision":  "rejected",
+    "confidence_score":  0.62,
+    "base_ref":  "main",
+    "git_diff_summary":  {
+                             "changed_files":  [
+                                                   "AGENTS.md",
+                                                   "CLAUDE.md",
+                                                   "generated-tests/solr-module-smoke.test.js",
+                                                   "generated-tests/solr-roundtrip.integration.test.js",
+                                                   "tv-radio-admin/Admin/API/admin-usage.js",
+                                                   "tv-radio-admin/Admin/API/app.js",
+                                                   "tv-radio-admin/Admin/API/package-lock.json",
+                                                   "tv-radio-admin/Admin/API/package.json",
+                                                   "tv-radio-admin/CLI/package-lock.json",
+                                                   "tv-radio-admin/CLI/package.json",
+                                                   "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                   "tv-radio-admin/Common/directdb-mongo.js",
+                                                   "tv-radio-admin/Common/package-lock.json",
+                                                   "tv-radio-admin/Common/package.json",
+                                                   "tv-radio-admin/Common/record-media-scan.js",
+                                                   "tv-radio-admin/Export/package-lock.json",
+                                                   "tv-radio-admin/Export/package.json",
+                                                   "tv-radio-admin/Export/primo-export.js",
+                                                   "tv-radio-admin/Ingest/package-lock.json",
+                                                   "tv-radio-admin/Ingest/package.json",
+                                                   "tv-radio-admin/Search/build.js",
+                                                   "tv-radio-admin/Search/package-lock.json",
+                                                   "tv-radio-admin/Search/package.json",
+                                                   "tv-radio-admin/Search/search-index-solr.js",
+                                                   "tv-radio-admin/Settings/Solr/schema.xml",
+                                                   "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                                   "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                                   "tv-radio-admin/Utilities/package-lock.json",
+                                                   "tv-radio-frontend/app-media.js",
+                                                   "tv-radio-frontend/app.js",
+                                                   "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                   "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                   "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                   "tv-radio-frontend/db-provider.js",
+                                                   "tv-radio-frontend/logger.js",
+                                                   "tv-radio-frontend/media/generic-media.js",
+                                                   "tv-radio-frontend/metrics.js",
+                                                   "tv-radio-frontend/package-lock.json",
+                                                   "tv-radio-frontend/package.json",
+                                                   "tv-radio-frontend/usage-monitoring.js"
+                                               ],
+                             "planned_files_touched":  [
+                                                           "tv-radio-admin/Admin/API/admin-usage.js",
+                                                           "tv-radio-admin/Admin/API/app.js",
+                                                           "tv-radio-admin/Admin/API/package.json",
+                                                           "tv-radio-admin/CLI/package.json",
+                                                           "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                           "tv-radio-admin/Common/directdb-mongo.js",
+                                                           "tv-radio-admin/Common/package.json",
+                                                           "tv-radio-admin/Common/record-media-scan.js",
+                                                           "tv-radio-admin/Export/package.json",
+                                                           "tv-radio-admin/Export/primo-export.js",
+                                                           "tv-radio-admin/Ingest/package.json",
+                                                           "tv-radio-admin/Search/build.js",
+                                                           "tv-radio-admin/Search/package.json",
+                                                           "tv-radio-admin/Search/search-index-solr.js",
+                                                           "tv-radio-admin/Settings/Solr/schema.xml",
+                                                           "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                                           "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                                           "tv-radio-frontend/app-media.js",
+                                                           "tv-radio-frontend/app.js",
+                                                           "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                           "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                           "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                           "tv-radio-frontend/db-provider.js",
+                                                           "tv-radio-frontend/logger.js",
+                                                           "tv-radio-frontend/media/generic-media.js",
+                                                           "tv-radio-frontend/metrics.js",
+                                                           "tv-radio-frontend/package.json"
+                                                       ],
+                             "unexpected_files":  [
+                                                      "AGENTS.md",
+                                                      "CLAUDE.md",
+                                                      "tv-radio-admin/Admin/API/package-lock.json",
+                                                      "tv-radio-admin/CLI/package-lock.json",
+                                                      "tv-radio-admin/Common/package-lock.json",
+                                                      "tv-radio-admin/Export/package-lock.json",
+                                                      "tv-radio-admin/Ingest/package-lock.json",
+                                                      "tv-radio-admin/Search/package-lock.json",
+                                                      "tv-radio-admin/Utilities/package-lock.json",
+                                                      "tv-radio-frontend/package-lock.json",
+                                                      "tv-radio-frontend/usage-monitoring.js"
+                                                  ],
+                             "missing_planned_files":  [
+                                                           "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+                                                           "tv-radio-admin/Admin/API/admin-image-handling.js",
+                                                           "tv-radio-admin/Admin/API/admin-live-titles.js",
+                                                           "tv-radio-admin/Admin/API/admin-media-scan.js",
+                                                           "tv-radio-admin/Admin/API/admin-playlists.js",
+                                                           "tv-radio-admin/Admin/API/admin-streaming-result-set.js",
+                                                           "tv-radio-admin/Admin/API/admin-titles-common.js",
+                                                           "tv-radio-admin/Admin/API/admin-unisat.js",
+                                                           "tv-radio-admin/Admin/API/cache-provider.js",
+                                                           "tv-radio-admin/Admin/API/unisat-record-processing.js",
+                                                           "tv-radio-admin/Admin/Interface/app/data/pbcore-reader.js",
+                                                           "tv-radio-admin/CLI/backup.js",
+                                                           "tv-radio-admin/Common/common.js",
+                                                           "tv-radio-admin/Common/directdb.js",
+                                                           "tv-radio-admin/Common/record-coercion.js",
+                                                           "tv-radio-admin/Export/dublincore-exporter.js",
+                                                           "tv-radio-admin/Ingest/attacher.js",
+                                                           "tv-radio-admin/Ingest/checker-prog-file.js",
+                                                           "tv-radio-admin/Ingest/city-country-dataset.js",
+                                                           "tv-radio-admin/Ingest/course-code-dataset.js",
+                                                           "tv-radio-admin/Ingest/csv-processor.js",
+                                                           "tv-radio-admin/Ingest/ingest.js",
+                                                           "tv-radio-admin/Ingest/lcsh-subjects-dataset.js",
+                                                           "tv-radio-admin/Search/search.js",
+                                                           "tv-radio-admin/shared-config.js",
+                                                           "tv-radio-admin/shared-config.js.default",
+                                                           "tv-radio-admin/Utilities/package.json",
+                                                           "tv-radio-frontend/config.js",
+                                                           "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                           "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                           "tv-radio-frontend/content/javascript/common.js",
+                                                           "tv-radio-frontend/content/live-streams/client-live-streams.js",
+                                                           "tv-radio-frontend/content/playlists/client-playlists.js",
+                                                           "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                           "tv-radio-frontend/content/tv-radio/client-discovery.js",
+                                                           "tv-radio-frontend/data/homepage-data.js",
+                                                           "tv-radio-frontend/data/playlist-data.js",
+                                                           "tv-radio-frontend/data/programme-data.js",
+                                                           "tv-radio-frontend/data/title-data.js",
+                                                           "tv-radio-frontend/data/unisat-data.js",
+                                                           "tv-radio-frontend/handlebars-helpers.js",
+                                                           "tv-radio-frontend/media/programme-media.js",
+                                                           "tv-radio-frontend/media/title-thumbnails.js",
+                                                           "tv-radio-frontend/media/unisat-thumbnails.js",
+                                                           "tv-radio-frontend/request-common.js",
+                                                           "tv-radio-frontend/shared/media-access.js",
+                                                           "tv-radio-frontend/solr-search.js"
+                                                       ],
+                             "dependency_changes_verified":  [
+                                                                 "tv-radio-admin/Admin/API/package.json",
+                                                                 "tv-radio-admin/CLI/package.json",
+                                                                 "tv-radio-admin/Common/package.json",
+                                                                 "tv-radio-admin/Export/package.json",
+                                                                 "tv-radio-admin/Ingest/package.json",
+                                                                 "tv-radio-admin/Search/package.json",
+                                                                 "tv-radio-frontend/package.json"
+                                                             ],
+                             "dependency_changes_missing":  [
+
+                                                            ]
+                         },
+    "content_check_results":  [
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"body-parser\" \"2.3.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"compression\" \"1.8.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"cron\" \"4.4.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"express\" \"5.2.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"fluent-ffmpeg\" \"2.1.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"jsonwebtoken\" \"9.0.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"memcached\" \"2.2.2\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"minimist\" \"1.2.8\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"influx\" \"5.12.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"socket.io\" \"4.8.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"socketio-jwt\" \"4.6.2\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"xml2js\" \"0.6.2\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/CLI/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/CLI/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"minimist\" \"1.2.8\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"mongodb\" \"7.5.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"fluent-ffmpeg\" \"2.1.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"xmlbuilder\" \"15.1.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"archiver\" \"8.0.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"stream-buffers\" \"3.0.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"ftp\" \"0.3.10\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Ingest/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Ingest/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"xml2js\" \"0.6.2\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Ingest/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"csv\" \"6.6.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Search/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Search/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"moment\" \"2.30.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"async\" \"3.2.6\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"body-parser\" \"2.3.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"express\" \"5.2.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"gc-stats\" \"1.4.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"handlebars\" \"4.7.9\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"influx\" \"5.12.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"memcached\" \"2.2.2\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"minimist\" \"1.2.8\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"moment\" \"2.30.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"mongodb\" \"7.5.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"nodemailer\" \"9.0.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"on-finished\" \"2.4.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"request\" \"2.88.2\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"send\" \"1.2.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"sharp\" \"0.35.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"socket.io-client\" \"4.8.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"uglify-js\" \"3.19.3\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"uuid\" \"14.0.1\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"walk\" \"2.3.15\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"winston\" \"3.19.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: \"\"winston-logstash\" \"2.1.0\"\""
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Settings/Solr/schema.xml",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/logger.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  }
+                              ],
+    "command_results":  [
+                            {
+                                "type":  "build",
+                                "command":  "(cwd: tv-radio-frontend) node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "(cwd: tv-radio-frontend) node --check app-media.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "(cwd: tv-radio-admin/CLI) node --check chapman.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "(cwd: tv-radio-admin/Admin/API) powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"Start node app.js; probe http://localhost:8080/; stop process\"",
+                                "outcome":  "failed",
+                                "exit_status":  0,
+                                "output":  "bounded startup command passed; startup output included: API listening on port 8080. Chapman Admin API successfully started. Required post-exit health probe to http://localhost:8080/ failed after 30s because no server remained reachable after the command stopped the process."
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "(cwd: tv-radio-frontend) powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"Start node app.js; probe http://localhost:8082/; stop process\"",
+                                "outcome":  "failed",
+                                "exit_status":  0,
+                                "output":  "bounded startup command passed; startup output included: Listening on port %d. stderr included winston-logstash legacy transport warnings and a Solr 400 homepage-data message. Required post-exit health probe to http://localhost:8082/ failed after 30s because no server remained reachable after the command stopped the process."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "(cwd: tv-radio-admin/CLI) node chapman.js resetindex --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "[INFO/INDEX-RESET] Search index rebuild has completed."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "(cwd: tv-radio-admin/CLI) node chapman.js index --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "completed reindex for titles, programmes, playlists, and UniSat records; all had 0 records and completed successfully; search index rebuild completed."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "(cwd: tv-radio-admin/CLI) node chapman.js geodata --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "read admin codes and countryInfo.txt; emitted [ERR/INGEST-GEO-DATA] unable to add country data to search index due to invalid response status code (400), but command exited 0."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "(cwd: tv-radio-admin/CLI) node chapman.js courses --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "[INFO/INGEST-COURSE-DATA] Starting import of course code data from tv-radio-admin/Data/courses.csv"
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "(cwd: repo root) node generated-tests/solr-module-smoke.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "Solr module smoke checks passed"
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "(cwd: repo root) node generated-tests/solr-roundtrip.integration.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "Solr fixture roundtrip passed"
+                            }
+                        ],
+    "repairs_applied":  [
+
+                        ],
+    "repair_rounds":  0,
+    "final_commit_ref":  "b3455d5a52412693f313a5789e32a0d44356e62e",
+    "rejection_reasons":  [
+                              "49 package.json content checks failed when evaluated as exact strings from change-plan.json; the required strings omit the JSON colon and therefore are not present in valid manifests.",
+                              "Both startup commands exited 0 but the mandated post-exit health checks failed because the declared bounded commands stop the node process before the separate health probe can run.",
+                              "Unexpected files are present in the diff outside planned_files and validation.generated_test_files: AGENTS.md, CLAUDE.md, package-lock.json files, and tv-radio-frontend/usage-monitoring.js."
+                          ],
+    "recommendations":  [
+                            "Correct the ChangePlan package manifest content checks to use valid JSON substrings such as \"\\\"async\\\": \\\"3.2.6\\\"\", or validate dependency versions semantically from package.json.",
+                            "Adjust startup validation so the health probe runs while the server process is still alive, or treat the bounded command internal HTTP probe as the startup health check.",
+                            "Review unexpected diff files and either add justified dependency lockfile and usage-monitoring changes to the approved plan or remove them from the upgrade commit."
+                        ]
+}

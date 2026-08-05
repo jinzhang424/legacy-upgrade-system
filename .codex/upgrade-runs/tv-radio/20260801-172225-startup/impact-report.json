@@ -1,0 +1,1009 @@
+{
+  "upgrade_description": "Upgrade any outdated dependencies found in the tv-radio repo, including compatibility for Solr. Solr configs are under tv-radio-admin/Settings/Solr (schema.xml, solrconfig.xml, solrconfig-records.xml), currently pinned to luceneMatchVersion 4.9. Solr is an external service and must be flagged explicitly; note client-code/config impact for Common/solr-helpers.js and Search/search-index-solr.js. Target the latest version compatible with this codebase's Solr client usage; infer from config/client code and flag unknowns.",
+  "affected_files": [
+    {
+      "file_path": "tv-radio-admin/Admin/API/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Admin API package manifest pins legacy runtime dependencies with major-version upgrade exposure.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 17,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "async, body-parser, compression, cron, express, fluent-ffmpeg, jsonwebtoken, memcached, minimist, influx, socket.io, socketio-jwt, xml2js",
+          "confidence": "high",
+          "reason": "Manifest dependency block with outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Frontend server package manifest pins legacy Express, MongoDB, Socket.IO, Sharp, Handlebars, and other dependencies.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 25,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "async, body-parser, express, gc-stats, handlebars, influx, memcached, minimist, moment, mongodb, nodemailer, on-finished, request, send, sharp, socket.io-client, uglify-js, uuid, walk, winston, winston-logstash",
+          "confidence": "high",
+          "reason": "Manifest dependency block with many outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Common/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Common package includes MongoDB driver 2.x and fluent-ffmpeg release-candidate dependency.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 7,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "mongodb, async, fluent-ffmpeg",
+          "confidence": "high",
+          "reason": "Manifest dependency block with outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Search/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Search package pins old async and moment versions used by Solr indexing code.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 7,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "async, moment",
+          "confidence": "high",
+          "reason": "Manifest dependency block with outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Ingest/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Ingest package pins old async, xml2js, and csv packages.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 8,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "async, xml2js, csv",
+          "confidence": "high",
+          "reason": "Manifest dependency block with outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Export/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Export package pins old archive/XML/FTP stream dependencies.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 10,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "async, xmlbuilder, archiver, stream-buffers, ftp",
+          "confidence": "high",
+          "reason": "Manifest dependency block with outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/CLI/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "low",
+      "reason": "CLI package pins old minimist and uses unmaintained packages.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 7,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "async, minimist, pace",
+          "confidence": "high",
+          "reason": "Manifest dependency block with outdated direct packages."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Utilities/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "low",
+      "reason": "Utilities package declares optimist, which is legacy and currently latest-equal but unmaintained.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "optimist",
+          "matched_api": "optimist",
+          "confidence": "high",
+          "reason": "Manifest dependency entry."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Settings/Solr/solrconfig.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Solr core config is pinned to Lucene 4.9-era behavior and declares request handlers/cache classes that may differ in current Solr.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "luceneMatchVersion",
+          "matched_api": "luceneMatchVersion 4.9",
+          "confidence": "high",
+          "reason": "Explicit Solr/Lucene compatibility version."
+        },
+        {
+          "start_line": 22,
+          "end_line": 46,
+          "symbol_or_pattern": "directoryFactory|codecFactory|updateHandler",
+          "matched_api": "solr.NRTCachingDirectoryFactory, solr.SchemaCodecFactory, solr.DirectUpdateHandler2",
+          "confidence": "high",
+          "reason": "Solr implementation classes named in core config."
+        },
+        {
+          "start_line": 147,
+          "end_line": 196,
+          "symbol_or_pattern": "requestHandler",
+          "matched_api": "/select, /query, /get, /update, /update/json, /update/csv",
+          "confidence": "high",
+          "reason": "Configured request handlers used by direct HTTP client code."
+        },
+        {
+          "start_line": 256,
+          "end_line": 383,
+          "symbol_or_pattern": "spellcheck|suggest|terms",
+          "matched_api": "solr.SpellCheckComponent, solr.SuggestComponent, /spell, /suggest, /terms",
+          "confidence": "high",
+          "reason": "Legacy search components and handlers."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Records Solr config duplicates Lucene 4.9-era handler and component configuration.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "luceneMatchVersion",
+          "matched_api": "luceneMatchVersion 4.9",
+          "confidence": "high",
+          "reason": "Explicit Solr/Lucene compatibility version."
+        },
+        {
+          "start_line": 22,
+          "end_line": 46,
+          "symbol_or_pattern": "directoryFactory|codecFactory|updateHandler",
+          "matched_api": "solr.NRTCachingDirectoryFactory, solr.SchemaCodecFactory, solr.DirectUpdateHandler2",
+          "confidence": "high",
+          "reason": "Solr implementation classes named in core config."
+        },
+        {
+          "start_line": 213,
+          "end_line": 262,
+          "symbol_or_pattern": "requestHandler",
+          "matched_api": "/select, /query, /get, /update, /update/json, /update/csv",
+          "confidence": "high",
+          "reason": "Configured request handlers used by direct HTTP client code."
+        },
+        {
+          "start_line": 322,
+          "end_line": 449,
+          "symbol_or_pattern": "spellcheck|suggest|terms",
+          "matched_api": "solr.SpellCheckComponent, solr.SuggestComponent, /spell, /suggest, /terms",
+          "confidence": "high",
+          "reason": "Legacy search components and handlers."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Settings/Solr/schema.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Schema uses Solr schema version 1.5, Trie field types, and SynonymFilterFactory patterns from older Solr/Lucene generations.",
+      "locations": [
+        {
+          "start_line": 2,
+          "end_line": 2,
+          "symbol_or_pattern": "schema version",
+          "matched_api": "schema version 1.5",
+          "confidence": "high",
+          "reason": "Explicit schema version."
+        },
+        {
+          "start_line": 107,
+          "end_line": 124,
+          "symbol_or_pattern": "Trie*Field",
+          "matched_api": "solr.TrieIntField, solr.TrieFloatField, solr.TrieLongField, solr.TrieDoubleField, solr.TrieDateField",
+          "confidence": "high",
+          "reason": "Legacy numeric/date field type family."
+        },
+        {
+          "start_line": 148,
+          "end_line": 364,
+          "symbol_or_pattern": "SynonymFilterFactory",
+          "matched_api": "solr.SynonymFilterFactory",
+          "confidence": "high",
+          "reason": "Repeated legacy analyzer filter usage."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/shared-config.js",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Runtime Solr endpoint configuration maps logical indexes to classic select/update paths.",
+      "locations": [
+        {
+          "start_line": 77,
+          "end_line": 102,
+          "symbol_or_pattern": "search settings",
+          "matched_api": "host, port, selectPath, updatePath",
+          "confidence": "high",
+          "reason": "Direct Solr endpoint configuration for content, geodata, LCSH, and course-code indexes."
+        },
+        {
+          "start_line": 106,
+          "end_line": 113,
+          "symbol_or_pattern": "SEARCH settings",
+          "matched_api": "path, selectPath, updatePath",
+          "confidence": "high",
+          "reason": "Compatibility bridge for frontend-style search config."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/shared-config.js.default",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Default Solr endpoint examples use classic collection/select and collection/update paths.",
+      "locations": [
+        {
+          "start_line": 50,
+          "end_line": 77,
+          "symbol_or_pattern": "type: solr",
+          "matched_api": "host, port, selectPath, updatePath",
+          "confidence": "high",
+          "reason": "Template Solr endpoint configuration."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/config.js",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Frontend Solr endpoint config uses a classic /select request path.",
+      "locations": [
+        {
+          "start_line": 50,
+          "end_line": 56,
+          "symbol_or_pattern": "SEARCH settings",
+          "matched_api": "host, port, path",
+          "confidence": "high",
+          "reason": "Runtime frontend Solr select endpoint configuration."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/config.js.default",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Frontend default Solr endpoint config uses a classic /select request path.",
+      "locations": [
+        {
+          "start_line": 61,
+          "end_line": 67,
+          "symbol_or_pattern": "SEARCH settings",
+          "matched_api": "host, port, path",
+          "confidence": "high",
+          "reason": "Template frontend Solr select endpoint configuration."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Search/search-index-solr.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin indexing code implements Solr client behavior directly with Node http, classic /select and /update handlers, XML delete/commit commands, JSON adds, and atomic updates.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 21,
+          "symbol_or_pattern": "http.request",
+          "matched_api": "performGeneralXMLCommand",
+          "confidence": "high",
+          "reason": "Direct HTTP POST to config.updatePath for XML commands."
+        },
+        {
+          "start_line": 50,
+          "end_line": 58,
+          "symbol_or_pattern": "delete|commit XML",
+          "matched_api": "<delete><query>*:*</query></delete>, <commit/>",
+          "confidence": "high",
+          "reason": "Classic Solr XML update commands."
+        },
+        {
+          "start_line": 63,
+          "end_line": 89,
+          "symbol_or_pattern": "addItemsToSearchIndex",
+          "matched_api": "JSON update to config.updatePath with commit=true",
+          "confidence": "high",
+          "reason": "Direct JSON update API usage."
+        },
+        {
+          "start_line": 118,
+          "end_line": 160,
+          "symbol_or_pattern": "updateItemsInSearchIndex",
+          "matched_api": "overwrite true add JSON",
+          "confidence": "high",
+          "reason": "Direct JSON update API usage."
+        },
+        {
+          "start_line": 189,
+          "end_line": 216,
+          "symbol_or_pattern": "removeItemsFromSearchIndex",
+          "matched_api": "XML delete query to config.updatePath",
+          "confidence": "high",
+          "reason": "Direct XML delete query API usage."
+        },
+        {
+          "start_line": 243,
+          "end_line": 259,
+          "symbol_or_pattern": "countItemsInSearchIndex",
+          "matched_api": "selectPath query with wt=json rows=0",
+          "confidence": "high",
+          "reason": "Classic select handler query API usage."
+        },
+        {
+          "start_line": 324,
+          "end_line": 373,
+          "symbol_or_pattern": "atomic update document",
+          "matched_api": "set, remove, add, mv-add, mv-remove",
+          "confidence": "high",
+          "reason": "Solr atomic update JSON document construction."
+        },
+        {
+          "start_line": 379,
+          "end_line": 651,
+          "symbol_or_pattern": "partialUpdate*",
+          "matched_api": "partialUpdateMultipleItemsUsingPreparedDocuments, partialUpdateItemsInSearchIndexUsingIdentifierList, partialUpdateItemsInSearchIndex",
+          "confidence": "high",
+          "reason": "Direct Solr atomic update flows and select-before-update flow."
+        },
+        {
+          "start_line": 787,
+          "end_line": 910,
+          "symbol_or_pattern": "escapeSolrQuery|performSearch",
+          "matched_api": "Solr query escaping, performSearch, performSearchOnClientsBehalf",
+          "confidence": "high",
+          "reason": "Classic query parser escaping and HTTP select proxying."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Common/solr-helpers.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Common helper formats strings and dates intended for Solr indexing.",
+      "locations": [
+        {
+          "start_line": 2,
+          "end_line": 10,
+          "symbol_or_pattern": "cleanString",
+          "matched_api": "Solr index string sanitization",
+          "confidence": "medium",
+          "reason": "Pipeline-declared Solr helper; file contains sanitization used for index-safe values."
+        },
+        {
+          "start_line": 13,
+          "end_line": 50,
+          "symbol_or_pattern": "formatDate",
+          "matched_api": "Solr index date formatting",
+          "confidence": "medium",
+          "reason": "Pipeline-declared Solr helper; file contains date serialization for index values."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/solr-search.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Frontend search code implements Solr select client behavior directly with Node http and query parser escaping.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 18,
+          "symbol_or_pattern": "http|querystring|clean JSON",
+          "matched_api": "http.request, querystring.stringify",
+          "confidence": "high",
+          "reason": "Direct HTTP Solr select client setup."
+        },
+        {
+          "start_line": 23,
+          "end_line": 91,
+          "symbol_or_pattern": "escapeSolrQuery",
+          "matched_api": "Solr query escaping regular expressions",
+          "confidence": "high",
+          "reason": "Classic Solr query parser escaping behavior."
+        },
+        {
+          "start_line": 97,
+          "end_line": 168,
+          "symbol_or_pattern": "performSearch",
+          "matched_api": "config.path select request with querystring",
+          "confidence": "high",
+          "reason": "Direct Solr select request and JSON response parse."
+        },
+        {
+          "start_line": 189,
+          "end_line": 242,
+          "symbol_or_pattern": "performBasicSearch|verifySolrResult",
+          "matched_api": "wt=json, rows, responseHeader, facet_counts",
+          "confidence": "high",
+          "reason": "Assumes Solr response shape and query parameters."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Search/build.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Search build orchestrates Solr indexing and calls direct Solr client APIs.",
+      "locations": [
+        {
+          "start_line": 12,
+          "end_line": 12,
+          "symbol_or_pattern": "require search-index-solr",
+          "matched_api": "require(__dirname + \"/search-index-solr.js\")",
+          "confidence": "high",
+          "reason": "Imports Solr client module."
+        },
+        {
+          "start_line": 78,
+          "end_line": 100,
+          "symbol_or_pattern": "addItemsToSearchIndex|commitSearchIndex",
+          "matched_api": "Solr add and commit",
+          "confidence": "high",
+          "reason": "Calls Solr update APIs."
+        },
+        {
+          "start_line": 393,
+          "end_line": 403,
+          "symbol_or_pattern": "resetSearchIndex|commitSearchIndex",
+          "matched_api": "Solr reset and commit",
+          "confidence": "high",
+          "reason": "Calls Solr update APIs."
+        },
+        {
+          "start_line": 431,
+          "end_line": 856,
+          "symbol_or_pattern": "addItemsToSearchIndex|removeItemsFromSearchIndex|partialUpdateItemsInSearchIndex",
+          "matched_api": "Solr add, delete, partial update, commit",
+          "confidence": "high",
+          "reason": "Multiple Solr indexing flows."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-live-titles.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Admin live-title search constructs Solr query strings and proxies Solr responses.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "require search-index-solr",
+          "matched_api": "require(__dirname + \"/../../Search/search-index-solr.js\")",
+          "confidence": "high",
+          "reason": "Imports Solr client module."
+        },
+        {
+          "start_line": 483,
+          "end_line": 563,
+          "symbol_or_pattern": "escapeSolrQuery",
+          "matched_api": "Solr query construction",
+          "confidence": "high",
+          "reason": "Builds Solr query parts and filters."
+        },
+        {
+          "start_line": 702,
+          "end_line": 702,
+          "symbol_or_pattern": "performSearchOnClientsBehalf",
+          "matched_api": "Solr select proxy",
+          "confidence": "high",
+          "reason": "Streams Solr search results to client response."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Bulk operations issue Solr partial updates, searches, and query escaping.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "require search-index-solr",
+          "matched_api": "require(__dirname + \"/../../Search/search-index-solr.js\")",
+          "confidence": "high",
+          "reason": "Imports Solr client module."
+        },
+        {
+          "start_line": 421,
+          "end_line": 544,
+          "symbol_or_pattern": "partialUpdateItemsInSearchIndexUsingIdentifierList|performSearch|escapeSolrQueryIncludingQuotes",
+          "matched_api": "Solr partial update, select, query escaping",
+          "confidence": "high",
+          "reason": "Calls Solr client APIs used during bulk edits."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-suggesters.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Suggester routes proxy Solr queries and depend on configured Solr suggester/index behavior.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "require search-index-solr",
+          "matched_api": "require(__dirname + \"/../../Search/search-index-solr.js\")",
+          "confidence": "high",
+          "reason": "Imports Solr client module."
+        },
+        {
+          "start_line": 98,
+          "end_line": 264,
+          "symbol_or_pattern": "performSearchOnClientsBehalf|escapeSolrQuery",
+          "matched_api": "Solr select proxy and query escaping",
+          "confidence": "high",
+          "reason": "Calls Solr client APIs for suggesters."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-unisat.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Admin UniSat search routes construct Solr queries and call Solr select/count APIs.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "require search-index-solr",
+          "matched_api": "require(__dirname + \"/../../Search/search-index-solr.js\")",
+          "confidence": "high",
+          "reason": "Imports Solr client module."
+        },
+        {
+          "start_line": 473,
+          "end_line": 630,
+          "symbol_or_pattern": "performSearchOnClientsBehalf|escapeSolrQuery|countItemsInSearchIndex",
+          "matched_api": "Solr select proxy, query escaping, count",
+          "confidence": "high",
+          "reason": "Calls Solr client APIs."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-image-handling.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Image updates can trigger Solr partial updates.",
+      "locations": [
+        {
+          "start_line": 2,
+          "end_line": 2,
+          "symbol_or_pattern": "require search-index-solr",
+          "matched_api": "require(__dirname + \"/../../Search/search-index-solr.js\")",
+          "confidence": "high",
+          "reason": "Imports Solr client module."
+        },
+        {
+          "start_line": 271,
+          "end_line": 271,
+          "symbol_or_pattern": "partialUpdateItemsInSearchIndexUsingIdentifierList",
+          "matched_api": "Solr partial update",
+          "confidence": "high",
+          "reason": "Calls Solr atomic update API."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/data/tv-radio-data.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Frontend TV/radio data layer builds Solr queries and depends on frontend Solr search module.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "require solr-search",
+          "matched_api": "require(__dirname + \"/../solr-search.js\")",
+          "confidence": "high",
+          "reason": "Imports frontend Solr client module."
+        },
+        {
+          "start_line": 122,
+          "end_line": 263,
+          "symbol_or_pattern": "escapeSolrQueryIncludingQuotes|performSearch",
+          "matched_api": "Solr query escaping and search",
+          "confidence": "high",
+          "reason": "Builds and executes Solr queries."
+        },
+        {
+          "start_line": 637,
+          "end_line": 696,
+          "symbol_or_pattern": "performSearch",
+          "matched_api": "Solr select",
+          "confidence": "high",
+          "reason": "Calls frontend Solr select helper."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/data/unisat-data.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Frontend UniSat data layer calls Solr search and query escaping repeatedly.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "require solr-search",
+          "matched_api": "require(__dirname + \"/../solr-search.js\")",
+          "confidence": "high",
+          "reason": "Imports frontend Solr client module."
+        },
+        {
+          "start_line": 37,
+          "end_line": 236,
+          "symbol_or_pattern": "performSearch",
+          "matched_api": "Solr select",
+          "confidence": "high",
+          "reason": "Calls frontend Solr select helper."
+        },
+        {
+          "start_line": 468,
+          "end_line": 973,
+          "symbol_or_pattern": "performSearch|escapeSolrQueryIncludingQuotes",
+          "matched_api": "Solr select and query escaping",
+          "confidence": "high",
+          "reason": "Builds and executes Solr queries."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/data/programme-data.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Frontend programme data layer uses Solr escaping and select calls for programme/title lookups.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "require solr-search",
+          "matched_api": "require(__dirname + \"/../solr-search.js\")",
+          "confidence": "high",
+          "reason": "Imports frontend Solr client module."
+        },
+        {
+          "start_line": 38,
+          "end_line": 306,
+          "symbol_or_pattern": "escapeSolrQueryIncludingQuotes|performSearch",
+          "matched_api": "Solr query escaping and search",
+          "confidence": "high",
+          "reason": "Builds and executes Solr queries."
+        },
+        {
+          "start_line": 404,
+          "end_line": 784,
+          "symbol_or_pattern": "escapeSolrQueryIncludingQuotes|performSearch",
+          "matched_api": "Solr query escaping and search",
+          "confidence": "high",
+          "reason": "Builds and executes Solr queries."
+        }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/data/title-data.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "Frontend title data layer uses Solr escaping and select calls.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "require solr-search",
+          "matched_api": "require(__dirname + \"/../solr-search.js\")",
+          "confidence": "high",
+          "reason": "Imports frontend Solr client module."
+        },
+        {
+          "start_line": 63,
+          "end_line": 368,
+          "symbol_or_pattern": "escapeSolrQueryIncludingQuotes|performSearch",
+          "matched_api": "Solr query escaping and search",
+          "confidence": "high",
+          "reason": "Builds and executes Solr queries."
+        }
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "tv-radio",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "repository root"
+      },
+      {
+        "id": "chapman-admin-api",
+        "version": "1.0.1",
+        "type": "internal",
+        "version_source": "tv-radio-admin/Admin/API/package.json"
+      },
+      {
+        "id": "chapman-common",
+        "version": "1.0.1",
+        "type": "internal",
+        "version_source": "tv-radio-admin/Common/package.json"
+      },
+      {
+        "id": "chapman-search",
+        "version": "1.0.1",
+        "type": "internal",
+        "version_source": "tv-radio-admin/Search/package.json"
+      },
+      {
+        "id": "chapman-ingest",
+        "version": "1.0.0",
+        "type": "internal",
+        "version_source": "tv-radio-admin/Ingest/package.json"
+      },
+      {
+        "id": "chapman-export",
+        "version": "1.0.1",
+        "type": "internal",
+        "version_source": "tv-radio-admin/Export/package.json"
+      },
+      {
+        "id": "chapman-cli",
+        "version": "1.0.1",
+        "type": "internal",
+        "version_source": "tv-radio-admin/CLI/package.json"
+      },
+      {
+        "id": "tv-radio-front-end",
+        "version": "1.0.2",
+        "type": "internal",
+        "version_source": "tv-radio-frontend/package.json"
+      },
+      {
+        "id": "Solr",
+        "version": "unknown; luceneMatchVersion 4.9 and schema version 1.5 indicate Solr 4.x-era config",
+        "type": "external_service",
+        "version_source": "tv-radio-admin/Settings/Solr/solrconfig.xml:4; tv-radio-admin/Settings/Solr/solrconfig-records.xml:4; tv-radio-admin/Settings/Solr/schema.xml:2"
+      },
+      {
+        "id": "MongoDB",
+        "version": "unknown",
+        "type": "external_service",
+        "version_source": "tv-radio-admin/shared-config.js:1-15; tv-radio-frontend/config.js:1"
+      },
+      {
+        "id": "Memcached",
+        "version": "unknown",
+        "type": "external_service",
+        "version_source": "tv-radio-admin/shared-config.js:8; tv-radio-frontend/cache-provider.js:1-6"
+      },
+      {
+        "id": "InfluxDB",
+        "version": "unknown",
+        "type": "external_service",
+        "version_source": "tv-radio-admin/shared-config.js:10; tv-radio-frontend/config.js:21-22"
+      },
+      {
+        "id": "FTP",
+        "version": "unknown",
+        "type": "external_service",
+        "version_source": "tv-radio-admin/shared-config.js.default:95-102; tv-radio-admin/Export/primo-export.js:321-395"
+      },
+      {
+        "id": "async",
+        "version": ">= 0.2.9 -> latest 3.2.6",
+        "type": "external_package",
+        "version_source": "package.json manifests; npm view async version"
+      },
+      {
+        "id": "express",
+        "version": "4.9.5 -> latest 5.2.1",
+        "type": "external_package",
+        "version_source": "tv-radio-admin/Admin/API/package.json:9; tv-radio-frontend/package.json:7; npm view express version"
+      },
+      {
+        "id": "mongodb",
+        "version": "^2.0.0/^2.2.24 -> latest 7.5.0",
+        "type": "external_package",
+        "version_source": "tv-radio-admin/Common/package.json:5; tv-radio-frontend/package.json:14; npm view mongodb version"
+      },
+      {
+        "id": "socket.io/socket.io-client",
+        "version": "1.1.0 -> latest 4.8.3",
+        "type": "external_package",
+        "version_source": "tv-radio-admin/Admin/API/package.json:15; tv-radio-frontend/package.json:20; npm view socket.io/socket.io-client version"
+      },
+      {
+        "id": "sharp",
+        "version": "^0.14.1 -> latest 0.35.3",
+        "type": "external_package",
+        "version_source": "tv-radio-frontend/package.json:19; npm view sharp version"
+      },
+      {
+        "id": "request",
+        "version": "^2.87.0 -> latest 2.88.2",
+        "type": "external_package",
+        "version_source": "tv-radio-frontend/package.json:17; npm view request version"
+      },
+      {
+        "id": "other npm dependencies",
+        "version": "multiple old pins; latest versions recorded from npm metadata",
+        "type": "external_package",
+        "version_source": "all package.json manifests; npm view batch on 2026-08-01"
+      }
+    ],
+    "edges": [
+      {
+        "from": "tv-radio",
+        "to": "chapman-admin-api",
+        "relationship": "contains package"
+      },
+      {
+        "from": "tv-radio",
+        "to": "chapman-common",
+        "relationship": "contains package"
+      },
+      {
+        "from": "tv-radio",
+        "to": "chapman-search",
+        "relationship": "contains package"
+      },
+      {
+        "from": "tv-radio",
+        "to": "chapman-ingest",
+        "relationship": "contains package"
+      },
+      {
+        "from": "tv-radio",
+        "to": "chapman-export",
+        "relationship": "contains package"
+      },
+      {
+        "from": "tv-radio",
+        "to": "chapman-cli",
+        "relationship": "contains package"
+      },
+      {
+        "from": "tv-radio",
+        "to": "tv-radio-front-end",
+        "relationship": "contains package"
+      },
+      {
+        "from": "chapman-search",
+        "to": "Solr",
+        "relationship": "direct HTTP select/update/delete/commit"
+      },
+      {
+        "from": "chapman-admin-api",
+        "to": "Solr",
+        "relationship": "query proxy, partial update, search"
+      },
+      {
+        "from": "chapman-ingest",
+        "to": "Solr",
+        "relationship": "index population"
+      },
+      {
+        "from": "tv-radio-front-end",
+        "to": "Solr",
+        "relationship": "direct HTTP select/search"
+      },
+      {
+        "from": "chapman-common",
+        "to": "MongoDB",
+        "relationship": "driver access"
+      },
+      {
+        "from": "tv-radio-front-end",
+        "to": "MongoDB",
+        "relationship": "driver access"
+      },
+      {
+        "from": "chapman-admin-api",
+        "to": "Memcached",
+        "relationship": "cache client"
+      },
+      {
+        "from": "tv-radio-front-end",
+        "to": "Memcached",
+        "relationship": "cache client"
+      },
+      {
+        "from": "chapman-admin-api",
+        "to": "InfluxDB",
+        "relationship": "metrics client"
+      },
+      {
+        "from": "tv-radio-front-end",
+        "to": "InfluxDB",
+        "relationship": "metrics client"
+      },
+      {
+        "from": "chapman-export",
+        "to": "FTP",
+        "relationship": "export transport"
+      }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 27,
+    "high_risk_count": 8,
+    "breaking_changes": [
+      "Solr config jump from Lucene/Solr 4.x-era settings to a modern compatible Solr target may affect luceneMatchVersion, schema version, Trie field types, SynonymFilterFactory usage, request handler classes, and classic select/update endpoint paths.",
+      "Solr client code does not use a package-managed Solr client; it manually builds HTTP requests, XML commands, JSON update payloads, atomic updates, query parser strings, and assumes classic response shapes.",
+      "Express 4.9.5 to latest 5.x introduces route/middleware and dependency behavior changes in admin API and frontend servers.",
+      "MongoDB Node driver 2.x to latest 7.x introduces callback/API, connection, topology, and result-shape changes.",
+      "Socket.IO 1.1.0 to latest 4.x has protocol and server/client compatibility changes.",
+      "Sharp 0.14.x to latest 0.35.x has native binary/runtime and API behavior changes.",
+      "jsonwebtoken 5.x to latest 9.x changes supported algorithms/defaults and Node runtime expectations.",
+      "Request is deprecated and latest-equal only at 2.88.2; replacement would be an architectural change rather than a simple latest upgrade."
+    ],
+    "notes": "Primary language is JavaScript/Node.js with npm package manifests per component. No lockfiles and no package test scripts were found. GitNexus index for tv-radio was available and used for Solr file discovery; targeted rg reads supplied exact line ranges for XML/config/package usage."
+  },
+  "coverage_notes": "GitNexus was available for repo tv-radio, indexed 2026-08-01T00:08:22.647Z at commit 6fdc30a7ea00b5e32f7489637aa93fe57c7f666f. Package manager coverage is reduced by absence of lockfiles, so transitive dependency versions are not fixed. Latest npm versions were checked with npm view on 2026-08-01. Solr service version is not explicitly declared by Docker image, CI, or service manifest in the repo; only luceneMatchVersion 4.9 and schema version 1.5 were found in tv-radio-admin/Settings/Solr. Target Solr version remains unknown and must be selected by compatibility validation against the direct HTTP client code and deployed Solr runtime. Additional configured services surfaced for human gate: MongoDB, Memcached, InfluxDB, FTP, all with unknown server versions."
+}
