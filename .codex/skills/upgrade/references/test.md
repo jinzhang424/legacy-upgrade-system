@@ -12,6 +12,7 @@ You are the Test Generation sub-agent. Your job is to create a small, high-value
 - `repo_path`: absolute path to the repository
 - `branch_name`: branch where tests and upgrade changes are staged
 - `artifact_dir`: directory where full JSON artifacts for this run are stored
+- `datastore_has_data`: `true | false | "unknown"` — whether the target database/search index currently holds data
 
 ## Tool Mapping
 
@@ -43,6 +44,18 @@ Create only high-value tests:
 - 1-3 integration tests that cover the riskiest cross-component behavior from the ChangePlan.
 
 Do not create one or more tests per affected file. Do not generate broad unit-test coverage. If the repo already has suitable smoke/integration tests, prefer recording commands to run them instead of adding new files.
+
+#### Empty or unknown datastore state
+
+A health check that only asserts an HTTP status code below 500 passes vacuously against an empty database or search index — it proves the process didn't crash on boot, not that read/write/query code still works after the upgrade. Breaking changes in a driver or ORM (for example a find call that used to return an array and now returns a cursor) often surface only once a query returns real rows.
+
+When `datastore_has_data` is `false` or `"unknown"`, at least one generated integration test must not assume pre-existing records. It must:
+
+1. Seed one minimal fixture record through the application's own write/ingest path (an API endpoint, CLI ingest command, or DB provider function used by the app) — not a raw driver insert that bypasses the code being upgraded, unless no application write path exists for that data type.
+2. Exercise the upgraded read/query/search path and assert the seeded fixture is actually returned, not just that the call succeeded or returned an empty result.
+3. Clean up the fixture (delete/remove it through the same application path where possible) after assertions run, including on failure, so the test is repeatable and does not leave residue in the target datastore.
+
+If no application write path exists for the area under test, do not fabricate one; record the gap in `notes` instead of shipping a test that would pass vacuously.
 
 ### Step 4 - Update ChangePlan
 
@@ -77,3 +90,4 @@ Return only this concise handoff:
 - Do not modify source files.
 - Do not run full validation; final validation owns build/test execution.
 - Ensure `change-plan.json` contains every generated test path and command needed by the final validator.
+- When `datastore_has_data` is not `true`, do not rely solely on status-code or empty-result checks for integration tests; seed, verify, and clean up fixture data as described in Step 3.

@@ -56,7 +56,7 @@ Rules:
 4. Attempt at most 3 repair rounds per failed command, capped at 8 repair rounds total across the executor run.
 5. Stop immediately if the same command fails with the same error signature after its third repair attempt.
 6. Apply a repair only when the failure is clearly caused by an approved planned change, a dependency/API migration in `ordered_changes`, dependency setup declared in `executor_check_commands`, or a generated test recorded in the ChangePlan.
-7. Do not broaden scope, rewrite unrelated modules, or chase failures outside the ChangePlan. If that is required, report execution failure and leave the working tree as-is.
+7. Do not broaden scope, rewrite unrelated modules, or chase failures outside the ChangePlan — with one bounded exception: if `validation.scope_expansion_limit` is set and greater than zero, and a failure is caused by a file not in `planned_files` calling directly into a dependency already listed in `expected_dependency_changes` for the same major-version bump, you may patch that one file as a scope expansion instead of halting. Each such fix counts against `validation.scope_expansion_limit`; once the limit is used up, any further out-of-plan failure must halt and report as usual. A scope expansion must be a narrow, mechanical compatibility fix (e.g. updating a call to match the new library API) — never a broader refactor or a fix touching a dependency not already in `expected_dependency_changes`. Record every scope expansion in `scope_expansions_applied` in the execution artifact.
 8. After each repair, re-run the failed command first. If it passes, continue with the remaining executor check commands.
 9. Record command outcomes and repairs in `execution-result.json`, including per-command repair attempt counts and total repair rounds used.
 10. For every startup command that has a `health_check_url`: after the bounded command exits with code 0, probe the URL with an HTTP GET. If it does not return a status below 500, the startup is a health-check failure even though the command exit code was 0. Record `health_check_outcome` as `failed`.
@@ -121,6 +121,15 @@ The full artifact must use this shape:
     }
   ],
   "executor_repair_rounds": "number",
+  "scope_expansions_applied": [
+    {
+      "file_path": "string",
+      "dependency": "string",
+      "reason": "string",
+      "summary": "string"
+    }
+  ],
+  "scope_expansions_used": "number",
   "failure_summary": "string",
   "execution_notes": "string"
 }
@@ -135,13 +144,14 @@ Return only this concise handoff:
   "branch_name": "string",
   "commit_ref": "string",
   "files_changed": ["string"],
+  "scope_expansions_used": "number",
   "failure_summary": "string"
 }
 ```
 
 ## Rules
 
-- Never modify files outside the approved ChangePlan unless the ChangePlan explicitly allows a scope expansion.
+- Never modify files outside the approved ChangePlan, except for bounded scope expansions permitted by `validation.scope_expansion_limit` as described in Step 3.7.
 - Never create intermediate commits.
 - Run the bounded pre-validator commands declared in `validation.executor_check_commands` before committing. These must include bounded equivalents of user-supplied build/startup/smoke/test commands when the planner recorded them. The validator still owns final git diff, build, startup, and test verification.
 - Keep the final commit as the only execution commit.

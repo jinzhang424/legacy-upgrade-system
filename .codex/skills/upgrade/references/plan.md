@@ -76,6 +76,14 @@ Also record the same health check URL in `validation.startup_health_check_urls` 
 
 If package manifests are changed and a user-supplied command depends on installed packages, include the necessary bounded dependency setup command in `validation.executor_check_commands` before the user command, or document why dependency setup is intentionally unavailable in `planning_notes`.
 
+### Step 4a - Bounded scope-expansion allowance
+
+Static analysis cannot guarantee it found every breaking call site. Pre-authorize a narrow, bounded allowance so the executor does not have to halt and wait for a human on every runtime-discovered miss:
+
+- Set `validation.scope_expansion_limit` to a small integer (2-3 unless the upgrade is unusually large).
+- A scope expansion may only cover a file that (a) is not already in `planned_files`, and (b) fails a bounded startup/CLI check specifically because of a direct call into a dependency already listed in `expected_dependency_changes` for the same major-version bump. It does not authorize broader refactors, unrelated fixes, or touching dependencies outside the approved plan.
+- Note this allowance in `planning_notes` so the human approval summary reflects that a small, bounded self-repair budget exists.
+
 ### Step 5 - Write ChangePlan
 
 Write the full plan to `artifact_dir/change-plan.json`.
@@ -140,7 +148,8 @@ The full artifact must use this shape:
         "must_not_contain": ["string"]
       }
     ],
-    "success_criteria": ["string"]
+    "success_criteria": ["string"],
+    "scope_expansion_limit": "number"
   },
   "rollback_strategy": "Revert the single final execution commit created by the executor.",
   "planning_notes": "string",

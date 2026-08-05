@@ -2,7 +2,7 @@
 
 Codex-centered legacy upgrade pipeline for multi-stage repository migrations.
 
-The project exposes one user-facing Codex skill: `upgrade`. It coordinates analysis, planning, small smoke/integration test generation, execution, and one final validation/repair pass with human approval gates between the major stages.
+The project exposes one user-facing Codex skill: `upgrade`. It coordinates analysis, planning, small smoke/integration test generation, execution, one final validation/repair pass, and a post-validation browser console check, with human approval gates between the major stages.
 
 ## Prerequisites
 
@@ -58,6 +58,7 @@ If `PATH_TO_REPO` is not configured, the skill will ask for it. If it is configu
 3. Test generation: creates a small set of smoke and integration tests, then records them in `change-plan.json`.
 4. Execution: applies planned changes on an `upgrade/<slug>` branch and creates one final commit.
 5. Final validation/repair: reads only `change-plan.json`, checks git diff alignment, runs build commands and tests, fixes plan-related build/test failures when possible, and amends the final upgrade commit.
+6. Post-validation browser console check: if the upgrade is approved and serves a browser-facing page, asks you to open it, check the developer tools Console tab, and report any errors. Reported errors that are clearly related to the upgrade are repaired (up to 3 rounds) and amended into the same commit.
 
 ## Enforcement And Fallback
 
