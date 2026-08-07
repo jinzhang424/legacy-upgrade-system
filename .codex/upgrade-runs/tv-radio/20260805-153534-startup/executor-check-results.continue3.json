@@ -1,0 +1,13 @@
+﻿{
+    "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+    "command":  "node chapman.js index --verbose",
+    "purpose":  "smoke",
+    "outcome":  "failed",
+    "exit_status":  1,
+    "output":  "Re-indexing Titles\r\ncmd.exe : C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\\node_modules\\pace\\pace.js:33\r\nAt line:20 char:13\r\n+   $output = \u0026 cmd.exe /c $c.command 2\u003e\u00261 | Out-String\r\n+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (C:\\Users\\OEM\\le...pace\\pace.js:33:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\n    throw new Error(\u0027You MUST specify the total number of operations that will be processed.\u0027);\r\n          ^\r\n\r\nError: You MUST specify the total number of operations that will be processed.\r\n    at new Pace (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\\node_modules\\pace\\pace.js:33:11)\r\n    at module.exports (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\\node_modules\\pace\\pace.js:78:10)\r\n    at progress (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\\chapman.js:389:23)\r\n    at _startSection (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\build.js:45:5)\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\build.js:305:21\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:3675:28\r\n    at replenish (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:447:21)\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:452:13\r\n    at eachOfLimit (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:478:36)\r\n    at awaitable (C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:212:32)\r\n\r\nNode.js v24.15.0\r\n",
+    "repair_attempts":  2,
+    "health_check_url":  null,
+    "health_check_outcome":  "skipped",
+    "health_check_repair_rounds":  0,
+    "elapsed_seconds":  0.6
+}

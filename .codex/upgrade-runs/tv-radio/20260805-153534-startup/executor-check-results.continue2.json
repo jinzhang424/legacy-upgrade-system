@@ -1,0 +1,13 @@
+﻿{
+    "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+    "command":  "node chapman.js index --verbose",
+    "purpose":  "smoke",
+    "outcome":  "failed",
+    "exit_status":  1,
+    "output":  "Re-indexing Titles\r\ncmd.exe : C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:325\r\nAt line:20 char:13\r\n+   $output = \u0026 cmd.exe /c $c.command 2\u003e\u00261 | Out-String\r\n+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (C:\\Users\\OEM\\le...st\\async.js:325:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\n            if (fn === null) throw new Error(\"Callback was already called.\");\r\n                                   ^\r\n\r\nError: Callback was already called.\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:325:36\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:3680:17\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\build.js:287:32\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common\\directdb-mongo.js:32:13\r\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\r\n\r\nNode.js v24.15.0\r\n",
+    "repair_attempts":  1,
+    "health_check_url":  null,
+    "health_check_outcome":  "skipped",
+    "health_check_repair_rounds":  0,
+    "elapsed_seconds":  0.64
+}

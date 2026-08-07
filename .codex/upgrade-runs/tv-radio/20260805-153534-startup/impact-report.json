@@ -1,0 +1,603 @@
+{
+  "upgrade_description": "Upgrade any outdated dependencies found in the tv-radio repo across all modules, including every package.json dependency/devDependency with a major-version gap, smaller logging/metrics clients such as winston, winston-logstash, influx, vendored front-end global scripts under tv-radio-admin/Admin/Interface/libs (Ember 1.13.3 trio, handlebars 3.0.3, jquery 1.11.0, socket.io 1.1.0), Solr compatibility from luceneMatchVersion 4.9 era config, and utilities ember-precompile.js/.sh dependency on deprecated optimist. Do not attempt full ember-cli rewrite; target newest version achievable without adopting ember-cli and flag if ember-cli migration is required to go further. Vendored socket.io client must remain in lockstep with tv-radio-admin/Admin/API socket.io server major.",
+  "affected_files": [
+    {
+      "file_path": "tv-radio-admin/Admin/API/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Admin API manifest contains several direct dependencies with current-major gaps: async 0-range to 3, body-parser 1 to 2, cron 1 to 4, express 4 to 5, influx 4 to 5, jsonwebtoken 5 to 9, and socket.io 1 to 4. socket.io must stay aligned with the vendored admin client.",
+      "locations": [
+        { "start_line": 5, "end_line": 17, "symbol_or_pattern": "dependencies", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate the direct Admin API package dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/CLI/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "CLI manifest carries async >=0.2.9, which resolves from a legacy range and has a major-version gap to async 3.x.",
+      "locations": [
+        { "start_line": 5, "end_line": 7, "symbol_or_pattern": "async|minimist|pace", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate CLI dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Common/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Common manifest contains mongodb ^2.2.24 with a major-version gap to 7.x plus async legacy range and deprecated fluent-ffmpeg.",
+      "locations": [
+        { "start_line": 5, "end_line": 7, "symbol_or_pattern": "mongodb|async|fluent-ffmpeg", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate Common dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Export/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Export manifest has major-version gaps for xmlbuilder 2 to 15, archiver 0 to 8, stream-buffers 2 to 3, and async legacy range.",
+      "locations": [
+        { "start_line": 6, "end_line": 10, "symbol_or_pattern": "async|xmlbuilder|archiver|stream-buffers|ftp", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate Export dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Ingest/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Ingest manifest has major-version gaps for async legacy range and csv 0 to 6.",
+      "locations": [
+        { "start_line": 6, "end_line": 8, "symbol_or_pattern": "async|csv|xml2js", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate Ingest dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Search/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Search manifest has async legacy range; moment is old but not a major-version gap.",
+      "locations": [
+        { "start_line": 6, "end_line": 7, "symbol_or_pattern": "async|moment", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate Search dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Utilities/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Utilities manifest depends on deprecated optimist 0.6.1, explicitly in scope for ember-precompile tooling.",
+      "locations": [
+        { "start_line": 5, "end_line": 5, "symbol_or_pattern": "optimist", "matched_api": "package.json direct dependency", "confidence": "high", "reason": "Manifest declares optimist." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Frontend manifest contains broad major-version gaps including async, body-parser, express, handlebars, influx, mongodb, nodemailer, send, socket.io-client, uglify-js, uuid, winston, and winston-logstash. It also includes deprecated request and gc-stats and native sharp 0.x.",
+      "locations": [
+        { "start_line": 5, "end_line": 25, "symbol_or_pattern": "dependencies", "matched_api": "package.json direct dependencies", "confidence": "high", "reason": "Manifest lines enumerate frontend dependencies." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/app.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin API startup directly uses Express 4 APIs, body-parser, compression, Socket.IO 1 server setup, jsonwebtoken 5 signing, socketio-jwt auth middleware, and static MIME APIs.",
+      "locations": [
+        { "start_line": 1, "end_line": 9, "symbol_or_pattern": "require('express'|'body-parser'|'socket.io'|'jsonwebtoken')", "matched_api": "express/body-parser/compression/socket.io/jsonwebtoken/socketio-jwt/minimist", "confidence": "high", "reason": "Direct package imports at process entry point." },
+        { "start_line": 19, "end_line": 21, "symbol_or_pattern": "socketio(server, {path})", "matched_api": "socket.io 1.x server initialization", "confidence": "high", "reason": "Socket.IO server creation is version-sensitive and must align with the client bundle." },
+        { "start_line": 40, "end_line": 41, "symbol_or_pattern": "express.static.mime.define", "matched_api": "Express static MIME API", "confidence": "high", "reason": "Express 5/static middleware changes may affect this API surface." },
+        { "start_line": 53, "end_line": 55, "symbol_or_pattern": "socketiojwt.authorize", "matched_api": "socketio-jwt middleware", "confidence": "medium", "reason": "Socket.IO middleware compatibility depends on server major." },
+        { "start_line": 142, "end_line": 164, "symbol_or_pattern": "new express.Router|jwt.sign", "matched_api": "Express Router and jsonwebtoken sign", "confidence": "high", "reason": "Direct usage in login/token flow." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-image-handling.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Uses body-parser raw middleware and Express route registration through injected express instance.",
+      "locations": [
+        { "start_line": 1, "end_line": 4, "symbol_or_pattern": "require('body-parser').raw", "matched_api": "body-parser raw middleware", "confidence": "high", "reason": "Direct body-parser API usage." },
+        { "start_line": 35, "end_line": 101, "symbol_or_pattern": "express.get|express.post", "matched_api": "Express route registration", "confidence": "medium", "reason": "Injected Express application usage in API handlers." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Direct async dependency and Socket.IO notification emission are part of admin bulk-operation flows.",
+      "locations": [
+        { "start_line": 12, "end_line": 15, "symbol_or_pattern": "async = require('async')", "matched_api": "async require", "confidence": "high", "reason": "Direct async package usage." },
+        { "start_line": 136, "end_line": 157, "symbol_or_pattern": "socketIO.sockets.emit", "matched_api": "Socket.IO server emit", "confidence": "medium", "reason": "Socket.IO event API surface in bulk notification workflow." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Common/directdb-mongo.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Main admin MongoDB adapter uses mongodb 2.x callback APIs and collection helpers removed or changed in later driver majors.",
+      "locations": [
+        { "start_line": 2, "end_line": 5, "symbol_or_pattern": "require('mongodb')|MongoClient", "matched_api": "mongodb driver", "confidence": "high", "reason": "Direct mongodb driver import and client extraction." },
+        { "start_line": 138, "end_line": 163, "symbol_or_pattern": "MongoClient.connect|db.close", "matched_api": "mongodb 2.x connection/db close callbacks", "confidence": "high", "reason": "Connection lifecycle changed across driver majors." },
+        { "start_line": 174, "end_line": 361, "symbol_or_pattern": "collection().count|ensureIndex|update|remove|insert", "matched_api": "mongodb legacy collection APIs", "confidence": "high", "reason": "Several APIs changed names or return contracts after mongodb 2.x." },
+        { "start_line": 723, "end_line": 758, "symbol_or_pattern": "initializeOrderedBulkOp|initializeUnorderedBulkOp", "matched_api": "mongodb bulk operation APIs", "confidence": "high", "reason": "Bulk operation APIs are version-sensitive." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Common/directdb-mongo-backup.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "MongoDB backup helper uses mongodb 2.x collection count/find stream/remove style APIs.",
+      "locations": [
+        { "start_line": 1, "end_line": 2, "symbol_or_pattern": "require('mongodb')|require('async')", "matched_api": "mongodb and async imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 21, "end_line": 75, "symbol_or_pattern": "collection().count|find().stream", "matched_api": "mongodb collection callbacks/streams", "confidence": "high", "reason": "Legacy driver usage." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/db-provider.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Frontend MongoDB provider uses mongodb 2.x callback APIs including connect, insert, update, and aggregate signatures.",
+      "locations": [
+        { "start_line": 1, "end_line": 3, "symbol_or_pattern": "require('mongodb')|MongoClient", "matched_api": "mongodb driver", "confidence": "high", "reason": "Direct mongodb driver import and client extraction." },
+        { "start_line": 64, "end_line": 76, "symbol_or_pattern": "MongoClient.connect|db.close", "matched_api": "mongodb connection lifecycle", "confidence": "high", "reason": "Driver connection return shape changed after 2.x." },
+        { "start_line": 90, "end_line": 116, "symbol_or_pattern": "collection().insert|update|aggregate", "matched_api": "mongodb collection callbacks", "confidence": "high", "reason": "Legacy collection method signatures." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Common/record-media-scan.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Media scan code uses deprecated fluent-ffmpeg, async, MongoDB provider collections, and Solr partial-update APIs.",
+      "locations": [
+        { "start_line": 4, "end_line": 13, "symbol_or_pattern": "fluent-ffmpeg|async|search-index-solr", "matched_api": "fluent-ffmpeg/async/Solr helper imports", "confidence": "high", "reason": "Direct package and helper imports." },
+        { "start_line": 26, "end_line": 29, "symbol_or_pattern": "ffmpeg(path).setFfmpegPath", "matched_api": "fluent-ffmpeg instance API", "confidence": "high", "reason": "Deprecated package usage." },
+        { "start_line": 127, "end_line": 183, "symbol_or_pattern": "dbProvider.db.collection().count|find().stream|initializeUnorderedBulkOp", "matched_api": "mongodb collection/bulk APIs", "confidence": "high", "reason": "Legacy MongoDB APIs through provider." },
+        { "start_line": 369, "end_line": 526, "symbol_or_pattern": "ffprobe", "matched_api": "fluent-ffmpeg ffprobe", "confidence": "high", "reason": "Runtime media metadata probe usage." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Search/search-index-solr.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin Solr client hand-builds HTTP requests for update, delete, partial update, search, escaping, response handling, and client passthrough. Compatibility depends on Solr config and query/update APIs.",
+      "locations": [
+        { "start_line": 8, "end_line": 21, "symbol_or_pattern": "performGeneralXMLCommand|http.request", "matched_api": "Solr XML update HTTP request", "confidence": "high", "reason": "Direct Solr service call." },
+        { "start_line": 63, "end_line": 160, "symbol_or_pattern": "addItemsToSearchIndex|updateItemsInSearchIndex", "matched_api": "Solr update JSON/XML calls", "confidence": "high", "reason": "Index update APIs." },
+        { "start_line": 189, "end_line": 259, "symbol_or_pattern": "removeItemsFromSearchIndex|countItemsInSearchIndex", "matched_api": "Solr delete/select calls", "confidence": "high", "reason": "Search index management APIs." },
+        { "start_line": 324, "end_line": 416, "symbol_or_pattern": "UPDATE_FIELD_*|partialUpdateMultipleItemsUsingPreparedDocuments", "matched_api": "Solr atomic/partial update APIs", "confidence": "high", "reason": "Atomic update semantics are Solr-version-sensitive." },
+        { "start_line": 790, "end_line": 883, "symbol_or_pattern": "escapeSolrQuery|performSearch|performSearchOnClientsBehalf", "matched_api": "Solr query escaping and select passthrough", "confidence": "high", "reason": "Query parser/response compatibility surface." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/solr-search.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Frontend Solr client hand-builds select queries and validates Solr response structures such as responseHeader, response, and facet_counts.",
+      "locations": [
+        { "start_line": 26, "end_line": 97, "symbol_or_pattern": "escapeSolrQuery|performSearch", "matched_api": "Solr query escaping and search entrypoint", "confidence": "high", "reason": "Query syntax and request shape compatibility." },
+        { "start_line": 114, "end_line": 133, "symbol_or_pattern": "hostname|port|http.request", "matched_api": "Solr HTTP request", "confidence": "high", "reason": "Direct network call to Solr." },
+        { "start_line": 199, "end_line": 250, "symbol_or_pattern": "verifySolrResult|facet_counts", "matched_api": "Solr response validation", "confidence": "high", "reason": "Response schema assumptions." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/app.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Frontend entry point directly uses Express 4, body-parser, handlebars 3, socket.io-client 1, uglify-js 2, async, custom .hbs require hooks, static middleware, and server startup.",
+      "locations": [
+        { "start_line": 1, "end_line": 16, "symbol_or_pattern": "require('express'|'body-parser'|'handlebars'|'socket.io-client'|'uglify-js'|'async')", "matched_api": "frontend direct package imports", "confidence": "high", "reason": "Direct package imports at entry point." },
+        { "start_line": 45, "end_line": 51, "symbol_or_pattern": "require.extensions['.handlebars'|'.hbs']", "matched_api": "CommonJS template extension hook", "confidence": "high", "reason": "Template loading depends on handlebars runtime behavior." },
+        { "start_line": 80, "end_line": 80, "symbol_or_pattern": "socketioClient(config.ADMIN_NOTIFICATION.server)", "matched_api": "socket.io-client connection", "confidence": "high", "reason": "Client major must match admin notification server major." },
+        { "start_line": 152, "end_line": 170, "symbol_or_pattern": "express.static|uglify.minify", "matched_api": "Express static middleware and uglify-js 2 API", "confidence": "high", "reason": "Direct version-sensitive usage." },
+        { "start_line": 299, "end_line": 300, "symbol_or_pattern": "server.listen", "matched_api": "startup validation point", "confidence": "medium", "reason": "Startup command validates this module." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/app-media.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Media frontend entry point directly uses Express and socket.io-client for admin notifications.",
+      "locations": [
+        { "start_line": 4, "end_line": 10, "symbol_or_pattern": "express|socket.io-client", "matched_api": "Express and Socket.IO client imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 42, "end_line": 42, "symbol_or_pattern": "socketioClient(config.ADMIN_NOTIFICATION.server)", "matched_api": "socket.io-client connection", "confidence": "high", "reason": "Client major must match notification server major." },
+        { "start_line": 54, "end_line": 55, "symbol_or_pattern": "server.listen", "matched_api": "startup validation point", "confidence": "medium", "reason": "Startup command validates this module when used." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/logger.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Logger uses winston 1 constructors/transports and winston-logstash 0.x monkey-patched methods; both have major-version gaps.",
+      "locations": [
+        { "start_line": 1, "end_line": 6, "symbol_or_pattern": "require('winston')|require('winston-logstash')", "matched_api": "winston and winston-logstash imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 18, "end_line": 33, "symbol_or_pattern": "new (winston.Logger)|winston.transports.Console", "matched_api": "winston 1 logger construction", "confidence": "high", "reason": "Winston 3 changed logger construction/transport usage." },
+        { "start_line": 41, "end_line": 82, "symbol_or_pattern": "logstash.log|logstash.announce", "matched_api": "winston-logstash internals", "confidence": "high", "reason": "Monkey-patching transport internals is high-risk across major versions." },
+        { "start_line": 118, "end_line": 118, "symbol_or_pattern": "new (winston.transports.Logstash)", "matched_api": "winston-logstash transport", "confidence": "high", "reason": "Transport API major change surface." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/metrics.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Metrics client imports influx 4.0.0 and uses the old function-call client style; latest package major is 5.x.",
+      "locations": [
+        { "start_line": 1, "end_line": 1, "symbol_or_pattern": "require('influx')", "matched_api": "influx import", "confidence": "high", "reason": "Direct package import." },
+        { "start_line": 39, "end_line": 39, "symbol_or_pattern": "influx(config.METRICS.config)", "matched_api": "influx client factory", "confidence": "high", "reason": "Direct client construction usage." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/cache-provider.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Memcached provider is an external-service client and direct package user. Package major is unchanged, but service/runtime behavior is in upgrade scope.",
+      "locations": [
+        { "start_line": 1, "end_line": 1, "symbol_or_pattern": "require('memcached')", "matched_api": "memcached client import", "confidence": "high", "reason": "Direct package import and external cache client." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/media/generic-media.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Generic media serving uses send 0.12.2 directly; latest send is 1.x.",
+      "locations": [
+        { "start_line": 1, "end_line": 12, "symbol_or_pattern": "send = require('send')", "matched_api": "send package import", "confidence": "high", "reason": "Direct package import." },
+        { "start_line": 162, "end_line": 162, "symbol_or_pattern": "send(request, path, options)", "matched_api": "send streaming API", "confidence": "high", "reason": "Direct version-sensitive call." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/media/title-thumbnails.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Title thumbnails use old sharp callback-style resize pipeline and send package.",
+      "locations": [
+        { "start_line": 1, "end_line": 8, "symbol_or_pattern": "sharp = require('sharp')|send = require('send')", "matched_api": "sharp and send imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 77, "end_line": 77, "symbol_or_pattern": "sharp(file).resize(...).toFormat(...).toBuffer(callback)", "matched_api": "sharp image pipeline", "confidence": "high", "reason": "Native package API and install/runtime are sensitive across versions." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/media/programme-media.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Programme media thumbnails use old sharp callback-style resize pipeline and send package.",
+      "locations": [
+        { "start_line": 1, "end_line": 7, "symbol_or_pattern": "sharp = require('sharp')|send = require('send')", "matched_api": "sharp and send imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 76, "end_line": 76, "symbol_or_pattern": "sharp(file).resize(...).toFormat(...).toBuffer(callback)", "matched_api": "sharp image pipeline", "confidence": "high", "reason": "Native package API and install/runtime are sensitive across versions." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/media/unisat-thumbnails.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "UniSat thumbnails use old sharp callback-style resize pipeline and send package.",
+      "locations": [
+        { "start_line": 1, "end_line": 7, "symbol_or_pattern": "sharp = require('sharp')|send = require('send')", "matched_api": "sharp and send imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 75, "end_line": 75, "symbol_or_pattern": "sharp(file).resize(...).toFormat(...).toBuffer(callback)", "matched_api": "sharp image pipeline", "confidence": "high", "reason": "Native package API and install/runtime are sensitive across versions." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/content/feedback/client-feedback.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Feedback feature directly uses handlebars 3, nodemailer 1, deprecated request, uuid 2, and async legacy range.",
+      "locations": [
+        { "start_line": 1, "end_line": 13, "symbol_or_pattern": "handlebars|nodemailer|uuid|async|request", "matched_api": "direct package imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 594, "end_line": 594, "symbol_or_pattern": "nodemailer.createTransport", "matched_api": "nodemailer transport API", "confidence": "high", "reason": "Nodemailer 1 to 9 is a large major-version gap." },
+        { "start_line": 659, "end_line": 659, "symbol_or_pattern": "request(requestOptions, callback)", "matched_api": "request package callback API", "confidence": "high", "reason": "request is deprecated and direct usage must be planned." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Export/primo-export.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Primo export directly uses stream-buffers 2, archiver 0, async, ftp, and Mongo-backed directdb; archive API changed substantially across archiver majors.",
+      "locations": [
+        { "start_line": 1, "end_line": 11, "symbol_or_pattern": "stream-buffers|archiver|async|ftp", "matched_api": "direct package imports", "confidence": "high", "reason": "Direct package imports." },
+        { "start_line": 641, "end_line": 643, "symbol_or_pattern": "collection().count|find(...).stream()", "matched_api": "MongoDB provider collection stream", "confidence": "medium", "reason": "Export flow depends on legacy MongoDB provider behavior." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Export/dublincore-exporter.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Dublin Core exporter directly imports xmlbuilder 2.x; latest major is 15.x.",
+      "locations": [
+        { "start_line": 1, "end_line": 2, "symbol_or_pattern": "xmlBuilder = require('xmlbuilder')", "matched_api": "xmlbuilder import", "confidence": "high", "reason": "Direct package import." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Search/build.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Search build command uses async and calls directdb plus Solr index build helpers.",
+      "locations": [
+        { "start_line": 3, "end_line": 12, "symbol_or_pattern": "async|directdb|search-index-solr", "matched_api": "async and Solr build imports", "confidence": "high", "reason": "Direct imports in maintenance command path." },
+        { "start_line": 237, "end_line": 237, "symbol_or_pattern": "directdb.initialize", "matched_api": "MongoDB provider initialization", "confidence": "medium", "reason": "CLI validation path depends on DB provider behavior." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Ingest/ingest.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "Ingest command uses async and directdb; csv/xml2js package impact may be in sibling ingest files.",
+      "locations": [
+        { "start_line": 1, "end_line": 7, "symbol_or_pattern": "directdb|async", "matched_api": "direct package/helper imports", "confidence": "medium", "reason": "Direct ingest dependency usage." },
+        { "start_line": 58, "end_line": 58, "symbol_or_pattern": "directdb.initialize", "matched_api": "MongoDB provider initialization", "confidence": "medium", "reason": "Ingest validation path depends on DB provider behavior." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Utilities/ember-precompile.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Template precompile utility directly depends on deprecated optimist and embeds Ember.Handlebars.template output for Ember 1.13.3-era runtime.",
+      "locations": [
+        { "start_line": 4, "end_line": 4, "symbol_or_pattern": "require('optimist').argv", "matched_api": "optimist argv", "confidence": "high", "reason": "Direct deprecated package usage." },
+        { "start_line": 10, "end_line": 24, "symbol_or_pattern": "Usage|argv._|argv.output|argv.b", "matched_api": "optimist parsed options", "confidence": "high", "reason": "CLI parsing behavior depends on optimist output shape." },
+        { "start_line": 96, "end_line": 97, "symbol_or_pattern": "Ember.Handlebars.template", "matched_api": "Ember 1.13 template output", "confidence": "high", "reason": "Generated output is tied to Ember/Handlebars runtime compatibility." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Utilities/ember-precompile.sh",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Shell wrapper invokes ember-precompile.js and documents legacy ember-precompile command assumptions.",
+      "locations": [
+        { "start_line": 2, "end_line": 6, "symbol_or_pattern": "ember-precompile.js", "matched_api": "precompile utility command", "confidence": "high", "reason": "Script invocation path for utility dependency." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/Interface/index.html",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Admin frontend loads vendored global jQuery 1.11.0, Handlebars 3.0.3, Ember 1.13.3 compiler/runtime, and Socket.IO 1.1.0 client from libs. Socket.IO client must remain in lockstep with Admin/API server major.",
+      "locations": [
+        { "start_line": 56, "end_line": 68, "symbol_or_pattern": "jquery-v1.11.0|handlebars-v3.0.3|ember-template-compiler-v1.13.3|ember.prod-v1.13.3|socket.io-1.1.0", "matched_api": "vendored frontend global script tags", "confidence": "high", "reason": "Script tags identify exact vendored global versions and load order." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/Interface/app/views.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Generated admin templates target Ember@1.13.3 and Ember.Handlebars.template output; migrating beyond non-ember-cli-compatible Ember lines may require broader template/runtime migration.",
+      "locations": [
+        { "start_line": 1, "end_line": 5, "symbol_or_pattern": "Ember.TEMPLATES|Ember.Handlebars.template|revision Ember@1.13.3", "matched_api": "Ember 1.13 generated templates", "confidence": "high", "reason": "Generated template file begins with Ember 1.13 template revision metadata." },
+        { "start_line": 5179, "end_line": 5179, "symbol_or_pattern": "Ember.ChosenSelectWithIcon", "matched_api": "legacy Ember view helper invocation", "confidence": "medium", "reason": "Generated template references view helper APIs removed in later Ember lines." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/Interface/app/data/model-base.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin application code uses Ember 1.x computed property APIs and Ember.$ AJAX.",
+      "locations": [
+        { "start_line": 75, "end_line": 75, "symbol_or_pattern": "Ember.ComputedProperty", "matched_api": "Ember computed property type", "confidence": "medium", "reason": "Ember internal/type APIs are version-sensitive." },
+        { "start_line": 514, "end_line": 514, "symbol_or_pattern": "Ember.computed.apply", "matched_api": "Ember computed API", "confidence": "medium", "reason": "Legacy computed-property API usage." },
+        { "start_line": 671, "end_line": 671, "symbol_or_pattern": "Ember.$.getJSON", "matched_api": "Ember.$ AJAX", "confidence": "medium", "reason": "Ember/jQuery integration changes across major versions." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/Interface/app/data/model-workspace.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin application code uses Ember.Set and Ember.$ AJAX patterns from Ember 1.x.",
+      "locations": [
+        { "start_line": 8, "end_line": 9, "symbol_or_pattern": "new Ember.Set()", "matched_api": "Ember.Set", "confidence": "high", "reason": "Ember.Set is removed/deprecated in later Ember versions." },
+        { "start_line": 227, "end_line": 227, "symbol_or_pattern": "Ember.$.getJSON", "matched_api": "Ember.$ AJAX", "confidence": "medium", "reason": "Ember/jQuery integration changes across major versions." },
+        { "start_line": 543, "end_line": 628, "symbol_or_pattern": "new Ember.Set()", "matched_api": "Ember.Set", "confidence": "high", "reason": "Multiple direct Ember.Set usages." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/Interface/app/interface/title-editor.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin title editor uses Ember.ObjectController, Ember.View, Ember.Handlebars.compile, and helper registration APIs from Ember 1.x.",
+      "locations": [
+        { "start_line": 93, "end_line": 93, "symbol_or_pattern": "Ember.ObjectController.extend", "matched_api": "Ember.ObjectController", "confidence": "high", "reason": "ObjectController is removed in later Ember versions." },
+        { "start_line": 342, "end_line": 487, "symbol_or_pattern": "Ember.View.extend", "matched_api": "Ember.View", "confidence": "high", "reason": "Classic views are a migration hotspot." },
+        { "start_line": 512, "end_line": 674, "symbol_or_pattern": "Ember.Handlebars.compile|Ember.Handlebars.helper", "matched_api": "Ember.Handlebars APIs", "confidence": "high", "reason": "Handlebars helper APIs are version-sensitive beyond Ember 1.x." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/Interface/app/interface-controls/chosen-select.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Admin control registers Ember.Handlebars helpers and computed properties tied to Ember 1.x view/helper behavior.",
+      "locations": [
+        { "start_line": 141, "end_line": 154, "symbol_or_pattern": "Ember.Handlebars.helper|Ember.defineProperty|Ember.computed", "matched_api": "Ember Handlebars helper and computed APIs", "confidence": "high", "reason": "Legacy helper/control implementation." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Settings/Solr/schema.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Solr schema uses legacy Trie field types from Solr/Lucene 4-era configuration; compatibility is a major Solr upgrade blocker.",
+      "locations": [
+        { "start_line": 107, "end_line": 124, "symbol_or_pattern": "solr.Trie*Field", "matched_api": "Solr legacy Trie field types", "confidence": "high", "reason": "Trie field types were deprecated/removed in later Solr versions." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Settings/Solr/solrconfig.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "General Solr config declares luceneMatchVersion 4.9 and legacy request handlers including /update/json back-compat handler.",
+      "locations": [
+        { "start_line": 4, "end_line": 4, "symbol_or_pattern": "luceneMatchVersion", "matched_api": "Solr luceneMatchVersion 4.9", "confidence": "high", "reason": "Explicit Solr/Lucene compatibility version." },
+        { "start_line": 147, "end_line": 191, "symbol_or_pattern": "/select|/update/json", "matched_api": "Solr request handlers", "confidence": "high", "reason": "Request handlers must align with client call sites." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Records Solr config declares luceneMatchVersion 4.9 and legacy request handlers including /update/json back-compat handler.",
+      "locations": [
+        { "start_line": 4, "end_line": 4, "symbol_or_pattern": "luceneMatchVersion", "matched_api": "Solr luceneMatchVersion 4.9", "confidence": "high", "reason": "Explicit Solr/Lucene compatibility version." },
+        { "start_line": 213, "end_line": 257, "symbol_or_pattern": "/select|/update/json", "matched_api": "Solr request handlers", "confidence": "high", "reason": "Request handlers must align with client call sites." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-admin/shared-config.js",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Admin config declares MongoDB connection strings, Solr search provider settings, Logstash host, and Memcached/cache settings used by external-service clients.",
+      "locations": [
+        { "start_line": 15, "end_line": 33, "symbol_or_pattern": "MONGO_CONNECT_STRING|type: 'mongodb'", "matched_api": "MongoDB service configuration", "confidence": "high", "reason": "Configured external database service." },
+        { "start_line": 119, "end_line": 119, "symbol_or_pattern": "logstash.host.org", "matched_api": "Logstash service host", "confidence": "medium", "reason": "External logging endpoint." }
+      ]
+    },
+    {
+      "file_path": "tv-radio-frontend/config.js",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Frontend config declares MongoDB connection string, Logstash endpoint, and runtime service settings consumed by upgraded clients.",
+      "locations": [
+        { "start_line": 1, "end_line": 13, "symbol_or_pattern": "MONGO_CONNECT_STRING|type: 'mongodb'", "matched_api": "MongoDB service configuration", "confidence": "high", "reason": "Configured external database service." },
+        { "start_line": 62, "end_line": 62, "symbol_or_pattern": "logstash.host.org", "matched_api": "Logstash service host", "confidence": "medium", "reason": "External logging endpoint." }
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      { "id": "module:tv-radio-admin/Admin/API", "version": "1.0.1", "type": "internal", "version_source": "tv-radio-admin/Admin/API/package.json" },
+      { "id": "module:tv-radio-admin/CLI", "version": "1.0.1", "type": "internal", "version_source": "tv-radio-admin/CLI/package.json" },
+      { "id": "module:tv-radio-admin/Common", "version": "1.0.1", "type": "internal", "version_source": "tv-radio-admin/Common/package.json" },
+      { "id": "module:tv-radio-admin/Export", "version": "1.0.1", "type": "internal", "version_source": "tv-radio-admin/Export/package.json" },
+      { "id": "module:tv-radio-admin/Ingest", "version": "1.0.0", "type": "internal", "version_source": "tv-radio-admin/Ingest/package.json" },
+      { "id": "module:tv-radio-admin/Search", "version": "1.0.1", "type": "internal", "version_source": "tv-radio-admin/Search/package.json" },
+      { "id": "module:tv-radio-admin/Utilities", "version": "1.0.0", "type": "internal", "version_source": "tv-radio-admin/Utilities/package.json" },
+      { "id": "module:tv-radio-frontend", "version": "1.0.2", "type": "internal", "version_source": "tv-radio-frontend/package.json" },
+      { "id": "package:async", "version": ">= 0.2.9 -> latest 3.2.6", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:body-parser", "version": "1.9.0 -> latest 2.3.0", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:compression", "version": "1.4.3 -> latest 1.8.1", "type": "external_package", "version_source": "tv-radio-admin/Admin/API/package.json; npm view on 2026-08-05" },
+      { "id": "package:cron", "version": "1.0.6 -> latest 4.4.0", "type": "external_package", "version_source": "tv-radio-admin/Admin/API/package.json; npm view on 2026-08-05" },
+      { "id": "package:express", "version": "4.9.5 -> latest 5.2.1", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:fluent-ffmpeg", "version": "2.0.0-rc3 -> latest 2.1.3 deprecated", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:influx", "version": "4.0.0 -> latest 5.12.0", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:jsonwebtoken", "version": "^5.4.0 -> latest 9.0.3", "type": "external_package", "version_source": "tv-radio-admin/Admin/API/package.json; npm view on 2026-08-05" },
+      { "id": "package:memcached", "version": "2.2.0 -> latest 2.2.2", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:minimist", "version": "1.1.0 -> latest 1.2.8", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:socket.io", "version": "1.1.0 -> latest 4.8.3", "type": "external_package", "version_source": "tv-radio-admin/Admin/API/package.json; npm view on 2026-08-05" },
+      { "id": "package:socketio-jwt", "version": "^4.3.1 -> latest 4.6.2", "type": "external_package", "version_source": "tv-radio-admin/Admin/API/package.json; npm view on 2026-08-05" },
+      { "id": "package:xml2js", "version": "0.4.4 -> latest 0.6.2", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:pace", "version": "0.0.4 -> latest 0.0.4", "type": "external_package", "version_source": "tv-radio-admin/CLI/package.json; npm view on 2026-08-05" },
+      { "id": "package:mongodb", "version": "^2.0.0/^2.2.24 -> latest 7.5.0", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:archiver", "version": "~0.14 -> latest 8.0.0", "type": "external_package", "version_source": "tv-radio-admin/Export/package.json; npm view on 2026-08-05" },
+      { "id": "package:ftp", "version": "~0.3.8 -> latest 0.3.10", "type": "external_package", "version_source": "tv-radio-admin/Export/package.json; npm view on 2026-08-05" },
+      { "id": "package:stream-buffers", "version": "2.1.0 -> latest 3.0.3", "type": "external_package", "version_source": "tv-radio-admin/Export/package.json; npm view on 2026-08-05" },
+      { "id": "package:xmlbuilder", "version": "~2.6.1 -> latest 15.1.1", "type": "external_package", "version_source": "tv-radio-admin/Export/package.json; npm view on 2026-08-05" },
+      { "id": "package:csv", "version": "0.4.0 -> latest 6.6.2", "type": "external_package", "version_source": "tv-radio-admin/Ingest/package.json; npm view on 2026-08-05" },
+      { "id": "package:moment", "version": "2.8.2/2.10.2 -> latest 2.30.1", "type": "external_package", "version_source": "package.json manifests; npm view on 2026-08-05" },
+      { "id": "package:optimist", "version": "0.6.1 -> latest 0.6.1", "type": "external_package", "version_source": "tv-radio-admin/Utilities/package.json; npm view on 2026-08-05" },
+      { "id": "package:gc-stats", "version": "^1.0.0 -> latest 1.4.1 deprecated", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:handlebars", "version": "3.0.0 -> latest 4.7.9", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:nodemailer", "version": "1.4.0 -> latest 9.0.4", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:on-finished", "version": "^2.2.0 -> latest 2.4.1", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:request", "version": "^2.87.0 -> latest 2.88.2 deprecated", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:send", "version": "0.12.2 -> latest 1.2.1", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:sharp", "version": "^0.14.1 -> latest 0.35.3", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:socket.io-client", "version": "1.1.0 -> latest 4.8.3", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:uglify-js", "version": "^2.4.17 -> latest 3.19.3", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:uuid", "version": "2.0.1 -> latest 14.0.1", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:walk", "version": "^2.3.9 -> latest 2.3.15", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:winston", "version": "^1.0.1 -> latest 3.19.0", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "package:winston-logstash", "version": "^0.3.0 -> latest 2.1.0", "type": "external_package", "version_source": "tv-radio-frontend/package.json; npm view on 2026-08-05" },
+      { "id": "vendored:admin-ember", "version": "1.13.3", "type": "external_package", "version_source": "tv-radio-admin/Admin/Interface/libs/ember-template-compiler-v1.13.3.js; ember.debug-v1.13.3.js; ember.prod-v1.13.3.js" },
+      { "id": "vendored:admin-handlebars", "version": "3.0.3", "type": "external_package", "version_source": "tv-radio-admin/Admin/Interface/libs/handlebars-v3.0.3.js" },
+      { "id": "vendored:admin-jquery", "version": "1.11.0", "type": "external_package", "version_source": "tv-radio-admin/Admin/Interface/libs/jquery-v1.11.0.js" },
+      { "id": "vendored:admin-socket.io-client", "version": "1.1.0", "type": "external_package", "version_source": "tv-radio-admin/Admin/Interface/libs/socket.io-1.1.0.js" },
+      { "id": "service:Solr", "version": "luceneMatchVersion 4.9; runtime version unknown", "type": "external_service", "version_source": "tv-radio-admin/Settings/Solr/solrconfig.xml:4; tv-radio-admin/Settings/Solr/solrconfig-records.xml:4" },
+      { "id": "service:MongoDB", "version": "unknown", "type": "external_service", "version_source": "tv-radio-admin/shared-config.js; tv-radio-frontend/config.js" },
+      { "id": "service:Memcached", "version": "unknown", "type": "external_service", "version_source": "tv-radio-frontend/cache-provider.js; tv-radio-admin/shared-config.js" },
+      { "id": "service:InfluxDB", "version": "unknown", "type": "external_service", "version_source": "tv-radio-frontend/metrics.js; tv-radio-frontend/config.js" },
+      { "id": "service:Logstash", "version": "unknown", "type": "external_service", "version_source": "tv-radio-admin/shared-config.js:119; tv-radio-frontend/config.js:62" }
+    ],
+    "edges": [
+      { "from": "module:tv-radio-admin/Admin/API", "to": "package:express", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Admin/API", "to": "package:body-parser", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Admin/API", "to": "package:socket.io", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Admin/API", "to": "package:jsonwebtoken", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Admin/API", "to": "vendored:admin-socket.io-client", "relationship": "must_remain_major_lockstep" },
+      { "from": "module:tv-radio-admin/Common", "to": "package:mongodb", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Common", "to": "package:fluent-ffmpeg", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Common", "to": "service:MongoDB", "relationship": "connects_to" },
+      { "from": "module:tv-radio-admin/Search", "to": "service:Solr", "relationship": "http_client_for" },
+      { "from": "module:tv-radio-admin/Search", "to": "package:async", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Export", "to": "package:archiver", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Export", "to": "package:stream-buffers", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Export", "to": "package:xmlbuilder", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Ingest", "to": "package:csv", "relationship": "declares" },
+      { "from": "module:tv-radio-admin/Utilities", "to": "package:optimist", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-admin/Utilities", "to": "vendored:admin-ember", "relationship": "generates_templates_for" },
+      { "from": "module:tv-radio-frontend", "to": "package:express", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:handlebars", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:mongodb", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:socket.io-client", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:winston", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:winston-logstash", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:influx", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "package:sharp", "relationship": "declares_and_imports" },
+      { "from": "module:tv-radio-frontend", "to": "service:Solr", "relationship": "http_client_for" },
+      { "from": "module:tv-radio-frontend", "to": "service:MongoDB", "relationship": "connects_to" },
+      { "from": "module:tv-radio-frontend", "to": "service:Memcached", "relationship": "connects_to" },
+      { "from": "module:tv-radio-frontend", "to": "service:InfluxDB", "relationship": "connects_to" },
+      { "from": "module:tv-radio-frontend", "to": "service:Logstash", "relationship": "sends_logs_to" },
+      { "from": "vendored:admin-ember", "to": "vendored:admin-handlebars", "relationship": "runtime_compiler_compatibility" },
+      { "from": "vendored:admin-socket.io-client", "to": "package:socket.io", "relationship": "protocol_major_lockstep" }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 44,
+    "high_risk_count": 29,
+    "breaking_changes": [
+      "Express 4.9.5 to 5.x affects route/static middleware and removed/changed APIs such as express.static.mime.",
+      "Socket.IO 1.1.0 to 4.x is a protocol and middleware major jump; vendored admin socket.io-1.1.0.js must stay in lockstep with Admin/API socket.io server major.",
+      "MongoDB Node driver 2.x to 7.x affects MongoClient.connect return shape, db handles, collection count/update/remove/insert callbacks, ensureIndex, streams, and bulk operations.",
+      "Winston 1.x to 3.x and winston-logstash 0.x to 2.x affect logger construction, transports, and monkey-patched Logstash internals.",
+      "Solr config is luceneMatchVersion 4.9 era and schema uses solr.Trie*Field types; runtime Solr target remains unknown from repo files.",
+      "Ember 1.13.3 plus Handlebars 3 global admin UI uses ObjectController, classic views, Ember.Handlebars helpers/templates, Ember.Set, and Ember.$ AJAX; going beyond a non-ember-cli-compatible ceiling likely requires an ember-cli/framework migration.",
+      "jsonwebtoken 5 to 9, nodemailer 1 to 9, archiver 0 to 8, xmlbuilder 2 to 15, csv 0 to 6, uuid 2 to 14, and send 0 to 1 each have direct call sites or manifest exposure that require focused validation.",
+      "Deprecated packages request, optimist, fluent-ffmpeg, and gc-stats remain directly declared or used even where latest major is unchanged or deprecated."
+    ],
+    "notes": "Primary language is Node.js/CommonJS JavaScript with vendored browser globals. Package manager is npm, but no package-lock.json/npm-shrinkwrap/yarn.lock files were found in the manifest scan, so exact installed transitive versions were not available. Entry points and validation context identified for later stages include tv-radio-admin/Admin/API/app.js on port 8080, tv-radio-frontend/app.js on port 8082, and tv-radio-admin/CLI/chapman.js maintenance commands. Datastore is declared empty for later validation planning."
+  },
+  "coverage_notes": "GitNexus index for tv-radio was available and current on 2026-08-05; GitNexus query confirmed admin API/CLI/search route areas, while line locations were captured with rg/Select-String for precision. npm view was used on 2026-08-05 to compare direct package latest versions. No dependency lockfiles were found, so dependency graph covers manifest direct dependencies plus vendored global scripts, not exact transitive installed versions. Solr was confirmed in tv-radio-admin/Settings/Solr and source clients, with luceneMatchVersion 4.9 in solrconfig.xml and solrconfig-records.xml; actual Solr runtime version and target version are unknown from repository files and must be confirmed by the orchestrator. MongoDB, Memcached, InfluxDB, and Logstash are detected as external services, but their runtime versions are unknown from repository files. Searches intentionally did not enumerate every line in vendored/minified library internals; affected frontend global files are represented by loading points, versioned filenames, and key generated/app-level Ember usage. Validation context retained for later stages: Admin/API startup node app.js in tv-radio-admin/Admin/API verify http://localhost:8080/; frontend startup node app.js in tv-radio-frontend verify http://localhost:8082/; CLI maintenance commands node chapman.js resetindex/index/geodata/courses --verbose; datastore_has_data=false."
+}
