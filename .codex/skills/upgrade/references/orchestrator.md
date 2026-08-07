@@ -155,8 +155,8 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - `artifact_dir`
    - `change_plan_path = artifact_dir/change-plan.json`
 3. The validator must read only `artifact_dir/change-plan.json` from the artifact directory. It must not read any other report artifact.
-4. The validator must run git diff, build/compile commands, existing test commands, and generated smoke/integration test commands referenced in `change-plan.json`.
-5. If build or test commands fail, the validator may fix code, dependency/config, or generated-test issues that are clearly related to the ChangePlan, then re-run the failed validation commands.
+4. The validator must run git diff, build/compile commands, existing test commands, and generated smoke/integration test commands referenced in `change-plan.json`. For any declared `startup_health_check_urls`, it must go beyond an HTTP status check: use the Playwright MCP server to actually load the page in a real browser and read the Console tab's output (`browser_navigate`, `browser_console_messages`, `browser_snapshot`), so a page that returns 200 but renders blank or throws a client-side error is still caught.
+5. If build, test, or browser-check commands fail, the validator may fix code, dependency/config, or generated-test issues that are clearly related to the ChangePlan (including console errors it captured automatically), then re-run the failed validation commands.
 6. If the validator makes fixes, it must amend the existing upgrade commit rather than creating a new commit.
 7. Extract the final ValidationReport JSON and use its `decision`.
 8. Present the final result:
@@ -165,23 +165,25 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - Files changed
    - Repairs applied, if any
    - Diff alignment result
-   - Build and test results
+   - Build, test, and browser console check results
    - Final decision
 
 ---
 
-## Stage 6 - Post-Validation Browser Console Check
+## Stage 6 - Post-Validation Manual Browser Check (Supplementary)
+
+Stage 5 already drove a real browser against every declared health-check URL and read its Console tab automatically; anything it found there was either repaired or already caused Stage 5 to reject. This stage exists only for errors that surface through manual interaction Playwright's automated page load doesn't perform — clicking through flows, submitting forms, logging in, navigating between pages.
 
 1. Only run this stage if Stage 5's `decision` is `approved`. If Stage 5 was rejected, skip this stage — the pipeline has already halted on the failure report.
 2. Collect browser-facing URLs from `validation.startup_health_check_urls` in `change-plan.json` (entries with a non-empty path). If there are none, skip this stage; there is no page to inspect.
-3. Ask the user: "The app is running at <url(s)>. Please open it in a browser, open developer tools, switch to the Console tab, and reload the page. Are there any errors in the console? If so, paste them here; otherwise reply 'no errors'." Wait for an explicit response.
+3. Ask the user: "The app is running at <url(s)>. Stage 5 already checked the console automatically on page load and found no issues (or fixed what it found). Please open it in a browser, open developer tools, switch to the Console tab, and click around the app the way a real user would — log in, submit forms, navigate between pages. Are there any additional console errors? If so, paste them here; otherwise reply 'no errors'." Wait for an explicit response.
 4. If the user reports no errors, present a short confirmation and end the pipeline.
 5. If the user reports console errors, run up to 3 repair rounds (`console_check_round` starting at 1):
    a. Record the user's raw report as `console_errors`.
    b. Read `references/validator.md` again.
-   c. Spawn the validator sub-agent with the same inputs as Stage 5 plus `console_errors` and `console_check_round`. Instruct it to repair the reported console errors when they are clearly related to the ChangePlan, in addition to its normal verification pass, and to amend the existing upgrade commit rather than creating a new one.
+   c. Spawn the validator sub-agent with the same inputs as Stage 5 plus `console_errors` and `console_check_round`. It re-runs its full procedure, including a fresh automated Playwright check, then additionally repairs the user-reported errors when they are clearly related to the ChangePlan, and amends the existing upgrade commit rather than creating a new one.
    d. Present the validator's updated decision, `console_error_results`, and any new repairs to the user.
-   e. Ask the user to refresh the page, recheck the console, and report whether errors remain.
+   e. Ask the user to refresh the page, repeat the manual interaction that triggered the error, recheck the console, and report whether errors remain.
    f. If the user reports no remaining errors, end the pipeline. If errors remain and `console_check_round < 3`, increment `console_check_round` and repeat from step (c).
 6. If console errors remain unresolved after 3 rounds, halt and report the unresolved errors to the user, noting they require manual follow-up outside the pipeline.
 

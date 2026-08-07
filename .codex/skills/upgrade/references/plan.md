@@ -72,7 +72,7 @@ For long-running server commands, do not record a raw command that can hang inde
 
 For every command with `purpose: startup`, set `health_check_url` to `http://localhost:<PORT><PATH>`. Derive the port from `user_health_check_urls` when provided; otherwise inspect config files (e.g. `config.js`, `shared-config.js`) and `app.js` defaults, and document the inference in `planning_notes`. A startup entry with no `health_check_url` is a validation gap that must be documented in `planning_notes`.
 
-Also record the same health check URL in `validation.startup_health_check_urls` at the index matching its `startup_commands` entry so the validator can re-probe it after the commit.
+Also record the same health check URL in `validation.startup_health_check_urls` at the index matching its `startup_commands` entry so the validator can re-probe it after the commit. The validator uses this URL for more than an HTTP status check: it also navigates to it with a real browser (Playwright MCP) and inspects the Console tab for errors, so the URL must be a page a browser can actually render, not a bare API/health endpoint that returns plain text or JSON, when the module in question serves a UI.
 
 If package manifests are changed and a user-supplied command depends on installed packages, include the necessary bounded dependency setup command in `validation.executor_check_commands` before the user command, or document why dependency setup is intentionally unavailable in `planning_notes`.
 
