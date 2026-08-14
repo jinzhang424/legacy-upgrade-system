@@ -11,6 +11,8 @@ You are the Upgrade Planning sub-agent. You receive an analysis summary and the 
 - `upgrade_description`: string
 - `user_constraints`: string[] optional
 - `user_validation_commands`: command entries or free-form user instructions describing how to compile, start, or smoke-test important modules
+- `user_key_pages`: `{ url, description }[]` optional, pages beyond the startup URL the user wants checked
+- `user_key_flows`: `{ name, url, steps: string[], description }[]` optional, interactive flows the user wants checked
 - `repo_path`: absolute path to the repository
 - `artifact_dir`: directory where full JSON artifacts for this run are stored
 
@@ -76,6 +78,14 @@ Also record the same health check URL in `validation.startup_health_check_urls` 
 
 If package manifests are changed and a user-supplied command depends on installed packages, include the necessary bounded dependency setup command in `validation.executor_check_commands` before the user command, or document why dependency setup is intentionally unavailable in `planning_notes`.
 
+Beyond the launch URL, also populate `validation.key_pages` from `user_key_pages` plus any additional obviously-important route the analysis surfaced (for example a search page whose handler was flagged as touching a changed dependency). Each entry is a page the validator loads and console-checks the same way as the startup URL. A root page loading cleanly does not prove a search page, a detail page, or an authenticated page also loads cleanly — do not let the startup URL stand in for the whole application.
+
+Populate `validation.key_user_flows` from `user_key_flows` plus any flow the analysis flagged as high-risk and interactive. Each flow is a short, deterministic sequence of browser actions (navigate, fill, click) ending in a console check — not an open-ended exploration. A load-only check proves a page rendered; it does not prove the interactive path behind a button still works, which is exactly the class of bug most likely to survive a load-only check and surface later as a user-reported bug instead of a caught one.
+
+For any change in `ordered_changes` that touches a data-ingestion, search-index, or CLI batch command (an `executor_check_commands` entry with `purpose: smoke` or `purpose: test`), do not rely on exit status alone — a clean exit only proves the process didn't crash, not that it processed the expected data. Add an `expected_output_checks` entry alongside the command: at minimum a `must_not_contain` list of error markers the command's own logger uses (e.g. `[ERR/`, `unable to add`), and, when feasible, a `min_record_count` the validator can confirm afterward via the search index/database's own count or query capability, rather than trusting that exit code 0 means every batch was actually committed.
+
+For any `dependency_graph` node in the ImpactReport marked `requires_live_verification: true` (an external service with in-repo config), add an entry to `validation.external_service_checks` describing: how to read the live service's current config/schema (a command or HTTP call), which repo file it must match, and what counts as a mismatch. A passing app-level health check does not prove a dependent service's live configuration matches what the repo expects — a downstream 400 error surfacing that is already too late for review to catch.
+
 ### Step 4a - Bounded scope-expansion allowance
 
 Static analysis cannot guarantee it found every breaking call site. Pre-authorize a narrow, bounded allowance so the executor does not have to halt and wait for a human on every runtime-discovered miss:
@@ -132,7 +142,11 @@ The full artifact must use this shape:
         "purpose": "setup | compile | startup | smoke | test",
         "timeout_seconds": "number",
         "required": "boolean",
-        "health_check_url": "string (required when purpose is startup)"
+        "health_check_url": "string (required when purpose is startup)",
+        "expected_output_checks": {
+          "must_not_contain": ["string, error markers this command's own logger uses"],
+          "min_record_count": "number, optional, verified via the search index/database's own count capability"
+        }
       }
     ],
     "build_commands": ["string"],
@@ -146,6 +160,28 @@ The full artifact must use this shape:
         "file_path": "string",
         "must_contain": ["string"],
         "must_not_contain": ["string"]
+      }
+    ],
+    "key_pages": [
+      {
+        "url": "string",
+        "description": "string"
+      }
+    ],
+    "key_user_flows": [
+      {
+        "name": "string",
+        "url": "string",
+        "steps": ["string"],
+        "description": "string"
+      }
+    ],
+    "external_service_checks": [
+      {
+        "service": "string",
+        "live_check_command_or_request": "string",
+        "expected_match_file": "string",
+        "mismatch_description": "string"
       }
     ],
     "success_criteria": ["string"],
@@ -176,3 +212,5 @@ Return only this concise handoff to the orchestrator:
 - Prefer narrow line-range inspection over whole-file reads.
 - Every `change_description` must be specific enough to implement without re-planning.
 - The validator must be able to validate the upgrade using only `change-plan.json`, git diff, and commands declared inside `change-plan.json`.
+- Before writing `content_checks`, verify each `must_contain`/`must_not_contain` string is a literal substring that would actually appear in the target file's raw text (e.g. `"async": "3.2.6"` with the colon and the quoting style the file actually uses) — not a paraphrase or a space-separated approximation. A `content_checks` entry that can never match a well-formed file is a planning defect, not a real validation failure, and it burns a full validator rejection cycle for nothing.
+- For dependencies with a historically large or hard-to-bound blast radius (a web framework's major bump changing route-matching semantics, for example), set `validation.scope_expansion_limit` higher than the 2-3 default and say why in `planning_notes`, rather than relying on the executor to discover the true surface one file at a time across repeated human-approved expansions.

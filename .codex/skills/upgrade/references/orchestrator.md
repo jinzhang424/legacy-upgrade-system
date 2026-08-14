@@ -37,6 +37,7 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
 10. Ask the user: "Does the target database/search index currently contain data, or is it empty (for example a fresh Docker instance with no data loaded)?"
     - Record the answer as `datastore_has_data`: `true`, `false`, or `"unknown"` if the user is unsure.
     - A status-code health check that returns 200 against an empty datastore does not prove read/write/query logic still works — it only proves the process didn't crash on boot. When `datastore_has_data` is `false` or `"unknown"`, pass this to the test generation sub-agent in Stage 3 so it seeds and cleans up its own fixture data instead of assuming records already exist.
+11. Ask the user: "Beyond the page that comes up right after startup, are there other pages or interactive flows worth checking after the upgrade — for example a search page, a login flow, or a specific admin screen? For each, give the URL (or how to reach it) and, if it needs interaction, the steps to take." Record the answer as `user_key_pages`: a list of `{ url, description }`, and `user_key_flows`: a list of `{ name, url, steps: string[], description }`. Both may be empty — the analyzer and planner should still flag obvious candidates (like a search route) from the codebase itself and note them in `planning_notes`. A load check on the startup page alone does not prove the rest of the application works.
 
 ---
 
@@ -81,6 +82,8 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - Any `user_constraints`
    - `user_validation_commands`
    - `user_health_check_urls`
+   - `user_key_pages`
+   - `user_key_flows`
    - `repo_path`
    - `artifact_dir`
 3. The planning sub-agent must write the full plan to `artifact_dir/change-plan.json` and return only:
@@ -155,7 +158,7 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - `artifact_dir`
    - `change_plan_path = artifact_dir/change-plan.json`
 3. The validator must read only `artifact_dir/change-plan.json` from the artifact directory. It must not read any other report artifact.
-4. The validator must run git diff, build/compile commands, existing test commands, and generated smoke/integration test commands referenced in `change-plan.json`. For any declared `startup_health_check_urls`, it must go beyond an HTTP status check: use the Playwright MCP server to actually load the page in a real browser and read the Console tab's output (`browser_navigate`, `browser_console_messages`, `browser_snapshot`), so a page that returns 200 but renders blank or throws a client-side error is still caught.
+4. The validator must run git diff, build/compile commands, existing test commands, and generated smoke/integration test commands referenced in `change-plan.json`. For any declared `startup_health_check_urls` or `key_pages`, it must go beyond an HTTP status check: use the Playwright MCP server to actually load the page in a real browser and read the Console tab's output (`browser_navigate`, `browser_console_messages`, `browser_snapshot`), so a page that returns 200 but renders blank or throws a client-side error is still caught. For any declared `key_user_flows`, it must additionally run the declared interaction steps and check the console after. For any `expected_output_checks` on a data/CLI command, or any `external_service_checks`, it must verify those too — exit code 0 and an HTTP 200 are not sufficient on their own.
 5. If build, test, or browser-check commands fail, the validator may fix code, dependency/config, or generated-test issues that are clearly related to the ChangePlan (including console errors it captured automatically), then re-run the failed validation commands.
 6. If the validator makes fixes, it must amend the existing upgrade commit rather than creating a new commit.
 7. Extract the final ValidationReport JSON and use its `decision`.
@@ -165,7 +168,7 @@ You do not analyse code, write plans, generate tests, apply upgrade changes, or 
    - Files changed
    - Repairs applied, if any
    - Diff alignment result
-   - Build, test, and browser console check results
+   - Build, test, browser console, key-flow, and external-service check results
    - Final decision
 
 ---

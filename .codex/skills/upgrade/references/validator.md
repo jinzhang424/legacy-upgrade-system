@@ -28,6 +28,7 @@ Read only `change_plan_path` from the artifact directory. Do not read `impact-re
 | Build/compile | Commands from `validation.build_commands` |
 | Run startup checks | Commands from `validation.startup_commands` |
 | Load and inspect the running page | Playwright MCP: `browser_navigate`, `browser_console_messages`, `browser_snapshot`, `browser_close` |
+| Run a declared interactive flow | Playwright MCP interaction tools (e.g. `browser_fill_form`/`browser_type`, `browser_click`), followed by `browser_console_messages`/`browser_snapshot` |
 | Run tests | Commands from `validation.existing_test_commands` and `validation.generated_test_commands` |
 | Content checks | Targeted file reads for `validation.content_checks` |
 | Apply validation repairs | Native edit/write tools |
@@ -83,6 +84,28 @@ Run commands in this order:
 
 Capture command, outcome, exit status, truncated output, and `health_check_outcome` for each. If a command is missing for a category, record it as skipped with a reason.
 
+### Step 5a - Check additional key pages
+
+For each entry in `validation.key_pages` (pages beyond the startup URL that matter, e.g. a search page), run the same Playwright load-and-observe procedure as Step 5.2c-d: navigate, capture console messages, take a snapshot, close. Record results in `browser_check_results` alongside the startup-URL entries, tagged with the page's `description`. A `key_pages` entry fails the same way a startup health check fails: failed navigation, no rendered content, or any `error`/`pageerror` console entry.
+
+### Step 5b - Run key user flows
+
+For each entry in `validation.key_user_flows`, execute its declared `steps` in order using the Playwright MCP interaction tools, then capture console output the same way as Step 5. This is a fixed, plan-declared sequence, not open-ended exploration — do not deviate from the declared steps or interact with anything not listed. Record each flow's outcome (`passed | failed`) and any captured console errors in `key_flow_results`. A flow fails on failed navigation/interaction or any `error`/`pageerror` console entry during or after its steps.
+
+This step exists because a page that loads cleanly does not prove its interactive paths still work — an upgrade can break a click handler, a form submit, or an API call triggered by user action without ever producing an error on initial page load. That gap is exactly what let bugs like a broken search button or a crashing query-parsing handler pass a load-only check in past runs.
+
+### Step 5c - Verify data/CLI command output content
+
+For any executed command with an `expected_output_checks` entry in the ChangePlan, do not treat exit status 0 as sufficient:
+
+1. Check the command's captured stdout/stderr against `must_not_contain` (error markers the command's own logger uses).
+2. If `min_record_count` is declared, run the corresponding count check against the search index/database after the command completes and confirm the count meets the minimum.
+3. Treat a failure of either check as a command failure, even though the process exited 0 — record the real failure reason in `command_results`, not a generic pass. A clean exit code only proves the process didn't crash; it does not prove every batch was actually committed, and a hung or short-circuited ingest can still exit 0 if a completion callback fires prematurely.
+
+### Step 5d - Verify external service state
+
+For each entry in `validation.external_service_checks`, run its declared read command/HTTP call against the live service and compare the result to the repo file it's supposed to match. Record the outcome in `external_service_check_results` (`{ service, outcome: passed|failed, detail }`). A mismatch here means the repo's config is correct but was never actually deployed to the running service — report it as a real failure, not a warning, even though it wasn't produced by a code change in the diff.
+
 ### Step 6 - Verify console errors (automated + user-reported)
 
 Run this step whenever Step 5 captured any automated console entries in `browser_check_results`, or `console_errors` is present in the inputs (a Stage 6 follow-up invocation with additional user-reported errors). Skip it only when neither source produced anything.
@@ -131,6 +154,10 @@ Reject for any critical failure:
 - A build, startup, or test failure remains after repair attempts.
 - A required repair would touch files unrelated to the ChangePlan.
 - An `in_scope` `console_error_results` entry remains unresolved after repair attempts, regardless of whether its `source` is `automated` or `user_reported`.
+- Any `key_pages` entry fails its browser check (failed navigation, no rendered content, or a captured `error`/`pageerror` console entry).
+- Any `key_user_flows` entry fails (failed navigation/interaction, or a captured `error`/`pageerror` console entry during or after its steps).
+- Any command with an `expected_output_checks` entry fails that check, even if its exit status was 0.
+- Any `external_service_checks` entry reports a mismatch between the live service and its expected repo-declared config/schema.
 
 Approve only when the diff aligns with the plan and all available build/test/content checks pass, and every `in_scope` console error captured by the automated Playwright check in this run is `fixed` (an `out_of_scope` entry does not block approval). On a Stage 6 follow-up invocation, this requirement also covers `in_scope` entries sourced from the user-pasted `console_errors` text.
 
@@ -183,6 +210,21 @@ Write `artifact_dir/validation-report.json` and return the same JSON:
       "console_errors_captured": ["string"]
     }
   ],
+  "key_flow_results": [
+    {
+      "name": "string",
+      "outcome": "passed | failed",
+      "console_errors_captured": ["string"],
+      "detail": "string"
+    }
+  ],
+  "external_service_check_results": [
+    {
+      "service": "string",
+      "outcome": "passed | failed",
+      "detail": "string"
+    }
+  ],
   "console_error_results": [
     {
       "error": "string",
@@ -198,14 +240,14 @@ Write `artifact_dir/validation-report.json` and return the same JSON:
 }
 ```
 
-`browser_check_results` has one entry per `startup_health_check_urls` entry that was non-empty; omit entries that were skipped for lack of a URL. `console_error_results` is populated whenever Step 6 ran (automated entries on every run, plus user-reported entries on Stage 6 follow-up invocations); omit it only if Step 6 found nothing on either side.
+`browser_check_results` has one entry per `startup_health_check_urls` entry that was non-empty, plus one entry per `validation.key_pages` entry (Step 5a); omit entries that were skipped for lack of a URL. `key_flow_results` has one entry per `validation.key_user_flows` entry (Step 5b); omit the field entirely if `key_user_flows` is empty. `external_service_check_results` has one entry per `validation.external_service_checks` entry (Step 5d); omit the field entirely if it is empty. `console_error_results` is populated whenever Step 6 ran (automated entries on every run, plus user-reported entries on Stage 6 follow-up invocations); omit it only if Step 6 found nothing on either side.
 
 ## Rules
 
-- Run the full verification pass (Steps 1-6) once, after execution is complete; this includes the automated Playwright console check, which always runs when a startup health-check URL is available. May be re-invoked in bounded Stage 6 follow-up rounds solely to repair additional user-reported browser console errors surfaced after manual interaction; each follow-up run still executes the full procedure, including a fresh automated Playwright pass, alongside the user-reported entries.
+- Run the full verification pass (Steps 1-6, including 5a-5d) once, after execution is complete; this includes the automated Playwright console check, which always runs when a startup health-check URL is available. May be re-invoked in bounded Stage 6 follow-up rounds solely to repair additional user-reported browser console errors surfaced after manual interaction; each follow-up run still executes the full procedure, including a fresh automated Playwright pass, alongside the user-reported entries.
 - Read only `change-plan.json` from `artifact_dir`, plus the `console_errors` text passed directly as an input on follow-up rounds.
 - Use git diff, declared commands, and live Playwright browser output as evidence, not prior agent reports.
-- Only navigate to URLs listed in `validation.startup_health_check_urls`. Do not crawl to other pages, submit forms, or click through the application — the browser check is a load-and-observe smoke check, not an exploratory session. Always close the browser session (`browser_close`) after each URL before moving to the next.
+- Only navigate to URLs listed in `validation.startup_health_check_urls` or `validation.key_pages`, and only interact with the page when executing the exact declared `steps` of a `validation.key_user_flows` entry. Do not crawl to other pages, submit forms, or click anything outside a declared flow's steps — the browser check is a load-and-observe (or run-the-declared-script) check, not an open-ended exploratory session. Always close the browser session (`browser_close`) after each URL/flow before moving to the next.
 - You may modify repository files only to fix build/test/content-check failures that are clearly related to the ChangePlan or generated tests recorded in `change-plan.json`, or `in_scope` console errors from either source.
 - Do not create a new commit. If repairs modify files, amend the existing upgrade commit.
 - Do not repair unrelated pre-existing failures, including `out_of_scope` console errors.

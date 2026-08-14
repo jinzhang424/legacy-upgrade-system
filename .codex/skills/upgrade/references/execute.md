@@ -63,6 +63,7 @@ Rules:
 11. For a health-check failure, attempt up to 3 additional repair rounds. These are separate from the 3 per-command execution repair rounds and do not count against the 8-round total cap. Apply repairs only when the root cause is clearly plan-related (e.g. a port or DB config changed by the upgrade). Re-run the full bounded startup command (including its HTTP probe) after each health-check repair.
 12. If the health check still fails after 3 health-check repair rounds, record `health_check_outcome: failed` and stop with execution failure.
 13. Record `health_check_url`, `health_check_outcome` (`passed | failed | skipped`), and `health_check_repair_rounds` in the corresponding `executor_check_results` entry.
+14. If a command's `executor_check_commands` entry has an `expected_output_checks` object (`must_not_contain` error markers and/or a `min_record_count` check), evaluate it the same way as the health check: exit code 0 alone is not sufficient. Record `output_check_outcome` (`passed | failed | skipped`) on the corresponding `executor_check_results` entry. This is an early feedback signal only — final validation re-verifies it independently.
 
 The executor check is an early feedback loop only. Final validation must still run after the commit.
 
@@ -108,7 +109,8 @@ The full artifact must use this shape:
       "repair_attempts": "number",
       "health_check_url": "string",
       "health_check_outcome": "passed | failed | skipped",
-      "health_check_repair_rounds": "number"
+      "health_check_repair_rounds": "number",
+      "output_check_outcome": "passed | failed | skipped"
     }
   ],
   "executor_repairs_applied": [
