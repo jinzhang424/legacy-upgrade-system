@@ -161,6 +161,42 @@ Reject for any critical failure:
 
 Approve only when the diff aligns with the plan and all available build/test/content checks pass, and every `in_scope` console error captured by the automated Playwright check in this run is `fixed` (an `out_of_scope` entry does not block approval). On a Stage 6 follow-up invocation, this requirement also covers `in_scope` entries sourced from the user-pasted `console_errors` text.
 
+### Confidence Score
+
+`confidence_score` measures correctness, not plan-scope conformance — scope/coverage problems (unexpected files, missing planned files, missing dependency changes) already gate `decision` directly and must not be double-counted here. Compute it as a quantitative base in `[0, 1]`, then apply qualitative deductions.
+
+**Evidence pass rate** — weighted pass rate across categories that have entries; a category with no entries in this run contributes its full weight (treated as neutral, not counted against the score):
+
+| Category | Weight | Pass rate source |
+|---|---|---|
+| Existing tests | 0.28 | `existing_test_commands` outcomes |
+| Generated tests | 0.11 | `generated_test_commands` outcomes |
+| Content checks | 0.11 | `content_check_results` outcomes |
+| Key flows/pages | 0.22 | `key_flow_results` + `key_pages` entries in `browser_check_results` |
+| Console errors | 0.17 | `in_scope` `console_error_results` resolved (`fixed`) vs unresolved |
+| External service checks | 0.11 | `external_service_check_results` outcomes |
+
+**Correctness multiplier** — repair rounds mean the agent directly observed a build, startup, test, or console failure during this run, independent of whether it later converged. This must discount the *whole* score, not one diluted category, so a known-and-fixed error can't be washed out by unrelated categories that happened to pass cleanly:
+
+`correctness_multiplier = 1.0 if repair_rounds == 0, else max(0.5, 1.0 - 0.25 * repair_rounds)`
+
+`quantitative_base = evidence_pass_rate * correctness_multiplier`
+
+**Qualitative deductions** — judgment calls the agent must justify in one line each, capped at a combined 0.30 deduction from the quantitative base:
+
+- Up to **-0.10**: generated tests pass but are shallow or tautological (assert the new code does what the new code does, rather than exercising the actual upgraded behavior).
+- Up to **-0.15**: a repair in `repairs_applied` suppresses a symptom (loosened assertion, swallowed exception, broadened catch) instead of fixing the underlying break.
+- Up to **-0.05**: a content check's matched string is present but in the wrong context (right token, wrong function/branch).
+- Up to **-0.10**: a passed flow/page/build only proves "no error," not that behavior matches pre-upgrade expectations — applies when a library/API change could plausibly alter output silently (e.g., default sort order, rounding, formatting) and nothing in the checks actually asserts the resulting value.
+
+`raw_score = clamp(quantitative_base - sum(qualitative_deductions), 0, 1)`. Record every applied deduction (category, amount, one-line reason) in `confidence_factors` in the report; omit categories with zero deduction. If `repair_rounds > 0`, record the applied `correctness_multiplier` as its own entry in `confidence_factors` (category `"repair_rounds"`) so the report shows why the score was discounted even though it isn't a qualitative deduction.
+
+**Rejected-decision ceiling** — `confidence_score` must never imply a rejected run was more likely right than wrong. If `decision == "rejected"`, scale rather than clamp, so relative severity between rejected runs stays visible instead of every rejection collapsing to the same number:
+
+`confidence_score = raw_score * 0.4 if decision == "rejected", else raw_score`
+
+If `decision == "approved"`, `confidence_score = raw_score`.
+
 ## Output Schema
 
 Write `artifact_dir/validation-report.json` and return the same JSON:
@@ -168,7 +204,14 @@ Write `artifact_dir/validation-report.json` and return the same JSON:
 ```json
 {
   "decision": "approved | rejected",
-  "confidence_score": "number",
+  "confidence_score": "number (0-1, see Confidence Score)",
+  "confidence_factors": [
+    {
+      "category": "string",
+      "amount": "number",
+      "reason": "string"
+    }
+  ],
   "base_ref": "string",
   "git_diff_summary": {
     "changed_files": ["string"],
@@ -240,7 +283,7 @@ Write `artifact_dir/validation-report.json` and return the same JSON:
 }
 ```
 
-`browser_check_results` has one entry per `startup_health_check_urls` entry that was non-empty, plus one entry per `validation.key_pages` entry (Step 5a); omit entries that were skipped for lack of a URL. `key_flow_results` has one entry per `validation.key_user_flows` entry (Step 5b); omit the field entirely if `key_user_flows` is empty. `external_service_check_results` has one entry per `validation.external_service_checks` entry (Step 5d); omit the field entirely if it is empty. `console_error_results` is populated whenever Step 6 ran (automated entries on every run, plus user-reported entries on Stage 6 follow-up invocations); omit it only if Step 6 found nothing on either side.
+`browser_check_results` has one entry per `startup_health_check_urls` entry that was non-empty, plus one entry per `validation.key_pages` entry (Step 5a); omit entries that were skipped for lack of a URL. `key_flow_results` has one entry per `validation.key_user_flows` entry (Step 5b); omit the field entirely if `key_user_flows` is empty. `external_service_check_results` has one entry per `validation.external_service_checks` entry (Step 5d); omit the field entirely if it is empty. `console_error_results` is populated whenever Step 6 ran (automated entries on every run, plus user-reported entries on Stage 6 follow-up invocations); omit it only if Step 6 found nothing on either side. `confidence_factors` has one entry per qualitative deduction applied under Confidence Score; omit the field entirely if no deductions were applied.
 
 ## Rules
 
