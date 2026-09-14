@@ -1,0 +1,269 @@
+{
+  "upgrade_description": "Upgrade projects/PeelAndSlice.Java from Java 17 to Java 21 and make the Maven build cross-platform by declaring UTF-8 source encoding, pinning maven-compiler-plugin 3.16.0 with release 21 and non-incremental compilation, removing unused Gson, disabling the download-sources profile by default, renaming ОбщиеКонфигурация to CommonConfiguration with its sole caller, and updating CI to Java 21. Preserve stub method bodies, test logic, and documentation snippets.",
+  "affected_files": [
+    {
+      "file_path": "pom.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Central Maven build configuration controls source decoding, compiler selection, Java bytecode level, dependency resolution, and the default source-download behavior for every build and test.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 9,
+          "symbol_or_pattern": "project properties insertion point",
+          "matched_api": "project.build.sourceEncoding",
+          "confidence": "high",
+          "reason": "The POM declares project coordinates and immediately starts the build section without a project.build.sourceEncoding property; the Windows baseline currently requires UTF-8 as a command-line override."
+        },
+        {
+          "start_line": 11,
+          "end_line": 18,
+          "symbol_or_pattern": "maven-compiler-plugin configuration",
+          "matched_api": "org.apache.maven.plugins:maven-compiler-plugin source/target 17",
+          "confidence": "high",
+          "reason": "The compiler plugin is unversioned and separately sets source and target to 17; this is the build-wide Java level and compiler behavior surface targeted by the Java 21 upgrade."
+        },
+        {
+          "start_line": 37,
+          "end_line": 42,
+          "symbol_or_pattern": "com.google.code.gson:gson",
+          "matched_api": "test dependency gson:2.14.0",
+          "confidence": "high",
+          "reason": "Gson is declared as a test dependency, but a repository-wide source scan found no Gson imports or API use, confirming it is unused within this repository."
+        },
+        {
+          "start_line": 51,
+          "end_line": 61,
+          "symbol_or_pattern": "download-sources profile activation",
+          "matched_api": "activeByDefault=true",
+          "confidence": "high",
+          "reason": "The download-sources profile is currently enabled for every default Maven invocation and is explicitly in scope for deactivation."
+        }
+      ]
+    },
+    {
+      "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "The source file and public class must be renamed together to CommonConfiguration; method bodies are immutable. The schema has no rename change type, so this entry represents the coordinated path and declaration rename.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "public class ОбщиеКонфигурация",
+          "matched_api": "class declaration and Java source filename",
+          "confidence": "high",
+          "reason": "Java requires the public class and source filename to agree; both carry the non-ASCII identifier that is being renamed."
+        }
+      ]
+    },
+    {
+      "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "medium",
+      "reason": "GitNexus and whole-repository text search identify BadFruit as the only caller/importer of ОбщиеКонфигурация, so all three symbol references must track the class rename without changing method logic.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "import ОбщиеКонфигурация",
+          "matched_api": "com.spun.llewellyn.talks.legacycode.required.ОбщиеКонфигурация",
+          "confidence": "high",
+          "reason": "Direct import of the class being renamed; GitNexus records a confidence-1.0 IMPORTS edge."
+        },
+        {
+          "start_line": 16,
+          "end_line": 17,
+          "symbol_or_pattern": "ОбщиеКонфигурация static and constructor references",
+          "matched_api": "ОбщиеКонфигурация.видыпервоначальногокредита and new ОбщиеКонфигурация",
+          "confidence": "high",
+          "reason": "The caller invokes a static method and constructs the renamed class; GitNexus maps createLoans to the class with CALLS confidence 0.9."
+        }
+      ]
+    },
+    {
+      "file_path": ".github/workflows/test.yml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "The only CI build job provisions the Java matrix value and runs Maven verify on Ubuntu, so it must move from JDK 17 to JDK 21 to exercise the upgraded compiler target.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 16,
+          "symbol_or_pattern": "build Java matrix",
+          "matched_api": "matrix.java=['17']",
+          "confidence": "high",
+          "reason": "The build job currently runs only on ubuntu-latest with Java 17."
+        },
+        {
+          "start_line": 26,
+          "end_line": 32,
+          "symbol_or_pattern": "JDK setup and Maven verification",
+          "matched_api": "actions/setup-java matrix.java; mvn -B verify --file pom.xml",
+          "confidence": "high",
+          "reason": "The matrix value feeds setup-java and the resulting toolchain executes the sole CI build/test command."
+        }
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "module:jason_kerney:peel_and_slice",
+        "version": "1.0-SNAPSHOT",
+        "type": "internal",
+        "version_source": "pom.xml:6-8"
+      },
+      {
+        "id": "class:ОбщиеКонфигурация",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java:5"
+      },
+      {
+        "id": "class:BadFruit",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java:11-58"
+      },
+      {
+        "id": "workflow:.github/workflows/test.yml",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": ".github/workflows/test.yml:4-32"
+      },
+      {
+        "id": "platform:java",
+        "version": "17 (target 21)",
+        "type": "external_package",
+        "version_source": "pom.xml:15-16; .github/workflows/test.yml:16"
+      },
+      {
+        "id": "tool:apache-maven",
+        "version": "unknown",
+        "type": "external_package",
+        "version_source": ".github/workflows/test.yml:31-32 and user-supplied validation command"
+      },
+      {
+        "id": "plugin:org.apache.maven.plugins:maven-compiler-plugin",
+        "version": "unversioned (target 3.16.0)",
+        "type": "external_package",
+        "version_source": "pom.xml:11-18"
+      },
+      {
+        "id": "plugin:org.apache.maven.plugins:maven-surefire-plugin",
+        "version": "3.6.0",
+        "type": "external_package",
+        "version_source": "pom.xml:19-22"
+      },
+      {
+        "id": "dependency:com.approvaltests:approvaltests",
+        "version": "30.1.1",
+        "type": "external_package",
+        "version_source": "pom.xml:26-30"
+      },
+      {
+        "id": "dependency:org.easymock:easymock",
+        "version": "5.7.0",
+        "type": "external_package",
+        "version_source": "pom.xml:31-36"
+      },
+      {
+        "id": "dependency:com.google.code.gson:gson",
+        "version": "2.14.0 (target removal)",
+        "type": "external_package",
+        "version_source": "pom.xml:37-42"
+      },
+      {
+        "id": "dependency:org.junit.jupiter:junit-jupiter",
+        "version": "6.1.3",
+        "type": "external_package",
+        "version_source": "pom.xml:43-48"
+      },
+      {
+        "id": "action:actions/setup-java",
+        "version": "v6",
+        "type": "external_package",
+        "version_source": ".github/workflows/test.yml:26-30"
+      }
+    ],
+    "edges": [
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "platform:java",
+        "relationship": "compiles to Java release"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "tool:apache-maven",
+        "relationship": "builds with"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "plugin:org.apache.maven.plugins:maven-compiler-plugin",
+        "relationship": "configures compiler with"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "plugin:org.apache.maven.plugins:maven-surefire-plugin",
+        "relationship": "runs tests with"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "dependency:com.approvaltests:approvaltests",
+        "relationship": "declares dependency"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "dependency:org.easymock:easymock",
+        "relationship": "declares test dependency"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "dependency:com.google.code.gson:gson",
+        "relationship": "declares unused test dependency"
+      },
+      {
+        "from": "module:jason_kerney:peel_and_slice",
+        "to": "dependency:org.junit.jupiter:junit-jupiter",
+        "relationship": "declares test dependency"
+      },
+      {
+        "from": "class:BadFruit",
+        "to": "class:ОбщиеКонфигурация",
+        "relationship": "imports, calls static method on, and constructs"
+      },
+      {
+        "from": "workflow:.github/workflows/test.yml",
+        "to": "action:actions/setup-java",
+        "relationship": "provisions JDK with"
+      },
+      {
+        "from": "workflow:.github/workflows/test.yml",
+        "to": "platform:java",
+        "relationship": "selects matrix version"
+      },
+      {
+        "from": "workflow:.github/workflows/test.yml",
+        "to": "tool:apache-maven",
+        "relationship": "runs verify with"
+      }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 4,
+    "high_risk_count": 1,
+    "breaking_changes": [
+      "Java compiler and emitted bytecode baseline changes from 17 to 21; produced classes require a Java 21-compatible runtime and must report class-file major version 65.",
+      "The existing unpinned compiler plugin and source/target configuration do not encode the requested compiler version, release semantics, UTF-8 source decoding, or disabled incremental compilation needed for flag-free cross-platform builds.",
+      "Renaming a public Java class requires a coordinated source filename, declaration, import, static reference, and constructor reference update; any missed occurrence is a compile failure.",
+      "The CI workflow currently validates only Java 17 on Linux; the requested Windows result remains a separate environment validation requirement."
+    ],
+    "notes": "GitNexus rates the class rename LOW blast radius (two direct graph dependents, both in BadFruit.java, and one transitive containing class; zero processes). The POM is high risk because its settings affect every compilation and test. No source API incompatibility requiring changes outside the explicitly requested class rename was identified. Stub bodies, tests, and documentation snippets remain outside the mutable scope."
+  },
+  "coverage_notes": "Full manifest/config scan found one pom.xml, no lockfile or Maven wrapper, and one build workflow. GitNexus index was available and current for PeelAndSlice.Java (23 files, 109 symbols, 207 relationships); query/context/impact confirmed BadFruit.java as the sole direct importer/caller of ОбщиеКонфигурация. GitNexus's Unicode rename preview returned only a duplicated line-9 import edit and failed to render the replacement, so exact declaration/import/use coverage was supplemented with rg across the repository (declaration line 5; BadFruit lines 9, 16-17). No Gson imports/usages were found. The external-service scan found generic java.sql.Connection abstractions and intentionally throwing stubs but no JDBC URL, driver, vendor, service configuration, or runnable database integration; therefore no external service node or live-state check is indicated. No listed Step 2a dependency boundary applies. Analysis did not run Maven because it would create/replace target build outputs and Stage 1 is analysis-only. Existing unrelated working-tree changes (.gitignore modified; .claude/, AGENTS.md, and CLAUDE.md untracked) were not touched. CI currently has only ubuntu-latest, so the required Windows validation cannot be demonstrated by the checked-in workflow alone."
+}

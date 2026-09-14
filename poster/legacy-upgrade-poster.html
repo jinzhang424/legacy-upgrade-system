@@ -1,0 +1,397 @@
+<title>Legacy Upgrade Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Code+Pro:wght@500&display=swap">
+<style>
+  /* A1 landscape research poster. Single visual world: printed sheet on a sky ground. */
+  :root{
+    --sky-top:#9EC5EA; --sky-bot:#E4F0FA;
+    --bar:#1F5FA8; --bar-deep:#174A85; --sub:#DCE9F7;
+    --ink:#12284B; --ink-2:#3B4A63; --ink-3:#6B7890;
+    --panel:#FFFFFF; --line:#C9D6E8;
+    --ok:#2E8B57; --miss:#D9822B; --fail:#6B4C9A;
+    --c-approved:#2A5DA8; --c-rejected:#D9822B; --c-failed:#6B4C9A;
+    --f-display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+    --f-body:"Source Sans 3","Segoe UI",Arial,sans-serif;
+    --f-mono:"Source Code Pro",Consolas,monospace;
+  }
+  html,body{margin:0;background:#4E5A6B;color:var(--ink);font-family:var(--f-body)}
+  body{padding-inline:16px;padding-block:16px;box-sizing:border-box}
+
+  .toolbar{max-width:1600px;margin:0 auto 12px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;color:#E8EEF6;font-size:14px}
+  .toolbar strong{font-family:var(--f-display);font-weight:700;font-size:16px;letter-spacing:.02em}
+  .toolbar span{opacity:.85}
+
+  .stage{width:100%;overflow:visible}
+  .poster{
+    width:841mm;height:594mm;box-sizing:border-box;padding:10mm;
+    background:
+      radial-gradient(60mm 30mm at 18% 22%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%),
+      radial-gradient(90mm 36mm at 72% 30%, rgba(255,255,255,.45), rgba(255,255,255,0) 70%),
+      radial-gradient(70mm 28mm at 40% 78%, rgba(255,255,255,.40), rgba(255,255,255,0) 70%),
+      linear-gradient(180deg,var(--sky-top) 0%,#BFDAF2 45%,var(--sky-bot) 100%);
+    display:grid;grid-template-rows:auto 1fr;gap:7mm;
+    transform-origin:top left;box-shadow:0 8px 40px rgba(0,0,0,.35);
+    font-size:16pt;line-height:1.27;
+  }
+
+  /* ---------- banner ---------- */
+  .banner{background:var(--panel);border-radius:3mm;padding:6mm 10mm;display:grid;grid-template-columns:auto 1fr auto;gap:10mm;align-items:center}
+  .logo{width:78mm;height:34mm;background:var(--bar-deep);color:#fff;border-radius:2mm;display:grid;grid-template-columns:auto 1fr;gap:4mm;align-items:center;padding:0 5mm;box-sizing:border-box}
+  .logo .crest{width:20mm;height:24mm;border:1.2mm solid #fff;border-radius:2mm 2mm 10mm 10mm;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:22pt}
+  .logo .lines{font-family:var(--f-display);font-weight:700;line-height:1.05}
+  .logo .lines .l1{font-size:12pt;letter-spacing:.06em;font-weight:600}
+  .logo .lines .l2{font-size:22pt;letter-spacing:.02em}
+  .logo .lines .l3{font-size:9.5pt;letter-spacing:.14em;font-weight:600;opacity:.9;margin-top:1mm}
+  .titleblock{text-align:center}
+  .titleblock h1{font-family:var(--f-display);font-weight:800;font-size:64pt;line-height:1;margin:0 0 3mm;letter-spacing:-.005em;text-wrap:balance}
+  .titleblock .q{font-size:23pt;font-style:italic;color:var(--ink-2);margin:0 0 3.5mm}
+  .titleblock .authors{font-family:var(--f-display);font-weight:700;font-size:24pt;margin:0}
+  .titleblock .authors small{font-weight:600;font-size:18pt;color:var(--ink-2)}
+  .titleblock .aff{font-size:18pt;color:var(--ink-2);margin:1.5mm 0 0}
+  .badge{width:78mm;height:34mm;border:1mm solid var(--bar);border-radius:2mm;display:grid;place-items:center;text-align:center;padding:2mm 4mm;box-sizing:border-box}
+  .badge .k{font-family:var(--f-display);font-weight:800;font-size:16pt;color:var(--bar);letter-spacing:.04em}
+  .badge .v{font-size:13.5pt;color:var(--ink-2);line-height:1.2;margin-top:1mm}
+
+  /* ---------- columns ---------- */
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:7mm;min-height:0}
+  .col{display:flex;flex-direction:column;gap:6mm;min-height:0}
+  section.panel{background:var(--panel);border-radius:3mm;overflow:hidden;display:flex;flex-direction:column}
+  section.panel.grow{flex:1 1 auto}
+  .hdr{background:var(--bar);color:#fff;font-family:var(--f-display);font-weight:700;font-size:31pt;letter-spacing:.01em;text-align:center;padding:2.2mm 4mm;line-height:1.1}
+  .body{padding:4mm 5.5mm 5mm;display:flex;flex-direction:column;gap:3.2mm}
+  .body p{margin:0}
+  .body ul{margin:0;padding-left:6mm;display:flex;flex-direction:column;gap:1.6mm}
+  .body ol{margin:0;padding-left:7mm;display:flex;flex-direction:column;gap:1.6mm}
+  .body li{padding-left:.5mm}
+  h3{font-family:var(--f-display);font-weight:700;font-size:21pt;color:var(--bar-deep);margin:1mm 0 0;line-height:1.1}
+  h3 + p, h3 + ul, h3 + ol{margin-top:-1mm}
+  .lead{font-weight:600}
+  .rq{background:var(--sub);border-left:2.2mm solid var(--bar);border-radius:0 2mm 2mm 0;padding:2.5mm 4mm;font-weight:600;font-size:18pt}
+  code{font-family:var(--f-mono);font-size:.86em;font-weight:500;color:var(--bar-deep);background:#EEF3FA;padding:0 .3em;border-radius:1mm}
+  .subbar{background:var(--sub);color:var(--bar-deep);font-family:var(--f-display);font-weight:700;font-size:19pt;text-align:center;padding:1.2mm 3mm;border-radius:1.5mm;letter-spacing:.02em}
+
+  /* stat tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm}
+  .tile{border:0.6mm solid var(--line);border-radius:2mm;padding:2.2mm 2mm 2.5mm;text-align:center}
+  .tile .n{font-family:var(--f-display);font-weight:800;font-size:38pt;line-height:1;color:var(--bar);font-variant-numeric:tabular-nums}
+  .tile .l{font-size:13.5pt;color:var(--ink-2);line-height:1.15;margin-top:1.2mm}
+
+  /* two-column mini table */
+  table{border-collapse:collapse;width:100%;font-size:15.5pt;font-variant-numeric:tabular-nums}
+  th,td{padding:1.4mm 2mm;border-bottom:0.4mm solid var(--line);vertical-align:top;text-align:left}
+  th{font-family:var(--f-display);font-weight:700;color:var(--bar-deep);font-size:16pt;border-bottom:0.7mm solid var(--bar)}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tr.hi td{background:#FFF4E8}
+  .cmp td:first-child{font-weight:600}
+  .yes{color:var(--ok);font-weight:700}.no{color:var(--miss);font-weight:700}.part{color:var(--ink-3);font-weight:700}
+
+  /* pipeline diagram */
+  .pipe{display:grid;grid-template-columns:auto 1fr;gap:0 3mm}
+  .pipe .rail{position:relative;width:10mm}
+  .pipe .rail::before{content:"";position:absolute;left:4.4mm;top:5mm;bottom:5mm;width:1.2mm;background:var(--line);border-radius:1mm}
+  .stage-row{display:grid;grid-template-columns:auto 1fr;gap:0 3mm;align-items:stretch}
+  .stages{display:flex;flex-direction:column;gap:2mm}
+  .st{display:grid;grid-template-columns:11mm 1fr;gap:3mm;align-items:start}
+  .st .num{width:10mm;height:10mm;border-radius:50%;background:var(--bar);color:#fff;font-family:var(--f-display);font-weight:800;font-size:17pt;display:grid;place-items:center;margin-top:.6mm}
+  .st .num.orc{background:var(--ink)}
+  .st .t{font-family:var(--f-display);font-weight:700;font-size:19pt;color:var(--bar-deep);line-height:1.1}
+  .st .d{font-size:15.5pt;color:var(--ink-2);line-height:1.25}
+  .gate{display:inline-block;background:#FFF1E2;border:0.5mm solid var(--miss);color:#8A4A0E;font-family:var(--f-display);font-weight:700;font-size:13pt;letter-spacing:.04em;padding:0 2mm;border-radius:1mm;margin-left:1.5mm;vertical-align:middle}
+  .tools{display:flex;flex-wrap:wrap;gap:2mm}
+  .chip{border:0.5mm solid var(--line);border-radius:5mm;padding:.6mm 3mm;font-size:14.5pt;color:var(--ink-2)}
+  .chip b{color:var(--bar-deep)}
+
+  /* charts */
+  .fig{display:flex;flex-direction:column;gap:1.5mm}
+  .fig .cap{font-size:14pt;color:var(--ink-2);line-height:1.2}
+  .fig .cap b{color:var(--ink)}
+  .fig svg{width:100%;height:auto;display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:1.5mm 5mm;font-size:14pt;color:var(--ink-2)}
+  .legend i{display:inline-block;width:4mm;height:4mm;border-radius:1mm;vertical-align:-.5mm;margin-right:1.5mm}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+
+  /* findings */
+  .find li{padding-left:1mm}
+  .find b{color:var(--bar-deep)}
+  .refs{font-size:12.4pt;line-height:1.22;color:var(--ink-2);columns:2;column-gap:5mm}
+  .refs ol{margin:0;padding-left:6mm;display:block}
+  .refs li{margin:0 0 1mm;break-inside:avoid}
+  .ack{font-size:13pt;color:var(--ink-2);margin-top:1mm}
+
+  @media print{
+    @page{size:841mm 594mm;margin:0}
+    html,body{background:#fff;padding:0}
+    .toolbar{display:none}
+    .poster{transform:none !important;box-shadow:none;margin:0}
+  }
+</style>
+
+<div class="toolbar">
+  <strong>A1 landscape · 841 × 594 mm</strong>
+  <span>Print with Ctrl+P → “Save as PDF”, paper size A1 (or custom 841 × 594 mm), margins none, background graphics on.</span>
+  <span>The preview below is scaled to fit your window.</span>
+</div>
+
+<div class="stage">
+<div class="poster" id="poster">
+
+  <!-- ================= BANNER ================= -->
+  <header class="banner">
+    <div class="logo" aria-label="The University of Auckland">
+      <div class="crest">UoA</div>
+      <div class="lines">
+        <div class="l1">THE UNIVERSITY OF</div>
+        <div class="l2">AUCKLAND</div>
+        <div class="l3">NEW ZEALAND</div>
+      </div>
+    </div>
+    <div class="titleblock">
+      <h1>AI-Driven Automated Upgrade of Legacy Systems</h1>
+      <p class="q">Can an agentic LLM pipeline modernise an outdated codebase without breaking it? Evidence from ten end-to-end runs</p>
+      <p class="authors">Dhruv Erinjery, Jinhao Zhang <small>· Supervisors: Jing Sun, Mengze Li</small></p>
+      <p class="aff">Department of Electrical, Computer and Software Engineering, The University of Auckland, New Zealand · in partnership with Digital Services, University of Auckland Library</p>
+    </div>
+    <div class="badge">
+      <div>
+        <div class="k">PART IV PROJECT 2026</div>
+        <div class="v">Legacy Upgrade System<br>Codex <code style="background:none;padding:0">$upgrade</code> pipeline · GPT-5.5 · GitNexus</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= COLUMNS ================= -->
+  <div class="cols">
+
+    <!-- ---------- COLUMN 1 ---------- -->
+    <div class="col">
+      <section class="panel">
+        <div class="hdr">Introduction</div>
+        <div class="body">
+          <div class="rq">Research question: can a multi-agent LLM pipeline analyse, plan, refactor and validate an upgrade of a legacy system so that the result builds, keeps its original behaviour, and costs less than a manual upgrade?</div>
+          <h3>Background</h3>
+          <ul>
+            <li>Legacy software is long-lived, poorly documented, costly to maintain and exposed to security risk. Manual modernisation needs scarce specialists and takes months, by which time requirements have moved on [1, 2].</li>
+            <li>LLMs generate, refactor and document code well, but hallucinate, plan poorly over multi-step tasks and lose context on large repositories with long dependency chains [3, 6, 10].</li>
+            <li>Prior work covers isolated pieces: architecture recovery (MDRE-LLM, SARIF) [4, 5], code-form planning (CodePlan) [6], agent memory (Mem0, SimpleMem) [7, 8], documentation agents (DocAgent) [9]. No end-to-end framework joins analysis, planning, transformation and validation.</li>
+            <li>Human validation is still essential: analysts who over-trust LLM output introduce automation bias [3, 11].</li>
+          </ul>
+          <h3>Objectives</h3>
+          <ol>
+            <li>Build an intelligent upgrade framework: analyse → plan → generate tests → transform → validate, with human approval gates.</li>
+            <li>Measure whether the upgraded system builds, passes its checks and preserves behaviour.</li>
+            <li>Measure tokens, cost and wall time per upgrade.</li>
+            <li>Compare with dependency tools already in use (Dependabot, Renovate, Codemod).</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="panel grow">
+        <div class="hdr">Target Systems</div>
+        <div class="body">
+          <div class="tiles">
+            <div class="tile"><div class="n">8</div><div class="l">npm packages in one monorepo</div></div>
+            <div class="tile"><div class="n">51</div><div class="l">dependency entries to upgrade</div></div>
+            <div class="tile"><div class="n">2014</div><div class="l">era of the oldest pinned versions</div></div>
+            <div class="tile"><div class="n">0</div><div class="l">README or code comments supplied</div></div>
+          </div>
+          <div class="subbar">tv-radio · Node.js media catalogue (9 runs)</div>
+          <p>Two applications: <code>tv-radio-frontend</code> (Express web app) and <code>tv-radio-admin</code> (API plus Solr search indexing through <code>chapman.js</code>). Backing services MongoDB, Solr, Memcached and InfluxDB were run in Docker so the upgraded code could be exercised.</p>
+          <p>Representative pins: <code>express 4.9.5</code>, <code>body-parser 1.9.0</code>, <code>handlebars 3.0.0</code>, MongoDB driver 2.x, <code>socket.io-client 1.1.0</code>, deprecated <code>request</code>, <code>uuid 2.0.1</code>, <code>uglify-js 2.x</code>, native <code>sharp 0.14</code> and <code>gc-stats</code> that no longer compile. Versions drift between packages (<code>moment</code> 2.10.2 vs 2.8.2).</p>
+          <div class="subbar">codemirror5 · build and test toolchain (1 run)</div>
+          <p>Developer dependencies only: <code>rollup</code> 1 → 4, <code>puppeteer</code> 1 → 25, <code>@rollup/plugin-buble</code>, <code>cm5-vim</code>. Oracle: <code>npm run build</code> and the existing <code>npm test</code> suite.</p>
+          <h3>How existing tools fare on tv-radio</h3>
+          <table class="cmp">
+            <tr><th>Tool</th><th>Bumps manifests</th><th>Rewrites call sites</th><th>Any library</th><th>Validates</th></tr>
+            <tr><td>Dependabot / Renovate</td><td class="yes">yes</td><td class="no">no</td><td class="yes">yes</td><td class="no">no</td></tr>
+            <tr><td>Codemod (AI)</td><td class="yes">yes</td><td class="part">popular libs</td><td class="no">InfluxDB, Solr left</td><td class="no">no</td></tr>
+            <tr><td>This pipeline</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="part">partly (see results)</td></tr>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ---------- COLUMN 2 ---------- -->
+    <div class="col">
+      <section class="panel">
+        <div class="hdr">Upgrade Pipeline</div>
+        <div class="body">
+          <p>One orchestrator agent runs six specialised stages in strict order through the OpenAI Codex CLI. Each stage writes its full artefact to disk and hands the next stage a compact summary, keeping every context window small. <span class="gate">GATE</span> marks where a human must approve before the pipeline continues.</p>
+          <div class="stages">
+            <div class="st"><div class="num orc">O</div><div><div class="t">Orchestrator (<code>$upgrade</code> skill)</div><div class="d">Asks for the current and target environment, build commands and URLs; preflights the repo and the GitNexus index; sequences the stages.</div></div></div>
+            <div class="st"><div class="num">1</div><div><div class="t">Analysis <span class="gate">GATE</span></div><div class="d">GitNexus dependency graph, impact queries and line ranges → affected files, risks, breaking-change notes.</div></div></div>
+            <div class="st"><div class="num">2</div><div><div class="t">Planning <span class="gate">GATE</span></div><div class="d">Line-aware <code>change-plan.json</code>: ordered changes, executor checks, key pages, user flows, scope-expansion budget.</div></div></div>
+            <div class="st"><div class="num">3</div><div><div class="t">Test generation</div><div class="d">Small smoke and integration tests for the affected files, recorded in the plan.</div></div></div>
+            <div class="st"><div class="num">4</div><div><div class="t">Execution</div><div class="d">Applies the plan on an <code>upgrade/&lt;slug&gt;</code> branch, runs every check, up to 3 repair rounds, commits once.</div></div></div>
+            <div class="st"><div class="num">5</div><div><div class="t">Validation and repair</div><div class="d">Diff-to-plan alignment, builds, tests, Playwright key-page and flow checks; weighted confidence score, rejected below 0.80.</div></div></div>
+            <div class="st"><div class="num">6</div><div><div class="t">Browser console check</div><div class="d">User reports console errors from the running app; in-scope errors repaired in up to 3 rounds and amended into the commit.</div></div></div>
+          </div>
+          <div class="tools">
+            <span class="chip"><b>Model</b> GPT-5.5, medium reasoning</span>
+            <span class="chip"><b>Retrieval</b> GitNexus MCP</span>
+            <span class="chip"><b>Browser</b> Playwright MCP</span>
+            <span class="chip"><b>Tried and dropped</b> Mem0 memory, per-stage validation</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel grow">
+        <div class="hdr">Evaluation Method</div>
+        <div class="body">
+          <p><span class="lead">Ten runs, 19 June to 14 September 2026:</span> nine on tv-radio with widening scope (frontend only → all packages → plus Solr → plus vendored client libraries → explicit breaking-pattern sweeps), one on codemirror5. Where the pipeline's verdict and independent verification disagree, both are reported.</p>
+          <h3>Independent verification (18 Sep 2026)</h3>
+          <ul>
+            <li>Every upgrade commit checked out, <code>npm install</code>ed and booted; <code>node --check</code> on all changed files; <code>git grep</code> for known breaking patterns.</li>
+            <li>Thirteen reference behaviours for tv-radio (module load, routes, search page, client bundle, admin search, CLI ingest, logging, Socket.IO auth) scored preserved or missing per run.</li>
+            <li>Tokens read from every Codex session log, sub-agent threads included; cost at GPT-5.5 list prices (US$5 / M uncached input, $0.50 / M cached, $30 / M output).</li>
+          </ul>
+          <h3>Metrics</h3>
+          <table>
+            <tr><th>Metric</th><th>Definition</th></tr>
+            <tr><td><b>CSR</b></td><td>share of runs whose output installs and every entry process loads</td></tr>
+            <tr><td><b>TSR</b></td><td>share of compiled runs passing the checks the user declared (<i>declared</i>) or those plus faults found straight afterwards (<i>extended</i>)</td></tr>
+            <tr><td><b>FBSR</b></td><td>builds and passes: C ∧ T</td></tr>
+            <tr><td><b>BPR / MBR</b></td><td>observed reference behaviours preserved / missing</td></tr>
+            <tr><td><b>EBER, NBR</b></td><td>runs with all behaviours intact; unrequested behaviours added</td></tr>
+            <tr><td><b>Test quality</b></td><td>did a generated test fail because of a real regression? (TP / FP / FN)</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="hdr">Next Steps</div>
+        <div class="body">
+          <ul>
+            <li>Never approve without runtime evidence: boot every entry process the plan touches, and make "no startup evidence" a hard reject.</li>
+            <li>Apply the known-break checklist to every major-version jump during analysis, and flag callers of an upgraded package that the plan did not touch.</li>
+            <li>Replace generated tests with boot-and-probe tests per entry point and a CLI run per user command; schema-check <code>change-plan.json</code> before execution.</li>
+            <li>Run a controlled ablation: one tool version, two tasks, four configurations, three repetitions, one oracle script independent of the pipeline.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- ---------- COLUMN 3 ---------- -->
+    <div class="col">
+      <section class="panel grow">
+        <div class="hdr">Results and Discussion</div>
+        <div class="body">
+          <div class="tiles">
+            <div class="tile"><div class="n">0.80</div><div class="l">CSR<br>8 of 10 outputs boot</div></div>
+            <div class="tile"><div class="n">0.20</div><div class="l">FBSR on declared checks<br><b style="color:var(--miss)">0 extended</b></div></div>
+            <div class="tile"><div class="n">0.48</div><div class="l">BPR<br>47 of 97 behaviours kept</div></div>
+            <div class="tile"><div class="n">49/51</div><div class="l">dependency entries bumped, every full run</div></div>
+          </div>
+
+          <div class="fig">
+            <div class="legend"><span><i style="background:var(--c-approved)"></i>pipeline approved</span><span><i style="background:var(--c-rejected)"></i>pipeline rejected</span><span><i style="background:var(--c-failed)"></i>execution failed, no commit</span></div>
+            <svg id="bpr" viewBox="0 0 640 250" role="img" aria-label="Behaviour preservation rate per run"></svg>
+            <div class="cap"><b>Fig. 1 · Behaviour preservation rate per run.</b> Dashed line: overall BPR 0.48. Approval did not track correctness: R1 was approved at confidence 0.82 with a frontend that cannot load; R9, rejected at 0.42, preserved the most.</div>
+          </div>
+
+          <div class="two">
+            <div class="fig">
+              <svg id="cost" viewBox="0 0 320 210" role="img" aria-label="Notional cost per run in US dollars"></svg>
+              <div class="cap"><b>Fig. 2 · Notional cost per run (US$).</b> Median 12.13, total 135.96.</div>
+            </div>
+            <div class="fig">
+              <svg id="time" viewBox="0 0 320 210" role="img" aria-label="Wall time per run in minutes"></svg>
+              <div class="cap"><b>Fig. 3 · Wall time per run (min).</b> Median 73, including approval waits.</div>
+            </div>
+          </div>
+
+          <h3>What the runs show</h3>
+          <ul class="find">
+            <li><b>Approval is not correctness.</b> All three approved runs shipped a frontend that cannot serve pages; two rejections were about agent files in the diff, not code.</li>
+            <li><b>Bumping works, behavioural migration does not.</b> Five signature-preserving breaks recurred every run: Express 5 route syntax and query objects, <code>uglify-js 3</code> input, <code>async 3</code> queue callbacks, <code>winston 3</code> with legacy logstash, <code>influx 5</code>. Only when the user listed them in the prompt (R9) were they planned and fixed.</li>
+            <li><b>Generated tests gave no signal.</b> Nine runs, zero real detections: they asserted version strings, <code>require()</code> and mocks, never a live route or CLI run.</li>
+            <li><b>The validator improved late.</b> Playwright and key-page checks caught real regressions in R8 and R9; earlier verdicts rested on diff hygiene.</li>
+            <li><b>True cost is 3 to 8× the orchestrator's status line.</b> Median 10.6 M input tokens per run (93 % cached); the execution sub-agent alone used up to 13 M in one rerun.</li>
+            <li><b>Every run needed 1 to 4 human decisions</b> beyond the two designed gates, and three runs needed a manual repair session afterwards.</li>
+          </ul>
+
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="hdr">References</div>
+        <div class="body">
+          <div class="refs"><ol>
+            <li>Wesley, Marchezan, Arkoh, Egyed, Ramler. Contemporary Software Modernization. <i>ACM TOSEM</i>, 2024.</li>
+            <li>Generative AI-Driven Legacy System Modernization. <i>J. Comp. Sci. Tech. Studies</i>, 2026.</li>
+            <li>Hu, Fu, Xie, Steven, Charland. SoK: LLMs for Reverse Engineering. arXiv:2509.21821, 2025.</li>
+            <li>Boronat, Mustafa. MDRE-LLM. <i>SANER</i>, 2025.</li>
+            <li>Zhang et al. Software Architecture Recovery with Information Fusion. arXiv:2311.04643, 2023.</li>
+            <li>Wen et al. Unlocking Reasoning Potential in LLMs by Scaling Code-form Planning. arXiv:2409.12452, 2024.</li>
+            <li>Chhikara et al. Mem0: Scalable Long-Term Memory. arXiv:2504.19413, 2025.</li>
+            <li>Liu et al. SimpleMem: Efficient Lifelong Memory for LLM Agents. arXiv:2601.02553, 2026.</li>
+            <li>Yang et al. DocAgent: Multi-Agent Code Documentation. arXiv:2504.08725, 2025.</li>
+            <li>Diggs et al. Leveraging LLMs for Legacy Code Modernization. arXiv:2411.14971, 2024.</li>
+            <li>Boukhari, Kharmoum, Ziti. AI-Powered Architecture Refactoring. <i>IJACSA</i> 16(12), 2025.</li>
+          </ol></div>
+          <p class="ack"><b>Acknowledgements.</b> We thank our supervisors Jing Sun and Mengze Li, and the Digital Services team at the University of Auckland Library. Runs used a Codex subscription; costs shown are notional list prices.</p>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  // ---- data (evaluation_reports/00-overview.md, 18 Sep 2026) ----
+  var runs = ["R1","R2","R3","R4","R5","R6","R7","R8","R9","R10"];
+  var verdict = ["approved","approved","rejected","approved","rejected","failed","rejected","rejected","rejected","failed"];
+  var bpr  = [0.11,0.75,0.50,0.50,0.60,0.13,0.36,0.46,0.75,0.50];
+  var cost = [9.62,12.16,12.11,19.45,13.13,10.45,11.61,22.91,17.00,7.52];
+  var mins = [56,98,42,90,73,72,70,136,99,45];
+  var col = {approved:"#2A5DA8",rejected:"#D9822B",failed:"#6B4C9A"};
+  var ink="#12284B", ink2="#3B4A63", grid="#C9D6E8";
+  var NS="http://www.w3.org/2000/svg";
+  function el(n,a,t){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+
+  function bars(id,vals,opt){
+    var s=document.getElementById(id); if(!s) return;
+    var W=opt.w,H=opt.h,L=opt.left,R=8,T=16,B=30;
+    var pw=W-L-R, ph=H-T-B, n=vals.length, slot=pw/n, bw=slot*0.7;
+    var max=opt.max, fs=opt.fs;
+    // grid + y labels
+    opt.ticks.forEach(function(v){
+      var y=T+ph-(v/max)*ph;
+      s.appendChild(el("line",{x1:L,x2:W-R,y1:y,y2:y,stroke:grid,"stroke-width":1}));
+      s.appendChild(el("text",{x:L-6,y:y+fs*0.35,"text-anchor":"end","font-size":fs,fill:ink2,"font-family":"Source Sans 3, Arial"},opt.fmt(v)));
+    });
+    // baseline
+    s.appendChild(el("line",{x1:L,x2:W-R,y1:T+ph,y2:T+ph,stroke:ink2,"stroke-width":1.2}));
+    vals.forEach(function(v,i){
+      var x=L+i*slot+(slot-bw)/2, h=(v/max)*ph, y=T+ph-h;
+      var r=Math.min(3,h/2);
+      var d="M"+x+" "+(T+ph)+" V"+(y+r)+" a"+r+" "+r+" 0 0 1 "+r+" -"+r+" H"+(x+bw-r)+" a"+r+" "+r+" 0 0 1 "+r+" "+r+" V"+(T+ph)+" Z";
+      s.appendChild(el("path",{d:d,fill:col[verdict[i]]}));
+      s.appendChild(el("text",{x:x+bw/2,y:y-4,"text-anchor":"middle","font-size":fs,fill:ink,"font-weight":"600","font-family":"Source Sans 3, Arial"},opt.label(v)));
+      s.appendChild(el("text",{x:x+bw/2,y:T+ph+fs+6,"text-anchor":"middle","font-size":fs,fill:ink2,"font-family":"Source Sans 3, Arial"},runs[i]));
+    });
+    if(opt.ref!=null){
+      var yr=T+ph-(opt.ref/max)*ph;
+      s.appendChild(el("line",{x1:L,x2:W-R,y1:yr,y2:yr,stroke:ink,"stroke-width":1.4,"stroke-dasharray":"6 4"}));
+      s.appendChild(el("text",{x:L+4,y:yr-5,"text-anchor":"start","font-size":fs,fill:ink,"font-weight":"600","font-family":"Source Sans 3, Arial"},opt.refLabel));
+    }
+  }
+  bars("bpr",bpr,{w:640,h:230,left:44,max:1,ticks:[0,0.25,0.5,0.75,1],fs:13,fmt:function(v){return v.toFixed(2);},label:function(v){return v.toFixed(2);},ref:0.48,refLabel:"overall 0.48"});
+  bars("cost",cost,{w:320,h:180,left:34,max:25,ticks:[0,5,10,15,20,25],fs:11,fmt:function(v){return "$"+v;},label:function(v){return v.toFixed(0);},ref:12.13,refLabel:"median"});
+  bars("time",mins,{w:320,h:180,left:34,max:150,ticks:[0,50,100,150],fs:11,fmt:function(v){return String(v);},label:function(v){return String(v);},ref:72.5,refLabel:"median"});
+
+  // ---- fit the A1 sheet to the window (screen only) ----
+  var poster=document.getElementById("poster"), stage=poster.parentNode;
+  function fit(){
+    if(window.matchMedia && window.matchMedia("print").matches){poster.style.transform="";stage.style.height="";return;}
+    var avail=stage.clientWidth, w=poster.offsetWidth, h=poster.offsetHeight;
+    var sc=Math.min(1,avail/w);
+    poster.style.transform="scale("+sc+")";
+    stage.style.height=(h*sc)+"px";
+  }
+  fit(); window.addEventListener("resize",fit);
+  window.addEventListener("beforeprint",function(){poster.style.transform="";stage.style.height="";});
+  window.addEventListener("afterprint",fit);
+})();
+</script>

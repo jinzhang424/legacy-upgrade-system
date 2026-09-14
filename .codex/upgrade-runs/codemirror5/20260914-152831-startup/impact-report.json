@@ -1,0 +1,284 @@
+{
+  "upgrade_description": "Upgrade codemirror5 devDependency toolchain to latest compatible versions: rollup ^1.26.3 to 4.63.2, puppeteer ^1.20.0 to 25.10.0, @rollup/plugin-buble ^0.21.3 to 1.0.3, cm5-vim ^0.0.5 to 0.0.6. node-static 0.7.11 and blint ^1.1.2 already latest; no change. Migrate rollup.config.js to current Rollup 4 config API/plugin interfaces. Update test/run.js for Puppeteer 25 API changes including page.waitFor removal and headless mode changes. Do not migrate to CodeMirror 6.",
+  "affected_files": [
+    {
+      "file_path": "package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Root npm manifest declares the build/test scripts and devDependency versions named in the upgrade request.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 18,
+          "symbol_or_pattern": "scripts.build/scripts.watch",
+          "matched_api": "rollup -c / rollup -w -c",
+          "confidence": "high",
+          "reason": "Rollup CLI entry points used by npm run build and watch."
+        },
+        {
+          "start_line": 24,
+          "end_line": 30,
+          "symbol_or_pattern": "devDependencies",
+          "matched_api": "@rollup/plugin-buble, blint, cm5-vim, node-static, puppeteer, rollup, rollup-plugin-copy",
+          "confidence": "high",
+          "reason": "All package-manager dependencies in the manifest; requested upgrades affect @rollup/plugin-buble, cm5-vim, puppeteer, and rollup, while node-static and blint are explicitly unchanged."
+        }
+      ]
+    },
+    {
+      "file_path": "rollup.config.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Rollup 1 to 4 and @rollup/plugin-buble 0.21 to 1.0 cross major configuration/plugin-interface boundaries; this file directly imports plugins, resolves cm5-vim, and defines the build outputs.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 2,
+          "symbol_or_pattern": "import buble / import copy",
+          "matched_api": "@rollup/plugin-buble, rollup-plugin-copy",
+          "confidence": "high",
+          "reason": "Rollup plugin imports used by the config."
+        },
+        {
+          "start_line": 4,
+          "end_line": 10,
+          "symbol_or_pattern": "copy({ targets })",
+          "matched_api": "rollup-plugin-copy with require.resolve(\"cm5-vim/vim.js\")",
+          "confidence": "high",
+          "reason": "Build-time copy target depends on cm5-vim 0.0.5 to 0.0.6 and may rewrite generated keymap/vim.js."
+        },
+        {
+          "start_line": 13,
+          "end_line": 30,
+          "symbol_or_pattern": "export default[0]",
+          "matched_api": "Rollup config object, UMD output, buble({namedFunctionExpressions:false}), copyVim",
+          "confidence": "high",
+          "reason": "Primary CodeMirror bundle configuration executed by Rollup 4."
+        },
+        {
+          "start_line": 32,
+          "end_line": 50,
+          "symbol_or_pattern": "export default[1..2]",
+          "matched_api": "Rollup config objects for IIFE/CJS runmode outputs with buble plugin",
+          "confidence": "high",
+          "reason": "Secondary Rollup outputs also use the upgraded plugin interface."
+        }
+      ]
+    },
+    {
+      "file_path": "test/run.js",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "Browser test runner directly launches Puppeteer and hosts the local static test pages; Puppeteer 1 to 25 crosses multiple launch/headless behavior changes.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 18,
+          "symbol_or_pattern": "node-static/http server on port 3000",
+          "matched_api": "require('node-static').Server, require('http').createServer, listen(3000)",
+          "confidence": "high",
+          "reason": "Throwaway local static server used by npm test; node-static itself is unchanged but this server is part of the Puppeteer test flow."
+        },
+        {
+          "start_line": 19,
+          "end_line": 21,
+          "symbol_or_pattern": "puppeteer.launch/newPage",
+          "matched_api": "require('puppeteer'), puppeteer.launch({args:[...]})",
+          "confidence": "high",
+          "reason": "Direct Puppeteer API usage affected by the Puppeteer 25 upgrade, including headless mode defaults."
+        },
+        {
+          "start_line": 22,
+          "end_line": 28,
+          "symbol_or_pattern": "page event/setup/navigation",
+          "matched_api": "page.on, page.evaluateOnNewDocument, page.goto",
+          "confidence": "high",
+          "reason": "Browser-page setup and navigation in the upgraded Puppeteer runtime."
+        },
+        {
+          "start_line": 29,
+          "end_line": 41,
+          "symbol_or_pattern": "custom polling loop",
+          "matched_api": "page.evaluate loop with sleep helper",
+          "confidence": "medium",
+          "reason": "No current page.waitFor call was found; this loop is the wait behavior to verify against Puppeteer 25."
+        }
+      ]
+    },
+    {
+      "file_path": "keymap/vim.js",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "low",
+      "reason": "Excluded generated build output is allowed by the input exception and may change as a side effect when rollup.config.js copies cm5-vim/vim.js after cm5-vim 0.0.6 is installed.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "generated file",
+          "matched_api": "cm5-vim/vim.js copied to keymap/vim.js",
+          "confidence": "medium",
+          "reason": "GitNexus did not index this generated output file; location marks the whole generated artifact for planner awareness."
+        }
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "codemirror5",
+        "version": "5.65.21",
+        "type": "internal",
+        "version_source": "package.json"
+      },
+      {
+        "id": "package.json",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "package.json"
+      },
+      {
+        "id": "rollup.config.js",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "rollup.config.js"
+      },
+      {
+        "id": "test/run.js",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "test/run.js"
+      },
+      {
+        "id": "rollup",
+        "version": "^1.26.3 -> 4.63.2",
+        "type": "external_package",
+        "version_source": "package.json"
+      },
+      {
+        "id": "@rollup/plugin-buble",
+        "version": "^0.21.3 -> 1.0.3",
+        "type": "external_package",
+        "version_source": "package.json"
+      },
+      {
+        "id": "cm5-vim",
+        "version": "^0.0.5 -> 0.0.6",
+        "type": "external_package",
+        "version_source": "package.json"
+      },
+      {
+        "id": "puppeteer",
+        "version": "^1.20.0 -> 25.10.0",
+        "type": "external_package",
+        "version_source": "package.json"
+      },
+      {
+        "id": "node-static",
+        "version": "0.7.11",
+        "type": "external_package",
+        "version_source": "package.json"
+      },
+      {
+        "id": "blint",
+        "version": "^1.1.2",
+        "type": "external_package",
+        "version_source": "package.json"
+      },
+      {
+        "id": "rollup-plugin-copy",
+        "version": "^3.4.0",
+        "type": "external_package",
+        "version_source": "package.json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "codemirror5",
+        "to": "package.json",
+        "relationship": "declares npm scripts and devDependencies"
+      },
+      {
+        "from": "package.json",
+        "to": "rollup",
+        "relationship": "devDependency for build/watch scripts"
+      },
+      {
+        "from": "package.json",
+        "to": "@rollup/plugin-buble",
+        "relationship": "devDependency used by rollup.config.js"
+      },
+      {
+        "from": "package.json",
+        "to": "cm5-vim",
+        "relationship": "devDependency copied into generated keymap/vim.js"
+      },
+      {
+        "from": "package.json",
+        "to": "puppeteer",
+        "relationship": "devDependency used by test/run.js"
+      },
+      {
+        "from": "package.json",
+        "to": "node-static",
+        "relationship": "devDependency used by test/run.js local static server"
+      },
+      {
+        "from": "package.json",
+        "to": "blint",
+        "relationship": "devDependency used by lint script; no version change requested"
+      },
+      {
+        "from": "package.json",
+        "to": "rollup-plugin-copy",
+        "relationship": "devDependency used by rollup.config.js; compatibility dependency for Rollup 4 build"
+      },
+      {
+        "from": "rollup.config.js",
+        "to": "rollup",
+        "relationship": "configuration consumed by rollup CLI"
+      },
+      {
+        "from": "rollup.config.js",
+        "to": "@rollup/plugin-buble",
+        "relationship": "imports and invokes buble plugin"
+      },
+      {
+        "from": "rollup.config.js",
+        "to": "rollup-plugin-copy",
+        "relationship": "imports and invokes copy plugin"
+      },
+      {
+        "from": "rollup.config.js",
+        "to": "cm5-vim",
+        "relationship": "resolves cm5-vim/vim.js and copies it to keymap"
+      },
+      {
+        "from": "test/run.js",
+        "to": "puppeteer",
+        "relationship": "requires and launches browser"
+      },
+      {
+        "from": "test/run.js",
+        "to": "node-static",
+        "relationship": "requires local static file server"
+      }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 4,
+    "high_risk_count": 2,
+    "breaking_changes": [
+      "Rollup ^1.26.3 to 4.63.2 crosses major config/plugin API and CLI behavior boundaries; rollup.config.js is the direct build surface.",
+      "@rollup/plugin-buble ^0.21.3 to 1.0.3 crosses a major plugin package boundary and is invoked in every Rollup output config.",
+      "Puppeteer ^1.20.0 to 25.10.0 crosses many browser-launch/runtime changes, including headless mode behavior; test/run.js is the direct usage site.",
+      "No page.waitFor usage was found in the included paths; test/run.js already uses a custom page.evaluate polling loop.",
+      "cm5-vim ^0.0.5 to 0.0.6 affects generated keymap/vim.js through rollup.config.js copy target."
+    ],
+    "notes": "No dependency from the Step 2a checklist crosses a listed boundary in this requested upgrade. node-static 0.7.11 and blint ^1.1.2 were found but are explicitly unchanged."
+  },
+  "coverage_notes": "GitNexus index for codemirror5 was available and current on 2026-09-14; GitNexus surfaced package.json, rollup.config.js, test/run.js, and test/lint.js file nodes, while exact line locations were captured with targeted Select-String because ripgrep returned no root-manifest matches in this shell. Excluded paths were not searched except for the explicitly allowed generated output keymap/vim.js. Repository scan found package.json and rollup.config.js only; no package-lock.json, Dockerfile, docker-compose.yml, XML/YAML/conf/ini service configs, or persistent database/cache/broker/search service declarations were found. User declared no external services; node-static is a throwaway local npm test server on port 3000, not a persistent external service."
+}

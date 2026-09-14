@@ -1,0 +1,126 @@
+﻿{
+  "status": "failed",
+  "branch_name": "upgrade/devdependency-toolchain-rollup-puppeteer",
+  "commit_ref": "",
+  "files_changed": [
+    "package.json",
+    "rollup.config.js",
+    "test/run.js",
+    "test/upgrade_toolchain_smoke.js"
+  ],
+  "changes_applied": [
+    "Retained prior package.json devDependency upgrades for @rollup/plugin-buble 1.0.3, cm5-vim 0.0.6, puppeteer 25.10.0, and rollup 4.63.2.",
+    "Retained prior rollup.config.js Rollup 4 createRequire migration and cm5-vim copy transform repairs for legacy parser/lint compatibility.",
+    "Retained prior test/run.js Puppeteer 25 launch and browser/server cleanup migration.",
+    "Added await before page.evaluateOnNewDocument in test/run.js so the automated test preload is registered before navigation under modern Puppeteer.",
+    "Retained generated smoke test test/upgrade_toolchain_smoke.js."
+  ],
+  "changes_skipped": [
+    {
+      "file_path": "keymap/vim.js",
+      "reason": "Generated output exists as an ignored build artifact and did not appear as a tracked working-tree change."
+    }
+  ],
+  "executor_check_results": [
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+      "command": "npm install",
+      "purpose": "setup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Passed in the prior execution attempt via npm.cmd install after PowerShell blocked npm.ps1. The user retry context stated npm install had passed.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+      "command": "npm run build",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Passed in the prior execution attempt after the Rollup/cm5-vim generation repairs. The user retry context stated npm run build had passed.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -Command startup probe from ChangePlan",
+      "purpose": "startup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Passed in the prior execution attempt. The user retry context stated the bounded static startup probe had passed.",
+      "repair_attempts": 0,
+      "health_check_url": "http://localhost:3000/",
+      "health_check_outcome": "passed",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+      "command": "npm test",
+      "purpose": "test",
+      "outcome": "failed",
+      "exit_status": 1,
+      "output": "PowerShell blocked npm.ps1 for the literal npm test command, so the equivalent Windows shim npm.cmd test was used. Final rerun exited 1 with five browser-suite assertion failures: core_move_bidi_Όȝǝڪȉۥ״ۺ׆ɀҩۏ ҳ, core_move_bidi_؅؁ĆՕƿɁǞϮؠȩóć ď, core_bidi_wrapped_selection, scroll_movedown_resize, and scroll_movedown_hscroll_resize. A targeted await page.evaluateOnNewDocument repair and two temporary Puppeteer launch geometry/flag experiments did not resolve the failures; ineffective temporary launch changes were removed.",
+      "repair_attempts": 1,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "failed"
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+      "command": "node ./test/upgrade_toolchain_smoke.js",
+      "purpose": "test",
+      "outcome": "skipped",
+      "exit_status": -1,
+      "output": "Skipped because required prior executor check npm test failed before commit.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "skipped"
+    }
+  ],
+  "executor_repairs_applied": [
+    {
+      "file_path": "rollup.config.js",
+      "reason": "Prior retry state: generated cm5-vim 0.0.6 output used optional chaining, for-of syntax, and trailing whitespace rejected by the legacy lint/parser during npm test.",
+      "summary": "Added a compileVim transform to the existing copy target to normalize two optional-chain expressions, run Buble with dangerousForOf for local array iteration, and trim trailing whitespace from generated keymap/vim.js.",
+      "command": "npm test",
+      "repair_round": 1
+    },
+    {
+      "file_path": "rollup.config.js",
+      "reason": "Prior retry state: generated cm5-vim 0.0.6 output retained an unused insertRegister argument rejected by the legacy linter.",
+      "summary": "Added a targeted compileVim source normalization that removes the unused insertRegister vim parameter before generation.",
+      "command": "npm test",
+      "repair_round": 2
+    },
+    {
+      "file_path": "test/run.js",
+      "reason": "Prior retry state: Chromium under Puppeteer 25 made an ancillary static request that produced a 404 and caused the runner to exit before the planned failed/errors/lint final condition.",
+      "summary": "Changed the node-static callback to avoid terminating the test runner on 404 static misses while still logging non-404 static errors.",
+      "command": "npm test",
+      "repair_round": 3
+    },
+    {
+      "file_path": "test/run.js",
+      "reason": "Modern Puppeteer returns a promise from evaluateOnNewDocument; awaiting it ensures the automated test preload is installed before navigation.",
+      "summary": "Added await before page.evaluateOnNewDocument. This was a valid runner migration repair but did not resolve the remaining Chrome 152 layout/bidi assertions.",
+      "command": "npm test",
+      "repair_round": 4
+    }
+  ],
+  "executor_repair_rounds": 4,
+  "scope_expansions_applied": [],
+  "scope_expansions_used": 0,
+  "failure_summary": "Execution stopped before commit because required executor check npm test still fails with five browser-suite assertion failures after clearly in-plan runner repairs. The remaining failures appear to be deterministic Chrome 152 layout/bidi assertion differences, and further fixes would require modifying legacy source/tests outside the approved ChangePlan or skipping tests.",
+  "execution_notes": "Current branch matched upgrade/devdependency-toolchain-rollup-puppeteer. Dirty files were the expected in-progress Stage 4 files. No commit was created. A Chromium debug.log generated during retry was removed so the working tree remains limited to package.json, rollup.config.js, test/run.js, and test/upgrade_toolchain_smoke.js."
+}

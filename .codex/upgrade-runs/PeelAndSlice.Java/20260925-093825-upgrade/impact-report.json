@@ -1,0 +1,193 @@
+{
+  "upgrade_description": "Upgrade projects/PeelAndSlice.Java from Java 17 to Java 21 on branch upgrade/java-21, preserving behavior. Replace Maven compiler source/target 17 with release 21, pin maven-compiler-plugin 3.16.0, declare UTF-8 source encoding, update the CI Java matrix to 21, retain the existing test outcome, and produce class-file major version 65.",
+  "affected_files": [
+    {
+      "file_path": "pom.xml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "This is the single-module Maven build manifest and the central compilation boundary for all 11 main and 5 test Java source files. It currently leaves maven-compiler-plugin unpinned and configures separate Java 17 source/target values; the requested Java 21 release, compiler-plugin pin, and deterministic UTF-8 source encoding all converge here. The compiler setting controls language/API availability and generated class-file version, while encoding is material because an existing source filename and identifiers are Cyrillic.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 8,
+          "symbol_or_pattern": "project metadata and XML encoding declaration",
+          "matched_api": "project.build.sourceEncoding",
+          "confidence": "high",
+          "reason": "The XML document declares UTF-8, but no Maven project.build.sourceEncoding property is present in the project metadata; compiler input encoding therefore is not explicitly pinned by the build."
+        },
+        {
+          "start_line": 9,
+          "end_line": 18,
+          "symbol_or_pattern": "build.plugins.plugin[maven-compiler-plugin]",
+          "matched_api": "org.apache.maven.plugins:maven-compiler-plugin; source=17; target=17",
+          "confidence": "high",
+          "reason": "The requested upgrade changes this unversioned compiler plugin to 3.16.0 and moves compilation from separate source/target 17 settings to Java release 21, which is the build path that must yield major version 65."
+        }
+      ]
+    },
+    {
+      "file_path": ".github/workflows/test.yml",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "The only build workflow selects Java through a one-entry matrix. Its current value is 17, and setup-java consumes that matrix value before Maven verification, so leaving it unchanged would validate the upgraded POM on the wrong runtime. The workflow currently runs only on ubuntu-latest; Windows verification is therefore not represented by this workflow configuration.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 16,
+          "symbol_or_pattern": "jobs.build.strategy.matrix.java",
+          "matched_api": "java: ['17']",
+          "confidence": "high",
+          "reason": "This matrix entry is the declared CI JDK version and is explicitly in the requested upgrade scope."
+        },
+        {
+          "start_line": 26,
+          "end_line": 32,
+          "symbol_or_pattern": "actions/setup-java and Maven build step",
+          "matched_api": "java-version: ${{ matrix.java }}; mvn -B verify --file pom.xml",
+          "confidence": "high",
+          "reason": "The selected matrix JDK flows directly into setup-java and then into the Maven verification command."
+        }
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "jason_kerney:peel_and_slice",
+        "version": "1.0-SNAPSHOT",
+        "type": "internal",
+        "version_source": "pom.xml:6-8"
+      },
+      {
+        "id": "Java SE/JDK",
+        "version": "17 (target 21)",
+        "type": "external_package",
+        "version_source": "pom.xml:15-16 and .github/workflows/test.yml:16"
+      },
+      {
+        "id": "org.apache.maven.plugins:maven-compiler-plugin",
+        "version": "unpinned (target 3.16.0)",
+        "type": "external_package",
+        "version_source": "pom.xml:11-18"
+      },
+      {
+        "id": "org.apache.maven.plugins:maven-surefire-plugin",
+        "version": "3.6.0",
+        "type": "external_package",
+        "version_source": "pom.xml:19-22"
+      },
+      {
+        "id": "com.approvaltests:approvaltests",
+        "version": "30.1.1",
+        "type": "external_package",
+        "version_source": "pom.xml:26-30"
+      },
+      {
+        "id": "org.easymock:easymock",
+        "version": "5.7.0",
+        "type": "external_package",
+        "version_source": "pom.xml:31-36"
+      },
+      {
+        "id": "com.google.code.gson:gson",
+        "version": "2.14.0",
+        "type": "external_package",
+        "version_source": "pom.xml:37-42"
+      },
+      {
+        "id": "org.junit.jupiter:junit-jupiter",
+        "version": "6.1.3",
+        "type": "external_package",
+        "version_source": "pom.xml:43-48"
+      },
+      {
+        "id": "java.sql",
+        "version": "JDK 17 API (target JDK 21 API)",
+        "type": "external_package",
+        "version_source": "imports in eight src/main/java files"
+      },
+      {
+        "id": "jdk.httpserver",
+        "version": "JDK 17 API (target JDK 21 API)",
+        "type": "external_package",
+        "version_source": "src/main/java/com/spun/llewellyn/talks/legacycode/quiz/FrameRate.java:4"
+      }
+    ],
+    "edges": [
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "Java SE/JDK",
+        "relationship": "compiled and tested against"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "org.apache.maven.plugins:maven-compiler-plugin",
+        "relationship": "compiled by"
+      },
+      {
+        "from": "org.apache.maven.plugins:maven-compiler-plugin",
+        "to": "Java SE/JDK",
+        "relationship": "targets release"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "org.apache.maven.plugins:maven-surefire-plugin",
+        "relationship": "tests executed by"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "com.approvaltests:approvaltests",
+        "relationship": "compile dependency"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "org.easymock:easymock",
+        "relationship": "test dependency"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "com.google.code.gson:gson",
+        "relationship": "test dependency"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "org.junit.jupiter:junit-jupiter",
+        "relationship": "test dependency"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "java.sql",
+        "relationship": "imports Connection type from"
+      },
+      {
+        "from": "jason_kerney:peel_and_slice",
+        "to": "jdk.httpserver",
+        "relationship": "imports HttpContext type from"
+      },
+      {
+        "from": "java.sql",
+        "to": "Java SE/JDK",
+        "relationship": "standard platform module"
+      },
+      {
+        "from": "jdk.httpserver",
+        "to": "Java SE/JDK",
+        "relationship": "JDK module"
+      }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 2,
+    "high_risk_count": 1,
+    "breaking_changes": [
+      "The compilation contract changes from Java 17 source/target semantics to Java 21 release semantics, including Java 21 language/API checks and class-file major version 65 instead of Java 17 major version 61.",
+      "Pinning maven-compiler-plugin at 3.16.0 replaces an environment-dependent effective plugin version with a fixed implementation version.",
+      "Declaring UTF-8 changes compiler input decoding from the platform default to a deterministic encoding; this is materially exercised by src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java and its Cyrillic identifiers.",
+      "The CI build JDK changes from 17 to 21; the current workflow has only a Linux runner, while the acceptance requirement also names Windows."
+    ],
+    "notes": "No Java source changes were identified as required by the repository scan. The only requested modification sites are pom.xml and .github/workflows/test.yml. The project has no application main entry point; Maven/Surefire is the executable validation path. Existing generated output under target was not treated as a trustworthy baseline because it predates the current working-tree metadata: it currently shows class major version 65 and stale Surefire reports totaling 4 tests with 0 failures, 0 errors, and 0 skips. Fresh baseline and post-upgrade verification belong to later pipeline stages."
+  },
+  "coverage_notes": "GitNexus was enabled and its PeelAndSlice.Java index matched repository HEAD 161e0cdd6a499d7989c1da4564c3788648643f97 (23 indexed files, 109 symbols, 207 relationships). GitNexus found no execution flows and does not model the YAML workflow at symbol level, so manifest/config discovery and exact line locations were augmented with targeted rg and line-numbered reads. The scan covered pom.xml, both workflow files, Dependabot configuration, all 11 main and 5 test Java files, and service indicators in repository configuration/source. Maven is the sole package manager; there is no dependency lockfile and no application main method. The declared validation command is mvn -B clean verify --file pom.xml from the repository root. Source tests contain four @Test methods across three runnable Surefire test classes; FrameRateTest.java and MockUtils.java have no @Test annotation. No external service configuration, driver acquisition, connection string, container image, or service version was found. Several examples use java.sql.Connection and database-themed stubs that throw immediately, but there is no configured or live database integration; this agrees with the user's declaration that there are no external services, no data-bearing database/search index, and no browser flows. The known breaking-change checklist for async, express, socket.io, and uglify-js is not applicable to this Maven/Java upgrade. No target-repository file was modified during analysis."
+}

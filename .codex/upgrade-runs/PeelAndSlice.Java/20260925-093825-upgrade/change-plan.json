@@ -1,0 +1,169 @@
+{
+  "upgrade_description": "Upgrade projects/PeelAndSlice.Java from Java 17 to Java 21 on branch upgrade/java-21, preserving behavior. Replace Maven compiler source/target 17 with release 21, pin maven-compiler-plugin 3.16.0, declare UTF-8 source encoding, update the CI Java matrix to 21, retain the existing test outcome, and produce class-file major version 65.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "pom.xml",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The POM is the single compilation boundary for all production and test sources. It must make Java 21 bytecode/API targeting deterministic, pin the compiler implementation, and decode the existing Cyrillic source and identifiers consistently on Windows and Linux.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 8,
+          "symbol_or_pattern": "project metadata and XML encoding declaration",
+          "matched_api": "project.build.sourceEncoding"
+        },
+        {
+          "start_line": 9,
+          "end_line": 18,
+          "symbol_or_pattern": "build.plugins.plugin[maven-compiler-plugin]",
+          "matched_api": "org.apache.maven.plugins:maven-compiler-plugin; source=17; target=17"
+        }
+      ],
+      "change_description": "Add a project-level <properties> block after the coordinates containing <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>. In the existing maven-compiler-plugin declaration, add <version>3.16.0</version>. Replace the separate <source>17</source> and <target>17</target> configuration elements with the single <release>21</release> element. Do not alter dependencies, Surefire configuration, Java sources, or test behavior.",
+      "validation_evidence": [
+        "pom.xml literally declares project.build.sourceEncoding as UTF-8.",
+        "pom.xml pins maven-compiler-plugin to 3.16.0 and configures release 21, with the former source/target 17 elements absent.",
+        "mvn -B clean verify --file pom.xml completes with the same test pass/fail counts as the pre-upgrade baseline and requires no extra flags.",
+        "javap -verbose on target/classes/com/spun/llewellyn/talks/legacycode/required/VideoMaker.class reports major version: 65."
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": ".github/workflows/test.yml",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The workflow matrix selects the JDK consumed by actions/setup-java and the Maven verification step, so it must follow the new Java 21 compilation contract.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 16,
+          "symbol_or_pattern": "jobs.build.strategy.matrix.java",
+          "matched_api": "java: ['17']"
+        },
+        {
+          "start_line": 26,
+          "end_line": 32,
+          "symbol_or_pattern": "actions/setup-java and Maven build step",
+          "matched_api": "java-version: ${{ matrix.java }}; mvn -B verify --file pom.xml"
+        }
+      ],
+      "change_description": "Change only the build job's Java matrix literal from java: ['17'] to java: ['21']. Keep setup-java wired to matrix.java, retain the Ubuntu runner and existing Maven command, and make no unrelated workflow changes.",
+      "validation_evidence": [
+        ".github/workflows/test.yml literally contains java: ['21'] and no longer contains java: ['17'].",
+        "The existing Ubuntu build job continues to pass matrix.java to actions/setup-java and then runs Maven verification, providing Linux coverage with JDK 21 when CI executes."
+      ]
+    }
+  ],
+  "planned_files": [
+    "pom.xml",
+    ".github/workflows/test.yml"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "pom.xml",
+      "dependency": "Java SE/JDK compilation release",
+      "from_version": "17",
+      "to_version": "21"
+    },
+    {
+      "file_path": "pom.xml",
+      "dependency": "org.apache.maven.plugins:maven-compiler-plugin",
+      "from_version": "unpinned",
+      "to_version": "3.16.0"
+    },
+    {
+      "file_path": ".github/workflows/test.yml",
+      "dependency": "CI Java matrix",
+      "from_version": "17",
+      "to_version": "21"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "main",
+      "master"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "mvn -B clean verify --file pom.xml",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILURE"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/required/VideoMaker.class",
+        "purpose": "compile",
+        "timeout_seconds": 60,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "Error:",
+            "major version: 61"
+          ]
+        }
+      }
+    ],
+    "build_commands": [
+      "mvn -B clean verify --file pom.xml",
+      "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/required/VideoMaker.class"
+    ],
+    "startup_commands": [],
+    "startup_health_check_urls": [],
+    "existing_test_commands": [
+      "mvn -B clean verify --file pom.xml"
+    ],
+    "generated_test_commands": [],
+    "generated_test_files": [],
+    "content_checks": [
+      {
+        "file_path": "pom.xml",
+        "must_contain": [
+          "<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>",
+          "<artifactId>maven-compiler-plugin</artifactId>",
+          "<version>3.16.0</version>",
+          "<release>21</release>"
+        ],
+        "must_not_contain": [
+          "<source>17</source>",
+          "<target>17</target>"
+        ]
+      },
+      {
+        "file_path": ".github/workflows/test.yml",
+        "must_contain": [
+          "java: ['21']",
+          "java-version: ${{ matrix.java }}",
+          "run: mvn -B verify --file pom.xml"
+        ],
+        "must_not_contain": [
+          "java: ['17']"
+        ]
+      }
+    ],
+    "key_pages": [],
+    "key_user_flows": [],
+    "external_service_checks": [],
+    "success_criteria": [
+      "Only pom.xml and .github/workflows/test.yml contain planned upgrade edits; no Java source, dependency, or unrelated behavior changes are introduced.",
+      "The execution branch is upgrade/java-21.",
+      "mvn -B clean verify --file pom.xml passes under JDK 21 on Windows with no extra flags and preserves the pre-upgrade test pass/fail counts.",
+      "The unchanged ubuntu-latest workflow uses JDK 21 and passes mvn -B verify --file pom.xml when CI runs, supplying Linux validation with no extra Maven flags.",
+      "The representative compiled class target/classes/com/spun/llewellyn/talks/legacycode/required/VideoMaker.class reports major version 65.",
+      "The POM pins maven-compiler-plugin 3.16.0, uses release 21 rather than source/target 17, and declares UTF-8 project source encoding.",
+      "The CI Java matrix contains only Java 21."
+    ],
+    "scope_expansion_limit": 2
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "Inspection was limited to the ImpactReport ranges plus minimal context (pom.xml lines 1-23 and .github/workflows/test.yml lines 11-33); no whole target file was read. The user supplied mvn -B clean verify --file pom.xml for both compile and test validation, so it appears in executor and final build/test validation. There is no startup target, browser flow, external service, database, or search index. The requested class-major check was made executable by selecting the stable production class VideoMaker.class and invoking javap -verbose; validation must positively confirm 'major version: 65', not merely the absence of version 61. The approved workflow currently runs ubuntu-latest only, and the requested workflow change is specifically java ['17'] to ['21']; therefore this plan does not silently broaden scope by adding a Windows runner. Windows validation is performed locally by the executor/validator, while Linux validation remains dependent on the existing GitHub Actions Ubuntu job running after push. If that CI job cannot be observed, Linux is an explicit unresolved platform-validation gap rather than an inferred pass. The same-test-count requirement needs a trustworthy pre-upgrade baseline captured before edits (or an existing approved baseline); stale target/Surefire output is not accepted as evidence. A bounded scope-expansion allowance of two files permits only direct Java 21 or maven-compiler-plugin 3.16.0 compatibility failures discovered by the declared verification command; it does not authorize unrelated fixes, refactors, dependency changes, or workflow expansion.",
+  "plan_summary": "Two-file Java 21 upgrade: make Maven compilation deterministic with release 21, compiler plugin 3.16.0, and UTF-8 encoding, then move the existing CI JDK matrix to 21. Validate with clean Maven verification, preserved test counts, and a major-version-65 class inspection; Windows is locally testable and Linux remains the existing Ubuntu CI responsibility."
+}

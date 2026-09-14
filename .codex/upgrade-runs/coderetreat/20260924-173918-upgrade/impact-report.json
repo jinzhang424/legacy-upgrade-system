@@ -1,0 +1,379 @@
+{
+  "upgrade_description": "Upgrade the independent coderetreat kata builds to Java 21 runtime compatibility with Java sourceCompatibility 17 and Gradle 8.10.2, and upgrade refactoring/gildedrose/js for Node.js 22 using the user-specified dependency targets. Preserve kata independence and validate every complete Gradle module tree plus both JavaScript test runners.",
+  "affected_files": [
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Root of the dijkstra multi-project build; it uses jcenter, removed Gradle configurations, SLF4J 1.7.12, and JUnit 4.12, and has no explicit Java compatibility.",
+      "locations": [
+        { "start_line": 11, "end_line": 17, "symbol_or_pattern": "java plugin and repositories", "matched_api": "apply plugin: 'java'; jcenter()", "confidence": "high", "reason": "Gradle 8 repository and Java compatibility configuration surface." },
+        { "start_line": 21, "end_line": 29, "symbol_or_pattern": "legacy dependency declarations", "matched_api": "compile; testCompile; slf4j-api:1.7.12; junit:4.12", "confidence": "high", "reason": "Removed configurations and requested dependency upgrades." }
+      ]
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Included dijkstra subproject uses removed testCompile and JUnit 4.12 and lacks explicit Java compatibility.",
+      "locations": [{ "start_line": 1, "end_line": 9, "symbol_or_pattern": "subproject Java configuration", "matched_api": "testCompile 'junit:junit:4.12'", "confidence": "high", "reason": "Full included module must remain buildable on Gradle 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Malformed Java compatibility 1.10 and JUnit Jupiter 5.8.2 declarations require requested targets.",
+      "locations": [
+        { "start_line": 17, "end_line": 17, "symbol_or_pattern": "sourceCompatibility", "matched_api": "sourceCompatibility = 1.10", "confidence": "high", "reason": "Malformed value is incompatible with the requested source level." },
+        { "start_line": 23, "end_line": 26, "symbol_or_pattern": "JUnit Jupiter dependencies", "matched_api": "junit-jupiter-api/engine:5.8.2", "confidence": "high", "reason": "Requested target is 5.10.3; ApprovalTests is present but not part of the requested version set." }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Malformed Java compatibility 1.10 and JUnit Jupiter 5.8.2 declarations require requested targets.",
+      "locations": [
+        { "start_line": 17, "end_line": 17, "symbol_or_pattern": "sourceCompatibility", "matched_api": "sourceCompatibility = 1.10", "confidence": "high", "reason": "Malformed value is incompatible with the requested source level." },
+        { "start_line": 23, "end_line": 25, "symbol_or_pattern": "JUnit Jupiter dependencies", "matched_api": "junit-jupiter-api/engine:5.8.2", "confidence": "high", "reason": "Requested target is 5.10.3." }
+      ]
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Root of the movierental multi-project build uses jcenter, removed configurations, SLF4J 1.7.12, and JUnit 4.12, with no explicit Java compatibility.",
+      "locations": [
+        { "start_line": 11, "end_line": 17, "symbol_or_pattern": "java plugin and repositories", "matched_api": "apply plugin: 'java'; jcenter()", "confidence": "high", "reason": "Gradle 8 repository and Java compatibility configuration surface." },
+        { "start_line": 21, "end_line": 29, "symbol_or_pattern": "legacy dependency declarations", "matched_api": "compile; testCompile; slf4j-api:1.7.12; junit:4.12", "confidence": "high", "reason": "Removed configurations and requested dependency upgrades." }
+      ]
+    },
+    {
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Included movierental subproject uses removed testCompile and JUnit 4.12 and lacks explicit Java compatibility.",
+      "locations": [{ "start_line": 1, "end_line": 9, "symbol_or_pattern": "subproject Java configuration", "matched_api": "testCompile 'junit:junit:4.12'", "confidence": "high", "reason": "Full included module must remain buildable on Gradle 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Root of the only five-subproject build uses jcenter, removed configurations, SLF4J 1.7.12, JUnit 4.12, and Mockito 2.2.6, with no explicit Java compatibility.",
+      "locations": [
+        { "start_line": 11, "end_line": 17, "symbol_or_pattern": "java plugin and repositories", "matched_api": "apply plugin: 'java'; jcenter()", "confidence": "high", "reason": "Gradle 8 repository and Java compatibility configuration surface." },
+        { "start_line": 21, "end_line": 30, "symbol_or_pattern": "legacy dependency declarations", "matched_api": "compile; testCompile; slf4j-api:1.7.12; junit:4.12; mockito-core:2.2.6", "confidence": "high", "reason": "Removed configurations and requested dependency upgrades." }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Racingcar leaderboard subproject independently repeats legacy repository and dependency configuration.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy module build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Every included racingcar module must be audited and upgraded." }]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Racingcar telemetrysystem subproject independently repeats legacy repository and dependency configuration.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy module build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Every included racingcar module must be audited and upgraded." }]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Racingcar textconverter subproject independently repeats legacy repository and dependency configuration.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy module build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Every included racingcar module must be audited and upgraded." }]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Racingcar tirepressuremonitoringsystem subproject independently repeats legacy repository and dependency configuration.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy module build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Every included racingcar module must be audited and upgraded." }]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Racingcar turnticketdispenser subproject independently repeats legacy repository and dependency configuration.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy module build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Every included racingcar module must be audited and upgraded." }]
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Malformed Java compatibility 1.10 and JUnit Jupiter 5.8.2 api/engine/params declarations require requested targets.",
+      "locations": [
+        { "start_line": 17, "end_line": 17, "symbol_or_pattern": "sourceCompatibility", "matched_api": "sourceCompatibility = 1.10", "confidence": "high", "reason": "Malformed value is incompatible with the requested source level." },
+        { "start_line": 23, "end_line": 26, "symbol_or_pattern": "JUnit Jupiter dependencies", "matched_api": "junit-jupiter-api/engine/params:5.8.2", "confidence": "high", "reason": "Requested target is 5.10.3." }
+      ]
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Trivia build uses removed testCompile and JUnit 4.12, lacks source compatibility, and uses legacy JavaExec main assignment that may surface under Gradle 8 validation.",
+      "locations": [
+        { "start_line": 1, "end_line": 9, "symbol_or_pattern": "legacy dependency declaration", "matched_api": "testCompile 'junit:junit:4.12'", "confidence": "high", "reason": "Removed configuration and requested dependency upgrade." },
+        { "start_line": 12, "end_line": 20, "symbol_or_pattern": "runGameRunner JavaExec task", "matched_api": "main = javaMainClass", "confidence": "medium", "reason": "Legacy Gradle DSL is a validation risk when moving from 6.8.3 to 8.10.2, even though it is outside the explicit version pins." }
+      ]
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Root of the bowlinggame multi-project build uses jcenter, removed configurations, SLF4J 1.7.12, and JUnit 4.12, with no explicit Java compatibility.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy root build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Gradle 8 and requested dependency upgrade surface." }]
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Included bowlinggame subproject uses removed testCompile and JUnit 4.12 and lacks explicit Java compatibility.",
+      "locations": [{ "start_line": 1, "end_line": 9, "symbol_or_pattern": "subproject Java configuration", "matched_api": "testCompile 'junit:junit:4.12'", "confidence": "high", "reason": "Full included module must remain buildable on Gradle 8.10.2." }]
+    },
+    {
+      "file_path": "tdd/gameoflife/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Root build has JUnit 4.12 and no explicit Java compatibility; its configuration name is already Gradle 8 compatible.",
+      "locations": [{ "start_line": 10, "end_line": 26, "symbol_or_pattern": "root Java and test configuration", "matched_api": "testImplementation junit:junit:4.12", "confidence": "high", "reason": "Requested JUnit and Java source targets apply to the full build." }]
+    },
+    {
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Included gameoflife subproject has JUnit 4.12 and no explicit Java compatibility.",
+      "locations": [{ "start_line": 1, "end_line": 9, "symbol_or_pattern": "subproject Java configuration", "matched_api": "testImplementation junit:junit:4.12", "confidence": "high", "reason": "Requested JUnit and Java source targets apply to the full included module." }]
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Malformed Java compatibility 1.10 and JUnit Jupiter 5.8.2 declarations require requested targets.",
+      "locations": [
+        { "start_line": 17, "end_line": 17, "symbol_or_pattern": "sourceCompatibility", "matched_api": "sourceCompatibility = 1.10", "confidence": "high", "reason": "Malformed value is incompatible with the requested source level." },
+        { "start_line": 23, "end_line": 25, "symbol_or_pattern": "JUnit Jupiter dependencies", "matched_api": "junit-jupiter-api/engine:5.8.2", "confidence": "high", "reason": "Requested target is 5.10.3." }
+      ]
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Java compatibility 1.8 and JUnit Jupiter 5.8.2 api/engine/params declarations require requested targets.",
+      "locations": [
+        { "start_line": 17, "end_line": 17, "symbol_or_pattern": "sourceCompatibility", "matched_api": "sourceCompatibility = 1.8", "confidence": "high", "reason": "Requested source level is 17." },
+        { "start_line": 23, "end_line": 26, "symbol_or_pattern": "JUnit Jupiter dependencies", "matched_api": "junit-jupiter-api/engine/params:5.8.2", "confidence": "high", "reason": "Requested target is 5.10.3." }
+      ]
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Root of stringcalculator multi-project build uses jcenter, removed configurations, SLF4J 1.7.12, and JUnit 4.12, with no explicit Java compatibility.",
+      "locations": [{ "start_line": 10, "end_line": 29, "symbol_or_pattern": "legacy root build", "matched_api": "jcenter(); compile slf4j-api:1.7.12; testCompile junit:4.12", "confidence": "high", "reason": "Gradle 8 and requested dependency upgrade surface." }]
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Included stringcalculator subproject uses removed compile/testCompile with Guava 19.0, JUnit 4.12, and Mockito 2.2.0, and lacks explicit Java compatibility.",
+      "locations": [{ "start_line": 1, "end_line": 11, "symbol_or_pattern": "subproject dependency configuration", "matched_api": "compile guava:19.0; testCompile junit:4.12; testCompile mockito-core:2.2.0", "confidence": "high", "reason": "Full included module crosses multiple requested major upgrades and must build on Gradle 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "All requested Node/TypeScript version pins live here, and rimraf 5 no longer expands the existing glob arguments by default.",
+      "locations": [
+        { "start_line": 5, "end_line": 11, "symbol_or_pattern": "npm scripts", "matched_api": "rimraf app/**/*.js test/**/*.js; jest; nyc mocha", "confidence": "high", "reason": "The cleanup scripts require rimraf 5 --glob syntax; both required test commands are declared here." },
+        { "start_line": 15, "end_line": 31, "symbol_or_pattern": "devDependencies", "matched_api": "Jest/Mocha/TypeScript/Node types/ts-jest/ts-node/tsconfig-paths/rimraf/ramda/chai", "confidence": "high", "reason": "Manifest contains every requested Node dependency; chai must remain on major 4." }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package-lock.json",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "npm install must regenerate the lock graph for the requested direct dependency versions and Node 22-compatible transitives.",
+      "locations": [{ "start_line": 1, "end_line": 11608, "symbol_or_pattern": "npm lockfile", "matched_api": "packages and dependency resolution graph", "confidence": "high", "reason": "Generated manifest is affected as a whole." }]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "The config imports pathsToModuleNameMapper from the removed ts-jest/utils subpath; ts-jest 29 exports it from the package root.",
+      "locations": [{ "start_line": 1, "end_line": 1, "symbol_or_pattern": "ts-jest utility import", "matched_api": "ts-jest/utils", "confidence": "high", "reason": "Known ts-jest major-version module path break." }]
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 6.8.2 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-6.8.2-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 7.4.1 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-7.4.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 7.4.1 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-7.4.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 6.8.2 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-6.8.2-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 6.8.2 for the five-module build must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-6.8.2-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 7.4.1 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-7.4.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 6.8.3 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-6.8.3-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "high", "reason": "Wrapper 3.1 crosses several incompatible Gradle generations and must move to 8.10.2.",
+      "locations": [{ "start_line": 6, "end_line": 6, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-3.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2; large version jump raises bootstrap risk." }]
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 7.2 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-7.2-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 7.4.1 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-7.4.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "medium", "reason": "Wrapper 7.4.1 must move to 8.10.2.",
+      "locations": [{ "start_line": 3, "end_line": 3, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-7.4.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2." }]
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify", "usage_type": "configuration", "risk_level": "high", "reason": "Wrapper 3.1 crosses several incompatible Gradle generations and must move to 8.10.2.",
+      "locations": [{ "start_line": 6, "end_line": 6, "symbol_or_pattern": "distributionUrl", "matched_api": "gradle-3.1-all.zip", "confidence": "high", "reason": "Requested wrapper target is 8.10.2; large version jump raises bootstrap risk." }]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      { "id": "algorithm/dijkstra", "version": "Gradle 6.8.2", "type": "internal", "version_source": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/chartsmart/java", "version": "Gradle 7.4.1", "type": "internal", "version_source": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/gildedrose/java", "version": "Gradle 7.4.1", "type": "internal", "version_source": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/movierental", "version": "Gradle 6.8.2", "type": "internal", "version_source": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/racingcar/java", "version": "Gradle 6.8.2", "type": "internal", "version_source": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/tennis/java", "version": "Gradle 7.4.1", "type": "internal", "version_source": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/trivia/java", "version": "Gradle 6.8.3", "type": "internal", "version_source": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "tdd/bowlinggame", "version": "Gradle 3.1", "type": "internal", "version_source": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "tdd/gameoflife", "version": "Gradle 7.2", "type": "internal", "version_source": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "tdd/minesweeper/java", "version": "Gradle 7.4.1", "type": "internal", "version_source": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "tdd/rpg-combat/java", "version": "Gradle 7.4.1", "type": "internal", "version_source": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "tdd/stringcalculator", "version": "Gradle 3.1", "type": "internal", "version_source": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties" },
+      { "id": "refactoring/gildedrose/js", "version": "npm lockfileVersion 2", "type": "internal", "version_source": "refactoring/gildedrose/js/package-lock.json" },
+      { "id": "org.slf4j:slf4j-api (target 2.0.13)", "version": "1.7.12", "type": "external_package", "version_source": "Gradle build files" },
+      { "id": "junit:junit (target 4.13.2)", "version": "4.12", "type": "external_package", "version_source": "Gradle build files" },
+      { "id": "org.junit.jupiter modules (target 5.10.3)", "version": "5.8.2", "type": "external_package", "version_source": "Gradle build files" },
+      { "id": "org.mockito:mockito-core (target 5.12.0)", "version": "2.2.0 / 2.2.6", "type": "external_package", "version_source": "tdd/stringcalculator/java/build.gradle and refactoring/racingcar/java/build.gradle" },
+      { "id": "com.google.guava:guava (target 33.2.1-jre)", "version": "19.0", "type": "external_package", "version_source": "tdd/stringcalculator/java/build.gradle" },
+      { "id": "typescript (target ^5.5.x)", "version": "^4.6.3", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "jest (target ^29.7.x)", "version": "^27.5.1", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "ts-jest (target ^29.2.x)", "version": "^27.1.4", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "@types/jest (target ^29.5.x)", "version": "^27.4.1", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "mocha (target ^10.6.x)", "version": "^9.2.2", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "@types/mocha (target ^10.0.x)", "version": "^9.1.0", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "@types/node (target ^22.x)", "version": "^17.0.23", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "ts-node (target ^10.9.x)", "version": "^10.7.0", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "tsconfig-paths (target ^4.2.x)", "version": "^3.14.1", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "rimraf (target ^5.0.x)", "version": "~3.0.2", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "ramda (target ^0.30.x)", "version": "^0.28.0", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" },
+      { "id": "chai (retain ^4.5.x)", "version": "^4.3.6", "type": "external_package", "version_source": "refactoring/gildedrose/js/package.json" }
+    ],
+    "edges": [
+      { "from": "algorithm/dijkstra", "to": "org.slf4j:slf4j-api (target 2.0.13)", "relationship": "declares" },
+      { "from": "algorithm/dijkstra", "to": "junit:junit (target 4.13.2)", "relationship": "declares in root and included java module" },
+      { "from": "refactoring/chartsmart/java", "to": "org.junit.jupiter modules (target 5.10.3)", "relationship": "declares api and engine" },
+      { "from": "refactoring/gildedrose/java", "to": "org.junit.jupiter modules (target 5.10.3)", "relationship": "declares api and engine" },
+      { "from": "refactoring/movierental", "to": "org.slf4j:slf4j-api (target 2.0.13)", "relationship": "declares" },
+      { "from": "refactoring/movierental", "to": "junit:junit (target 4.13.2)", "relationship": "declares in root and included java module" },
+      { "from": "refactoring/racingcar/java", "to": "org.slf4j:slf4j-api (target 2.0.13)", "relationship": "declares in root and all five included modules" },
+      { "from": "refactoring/racingcar/java", "to": "junit:junit (target 4.13.2)", "relationship": "declares in root and all five included modules" },
+      { "from": "refactoring/racingcar/java", "to": "org.mockito:mockito-core (target 5.12.0)", "relationship": "declares in root" },
+      { "from": "refactoring/tennis/java", "to": "org.junit.jupiter modules (target 5.10.3)", "relationship": "declares api, engine, and params" },
+      { "from": "refactoring/trivia/java", "to": "junit:junit (target 4.13.2)", "relationship": "declares" },
+      { "from": "tdd/bowlinggame", "to": "org.slf4j:slf4j-api (target 2.0.13)", "relationship": "declares in root" },
+      { "from": "tdd/bowlinggame", "to": "junit:junit (target 4.13.2)", "relationship": "declares in root and included java module" },
+      { "from": "tdd/gameoflife", "to": "junit:junit (target 4.13.2)", "relationship": "declares in root and included java module" },
+      { "from": "tdd/minesweeper/java", "to": "org.junit.jupiter modules (target 5.10.3)", "relationship": "declares api and engine" },
+      { "from": "tdd/rpg-combat/java", "to": "org.junit.jupiter modules (target 5.10.3)", "relationship": "declares api, engine, and params" },
+      { "from": "tdd/stringcalculator", "to": "org.slf4j:slf4j-api (target 2.0.13)", "relationship": "declares in root" },
+      { "from": "tdd/stringcalculator", "to": "junit:junit (target 4.13.2)", "relationship": "declares in root and included java module" },
+      { "from": "tdd/stringcalculator", "to": "org.mockito:mockito-core (target 5.12.0)", "relationship": "declares in included java module" },
+      { "from": "tdd/stringcalculator", "to": "com.google.guava:guava (target 33.2.1-jre)", "relationship": "declares in included java module" },
+      { "from": "refactoring/gildedrose/js", "to": "typescript (target ^5.5.x)", "relationship": "devDependency" },
+      { "from": "refactoring/gildedrose/js", "to": "jest (target ^29.7.x)", "relationship": "devDependency and test runner" },
+      { "from": "refactoring/gildedrose/js", "to": "ts-jest (target ^29.2.x)", "relationship": "devDependency and Jest transformer" },
+      { "from": "refactoring/gildedrose/js", "to": "@types/jest (target ^29.5.x)", "relationship": "devDependency" },
+      { "from": "refactoring/gildedrose/js", "to": "mocha (target ^10.6.x)", "relationship": "devDependency and test runner" },
+      { "from": "refactoring/gildedrose/js", "to": "@types/mocha (target ^10.0.x)", "relationship": "devDependency" },
+      { "from": "refactoring/gildedrose/js", "to": "@types/node (target ^22.x)", "relationship": "devDependency" },
+      { "from": "refactoring/gildedrose/js", "to": "ts-node (target ^10.9.x)", "relationship": "devDependency" },
+      { "from": "refactoring/gildedrose/js", "to": "tsconfig-paths (target ^4.2.x)", "relationship": "devDependency" },
+      { "from": "refactoring/gildedrose/js", "to": "rimraf (target ^5.0.x)", "relationship": "devDependency used by precompile and pretest" },
+      { "from": "refactoring/gildedrose/js", "to": "ramda (target ^0.30.x)", "relationship": "devDependency; no source import found" },
+      { "from": "refactoring/gildedrose/js", "to": "chai (retain ^4.5.x)", "relationship": "devDependency used by Mocha tests" }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 37,
+    "high_risk_count": 19,
+    "breaking_changes": [
+      "Gradle 8 removes the compile and testCompile configurations used by 15 build files.",
+      "jcenter() is unavailable and appears in ten active build files.",
+      "Gradle wrapper jumps range from 7.x to 8.10.2 and, for bowlinggame/stringcalculator, from 3.1 to 8.10.2.",
+      "sourceCompatibility values 1.10 are malformed for the intended Java level; several other projects omit an explicit source level.",
+      "Mockito 2.x to 5.12.0 and Guava 19.0 to 33.2.1-jre are large major-version jumps requiring module-level test validation.",
+      "rimraf 5 requires explicit --glob handling for the current npm cleanup scripts.",
+      "ts-jest 29 removes the ts-jest/utils subpath used by jest.config.ts; Jest and ts-jest majors must stay aligned.",
+      "Chai 5 would switch the Mocha CommonJS setup to ESM, so the requested retained Chai 4 line is a deliberate compatibility constraint."
+    ],
+    "notes": "The audit identified 12 independent Gradle wrapper roots and 22 active build.gradle files. GitNexus confirmed the racingcar module flow and test surfaces; targeted filesystem reads supplied precise Gradle and manifest line locations. Generated wrapper JAR/scripts may also be refreshed by the executor's wrapper command, but the version-bearing configuration locations are the 12 wrapper properties files listed here."
+  },
+  "coverage_notes": "GitNexus index coderetreat was available (192 files, 723 nodes, 1273 edges) and used for structure/usage discovery; exact configuration line ranges were verified with targeted reads because build manifests are represented primarily as file nodes. All settings.gradle files were inspected: dijkstra, movierental, bowlinggame, gameoflife, and stringcalculator include a java module; racingcar includes leaderboard, telemetrysystem, textconverter, tirepressuremonitoringsystem, and turnticketdispenser; other wrapper roots are single active source projects despite legacy placeholder includes/comments. No excluded paths. No external services were declared, and a targeted scan of repository-owned files found no database, search, broker, cache, Docker, host/port, or other service configuration. node_modules and historical *.patch files were excluded from findings. No direct Ramda source import was found. The Step 2a async/express/socket.io/uglify-js checklist does not apply to any requested direct dependency crossing a listed boundary. Repository git status could not be read because Git flagged dubious ownership; this did not reduce manifest/module coverage."
+}
