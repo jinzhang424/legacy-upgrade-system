@@ -1,0 +1,367 @@
+﻿{
+    "upgrade_description":  "Upgrade codemirror5 devDependency toolchain to latest compatible versions: rollup ^1.26.3 to 4.63.2, puppeteer ^1.20.0 to 25.10.0, @rollup/plugin-buble ^0.21.3 to 1.0.3, cm5-vim ^0.0.5 to 0.0.6. node-static 0.7.11 and blint ^1.1.2 already latest; no change. Migrate rollup.config.js to current Rollup 4 config API/plugin interfaces. Update test/run.js for Puppeteer 25 API changes including page.waitFor removal and headless mode changes. Do not migrate to CodeMirror 6.",
+    "ordered_changes":  [
+                            {
+                                "sequence":  1,
+                                "file_path":  "package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Root npm manifest declares the requested devDependency upgrades and the build/test scripts that validate them.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  17,
+                                                      "end_line":  18,
+                                                      "symbol_or_pattern":  "scripts.build/scripts.watch",
+                                                      "matched_api":  "rollup -c / rollup -w -c"
+                                                  },
+                                                  {
+                                                      "start_line":  24,
+                                                      "end_line":  30,
+                                                      "symbol_or_pattern":  "devDependencies",
+                                                      "matched_api":  "@rollup/plugin-buble, blint, cm5-vim, node-static, puppeteer, rollup, rollup-plugin-copy"
+                                                  }
+                                              ],
+                                "change_description":  "In devDependencies, update only the requested entries: set \"@rollup/plugin-buble\" to \"1.0.3\", \"cm5-vim\" to \"0.0.6\", \"puppeteer\" to \"25.10.0\", and \"rollup\" to \"4.63.2\". Leave \"blint\": \"^1.1.2\", \"node-static\": \"0.7.11\", and \"rollup-plugin-copy\": \"^3.4.0\" unchanged. Do not alter the build, watch, prepare, test, or lint script strings unless validation proves Rollup 4 requires an exact script-level adjustment.",
+                                "validation_evidence":  [
+                                                            "package.json contains the four exact upgraded devDependency strings and still contains unchanged node-static/blint strings.",
+                                                            "npm install completes from the repository root after the manifest edit.",
+                                                            "npm run build and npm test run against the installed upgraded toolchain."
+                                                        ]
+                            },
+                            {
+                                "sequence":  2,
+                                "file_path":  "rollup.config.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Rollup 1 to 4 and @rollup/plugin-buble 0.21 to 1.0 cross major configuration/plugin-interface boundaries; this config directly drives all generated build outputs.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "import buble / import copy",
+                                                      "matched_api":  "@rollup/plugin-buble, rollup-plugin-copy"
+                                                  },
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "copy({ targets })",
+                                                      "matched_api":  "rollup-plugin-copy with require.resolve(\"cm5-vim/vim.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  13,
+                                                      "end_line":  30,
+                                                      "symbol_or_pattern":  "export default[0]",
+                                                      "matched_api":  "Rollup config object, UMD output, buble({namedFunctionExpressions:false}), copyVim"
+                                                  },
+                                                  {
+                                                      "start_line":  32,
+                                                      "end_line":  50,
+                                                      "symbol_or_pattern":  "export default[1..2]",
+                                                      "matched_api":  "Rollup config objects for IIFE/CJS runmode outputs with buble plugin"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the three output targets intact: src/codemirror.js to lib/codemirror.js as UMD named CodeMirror with the existing banner, src/addon/runmode/runmode-standalone.js to addon/runmode/runmode-standalone.js as IIFE named CodeMirror with freeze false, and src/addon/runmode/runmode.node.js to addon/runmode/runmode.node.js as CJS with freeze false. Preserve the buble({namedFunctionExpressions: false}) option for every output. Migrate the config so it loads under Rollup 4 without relying on an unavailable CommonJS require in an ES-module-style config: add createRequire from the Node module package and define require via createRequire(import.meta.url), or otherwise use a Rollup-4-compatible module-resolution pattern that still resolves cm5-vim/vim.js and copies it to ./keymap. Keep rollup-plugin-copy usage narrow to the cm5-vim copy target. Do not edit src/, lib/, addon/, mode/, theme/, demo/, doc/, or keymap source files manually.",
+                                "validation_evidence":  [
+                                                            "npm run build completes with Rollup 4 and @rollup/plugin-buble 1.0.3.",
+                                                            "Build output paths are regenerated: lib/codemirror.js, keymap/vim.js, addon/runmode/runmode-standalone.js, and addon/runmode/runmode.node.js.",
+                                                            "rollup.config.js still contains buble({namedFunctionExpressions: false}) and require.resolve(\"cm5-vim/vim.js\") or an equivalent literal cm5-vim/vim.js resolver."
+                                                        ]
+                            },
+                            {
+                                "sequence":  3,
+                                "file_path":  "test/run.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "The test runner directly launches Puppeteer and hosts the local static test page; Puppeteer 1 to 25 changes browser launch and headless behavior.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  18,
+                                                      "symbol_or_pattern":  "node-static/http server on port 3000",
+                                                      "matched_api":  "require(\u0027node-static\u0027).Server, require(\u0027http\u0027).createServer, listen(3000)"
+                                                  },
+                                                  {
+                                                      "start_line":  19,
+                                                      "end_line":  21,
+                                                      "symbol_or_pattern":  "puppeteer.launch/newPage",
+                                                      "matched_api":  "require(\u0027puppeteer\u0027), puppeteer.launch({args:[...]})"
+                                                  },
+                                                  {
+                                                      "start_line":  22,
+                                                      "end_line":  28,
+                                                      "symbol_or_pattern":  "page event/setup/navigation",
+                                                      "matched_api":  "page.on, page.evaluateOnNewDocument, page.goto"
+                                                  },
+                                                  {
+                                                      "start_line":  29,
+                                                      "end_line":  41,
+                                                      "symbol_or_pattern":  "custom polling loop",
+                                                      "matched_api":  "page.evaluate loop with sleep helper"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the node-static server on port 3000 and the navigation target http://localhost:3000/test/index.html# plus the optional CLI argument. Update Puppeteer launch options for Puppeteer 25 by explicitly selecting a supported headless mode, preserving --no-sandbox and --disable-setuid-sandbox. Keep the existing custom polling loop; do not introduce page.waitFor. Ensure browser.close() and server.close() are reachable on both success and failure, preferably with try/finally around browser work instead of process.exit before cleanup. Preserve console/dialog logging and the final failure condition based on failed count, errors length, and lint.ok.",
+                                "validation_evidence":  [
+                                                            "npm test launches Chromium through Puppeteer 25 without deprecated page.waitFor usage.",
+                                                            "The test runner exits non-zero when failed tests, captured errors, or lint failure are present.",
+                                                            "The runner closes browser and server resources before process exit."
+                                                        ]
+                            },
+                            {
+                                "sequence":  4,
+                                "file_path":  "keymap/vim.js",
+                                "change_type":  "create",
+                                "estimated_risk":  "low",
+                                "rationale":  "The user constraint permits generated keymap/vim.js build output to change as a side effect of copying cm5-vim/vim.js after cm5-vim 0.0.6 is installed.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  1,
+                                                      "symbol_or_pattern":  "generated file",
+                                                      "matched_api":  "cm5-vim/vim.js copied to keymap/vim.js"
+                                                  }
+                                              ],
+                                "change_description":  "Do not hand-edit keymap/vim.js. Allow npm run build to create or refresh this generated output via the rollup.config.js copy target. If the file appears in the working tree after the build, validate that it came from node_modules/cm5-vim/vim.js for version 0.0.6 and do not apply unrelated source edits under keymap/.",
+                                "validation_evidence":  [
+                                                            "After npm run build, keymap/vim.js exists or is refreshed only through the cm5-vim copy target.",
+                                                            "No manual source edits are made under excluded directories beyond this allowed generated output."
+                                                        ]
+                            }
+                        ],
+    "planned_files":  [
+                          "package.json",
+                          "rollup.config.js",
+                          "test/run.js",
+                          "keymap/vim.js"
+                      ],
+    "expected_dependency_changes":  [
+                                        {
+                                            "file_path":  "package.json",
+                                            "dependency":  "@rollup/plugin-buble",
+                                            "from_version":  "^0.21.3",
+                                            "to_version":  "1.0.3"
+                                        },
+                                        {
+                                            "file_path":  "package.json",
+                                            "dependency":  "cm5-vim",
+                                            "from_version":  "^0.0.5",
+                                            "to_version":  "0.0.6"
+                                        },
+                                        {
+                                            "file_path":  "package.json",
+                                            "dependency":  "puppeteer",
+                                            "from_version":  "^1.20.0",
+                                            "to_version":  "25.10.0"
+                                        },
+                                        {
+                                            "file_path":  "package.json",
+                                            "dependency":  "rollup",
+                                            "from_version":  "^1.26.3",
+                                            "to_version":  "4.63.2"
+                                        }
+                                    ],
+    "validation":  {
+                       "base_branch_candidates":  [
+                                                      "main",
+                                                      "master"
+                                                  ],
+                       "executor_check_commands":  [
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true,
+                                                           "health_check_url":  "",
+                                                           "expected_output_checks":  {
+                                                                                          "must_not_contain":  [
+                                                                                                                   "npm ERR!",
+                                                                                                                   "ERR_PNPM",
+                                                                                                                   "yarn error"
+                                                                                                               ]
+                                                                                      }
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+                                                           "command":  "npm run build",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  120,
+                                                           "required":  true,
+                                                           "health_check_url":  "",
+                                                           "expected_output_checks":  {
+                                                                                          "must_not_contain":  [
+                                                                                                                   "Error:",
+                                                                                                                   "RollupError",
+                                                                                                                   "Cannot find module"
+                                                                                                               ]
+                                                                                      }
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+                                                           "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$out=\u0027startup.out.log\u0027; $err=\u0027startup.err.log\u0027; $code=\u0027const files = new (require(\u0027\u0027node-static\u0027\u0027).Server)(); require(\u0027\u0027http\u0027\u0027).createServer(function(req,res){ req.addListener(\u0027\u0027end\u0027\u0027, function(){ files.serve(req,res,function(err){ if(err){ console.error(err); process.exitCode=1; } }); }).resume(); }).listen(3000);\u0027; $p=Start-Process -FilePath node -ArgumentList @(\u0027-e\u0027,$code) -PassThru -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err; try { $ok=$false; $deadline=(Get-Date).AddSeconds(30); while((Get-Date) -lt $deadline){ try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:3000/\u0027 -TimeoutSec 2; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch {}; Start-Sleep -Milliseconds 500 }; if(-not $ok){ Get-Content $out,$err -ErrorAction SilentlyContinue; exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                           "purpose":  "startup",
+                                                           "timeout_seconds":  45,
+                                                           "required":  true,
+                                                           "health_check_url":  "http://localhost:3000/",
+                                                           "expected_output_checks":  {
+                                                                                          "must_not_contain":  [
+                                                                                                                   "Error:",
+                                                                                                                   "EADDRINUSE",
+                                                                                                                   "Cannot find module"
+                                                                                                               ]
+                                                                                      }
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+                                                           "command":  "npm test",
+                                                           "purpose":  "test",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true,
+                                                           "health_check_url":  "",
+                                                           "expected_output_checks":  {
+                                                                                          "must_not_contain":  [
+                                                                                                                   "Error:",
+                                                                                                                   "UnhandledPromiseRejection",
+                                                                                                                   "TimeoutError",
+                                                                                                                   "failed"
+                                                                                                               ]
+                                                                                      }
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\codemirror5",
+                                                           "command":  "node ./test/upgrade_toolchain_smoke.js",
+                                                           "purpose":  "test",
+                                                           "timeout_seconds":  120,
+                                                           "required":  true,
+                                                           "health_check_url":  "",
+                                                           "expected_output_checks":  {
+                                                                                          "must_not_contain":  [
+                                                                                                                   "Error:",
+                                                                                                                   "UnhandledPromiseRejection",
+                                                                                                                   "TimeoutError",
+                                                                                                                   "failed"
+                                                                                                               ]
+                                                                                      }
+                                                       }
+                                                   ],
+                       "build_commands":  [
+                                              "npm run build"
+                                          ],
+                       "startup_commands":  [
+                                                "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$out=\u0027startup.out.log\u0027; $err=\u0027startup.err.log\u0027; $code=\u0027const files = new (require(\u0027\u0027node-static\u0027\u0027).Server)(); require(\u0027\u0027http\u0027\u0027).createServer(function(req,res){ req.addListener(\u0027\u0027end\u0027\u0027, function(){ files.serve(req,res,function(err){ if(err){ console.error(err); process.exitCode=1; } }); }).resume(); }).listen(3000);\u0027; $p=Start-Process -FilePath node -ArgumentList @(\u0027-e\u0027,$code) -PassThru -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err; try { $ok=$false; $deadline=(Get-Date).AddSeconds(30); while((Get-Date) -lt $deadline){ try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:3000/\u0027 -TimeoutSec 2; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch {}; Start-Sleep -Milliseconds 500 }; if(-not $ok){ Get-Content $out,$err -ErrorAction SilentlyContinue; exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\""
+                                            ],
+                       "startup_health_check_urls":  [
+                                                         "http://localhost:3000/"
+                                                     ],
+                       "existing_test_commands":  [
+                                                      "npm test"
+                                                  ],
+                       "content_checks":  [
+                                              {
+                                                  "file_path":  "package.json",
+                                                  "must_contain":  [
+                                                                       "\"@rollup/plugin-buble\": \"1.0.3\"",
+                                                                       "\"cm5-vim\": \"0.0.6\"",
+                                                                       "\"puppeteer\": \"25.10.0\"",
+                                                                       "\"rollup\": \"4.63.2\"",
+                                                                       "\"node-static\": \"0.7.11\"",
+                                                                       "\"blint\": \"^1.1.2\"",
+                                                                       "\"build\": \"rollup -c\"",
+                                                                       "\"test\": \"node ./test/run.js\""
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "\"@rollup/plugin-buble\": \"^0.21.3\"",
+                                                                           "\"cm5-vim\": \"^0.0.5\"",
+                                                                           "\"puppeteer\": \"^1.20.0\"",
+                                                                           "\"rollup\": \"^1.26.3\""
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "rollup.config.js",
+                                                  "must_contain":  [
+                                                                       "import buble from \u0027@rollup/plugin-buble\u0027;",
+                                                                       "buble({namedFunctionExpressions: false})",
+                                                                       "cm5-vim/vim.js",
+                                                                       "file: \"lib/codemirror.js\"",
+                                                                       "file: \"addon/runmode/runmode-standalone.js\"",
+                                                                       "file: \"addon/runmode/runmode.node.js\""
+                                                                   ],
+                                                  "must_not_contain":  [
+
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "test/run.js",
+                                                  "must_contain":  [
+                                                                       "const puppeteer = require(\u0027puppeteer\u0027);",
+                                                                       "--no-sandbox",
+                                                                       "--disable-setuid-sandbox",
+                                                                       "http://localhost:3000/test/index.html#",
+                                                                       "window.done",
+                                                                       "lint.ok"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "page.waitFor("
+                                                                       ]
+                                              }
+                                          ],
+                       "key_pages":  [
+                                         {
+                                             "url":  "http://localhost:3000/",
+                                             "description":  "main demo index.html"
+                                         },
+                                         {
+                                             "url":  "http://localhost:3000/test/index.html",
+                                             "description":  "automated browser test-suite page driven by npm test"
+                                         },
+                                         {
+                                             "url":  "http://localhost:3000/demo/vim.html",
+                                             "description":  "Vim keymap demo exercising upgraded cm5-vim dependency"
+                                         },
+                                         {
+                                             "url":  "http://localhost:3000/demo/search.html",
+                                             "description":  "Search demo exercising addon loading against rebuilt lib/codemirror.js"
+                                         },
+                                         {
+                                             "url":  "http://localhost:3000/demo/theme.html",
+                                             "description":  "Theme demo exercising theme loading against rebuilt lib/codemirror.js"
+                                         }
+                                     ],
+                       "key_user_flows":  [
+                                              {
+                                                  "name":  "vim-demo-load-and-edit",
+                                                  "url":  "http://localhost:3000/demo/vim.html",
+                                                  "steps":  [
+                                                                "navigate to http://localhost:3000/demo/vim.html",
+                                                                "click the primary editor surface",
+                                                                "type i",
+                                                                "type upgraded",
+                                                                "press Escape",
+                                                                "check browser console for errors"
+                                                            ],
+                                                  "description":  "High-risk interactive check for the cm5-vim generated keymap after cm5-vim 0.0.6 is copied into keymap/vim.js."
+                                              }
+                                          ],
+                       "external_service_checks":  [
+
+                                                   ],
+                       "success_criteria":  [
+                                                "Only package.json, rollup.config.js, test/run.js, and generated keymap/vim.js are changed for this plan; excluded source directories are not manually edited.",
+                                                "Dependency versions are updated exactly for rollup, puppeteer, @rollup/plugin-buble, and cm5-vim; node-static and blint remain unchanged.",
+                                                "npm install, npm run build, bounded startup health check, and npm test all complete successfully.",
+                                                "The browser validator can load the startup URL and all key pages without console errors.",
+                                                "The Vim demo flow accepts input without console errors after the generated Vim keymap refresh.",
+                                                "Generated smoke test node ./test/upgrade_toolchain_smoke.js passes after npm install and npm run build, proving upgraded devDependency versions, Rollup output artifacts, and Puppeteer runner migration checks are satisfied.",
+                                                "Generated Vim demo integration check starts a local static server, loads /demo/vim.html in Puppeteer, confirms CodeMirror.Vim registration, inserts fixture text through the editor UI, verifies the text is returned from the editor value, and closes browser/server resources."
+                                            ],
+                       "scope_expansion_limit":  3,
+                       "generated_test_files":  [
+                                                    "test/upgrade_toolchain_smoke.js"
+                                                ],
+                       "generated_test_commands":  [
+                                                       "node ./test/upgrade_toolchain_smoke.js"
+                                                   ]
+                   },
+    "rollback_strategy":  "Revert the single final execution commit created by the executor.",
+    "planning_notes":  "Inspected only the ImpactReport locations plus minimal surrounding context in package.json lines 14-32, rollup.config.js lines 1-52, test/run.js lines 1-41, and attempted keymap/vim.js line 1. keymap/vim.js is absent in the current tree, so it is planned as generated output created/refreshed by npm run build rather than a hand edit. No package-lock.json, npm-shrinkwrap.json, yarn.lock, or pnpm-lock.yaml was found by targeted file search; user-supplied npm install is still preserved exactly as a required setup command because package manifests change and commands depend on installed packages. The startup health check URL http://localhost:3000/ comes from user_health_check_urls for the bounded node-static server on port 3000. npm test starts its own node-static server and drives http://localhost:3000/test/index.html through Puppeteer, so it is represented as an existing test command rather than a long-running startup command. No dependency_graph nodes require live verification and datastore_has_data=false, so external_service_checks is empty and no min_record_count is applicable. A bounded scope expansion limit of 3 is pre-authorized for runtime-discovered direct call sites into the planned Rollup/Puppeteer/Buble dependency bumps only; it does not authorize broad refactors, dependency changes outside expected_dependency_changes, or edits under excluded source directories except generated keymap/vim.js.",
+    "plan_summary":  "Update the codemirror5 build/test dev toolchain by changing four devDependency versions in package.json, adapting rollup.config.js for Rollup 4 while preserving existing output targets and cm5-vim copy behavior, and updating test/run.js for Puppeteer 25 launch/cleanup behavior. Validate with npm install, npm run build, a bounded node-static startup probe on http://localhost:3000/, npm test, key page browser console checks, and a focused Vim demo interaction."
+}
