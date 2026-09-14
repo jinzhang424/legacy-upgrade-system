@@ -1,0 +1,60 @@
+== test/test_add_cookie.py
+======================= 2 passed, 12 warnings in 14.32s ========================
+== test/test_admin_api.py
+======================= 22 passed, 11 warnings in 12.90s =======================
+== test/test_anon_workflow.py
+======================= 27 passed, 22 warnings in 18.63s =======================
+== test/test_api_user_login.py
+======================= 49 passed, 12 warnings in 13.43s =======================
+== test/test_app_content_domain.py
+======================= 33 passed, 19 warnings in 15.41s =======================
+== test/test_auto_login.py
+======================= 13 passed, 18 warnings in 14.46s =======================
+== test/test_browser_init.py
+======================= 8 passed, 11 warnings in 12.22s ========================
+== test/test_bugreport.py
+======================== 2 passed, 8 warnings in 10.09s ========================
+== test/test_cdxj_cache.py
+======================= 20 passed, 17 warnings in 25.75s =======================
+== test/test_colls_api.py
+======================= 13 passed, 9 warnings in 13.06s ========================
+== test/test_create_new_api.py
+======================= 10 passed, 20 warnings in 17.64s =======================
+== test/test_dat_api.py
+======================= 21 passed, 12 warnings in 15.61s =======================
+== test/test_external.py
+======================= 16 passed, 15 warnings in 17.35s =======================
+== test/test_extract.py
+================== 1 failed, 9 passed, 21 warnings in 23.18s ===================
+== test/test_lists_anon_user.py
+======================= 43 passed, 11 warnings in 13.91s =======================
+== test/test_lists_multi_user.py
+======================= 19 passed, 14 warnings in 14.98s =======================
+== test/test_login_migrate.py
+======================= 17 passed, 12 warnings in 15.98s =======================
+== test/test_no_anon.py
+======================= 4 passed, 16 warnings in 14.31s ========================
+== test/test_no_cookies.py
+======================== 1 passed, 7 warnings in 15.75s ========================
+== test/test_patch.py
+======================= 5 passed, 41 warnings in 22.57s ========================
+== test/test_pending.py
+======================= 6 passed, 31 warnings in 27.80s ========================
+== test/test_player_proxy.py
+======================= 33 passed, 16 warnings in 19.96s =======================
+== test/test_rate_limits.py
+======================= 7 passed, 17 warnings in 15.50s ========================
+== test/test_rec.py
+======================= 2 passed, 12 warnings in 13.44s ========================
+== test/test_record_limits.py
+======================= 8 passed, 16 warnings in 16.20s ========================
+== test/test_recs_api.py
+======================= 20 passed, 12 warnings in 14.48s =======================
+== test/test_register_migrate.py
+======================= 53 passed, 28 warnings in 22.37s =======================
+== test/test_storage_commit.py
+================= 13 passed, 13 skipped, 15 warnings in 30.35s =================
+== test/test_upload.py
+======================= 37 passed, 93 warnings in 54.20s =======================
+== test/test_ws.py
+======================= 8 passed, 22 warnings in 20.97s ========================

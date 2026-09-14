@@ -1,0 +1,3202 @@
+{
+  "upgrade_description": "Upgrade every independent coderetreat kata and complete Gradle module tree to Gradle 8.10.2 on Java 21 with sourceCompatibility 17, the requested Java dependency/repository/configuration targets, and upgrade refactoring/gildedrose/js for Node 22 with the requested TypeScript/Jest/Mocha stack while preserving kata isolation.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The aggregate kata build uses JCenter, removed Gradle configurations, and old SLF4J/JUnit versions.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` immediately after the Java plugin; replace `jcenter()` with `mavenCentral()`; replace `compile`/`testCompile` declarations with `implementation`/`testImplementation`; update `org.slf4j:slf4j-api` from 1.7.12 to 2.0.13 and `junit:junit` from 4.12 to 4.13.2. Preserve the `java` included-project boundary.",
+      "validation_evidence": [
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The included Java module uses removed testCompile syntax and an old JUnit version.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` after the Java plugin and replace `testCompile 'junit:junit:4.12'` with `testImplementation 'junit:junit:4.13.2'`.",
+      "validation_evidence": [
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 3,
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The malformed Java level and JUnit Jupiter 5.8.2 declarations do not meet the requested targets.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Replace `sourceCompatibility = 1.10` with `sourceCompatibility = 17`; update junit-jupiter-api and junit-jupiter-engine from 5.8.2 to 5.10.3; retain ApprovalTests 14.0.0 and the existing JUnit Platform test configuration.",
+      "validation_evidence": [
+        "From refactoring/chartsmart/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 4,
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The malformed Java level and JUnit Jupiter 5.8.2 declarations do not meet the requested targets.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Replace `sourceCompatibility = 1.10` with `sourceCompatibility = 17`; update junit-jupiter-api and junit-jupiter-engine from 5.8.2 to 5.10.3; retain the existing JUnit Platform test configuration.",
+      "validation_evidence": [
+        "From refactoring/gildedrose/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 5,
+      "file_path": "refactoring/movierental/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The aggregate kata build uses JCenter, removed Gradle configurations, and old SLF4J/JUnit versions.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` after the Java plugin; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J 1.7.12 to 2.0.13 and JUnit 4.12 to 4.13.2.",
+      "validation_evidence": [
+        "From refactoring/movierental, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 6,
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The included Java module uses removed testCompile syntax and old JUnit.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` after the Java plugin and replace `testCompile 'junit:junit:4.12'` with `testImplementation 'junit:junit:4.13.2'`.",
+      "validation_evidence": [
+        "From refactoring/movierental, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 7,
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The five-module aggregate crosses Gradle configuration, repository, SLF4J, JUnit, and Mockito compatibility boundaries.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 30,
+          "end_line": 30,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 30,
+          "end_line": 30,
+          "symbol_or_pattern": "org.mockito",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J to 2.0.13, JUnit to 4.13.2, and Mockito to 5.12.0. Do not alter the five-subproject settings tree.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 8,
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This included Racing Car module repeats the obsolete repository, configuration, SLF4J, and JUnit declarations.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J 1.7.12 to 2.0.13 and JUnit 4.12 to 4.13.2.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 9,
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This included Racing Car module repeats the obsolete repository, configuration, SLF4J, and JUnit declarations.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J 1.7.12 to 2.0.13 and JUnit 4.12 to 4.13.2.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 10,
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This included Racing Car module repeats the obsolete repository, configuration, SLF4J, and JUnit declarations.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J 1.7.12 to 2.0.13 and JUnit 4.12 to 4.13.2.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 11,
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This included Racing Car module repeats the obsolete repository, configuration, SLF4J, and JUnit declarations.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J 1.7.12 to 2.0.13 and JUnit 4.12 to 4.13.2.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 12,
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This included Racing Car module repeats the obsolete repository, configuration, SLF4J, and JUnit declarations.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J 1.7.12 to 2.0.13 and JUnit 4.12 to 4.13.2.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 13,
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The malformed Java level and JUnit Jupiter 5.8.2 modules do not meet the requested targets.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Replace `sourceCompatibility = 1.10` with `sourceCompatibility = 17`; update junit-jupiter-api, junit-jupiter-engine, and junit-jupiter-params from 5.8.2 to 5.10.3; retain JUnit Platform configuration.",
+      "validation_evidence": [
+        "From refactoring/tennis/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 14,
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The build uses removed testCompile syntax, old JUnit, and a JavaExec main property removed by modern Gradle.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `testCompile 'junit:junit:4.12'` with `testImplementation 'junit:junit:4.13.2'`; in `runGameRunner`, replace `main = javaMainClass` with `mainClass = javaMainClass` so Gradle 8 can configure the task.",
+      "validation_evidence": [
+        "From refactoring/trivia/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods.",
+        "Gradle configuration completes with the modern JavaExec mainClass property."
+      ]
+    },
+    {
+      "sequence": 15,
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The Gradle 3.1-era aggregate build uses JCenter, removed configurations, and old dependencies.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "From tdd/bowlinggame, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 16,
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The included Java module uses removed testCompile syntax and old JUnit.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` and replace `testCompile 'junit:junit:4.12'` with `testImplementation 'junit:junit:4.13.2'`.",
+      "validation_evidence": [
+        "From tdd/bowlinggame, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 17,
+      "file_path": "tdd/gameoflife/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The root build needs explicit Java 17 compatibility and the requested JUnit patch.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` after the Java plugin and update `testImplementation \"junit:junit:4.12\"` to `testImplementation \"junit:junit:4.13.2\"`; retain Maven Central and the existing modern dependency configuration.",
+      "validation_evidence": [
+        "From tdd/gameoflife, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 18,
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The included module needs explicit Java 17 compatibility and the requested JUnit patch.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17` after the Java plugin and update `testImplementation \"junit:junit:4.12\"` to `testImplementation \"junit:junit:4.13.2\"`.",
+      "validation_evidence": [
+        "From tdd/gameoflife, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 19,
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The malformed Java level and JUnit Jupiter 5.8.2 declarations do not meet the requested targets.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Replace `sourceCompatibility = 1.10` with `sourceCompatibility = 17`; update junit-jupiter-api and junit-jupiter-engine to 5.10.3; retain the JUnit Platform configuration.",
+      "validation_evidence": [
+        "From tdd/minesweeper/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 20,
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The Java level and JUnit Jupiter 5.8.2 modules are below the requested targets.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Replace `sourceCompatibility = 1.8` with `sourceCompatibility = 17`; update junit-jupiter-api, junit-jupiter-engine, and junit-jupiter-params to 5.10.3; retain JUnit Platform configuration.",
+      "validation_evidence": [
+        "From tdd/rpg-combat/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 21,
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The Gradle 3.1-era aggregate build uses JCenter, removed configurations, and old dependencies.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `jcenter()` with `mavenCentral()`; migrate `compile`/`testCompile` to `implementation`/`testImplementation`; update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "From tdd/stringcalculator, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 22,
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The included module crosses Gradle configuration, Guava, JUnit, and Mockito compatibility boundaries.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "com.google.guava",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency"
+        },
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "org.mockito:mockito-core:2.2.0",
+          "matched_api": "declared dependency"
+        }
+      ],
+      "change_description": "Insert `sourceCompatibility = 17`; replace `compile group:` with `implementation group:` and `testCompile` with `testImplementation`; update Guava 19.0 to 33.2.1-jre, JUnit 4.12 to 4.13.2, and Mockito 2.2.0 to 5.12.0.",
+      "validation_evidence": [
+        "From tdd/stringcalculator, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 23,
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 6.8.2, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from algorithm/dijkstra with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 24,
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 7.4.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from refactoring/chartsmart/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From refactoring/chartsmart/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 25,
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 7.4.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from refactoring/gildedrose/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From refactoring/gildedrose/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 26,
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 6.8.2, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from refactoring/movierental with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From refactoring/movierental, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 27,
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 6.8.2, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from refactoring/racingcar/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 28,
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 7.4.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from refactoring/tennis/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From refactoring/tennis/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 29,
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 6.8.3, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from refactoring/trivia/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From refactoring/trivia/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 30,
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 3.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from tdd/bowlinggame with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From tdd/bowlinggame, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 31,
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 7.2, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from tdd/gameoflife with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From tdd/gameoflife, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 32,
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 7.4.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from tdd/minesweeper/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From tdd/minesweeper/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 33,
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 7.4.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from tdd/rpg-combat/java with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From tdd/rpg-combat/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 34,
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This independent kata wrapper is Gradle 3.1, below the required Java 21-compatible Gradle 8.10.2 baseline.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution"
+        }
+      ],
+      "change_description": "Set distributionUrl to https\\://services.gradle.org/distributions/gradle-8.10.2-all.zip, then regenerate the complete wrapper from tdd/stringcalculator with the Gradle wrapper task so metadata remains internally consistent.",
+      "validation_evidence": [
+        "From tdd/stringcalculator, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 35,
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from algorithm/dijkstra; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 36,
+      "file_path": "algorithm/dijkstra/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from algorithm/dijkstra; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 37,
+      "file_path": "algorithm/dijkstra/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from algorithm/dijkstra; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 38,
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/chartsmart/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/chartsmart/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 39,
+      "file_path": "refactoring/chartsmart/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/chartsmart/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/chartsmart/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 40,
+      "file_path": "refactoring/chartsmart/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/chartsmart/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/chartsmart/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 41,
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/gildedrose/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/gildedrose/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 42,
+      "file_path": "refactoring/gildedrose/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/gildedrose/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/gildedrose/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 43,
+      "file_path": "refactoring/gildedrose/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/gildedrose/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/gildedrose/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 44,
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/movierental; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/movierental, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 45,
+      "file_path": "refactoring/movierental/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/movierental; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/movierental, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 46,
+      "file_path": "refactoring/movierental/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/movierental; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/movierental, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 47,
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/racingcar/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 48,
+      "file_path": "refactoring/racingcar/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/racingcar/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 49,
+      "file_path": "refactoring/racingcar/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/racingcar/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/racingcar/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the root and all five included modules without executing test methods."
+      ]
+    },
+    {
+      "sequence": 50,
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/tennis/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/tennis/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 51,
+      "file_path": "refactoring/tennis/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/tennis/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/tennis/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 52,
+      "file_path": "refactoring/tennis/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/tennis/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/tennis/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 53,
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/trivia/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/trivia/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 54,
+      "file_path": "refactoring/trivia/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/trivia/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/trivia/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 55,
+      "file_path": "refactoring/trivia/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from refactoring/trivia/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From refactoring/trivia/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 56,
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/bowlinggame; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/bowlinggame, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 57,
+      "file_path": "tdd/bowlinggame/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/bowlinggame; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/bowlinggame, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 58,
+      "file_path": "tdd/bowlinggame/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/bowlinggame; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/bowlinggame, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 59,
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/gameoflife; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/gameoflife, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 60,
+      "file_path": "tdd/gameoflife/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/gameoflife; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/gameoflife, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 61,
+      "file_path": "tdd/gameoflife/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/gameoflife; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/gameoflife, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 62,
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/minesweeper/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/minesweeper/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 63,
+      "file_path": "tdd/minesweeper/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/minesweeper/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/minesweeper/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 64,
+      "file_path": "tdd/minesweeper/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/minesweeper/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/minesweeper/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 65,
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/rpg-combat/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/rpg-combat/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 66,
+      "file_path": "tdd/rpg-combat/java/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/rpg-combat/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/rpg-combat/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 67,
+      "file_path": "tdd/rpg-combat/java/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/rpg-combat/java; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/rpg-combat/java, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 68,
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/stringcalculator; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/stringcalculator, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 69,
+      "file_path": "tdd/stringcalculator/gradlew",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/stringcalculator; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/stringcalculator, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 70,
+      "file_path": "tdd/stringcalculator/gradlew.bat",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This generated wrapper companion must match the Gradle 8.10.2 wrapper distribution and bootstrap behavior.",
+      "locations": [],
+      "change_description": "Regenerate this file as part of the complete Gradle 8.10.2 wrapper task executed from tdd/stringcalculator; do not hand-edit generated wrapper code or copy artifacts across kata roots. Preserve platform-appropriate executable behavior for gradlew.",
+      "validation_evidence": [
+        "From tdd/stringcalculator, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21, resolves the upgraded dependencies, and compiles production plus test sources for the complete included-project tree without executing test methods."
+      ]
+    },
+    {
+      "sequence": 71,
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This manifest controls the Node 22 TypeScript, Jest, Mocha, and cleanup toolchain.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "precompile",
+          "matched_api": "rimraf CLI glob handling"
+        },
+        {
+          "start_line": 8,
+          "end_line": 8,
+          "symbol_or_pattern": "pretest",
+          "matched_api": "rimraf CLI glob handling"
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "@types/jest",
+          "matched_api": "npm devDependency"
+        },
+        {
+          "start_line": 21,
+          "end_line": 21,
+          "symbol_or_pattern": "jest",
+          "matched_api": "npm devDependency"
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "mocha",
+          "matched_api": "npm devDependency"
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "ramda",
+          "matched_api": "npm devDependency"
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "rimraf",
+          "matched_api": "npm devDependency"
+        },
+        {
+          "start_line": 28,
+          "end_line": 28,
+          "symbol_or_pattern": "ts-jest",
+          "matched_api": "npm devDependency"
+        },
+        {
+          "start_line": 31,
+          "end_line": 31,
+          "symbol_or_pattern": "typescript",
+          "matched_api": "npm devDependency"
+        }
+      ],
+      "change_description": "Change precompile and pretest to `rimraf --glob app/**/*.js test/**/*.js jest.config.js` so prior emitted JavaScript is removed; set test:jest to `jest --config jest.config.ts`; add `validate:jest` using Jest 29 `--listTests --runInBand --no-cache`; add `validate:mocha` using Mocha 10 `--dry-run` with ts-node/register, tsconfig-paths/register, the ts extension, and the TypeScript Mocha spec glob. Set TypeScript ^5.5.4, Jest ^29.7.0, ts-jest ^29.2.5, @types/jest ^29.5.12, Mocha ^10.6.0, @types/mocha ^10.0.7, @types/node ^22.5.4, ts-node ^10.9.2, tsconfig-paths ^4.2.0, rimraf ^5.0.10, Ramda ^0.30.1, and Chai ^4.5.0. Retain full assertion-running test scripts for developer use, but do not invoke them as upgrade acceptance gates.",
+      "validation_evidence": [
+        "npm install succeeds on Node 22 and regenerates package-lock.json.",
+        "npm run precompile removes app/test JavaScript and jest.config.js residue, then npx tsc --noEmit compiles application, tests, and configuration without emitting files.",
+        "npm run validate:jest loads Jest 29 with jest.config.ts and lists discovered Jest tests without executing assertions.",
+        "npm run validate:mocha loads the TypeScript Mocha spec through Mocha 10, ts-node, and tsconfig-paths in dry-run mode without executing assertions.",
+        "Chai remains major 4 and Jest/ts-jest remain aligned on major 29."
+      ]
+    },
+    {
+      "sequence": 72,
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "ts-jest 29 no longer exports the mapper through the legacy ts-jest/utils subpath.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "pathsToModuleNameMapper",
+          "matched_api": "ts-jest/utils"
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "transform",
+          "matched_api": "ts-jest"
+        }
+      ],
+      "change_description": "Change only the import source for pathsToModuleNameMapper from `ts-jest/utils` to the `ts-jest` package root; retain the transform, roots, coverage, setup, and path-mapping semantics.",
+      "validation_evidence": [
+        "Jest 29 loads the explicit jest.config.ts through npm run validate:jest, ts-jest transforms remain configured, and the expected TypeScript test is discovered without executing assertions."
+      ]
+    },
+    {
+      "sequence": 73,
+      "file_path": "refactoring/gildedrose/js/package-lock.json",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The lock graph must be regenerated from the upgraded manifest under Node 22.",
+      "locations": [],
+      "change_description": "Run npm install in refactoring/gildedrose/js after package.json changes and commit the resulting package-lock.json as a unit; do not hand-edit transitive entries. Verify its root devDependency specifications match package.json.",
+      "validation_evidence": [
+        "npm install completes without lock mismatch and the root package dependency specifications match package.json.",
+        "The non-emitting TypeScript compile and Jest/Mocha load-only checks succeed using the resolved lock graph."
+      ]
+    },
+    {
+      "sequence": 74,
+      "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "The required Java 21 testClasses compatibility check rejects the prohibited java.dijkstra declaration, so this package-only correction is necessary to compile the Dijkstra test source.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "package java.dijkstra;",
+          "matched_api": "Java package declaration"
+        }
+      ],
+      "change_description": "Replace only `package java.dijkstra;` with `package dijkstra;`. Do not change, remove, disable, or weaken `Assert.assertTrue(\"First dummy test\", false)`. The production class already declares `package dijkstra;`, both files already reside under matching dijkstra source paths, and no import, file move, or class rename is required.",
+      "validation_evidence": [
+        "The test file contains `package dijkstra;`, contains no `java.dijkstra`, and retains `Assert.assertTrue(\"First dummy test\", false)` verbatim.",
+        "From algorithm/dijkstra, the required Gradle 8.10.2 `clean classes testClasses --no-daemon` command succeeds on Java 21 without executing test methods."
+      ]
+    },
+    {
+      "sequence": 75,
+      "file_path": "refactoring/gildedrose/js/tsconfig.json",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "TypeScript 5.5 compilation exposed conflicting upgraded Jest 29 and Mocha 10 ambient declarations in third-party declaration files.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "skipLibCheck",
+          "matched_api": "TypeScript compiler option"
+        }
+      ],
+      "change_description": "Add `\"skipLibCheck\": true` within compilerOptions. Keep strict checking for project source while skipping cross-validation of third-party .d.ts files whose Jest and Mocha ambient declarations conflict; do not change application or test source behavior.",
+      "validation_evidence": [
+        "`npx tsc --noEmit` succeeds with TypeScript 5.5 against the upgraded Jest and Mocha typings and emits no JavaScript.",
+        "The compiler configuration retains `strict: true` and adds only `skipLibCheck: true` for dependency declarations."
+      ]
+    }
+  ],
+  "planned_files": [
+    "algorithm/dijkstra/build.gradle",
+    "algorithm/dijkstra/java/build.gradle",
+    "refactoring/chartsmart/java/build.gradle",
+    "refactoring/gildedrose/java/build.gradle",
+    "refactoring/movierental/build.gradle",
+    "refactoring/movierental/java/build.gradle",
+    "refactoring/racingcar/java/build.gradle",
+    "refactoring/racingcar/java/leaderboard/build.gradle",
+    "refactoring/racingcar/java/telemetrysystem/build.gradle",
+    "refactoring/racingcar/java/textconverter/build.gradle",
+    "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+    "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+    "refactoring/tennis/java/build.gradle",
+    "refactoring/trivia/java/build.gradle",
+    "tdd/bowlinggame/build.gradle",
+    "tdd/bowlinggame/java/build.gradle",
+    "tdd/gameoflife/build.gradle",
+    "tdd/gameoflife/java/build.gradle",
+    "tdd/minesweeper/java/build.gradle",
+    "tdd/rpg-combat/java/build.gradle",
+    "tdd/stringcalculator/build.gradle",
+    "tdd/stringcalculator/java/build.gradle",
+    "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+    "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.jar",
+    "algorithm/dijkstra/gradlew",
+    "algorithm/dijkstra/gradlew.bat",
+    "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/chartsmart/java/gradlew",
+    "refactoring/chartsmart/java/gradlew.bat",
+    "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/gildedrose/java/gradlew",
+    "refactoring/gildedrose/java/gradlew.bat",
+    "refactoring/movierental/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/movierental/gradlew",
+    "refactoring/movierental/gradlew.bat",
+    "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/racingcar/java/gradlew",
+    "refactoring/racingcar/java/gradlew.bat",
+    "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/tennis/java/gradlew",
+    "refactoring/tennis/java/gradlew.bat",
+    "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/trivia/java/gradlew",
+    "refactoring/trivia/java/gradlew.bat",
+    "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/bowlinggame/gradlew",
+    "tdd/bowlinggame/gradlew.bat",
+    "tdd/gameoflife/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/gameoflife/gradlew",
+    "tdd/gameoflife/gradlew.bat",
+    "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/minesweeper/java/gradlew",
+    "tdd/minesweeper/java/gradlew.bat",
+    "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/rpg-combat/java/gradlew",
+    "tdd/rpg-combat/java/gradlew.bat",
+    "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/stringcalculator/gradlew",
+    "tdd/stringcalculator/gradlew.bat",
+    "refactoring/gildedrose/js/package.json",
+    "refactoring/gildedrose/js/jest.config.ts",
+    "refactoring/gildedrose/js/package-lock.json",
+    "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+    "refactoring/gildedrose/js/tsconfig.json"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "1.10",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "1.10",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "org.mockito:mockito-core",
+      "from_version": "2.2.6",
+      "to_version": "5.12.0"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "1.10",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-params",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "dependency": "Gradle JavaExec main property",
+      "from_version": "main",
+      "to_version": "mainClass"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/gameoflife/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "1.10",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "1.8",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-params",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "Gradle repository",
+      "from_version": "jcenter()",
+      "to_version": "mavenCentral()"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "sourceCompatibility",
+      "from_version": "unspecified",
+      "to_version": "17"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "Gradle compile configuration",
+      "from_version": "compile",
+      "to_version": "implementation"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "Gradle test configuration",
+      "from_version": "testCompile",
+      "to_version": "testImplementation"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "com.google.guava:guava",
+      "from_version": "19.0",
+      "to_version": "33.2.1-jre"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "org.mockito:mockito-core",
+      "from_version": "2.2.0",
+      "to_version": "5.12.0"
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.3",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "3.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "3.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "typescript",
+      "from_version": "^4.6.3",
+      "to_version": "^5.5.4"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "jest",
+      "from_version": "^27.5.1",
+      "to_version": "^29.7.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "ts-jest",
+      "from_version": "^27.1.4",
+      "to_version": "^29.2.5"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/jest",
+      "from_version": "^27.4.1",
+      "to_version": "^29.5.12"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "mocha",
+      "from_version": "^9.2.2",
+      "to_version": "^10.6.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/mocha",
+      "from_version": "^9.1.0",
+      "to_version": "^10.0.7"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/node",
+      "from_version": "^17.0.23",
+      "to_version": "^22.5.4"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "ts-node",
+      "from_version": "^10.7.0",
+      "to_version": "^10.9.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "tsconfig-paths",
+      "from_version": "^3.14.1",
+      "to_version": "^4.2.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "rimraf",
+      "from_version": "~3.0.2",
+      "to_version": "^5.0.10"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "ramda",
+      "from_version": "^0.28.0",
+      "to_version": "^0.30.1"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "chai",
+      "from_version": "^4.3.6",
+      "to_version": "^4.5.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "dependency": "pathsToModuleNameMapper import",
+      "from_version": "ts-jest/utils",
+      "to_version": "ts-jest"
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "dependency": "Java package declaration",
+      "from_version": "java.dijkstra",
+      "to_version": "dijkstra"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/tsconfig.json",
+      "dependency": "TypeScript skipLibCheck",
+      "from_version": "unspecified",
+      "to_version": "true"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "main",
+      "master"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "algorithm/dijkstra",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/chartsmart/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/movierental",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/racingcar/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/tennis/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/trivia/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/bowlinggame",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/gameoflife",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/minesweeper/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/rpg-combat/java",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/stringcalculator",
+        "command": ".\\gradlew.bat clean classes testClasses --no-daemon",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm install",
+        "purpose": "setup",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm run precompile",
+        "purpose": "setup",
+        "timeout_seconds": 120,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npx tsc --noEmit",
+        "purpose": "compile",
+        "timeout_seconds": 300,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm run validate:jest",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm run validate:mocha",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true
+      }
+    ],
+    "build_commands": [
+      "powershell -NoProfile -Command \"Set-Location 'algorithm/dijkstra'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/chartsmart/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/gildedrose/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/movierental'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/racingcar/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/tennis/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/trivia/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/bowlinggame'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/gameoflife'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/minesweeper/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/rpg-combat/java'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/stringcalculator'; .\\gradlew.bat clean classes testClasses --no-daemon\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm install\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm run precompile\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npx tsc --noEmit\""
+    ],
+    "startup_commands": [],
+    "startup_health_check_urls": [],
+    "existing_test_commands": [
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm run validate:jest\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm run validate:mocha\""
+    ],
+    "generated_test_commands": [],
+    "generated_test_files": [],
+    "content_checks": [
+      {
+        "file_path": "algorithm/dijkstra/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2",
+          "name: 'mockito-core', version: '5.12.0'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/tennis/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'",
+          "name: 'junit-jupiter-params', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "refactoring/trivia/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2",
+          "mainClass = javaMainClass"
+        ],
+        "must_not_contain": [
+          "    testCompile ",
+          "main = javaMainClass",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'",
+          "name: 'junit-jupiter-params', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "org.slf4j:slf4j-api:2.0.13",
+          "junit:junit:4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "junit:junit:4.13.2",
+          "name: 'guava', version: '33.2.1-jre'",
+          "mockito-core:5.12.0"
+        ],
+        "must_not_contain": [
+          "    compile ",
+          "    testCompile ",
+          "sourceCompatibility = 1.10"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.3-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-3.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-3.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/package.json",
+        "must_contain": [
+          "\"precompile\": \"rimraf --glob app/**/*.js test/**/*.js jest.config.js\"",
+          "\"pretest\": \"rimraf --glob app/**/*.js test/**/*.js jest.config.js\"",
+          "\"test:jest\": \"jest --config jest.config.ts\"",
+          "\"validate:jest\": \"jest --config jest.config.ts --listTests --runInBand --no-cache\"",
+          "\"validate:mocha\": \"mocha --require ts-node/register --require tsconfig-paths/register --extension ts --dry-run test/mocha/**/*.spec.ts\"",
+          "\"typescript\": \"^5.5.4\"",
+          "\"jest\": \"^29.7.0\"",
+          "\"ts-jest\": \"^29.2.5\"",
+          "\"@types/jest\": \"^29.5.12\"",
+          "\"mocha\": \"^10.6.0\"",
+          "\"@types/mocha\": \"^10.0.7\"",
+          "\"@types/node\": \"^22.5.4\"",
+          "\"ts-node\": \"^10.9.2\"",
+          "\"tsconfig-paths\": \"^4.2.0\"",
+          "\"rimraf\": \"^5.0.10\"",
+          "\"ramda\": \"^0.30.1\"",
+          "\"chai\": \"^4.5.0\""
+        ],
+        "must_not_contain": [
+          "\"chai\": \"^5",
+          "\"precompile\": \"rimraf app/**/*.js test/**/*.js\"",
+          "\"pretest\": \"rimraf app/**/*.js test/**/*.js\""
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/jest.config.ts",
+        "must_contain": [
+          "from  \"ts-jest\""
+        ],
+        "must_not_contain": [
+          "ts-jest/utils"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/package-lock.json",
+        "must_contain": [
+          "\"typescript\": \"^5.5.4\"",
+          "\"jest\": \"^29.7.0\"",
+          "\"chai\": \"^4.5.0\""
+        ],
+        "must_not_contain": [
+          "\"ts-jest\": \"^27.1.4\""
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+        "must_contain": [
+          "package dijkstra;",
+          "Assert.assertTrue(\"First dummy test\", false);"
+        ],
+        "must_not_contain": [
+          "package java.dijkstra;",
+          "java.dijkstra"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/tsconfig.json",
+        "must_contain": [
+          "\"strict\": true",
+          "\"skipLibCheck\": true"
+        ],
+        "must_not_contain": [
+          "\"skipLibCheck\": false"
+        ]
+      }
+    ],
+    "key_pages": [],
+    "key_user_flows": [],
+    "external_service_checks": [],
+    "success_criteria": [
+      "All 75 planned files contain only the approved independent-kata build, wrapper, Node toolchain, Dijkstra package-compatibility, or TypeScript declaration-compatibility changes.",
+      "Each of the 12 independent wrapper roots selects Gradle 8.10.2 under Java 21; clean classes and testClasses compile every production and test source in the complete settings.gradle tree without executing test methods.",
+      "All 22 build.gradle files declare sourceCompatibility 17; active jcenter(), compile, and testCompile declarations are absent.",
+      "SLF4J 2.0.13, JUnit 4.13.2, JUnit Jupiter 5.10.3, Mockito 5.12.0, and Guava 33.2.1-jre resolve successfully and all production/test consumers compile.",
+      "All 36 generated Gradle wrapper companion files are regenerated within their own kata roots rather than shared across independent builds.",
+      "DijkstraAlgorithmTest uses package dijkstra for Java 21 testClasses compatibility while its intentional failing assertion remains verbatim and is never executed by required Gradle commands.",
+      "npm install succeeds under Node 22 and package-lock.json matches package.json.",
+      "npm run precompile removes execution-generated app/test JavaScript and jest.config.js residue; npx tsc --noEmit then compiles application, test, and configuration TypeScript without producing JavaScript or changing behavior.",
+      "tsconfig.json retains strict project checking and uses skipLibCheck only to avoid incompatible third-party Jest/Mocha ambient declaration cross-checking.",
+      "npm run validate:jest loads Jest 29, the explicit jest.config.ts, ts-jest, and expected test discovery without executing placeholder assertions.",
+      "npm run validate:mocha loads the TypeScript Mocha spec through Mocha 10, ts-node, and tsconfig-paths with --dry-run, without executing placeholder assertions or producing coverage output.",
+      "No application source, placeholder assertion, or test expectation is changed, removed, disabled, or weakened.",
+      "No startup/browser workflow, external service, datastore, or cross-kata coupling is introduced.",
+      "Any additional scope-expansion repair remains limited to a direct compatibility failure involving an already-listed dependency major bump; it must not alter application behavior or assertions."
+    ],
+    "scope_expansion_limit": 3
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "The approved ImpactReport remains the baseline, augmented by one execution-proven bounded scope expansion that the user explicitly asked to incorporate. The latest execution-result.json shows all 12 required Gradle `clean classes testClasses --no-daemon` checks passed, npm install passed, and TypeScript compilation passed only after adding `skipLibCheck` to refactoring/gildedrose/js/tsconfig.json because upgraded Jest 29 and Mocha 10 ambient declarations conflict in third-party .d.ts files. That file is now explicit planned change 75 with exact line-level guidance and content validation; strict project-source checking remains enabled, so no application or test behavior changes. The planned package.json change now also includes the execution-proven explicit `--config jest.config.ts` selection, because emitting TypeScript previously created a duplicate jest.config.js that Jest 29 rejected. The user clarified that assertion outcomes are not acceptance criteria for Node test frameworks either. Consequently, the pre-existing Jest placeholder expectation (expected fixme, received foo) is not changed, removed, disabled, or weakened. Required Node validation now installs dependencies, cleans the five execution-generated app/test JavaScript files plus generated jest.config.js, compiles all TypeScript with `npx tsc --noEmit`, lists Jest-discovered tests using the explicit TypeScript configuration without executing them, and dry-loads the TypeScript Mocha spec through Mocha 10, ts-node, and tsconfig-paths without running assertions. Local tool help from the installed target toolchain confirms Jest 29 supports --listTests, --runInBand, and --no-cache and Mocha 10 supports --dry-run, --require, and --extension. Separate validate:jest and validate:mocha package scripts make the non-asserting acceptance behavior deterministic while preserving the full assertion-running test:jest and test:mocha scripts for developers. npm run compile is removed from acceptance because it emits tracked/untracked JavaScript; npm run precompile followed by npx tsc --noEmit prevents repository pollution. package-lock.json remains planned and is regenerated only by required npm install. The 12 Gradle compilation checks and the required Dijkstra package correction remain unchanged, and no Gradle test method runs. The repository currently contains uncommitted failed-execution edits plus restored user changes; this revision modifies only change-plan.json and does not authorize changes to .gitignore, .claude/, AGENTS.md, CLAUDE.md, application sources, or placeholder assertions. No startup/browser or external-service checks apply. The bounded scope allowance cannot be used to alter behavior, expectations, or assertions.",
+  "plan_summary": "Upgrade 12 isolated Gradle trees and the Gilded Rose Node toolchain, retain the required Dijkstra package fix and TypeScript skipLibCheck repair, then validate Java by compilation and Jest/Mocha by non-asserting discovery/dry-load checks with non-emitting TypeScript compilation."
+}
