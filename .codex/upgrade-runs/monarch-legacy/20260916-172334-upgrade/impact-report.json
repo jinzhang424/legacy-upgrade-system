@@ -1,0 +1,431 @@
+{
+  "upgrade_description": "Upgrade monarch-app dependencies for Node 18/20 LTS: hapi to @hapi/hapi ^21, inert to @hapi/inert ^7 with require changes; Babel 6 to Babel 7; webpack/tooling to v5; node-sass to sass; ESLint 8; Vue 2.7 interim and Bootstrap 5; request and axios 0.18 to axios 1; moment to dayjs; Gulp 4; Mocha 10; Mustache 4; Underscore 1.13; xml2js 0.6; engines.node >=18.",
+  "affected_files": [
+    {
+      "file_path": "package.json",
+      "change_type": "dependency_manifest",
+      "usage_type": "manifest_scripts_engines",
+      "risk_level": "high",
+      "reason": "Only dependency manifest; contains Node 6 engine, legacy command flags, all requested old packages, and no lockfile exists.",
+      "locations": [
+        {"start_line": 5, "end_line": 42, "symbol": "scripts", "matched_api": "webpack/eslint/start scripts", "usage_type": "build_and_runtime_commands", "confidence": "high", "reason": "Webpack 5/dev-server 5 remove or change several CLI flags; scripts use Unix-only environment syntax."},
+        {"start_line": 53, "end_line": 56, "symbol": "engines", "matched_api": "node >= 6.11.2", "usage_type": "runtime_constraint", "confidence": "high", "reason": "Must become Node >=18."},
+        {"start_line": 61, "end_line": 119, "symbol": "devDependencies", "matched_api": "Babel 6, webpack 4, Gulp 3, ESLint 5, Mocha 5, node-sass 4", "usage_type": "dependency_declarations", "confidence": "high", "reason": "Requested toolchain majors are declared here."},
+        {"start_line": 121, "end_line": 150, "symbol": "dependencies", "matched_api": "hapi/inert/request/axios/moment/Vue/Bootstrap/Mustache/Underscore/xml2js", "usage_type": "dependency_declarations", "confidence": "high", "reason": "Requested runtime replacements and upgrades are declared here."}
+      ]
+    },
+    {
+      "file_path": ".babelrc",
+      "change_type": "build_configuration",
+      "usage_type": "babel_configuration",
+      "risk_level": "high",
+      "reason": "Babel 6 preset/plugin names must move to Babel 7 package names or supported equivalents.",
+      "locations": [{"start_line": 1, "end_line": 4, "symbol": "Babel config", "matched_api": "env, transform-runtime, syntax-dynamic-import", "usage_type": "configuration", "confidence": "high", "reason": "All configured names are Babel 6-era."}]
+    },
+    {
+      "file_path": ".eslintrc",
+      "change_type": "lint_configuration",
+      "usage_type": "eslint_configuration",
+      "risk_level": "medium",
+      "reason": "ESLint 8 and newer Vue/Airbnb configuration require parser/plugin compatibility and valid modern config syntax.",
+      "locations": [{"start_line": 1, "end_line": 26, "symbol": "ESLint config", "matched_api": "babel-eslint/plugin:vue/strongly-recommended/airbnb-base", "usage_type": "configuration", "confidence": "high", "reason": "Legacy parser and plugin versions are coupled to ESLint 5."}]
+    },
+    {
+      "file_path": "webpack.config.js",
+      "change_type": "build_configuration",
+      "usage_type": "webpack_sass_dev_server_configuration",
+      "risk_level": "high",
+      "reason": "Webpack 5 removes NamedModulesPlugin and node polyfill config, dev-server 5 changes its schema, ExtractTextPlugin is obsolete, and sass-loader now uses Dart Sass/API-specific options.",
+      "locations": [
+        {"start_line": 8, "end_line": 23, "symbol": "loader/plugin imports", "matched_api": "node-sass, extract-text-webpack-plugin, vue-loader/lib/plugin", "usage_type": "module_import", "confidence": "high", "reason": "node-sass is replaced; plugin compatibility must be aligned with webpack 5 and Vue 2.7."},
+        {"start_line": 126, "end_line": 160, "symbol": "plugins", "matched_api": "ExtractTextPlugin, webpack.NamedModulesPlugin, LoaderOptionsPlugin", "usage_type": "webpack_plugin_configuration", "confidence": "high", "reason": "Webpack 5 requires MiniCssExtractPlugin or asset modules; NamedModulesPlugin was removed."},
+        {"start_line": 194, "end_line": 209, "symbol": "preLoaders", "matched_api": "eslint-loader", "usage_type": "webpack_loader_configuration", "confidence": "high", "reason": "eslint-loader is deprecated and incompatible with the requested lint stack."},
+        {"start_line": 218, "end_line": 365, "symbol": "config.module", "matched_api": "cache/devtool/noParse/loader query/sass-loader/file-loader/url-loader/node", "usage_type": "webpack_configuration", "confidence": "high", "reason": "Multiple webpack 4-era options/loaders require webpack 5 schema and asset-module updates."},
+        {"start_line": 395, "end_line": 502, "symbol": "config.devServer", "matched_api": "clientLogLevel/noInfo/inline/contentBase/overlay/publicPath/quiet/watchOptions/proxy", "usage_type": "dev_server_configuration", "confidence": "high", "reason": "webpack-dev-server 5 has a materially different option and proxy schema."}
+      ]
+    },
+    {
+      "file_path": "gulpfile.js",
+      "change_type": "task_runner_migration",
+      "usage_type": "gulp_task_definitions",
+      "risk_level": "high",
+      "reason": "Gulp 3 array dependencies are unsupported in Gulp 4; Node 18 also rejects several legacy Buffer and js-yaml APIs.",
+      "locations": [
+        {"start_line": 30, "end_line": 33, "symbol": "aggregate tasks", "matched_api": "gulp.task(name, dependencyArray)", "usage_type": "task_dependency", "confidence": "high", "reason": "Must migrate orchestration to gulp.series/gulp.parallel."},
+        {"start_line": 128, "end_line": 217, "symbol": "build tasks", "matched_api": "gulp.task with dependency arrays", "usage_type": "task_definitions", "confidence": "high", "reason": "All dependent task declarations require Gulp 4 composition."},
+        {"start_line": 44, "end_line": 49, "symbol": "yaml_to_json", "matched_api": "jsyaml.safeLoad and new Buffer", "usage_type": "node_runtime_api", "confidence": "high", "reason": "Transitive/config APIs are legacy under Node 18 and current js-yaml."}
+      ]
+    },
+    {
+      "file_path": "lib/monarch/web/webapp.js",
+      "change_type": "runtime_api_migration",
+      "usage_type": "hapi_inert_request_mustache_xml2js",
+      "risk_level": "high",
+      "reason": "Central server combines Hapi 16 callbacks/connections, Inert registration, request+wait.for synchronous calls, Mustache rendering, and xml2js parsing.",
+      "locations": [
+        {"start_line": 132, "end_line": 136, "symbol": "AsyncRequest", "matched_api": "request.defaults", "usage_type": "http_client_initialization", "confidence": "high", "reason": "request replacement must preserve timeouts/keepalive and call semantics."},
+        {"start_line": 202, "end_line": 232, "symbol": "app", "matched_api": "require('hapi'), require('inert'), new Hapi.Server, app.connection, app.register(callback)", "usage_type": "server_bootstrap", "confidence": "high", "reason": "Hapi 21 uses @hapi packages, constructor options, promises, and a different lifecycle."},
+        {"start_line": 2611, "end_line": 2627, "symbol": "blog RSS fetch", "matched_api": "WaitFor.for(AsyncRequest.get), xml2js.parseString", "usage_type": "synchronous_http_and_xml_parse", "confidence": "high", "reason": "Axios is promise-based; this control flow cannot be replaced mechanically."},
+        {"start_line": 4914, "end_line": 4925, "symbol": "startServer", "matched_api": "app.start(callback)", "usage_type": "server_lifecycle", "confidence": "high", "reason": "Hapi 21 start is promise-based and callback signature is removed."}
+      ]
+    },
+    {
+      "file_path": "lib/monarch/web/webenv.js",
+      "change_type": "runtime_api_review",
+      "usage_type": "hapi_route_registration",
+      "risk_level": "high",
+      "reason": "Registers Hapi routes and uses Underscore; route handlers must be validated against Hapi 21 response toolkit semantics.",
+      "locations": [
+        {"start_line": 2, "end_line": 2, "symbol": "underscore import", "matched_api": "require('underscore')", "usage_type": "module_import", "confidence": "high", "reason": "Direct dependency usage."},
+        {"start_line": 289, "end_line": 360, "symbol": "route registration", "matched_api": "app.route", "usage_type": "hapi_route_configuration", "confidence": "high", "reason": "Hapi major migration boundary."}
+      ]
+    },
+    {
+      "file_path": "lib/monarch/api.js",
+      "change_type": "http_client_migration",
+      "usage_type": "request_to_axios_and_external_services",
+      "risk_level": "high",
+      "reason": "request is wrapped by wait.for to expose synchronous fetches throughout the service layer; Axios 1 is asynchronous and response/error shapes differ.",
+      "locations": [
+        {"start_line": 14, "end_line": 40, "symbol": "dependency imports", "matched_api": "underscore, request.defaults, wait.for", "usage_type": "module_import", "confidence": "high", "reason": "Direct deprecated client setup."},
+        {"start_line": 80, "end_line": 89, "symbol": "fetchUrl", "matched_api": "WaitFor.for(AsyncRequest.get)", "usage_type": "synchronous_http", "confidence": "high", "reason": "Core synchronous wrapper needs async propagation or compatible abstraction."},
+        {"start_line": 3195, "end_line": 3204, "symbol": "HTTP post/get", "matched_api": "WaitFor.for(AsyncRequest.post/get)", "usage_type": "synchronous_http", "confidence": "high", "reason": "Request options and response bodies must be mapped explicitly."},
+        {"start_line": 4457, "end_line": 4491, "symbol": "service health checks", "matched_api": "SciGraph/GOlr/OwlSim endpoints", "usage_type": "external_service_health", "confidence": "high", "reason": "Startup/test behavior depends on live external services."}
+      ]
+    },
+    {
+      "file_path": "common.js",
+      "change_type": "date_library_migration",
+      "usage_type": "moment_to_dayjs",
+      "risk_level": "medium",
+      "reason": "Only direct Moment usage formats the build banner timestamp.",
+      "locations": [{"start_line": 9, "end_line": 24, "symbol": "getInfos", "matched_api": "moment(new Date()).format()", "usage_type": "date_formatting", "confidence": "high", "reason": "Direct replacement boundary; output format should be regression-checked."}]
+    },
+    {
+      "file_path": "ui/main.js",
+      "change_type": "frontend_framework_upgrade",
+      "usage_type": "vue_router_bootstrapvue_bootstrap",
+      "risk_level": "high",
+      "reason": "Vue 2 plugin/global component bootstrap and legacy BootstrapVue are central to the SPA; BootstrapVue 2 does not support Bootstrap 5.",
+      "locations": [
+        {"start_line": 5, "end_line": 31, "symbol": "frontend imports", "matched_api": "Vue, vue-router, bootstrap-vue", "usage_type": "module_import", "confidence": "high", "reason": "Vue 2.7 is feasible, but Bootstrap 5 requires replacing or removing BootstrapVue 2."},
+        {"start_line": 109, "end_line": 129, "symbol": "main", "matched_api": "Vue.use and Vue.component", "usage_type": "framework_bootstrap", "confidence": "high", "reason": "Vue 2 API remains valid for 2.7 but all plugin compatibility must be aligned."},
+        {"start_line": 158, "end_line": 242, "symbol": "router/root instance", "matched_api": "new Router and new Vue", "usage_type": "framework_bootstrap", "confidence": "high", "reason": "Confirms interim Vue 2.7 is substantially smaller than Vue 3 rewrite."}
+      ]
+    },
+    {
+      "file_path": "ui/router/index.js",
+      "change_type": "frontend_framework_review",
+      "usage_type": "vue_router_3",
+      "risk_level": "medium",
+      "reason": "Uses Vue Router 3 constructor API, compatible with Vue 2.7 but not Vue 3/router 4.",
+      "locations": [{"start_line": 1, "end_line": 15, "symbol": "router", "matched_api": "Vue.use(Router), new Router", "usage_type": "router_bootstrap", "confidence": "high", "reason": "Evidence supports interim Vue 2.7 rather than a full Vue 3 rewrite."}]
+    },
+    {
+      "file_path": "js/index.js",
+      "change_type": "frontend_dependency_upgrade",
+      "usage_type": "bootstrap_entry_import",
+      "risk_level": "high",
+      "reason": "Imports Bootstrap JavaScript; Bootstrap 5 drops jQuery, changes Popper package and many markup conventions.",
+      "locations": [{"start_line": 23, "end_line": 23, "symbol": "bootstrap import", "matched_api": "import 'bootstrap'", "usage_type": "side_effect_import", "confidence": "high", "reason": "Direct Bootstrap runtime boundary."}]
+    },
+    {
+      "file_path": "ui/components/AnalyzePhenotypes.vue",
+      "change_type": "ui_component_migration",
+      "usage_type": "bootstrap_vue_components",
+      "risk_level": "high",
+      "reason": "Uses BootstrapVue form, alert, checkbox, radio, and modal components that are not supplied by Bootstrap 5 itself.",
+      "locations": [{"start_line": 20, "end_line": 178, "symbol": "template", "matched_api": "b-form-textarea/b-alert/b-form-group/b-form-checkbox-group/b-form-radio-group/b-modal", "usage_type": "component_markup", "confidence": "high", "reason": "Requires a Vue-2-compatible Bootstrap 5 component strategy or component rewrites."}]
+    },
+    {
+      "file_path": "ui/components/AssocTable.vue",
+      "change_type": "ui_component_migration",
+      "usage_type": "bootstrap_vue_components",
+      "risk_level": "high",
+      "reason": "Uses BootstrapVue tables and pagination.",
+      "locations": [{"start_line": 9, "end_line": 148, "symbol": "template", "matched_api": "b-table/b-pagination", "usage_type": "component_markup", "confidence": "high", "reason": "Bootstrap 5 alone does not implement these Vue components."}]
+    },
+    {
+      "file_path": "ui/components/MonarchAutocomplete.vue",
+      "change_type": "ui_component_migration",
+      "usage_type": "bootstrap_vue_components",
+      "risk_level": "high",
+      "reason": "Uses BootstrapVue checkbox groups in the autocomplete workflow.",
+      "locations": [{"start_line": 20, "end_line": 61, "symbol": "template", "matched_api": "b-form-checkbox-group", "usage_type": "component_markup", "confidence": "high", "reason": "Autocomplete is a named Behave workflow and needs regression coverage."}]
+    },
+    {
+      "file_path": "ui/components/PhenotypesTable.vue",
+      "change_type": "ui_component_migration",
+      "usage_type": "bootstrap_vue_components",
+      "risk_level": "high",
+      "reason": "Uses BootstrapVue table and pagination components.",
+      "locations": [{"start_line": 4, "end_line": 63, "symbol": "template", "matched_api": "b-table/b-pagination", "usage_type": "component_markup", "confidence": "high", "reason": "Bootstrap 5 alone does not implement these Vue components."}]
+    },
+    {
+      "file_path": "js/exac_gene_summary.js",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1",
+      "risk_level": "medium",
+      "reason": "Direct Axios GET usage must be checked for Axios 1 error/params behavior.",
+      "locations": [{"start_line": 10, "end_line": 11, "symbol": "imports", "matched_api": "Vue and axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct imports."}, {"start_line": 58, "end_line": 66, "symbol": "request", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Axios request site."}]
+    },
+    {
+      "file_path": "js/exac_table.js",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1",
+      "risk_level": "medium",
+      "reason": "Direct Axios GET usage.",
+      "locations": [{"start_line": 10, "end_line": 11, "symbol": "imports", "matched_api": "Vue and axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct imports."}, {"start_line": 92, "end_line": 100, "symbol": "request", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Axios request site."}]
+    },
+    {
+      "file_path": "js/search_results.js",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1_search",
+      "risk_level": "medium",
+      "reason": "Search and suggestion flows use Axios GET and are covered by Behave autocomplete/basic tests.",
+      "locations": [{"start_line": 11, "end_line": 12, "symbol": "imports", "matched_api": "Vue and axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct imports."}, {"start_line": 95, "end_line": 207, "symbol": "search requests", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Multiple user-facing request sites."}]
+    },
+    {
+      "file_path": "ui/components/ExacGeneSummary.vue",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1",
+      "risk_level": "medium",
+      "reason": "Direct Axios GET usage in a Vue component.",
+      "locations": [{"start_line": 54, "end_line": 54, "symbol": "axios import", "matched_api": "import axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct dependency usage."}, {"start_line": 102, "end_line": 110, "symbol": "request", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Axios request site."}]
+    },
+    {
+      "file_path": "ui/components/ExacVariantTable.vue",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1",
+      "risk_level": "medium",
+      "reason": "Direct Axios GET usage in a Vue component.",
+      "locations": [{"start_line": 86, "end_line": 86, "symbol": "axios import", "matched_api": "import axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct dependency usage."}, {"start_line": 168, "end_line": 176, "symbol": "request", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Axios request site."}]
+    },
+    {
+      "file_path": "ui/monarchAccess/JSONAccess.js",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1",
+      "risk_level": "medium",
+      "reason": "Direct Axios GET wrapper.",
+      "locations": [{"start_line": 1, "end_line": 1, "symbol": "axios import", "matched_api": "import axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct dependency usage."}, {"start_line": 62, "end_line": 70, "symbol": "request", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Axios request site."}]
+    },
+    {
+      "file_path": "ui/monarchAccess/index.js",
+      "change_type": "http_client_upgrade",
+      "usage_type": "axios_1_data_access",
+      "risk_level": "medium",
+      "reason": "Main SPA data-access layer contains many Axios GET calls.",
+      "locations": [{"start_line": 2, "end_line": 2, "symbol": "axios import", "matched_api": "import axios", "usage_type": "module_import", "confidence": "high", "reason": "Direct dependency usage."}, {"start_line": 176, "end_line": 409, "symbol": "data requests", "matched_api": "axios.get", "usage_type": "http_request", "confidence": "high", "reason": "Multiple graph/bioentity request sites."}]
+    },
+    {
+      "file_path": "conf/server_config_dev.json",
+      "change_type": "external_service_configuration",
+      "usage_type": "live_service_endpoints",
+      "risk_level": "high",
+      "reason": "Development runtime points to live SciGraph, Solr/GOlr, OwlSim, and Biolink API services with no versions declared.",
+      "locations": [{"start_line": 6, "end_line": 18, "symbol": "service URLs", "matched_api": "HTTPS endpoints", "usage_type": "external_service_configuration", "confidence": "high", "reason": "Checked-in live endpoints require compatibility and availability verification."}]
+    },
+    {
+      "file_path": "conf/server_config_beta.json",
+      "change_type": "external_service_configuration",
+      "usage_type": "live_service_endpoints",
+      "risk_level": "high",
+      "reason": "Beta runtime points to live SciGraph, Solr/GOlr, OwlSim, and Biolink API services with no versions declared.",
+      "locations": [{"start_line": 6, "end_line": 18, "symbol": "service URLs", "matched_api": "HTTPS endpoints", "usage_type": "external_service_configuration", "confidence": "high", "reason": "Checked-in live endpoints require compatibility and availability verification."}]
+    },
+    {
+      "file_path": "conf/server_config_production.json",
+      "change_type": "external_service_configuration",
+      "usage_type": "live_service_endpoints",
+      "risk_level": "high",
+      "reason": "Production runtime points to live SciGraph, Solr/GOlr, OwlSim, and Biolink API services with no versions declared.",
+      "locations": [{"start_line": 4, "end_line": 18, "symbol": "service URLs", "matched_api": "HTTPS endpoints", "usage_type": "external_service_configuration", "confidence": "high", "reason": "Checked-in live endpoints require compatibility and availability verification."}]
+    },
+    {
+      "file_path": "conf/server_config_public.json",
+      "change_type": "external_service_configuration",
+      "usage_type": "live_service_endpoint",
+      "risk_level": "medium",
+      "reason": "Public configuration includes an unversioned plain-HTTP SciGraph data endpoint.",
+      "locations": [{"start_line": 6, "end_line": 6, "symbol": "scigraph_data_url", "matched_api": "http://datagraph.monarchinitiative.org/", "usage_type": "external_service_configuration", "confidence": "high", "reason": "Live unversioned dependency."}]
+    },
+    {
+      "file_path": ".travis.yml",
+      "change_type": "ci_configuration",
+      "usage_type": "node_runtime_and_integration_tests",
+      "risk_level": "high",
+      "reason": "CI explicitly installs Node 6.11.2 and old Trusty/Firefox tooling, then starts beta mode and runs live Selenium tests.",
+      "locations": [{"start_line": 5, "end_line": 49, "symbol": "CI environment", "matched_api": "Trusty, Node 6.11.2, geckodriver 0.19", "usage_type": "ci_runtime", "confidence": "high", "reason": "Incompatible with target Node/runtime assumptions."}, {"start_line": 51, "end_line": 86, "symbol": "install/test", "matched_api": "startbeta, make test, behave", "usage_type": "verification_pipeline", "confidence": "high", "reason": "Documents repository-root commands and localhost:8080 Behave target."}]
+    },
+    {
+      "file_path": "Makefile",
+      "change_type": "test_configuration",
+      "usage_type": "node_test_runner",
+      "risk_level": "medium",
+      "reason": "Defines repository-root equivalent tests and the backend port.",
+      "locations": [{"start_line": 10, "end_line": 16, "symbol": "Node environment", "matched_api": "NODE_PATH/NODE_PORT=8080", "usage_type": "runtime_configuration", "confidence": "high", "reason": "Establishes server port and module path."}, {"start_line": 25, "end_line": 39, "symbol": "test targets", "matched_api": "tests/apitest.js tests/class-info-test.js tests/phenopacket-test.js", "usage_type": "test_commands", "confidence": "high", "reason": "Equivalent when make is unavailable."}]
+    },
+    {
+      "file_path": "tests/behave/maui_basic.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_smoke_workflow",
+      "risk_level": "medium",
+      "reason": "Core landing/navigation acceptance coverage should validate server and Bootstrap changes.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "Behave scenarios", "usage_type": "acceptance_test", "confidence": "high", "reason": "Manifest/config scan identifies Behave as CI workflow coverage."}]
+    },
+    {
+      "file_path": "tests/behave/maui_disease.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_disease_workflow",
+      "risk_level": "medium",
+      "reason": "Disease page depends on backend services, templates, Axios/UI behavior.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "/disease workflow", "usage_type": "acceptance_test", "confidence": "high", "reason": "User identified as a key workflow."}]
+    },
+    {
+      "file_path": "tests/behave/maui_gene.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_gene_workflow",
+      "risk_level": "medium",
+      "reason": "Gene page exercises backend external services and UI tables.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "gene workflow", "usage_type": "acceptance_test", "confidence": "high", "reason": "User identified as a key workflow."}]
+    },
+    {
+      "file_path": "tests/behave/maui_phenogrid.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_phenogrid_workflow",
+      "risk_level": "medium",
+      "reason": "Phenogrid bundles and frontend build are sensitive to webpack/Bootstrap changes.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "phenogrid workflow", "usage_type": "acceptance_test", "confidence": "high", "reason": "User identified as a key workflow."}]
+    },
+    {
+      "file_path": "tests/behave/maui_autocomplete.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_autocomplete_workflow",
+      "risk_level": "high",
+      "reason": "Directly covers Axios search calls and BootstrapVue form controls.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "autocomplete workflow", "usage_type": "acceptance_test", "confidence": "high", "reason": "High-value cross-boundary regression test."}]
+    },
+    {
+      "file_path": "tests/behave/maui_analyze.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_analyze_workflow",
+      "risk_level": "high",
+      "reason": "Analyze UI uses many BootstrapVue controls and OwlSim services.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "phenotype analyze workflow", "usage_type": "acceptance_test", "confidence": "high", "reason": "High-value UI/service integration regression test."}]
+    },
+    {
+      "file_path": "tests/behave/maui_utilities.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_utility_workflows",
+      "risk_level": "medium",
+      "reason": "Utility routes exercise Hapi routing and template rendering.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "utility workflows", "usage_type": "acceptance_test", "confidence": "high", "reason": "User identified as a key workflow."}]
+    },
+    {
+      "file_path": "tests/behave/data-internal.feature",
+      "change_type": "validation_target",
+      "usage_type": "selenium_golr_workflow",
+      "risk_level": "high",
+      "reason": "Internal data-table checks depend on GOlr/Solr live endpoints and frontend table rendering.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol": "feature", "matched_api": "GOlr table workflow", "usage_type": "acceptance_test", "confidence": "high", "reason": "External-service and Bootstrap table regression coverage."}]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {"id": "app:monarch-app", "type": "application", "name": "monarch-app", "current_version": "3.0.0"},
+      {"id": "runtime:node", "type": "runtime", "name": "Node.js", "current_version": ">=6.11.2", "target_version": ">=18"},
+      {"id": "npm:@hapi/hapi", "type": "external_dependency", "name": "hapi -> @hapi/hapi", "current_version": "^16.6.2", "target_version": "^21", "breaking_change_families": ["package rename", "server connection model", "promise lifecycle", "response toolkit", "route validation defaults"]},
+      {"id": "npm:@hapi/inert", "type": "external_dependency", "name": "inert -> @hapi/inert", "current_version": "^4.2.1", "target_version": "^7", "breaking_change_families": ["package rename", "async plugin registration", "Hapi peer compatibility"]},
+      {"id": "npm:@babel/core", "type": "external_dependency", "name": "babel-core -> @babel/core", "current_version": "^6.26.3", "target_version": "7.x", "breaking_change_families": ["scoped package names", "plugin/preset renames", "Babel 7 config resolution"]},
+      {"id": "npm:@babel/preset-env", "type": "external_dependency", "name": "babel-preset-env -> @babel/preset-env", "current_version": "^1.7.0", "target_version": "7.x", "breaking_change_families": ["scoped preset name", "browser target defaults"]},
+      {"id": "npm:babel-loader", "type": "external_dependency", "name": "babel-loader", "current_version": "^7.1.4", "target_version": "^9", "breaking_change_families": ["webpack 5 peer requirement", "Node version floor"]},
+      {"id": "npm:webpack", "type": "external_dependency", "name": "webpack", "current_version": "^4.17.2", "target_version": "^5", "breaking_change_families": ["removed plugins", "removed Node polyfills", "persistent cache schema", "asset modules", "CLI production flags"]},
+      {"id": "npm:webpack-cli", "type": "external_dependency", "name": "webpack-cli", "current_version": "^3.1.0", "target_version": "^5", "breaking_change_families": ["CLI option changes"]},
+      {"id": "npm:webpack-dev-server", "type": "external_dependency", "name": "webpack-dev-server", "current_version": "^3.1.8", "target_version": "^5", "breaking_change_families": ["devServer schema", "client options", "static content option", "proxy array/context syntax", "removed inline flags"]},
+      {"id": "npm:sass", "type": "external_dependency", "name": "node-sass -> sass", "current_version": "node-sass ^4.9.3", "target_version": "sass current", "breaking_change_families": ["implementation replacement", "modern Sass API", "legacy @import warnings"]},
+      {"id": "npm:sass-loader", "type": "external_dependency", "name": "sass-loader", "current_version": "^7.1.0", "target_version": "webpack-5-compatible current", "breaking_change_families": ["additionalData/sassOptions option nesting", "implementation selection"]},
+      {"id": "npm:eslint", "type": "external_dependency", "name": "eslint", "current_version": "^5.5.0", "target_version": "^8", "breaking_change_families": ["Node floor", "removed/deprecated rules and formatters", "parser/plugin compatibility"]},
+      {"id": "npm:eslint-config-airbnb-base", "type": "external_dependency", "name": "eslint-config-airbnb-base", "current_version": "^13.1.0", "target_version": "ESLint-8-compatible", "breaking_change_families": ["rule changes", "eslint-plugin-import peer range"]},
+      {"id": "npm:vue", "type": "external_dependency", "name": "vue", "current_version": "^2.5.17", "target_version": "^2.7", "breaking_change_families": ["compiler/runtime version alignment", "Vue 2 final minor behavior"]},
+      {"id": "npm:bootstrap", "type": "external_dependency", "name": "bootstrap", "current_version": "^4.1.3", "target_version": "^5", "breaking_change_families": ["jQuery removal", "Popper v2", "utility/markup changes", "data attribute prefix"]},
+      {"id": "npm:bootstrap-vue", "type": "external_dependency", "name": "bootstrap-vue", "current_version": "^2.0.0-rc.11", "target_version": "replacement required", "breaking_change_families": ["BootstrapVue 2 targets Bootstrap 4 and cannot provide Bootstrap 5 components"]},
+      {"id": "npm:axios", "type": "external_dependency", "name": "request -> axios and axios upgrade", "current_version": "request ^2.88.0; axios ^0.18.0", "target_version": "axios ^1", "breaking_change_families": ["callback/synchronous wrapper to promises", "response body to data", "error/status behavior", "params serialization", "proxy behavior"]},
+      {"id": "npm:dayjs", "type": "external_dependency", "name": "moment -> dayjs", "current_version": "moment ^2.22.2", "target_version": "dayjs current", "breaking_change_families": ["format/parsing/plugin differences"]},
+      {"id": "npm:gulp", "type": "external_dependency", "name": "gulp", "current_version": "^3.9.1", "target_version": "^4", "breaking_change_families": ["task dependency arrays removed", "series/parallel composition", "async completion"]},
+      {"id": "npm:mocha", "type": "external_dependency", "name": "mocha", "current_version": "^5.2.0", "target_version": "^10", "breaking_change_families": ["Node floor", "runner/default/reporting changes"]},
+      {"id": "npm:mustache", "type": "external_dependency", "name": "mustache", "current_version": "^2.3.2", "target_version": "^4", "breaking_change_families": ["rendering/parser behavior across majors"]},
+      {"id": "npm:underscore", "type": "external_dependency", "name": "underscore", "current_version": "^1.9.1", "target_version": "^1.13", "breaking_change_families": ["template/security and edge-case behavior"]},
+      {"id": "npm:xml2js", "type": "external_dependency", "name": "xml2js", "current_version": "^0.4.19", "target_version": "^0.6", "breaking_change_families": ["parser option/default and callback behavior review"]},
+      {"id": "npm:async", "type": "external_dependency", "name": "async", "current_version": "^2.6.1", "target_version": "unchanged/not requested", "breaking_change_families": ["Checklist run: no direct imports or .drain assignments found"]},
+      {"id": "service:scigraph-ontology", "type": "external_service", "name": "SciGraph ontology", "current_version": "unknown", "target_version": "unknown", "version_source": "conf/server_config_{dev,beta,production}.json URLs", "requires_live_verification": true},
+      {"id": "service:scigraph-data", "type": "external_service", "name": "SciGraph data", "current_version": "unknown", "target_version": "unknown", "version_source": "conf/server_config_{dev,beta,production,public}.json URLs", "requires_live_verification": true},
+      {"id": "service:solr-golr", "type": "external_service", "name": "Solr/GOlr", "current_version": "unknown", "target_version": "unknown", "version_source": "conf/server_config_{dev,beta,production}.json golr_url/search_url", "requires_live_verification": true},
+      {"id": "service:owlsim", "type": "external_service", "name": "OwlSim", "current_version": "unknown", "target_version": "unknown", "version_source": "conf/server_config_{dev,beta,production}.json owlsim_services_url", "requires_live_verification": true},
+      {"id": "service:biolink-api", "type": "external_service", "name": "Biolink API", "current_version": "unknown", "target_version": "unknown", "version_source": "conf/server_config_{dev,beta,production}.json biolink_url", "requires_live_verification": true},
+      {"id": "service:blogger-rss", "type": "external_service", "name": "Blogger RSS", "current_version": "unknown", "target_version": "unknown", "version_source": "lib/monarch/web/webapp.js:2603-2607", "requires_live_verification": true}
+    ],
+    "edges": [
+      {"from": "app:monarch-app", "to": "runtime:node", "relationship": "runs_on"},
+      {"from": "app:monarch-app", "to": "npm:@hapi/hapi", "relationship": "server_framework"},
+      {"from": "npm:@hapi/hapi", "to": "npm:@hapi/inert", "relationship": "plugin"},
+      {"from": "app:monarch-app", "to": "npm:webpack", "relationship": "bundled_by"},
+      {"from": "npm:webpack", "to": "npm:webpack-cli", "relationship": "invoked_by"},
+      {"from": "npm:webpack", "to": "npm:webpack-dev-server", "relationship": "served_by"},
+      {"from": "npm:webpack", "to": "npm:babel-loader", "relationship": "transpiles_with"},
+      {"from": "npm:babel-loader", "to": "npm:@babel/core", "relationship": "uses"},
+      {"from": "npm:@babel/core", "to": "npm:@babel/preset-env", "relationship": "configured_with"},
+      {"from": "npm:webpack", "to": "npm:sass-loader", "relationship": "styles_with"},
+      {"from": "npm:sass-loader", "to": "npm:sass", "relationship": "implementation"},
+      {"from": "app:monarch-app", "to": "npm:vue", "relationship": "frontend_framework"},
+      {"from": "app:monarch-app", "to": "npm:bootstrap", "relationship": "css_js_framework"},
+      {"from": "npm:vue", "to": "npm:bootstrap-vue", "relationship": "component_plugin"},
+      {"from": "npm:bootstrap-vue", "to": "npm:bootstrap", "relationship": "expects_v4_not_v5"},
+      {"from": "app:monarch-app", "to": "npm:axios", "relationship": "http_client"},
+      {"from": "app:monarch-app", "to": "npm:dayjs", "relationship": "date_library"},
+      {"from": "app:monarch-app", "to": "service:scigraph-ontology", "relationship": "calls"},
+      {"from": "app:monarch-app", "to": "service:scigraph-data", "relationship": "calls"},
+      {"from": "app:monarch-app", "to": "service:solr-golr", "relationship": "calls"},
+      {"from": "app:monarch-app", "to": "service:owlsim", "relationship": "calls"},
+      {"from": "app:monarch-app", "to": "service:biolink-api", "relationship": "calls"},
+      {"from": "app:monarch-app", "to": "service:blogger-rss", "relationship": "calls"}
+    ],
+    "manifest_inventory": {
+      "manifest": "package.json",
+      "lockfiles": [],
+      "devDependencies": {"assets-webpack-plugin":"^3.9.6","babel-core":"^6.26.3","babel-eslint":"^8.2.3","babel-loader":"^7.1.4","babel-plugin-syntax-dynamic-import":"^6.18.0","babel-plugin-transform-runtime":"^6.23.0","babel-preset-env":"^1.7.0","browser-sync-webpack-plugin":"^2.2.2","chai":"^4.1.2","css-loader":"^1.0.0","d3-axis":"^1.0.12","d3-scale":"^2.1.2","d3-selection":"^1.3.2","del":"^3.0.0","eslint":"^5.5.0","eslint-config-airbnb-base":"^13.1.0","eslint-loader":"^2.1.0","eslint-plugin-import":"^2.14.0","eslint-plugin-react":"7","eslint-plugin-vue":"^4.7.1","exports-loader":"^0.7.0","extract-text-webpack-plugin":"^4.0.0-beta.0","file-loader":"^2.0.0","git-rev-sync":"^1.12.0","gulp":"^3.9.1","gulp-download":"0.0.1","gulp-jsoncombine":"^1.0.4","gulp-rename":"^1.4.0","gulp-shell":"^0.6.5","html-webpack-plugin":"^3.2.0","imports-loader":"^0.8.0","is-my-json-valid":"^2.19.0","json-loader":"^0.5.7","less-loader":"^4.1.0","lodash.template":"^4.4.0","mocha":"^5.2.0","moment":"^2.22.2","my-local-ip":"^1.0.0","node-sass":"^4.9.3","nodemon":"^1.18.4","npmlog":"^4.1.2","postcss-loader":"^3.0.0","raw-loader":"^1.0.0-beta.0","resolve-url-loader":"^2.3.0","sass-loader":"^7.1.0","sass-resources-loader":"^1.3.3","style-loader":"^0.23.0","uglify-js":"^3.4.9","uglifyjs-webpack-plugin":"^1.3.0","url-loader":"^1.1.1","vue-loader":"^15.4.1","vue-style-loader":"^4.1.2","vue-template-compiler":"^2.5.17","wait-on":"^3.0.1","webpack":"^4.17.2","webpack-bundle-analyzer":"^2.13.1","webpack-cli":"^3.1.0","webpack-dev-server":"^3.1.8"},
+      "dependencies": {"async":"^2.6.1","axios":"^0.18.0","bbop":"^2.4.3","bbop-graph":"0.0.19","bbop-manager-golr":"0.0.12","bbop-registry":"0.0.3","bbop-response-golr":"0.0.8","bbop-rest-manager":"0.0.17","bbop-widget-set":"^2.5.12","bootstrap":"^4.1.3","bootstrap-vue":"^2.0.0-rc.11","font-awesome":"^4.7.0","golr-conf":"0.0.3","hapi":"^16.6.2","inert":"^4.2.1","jquery":"^3.3.1","jquery-ui":"^1.12.1","mustache":"^2.3.2","phenogrid":"^1.3.11","popper.js":"^1.14.4","pup-tent":"^0.9.10","request":"^2.88.0","underscore":"^1.9.1","vue":"^2.5.17","vue-form-wizard":"^0.8.4","vue-good-table":"^2.13.3","vue-router":"^3.0.1","wait.for":"^0.6.6","xml2js":"^0.4.19"},
+      "unrequested_dependencies": "Inventoried but no target/latest-major claim made because the requested scope names explicit packages and network registry lookup was not part of this analysis stage. Compatibility of transitive and adjacent webpack/Vue plugins remains a planning obligation."
+    }
+  },
+  "risk_summary": {
+    "total_affected_files": 37,
+    "high_risk_count": 20,
+    "breaking_changes": [
+      "Hapi 16 to @hapi/hapi 21 replaces app.connection and callback lifecycle with constructor options and promises.",
+      "request is synchronously invoked through wait.for; Axios 1 is promise-based, so async control flow must propagate through server handlers/service methods.",
+      "Webpack 5 removes NamedModulesPlugin and automatic Node polyfills; webpack-dev-server 5 rejects many current devServer keys and CLI flags.",
+      "ExtractTextPlugin, eslint-loader, file-loader/url-loader-era patterns and old HtmlWebpackPlugin/plugin versions must be aligned with webpack 5.",
+      "Gulp 4 removes dependency arrays and requires explicit series/parallel task composition.",
+      "BootstrapVue 2 targets Bootstrap 4; Bootstrap 5 cannot be adopted while retaining the current b-* components without an alternate compatibility strategy.",
+      "There is no package lockfile, making reproducible installation and transitive compatibility/security verification impossible until one is generated.",
+      "CI and scripts assume Node 6, Ubuntu Trusty, old Firefox/geckodriver, Unix shell syntax, and deprecated webpack flags.",
+      "Known-checklist scans found no async .drain assignment, Express route/query hazard, Socket.IO client/server boundary, or uglify-js filename-array minify call in committed JavaScript."
+    ],
+    "notes": [
+      "The committed source supports the requested interim Vue 2.7 direction; a Vue 3 rewrite would expand scope across global registration, router construction, plugins, and every BootstrapVue component.",
+      "Start runs from repository root, listens on localhost:8080 by default, and Behave targets http://localhost:8080.",
+      "make test maps to Node invocations for tests/apitest.js, tests/class-info-test.js, and tests/phenopacket-test.js with NODE_PATH set.",
+      "npm run wbs-lint currently references wbs.eslintrc and wpsrc, neither of which is present in HEAD, so the requested lint command is already structurally broken and needs planning attention."
+    ]
+  },
+  "coverage_notes": [
+    "GitNexus preflight reported 0 indexed files, 0 symbols, and 0 relationships; graph-assisted call/impact analysis was unavailable, so coverage is reduced to committed-tree manifest/config inspection and git grep line searches.",
+    "The target worktree has nearly every tracked application file staged as deleted. Analysis preserved that state and read HEAD objects via git show/git grep. Build, start, lint, tests, and later edits cannot proceed safely in this worktree until the orchestrator/user restores or recreates the application files.",
+    "Repository ownership is considered dubious by Git for the current process identity; read-only commands used a per-command safe.directory setting without changing global configuration.",
+    "No package-lock.json, npm-shrinkwrap.json, yarn.lock, or pnpm lockfile exists in HEAD; exact resolved/transitive versions are unknown.",
+    "External service versions are not declared. SciGraph ontology/data, Solr/GOlr, OwlSim, Biolink API, and Blogger RSS are checked-in live endpoints and require live compatibility/availability verification.",
+    "Dependency usage searches covered all committed .js and .vue require/import sites for requested packages. Bootstrap CSS class-level usage is extensive and was represented by the entry import and BootstrapVue component boundaries rather than enumerating every markup class.",
+    "Feature files were treated as whole-file validation artifacts because the worktree copies are absent; exact scenarios remain available in HEAD but were not required to locate dependency boundaries.",
+    "No excluded paths were supplied. Generated/cache data was not used as upgrade evidence except to avoid noisy false positives during service scanning."
+  ]
+}

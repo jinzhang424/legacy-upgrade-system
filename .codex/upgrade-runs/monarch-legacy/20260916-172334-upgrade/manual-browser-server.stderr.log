@@ -1,0 +1,2 @@
+npm notice run monarch-app@3.0.0 start
+npm notice run cross-env NODE_PATH=./lib/monarch node lib/monarch/web/webapp_launcher.js

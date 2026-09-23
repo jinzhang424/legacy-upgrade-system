@@ -1,0 +1,554 @@
+{
+  "decision": "approved",
+  "confidence_score": 0.75,
+  "confidence_factors": [
+    {
+      "category": "repair_rounds",
+      "amount": 0.75,
+      "reason": "One repair round was required; the correctness multiplier reduced the otherwise complete 1.0 evidence pass rate to 0.75."
+    }
+  ],
+  "base_ref": "main",
+  "git_diff_summary": {
+    "changed_files": [
+      "algorithm/dijkstra/build.gradle",
+      "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.jar",
+      "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "algorithm/dijkstra/gradlew",
+      "algorithm/dijkstra/gradlew.bat",
+      "algorithm/dijkstra/java/build.gradle",
+      "algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java",
+      "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "refactoring/chartsmart/java/build.gradle",
+      "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/chartsmart/java/gradlew",
+      "refactoring/chartsmart/java/gradlew.bat",
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+      "refactoring/gildedrose/js/jest.config.ts",
+      "refactoring/gildedrose/js/package-lock.json",
+      "refactoring/gildedrose/js/package.json",
+      "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+      "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts",
+      "refactoring/gildedrose/js/tsconfig.json",
+      "refactoring/movierental/build.gradle",
+      "refactoring/movierental/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/movierental/gradlew",
+      "refactoring/movierental/gradlew.bat",
+      "refactoring/movierental/java/build.gradle",
+      "refactoring/racingcar/java/build.gradle",
+      "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/racingcar/java/gradlew",
+      "refactoring/racingcar/java/gradlew.bat",
+      "refactoring/racingcar/java/leaderboard/build.gradle",
+      "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "refactoring/racingcar/java/textconverter/build.gradle",
+      "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+      "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+      "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "refactoring/tennis/java/build.gradle",
+      "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/tennis/java/gradlew",
+      "refactoring/tennis/java/gradlew.bat",
+      "refactoring/trivia/java/build.gradle",
+      "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/trivia/java/gradlew",
+      "refactoring/trivia/java/gradlew.bat",
+      "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+      "tdd/bowlinggame/build.gradle",
+      "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/bowlinggame/gradlew",
+      "tdd/bowlinggame/gradlew.bat",
+      "tdd/bowlinggame/java/build.gradle",
+      "tdd/bowlinggame/java/src/main/java/bowlinggame/BowlingGame.java",
+      "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+      "tdd/gameoflife/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/gameoflife/gradlew",
+      "tdd/gameoflife/gradlew.bat",
+      "tdd/gameoflife/java/src/main/java/gameoflife/GameOfLife.java",
+      "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+      "tdd/minesweeper/java/build.gradle",
+      "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/minesweeper/java/gradlew",
+      "tdd/minesweeper/java/gradlew.bat",
+      "tdd/minesweeper/java/src/main/java/minesweeper/MineSweeper.java",
+      "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+      "tdd/rpg-combat/java/build.gradle",
+      "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/rpg-combat/java/gradlew",
+      "tdd/rpg-combat/java/gradlew.bat",
+      "tdd/rpg-combat/java/src/main/java/org/rpg/Dummy.java",
+      "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+      "tdd/stringcalculator/build.gradle",
+      "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/stringcalculator/gradlew",
+      "tdd/stringcalculator/gradlew.bat",
+      "tdd/stringcalculator/java/build.gradle",
+      "tdd/stringcalculator/java/src/main/java/stringcalculator/StringCalculator.java",
+      "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java"
+    ],
+    "planned_files_touched": [
+      "algorithm/dijkstra/build.gradle",
+      "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.jar",
+      "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "algorithm/dijkstra/gradlew",
+      "algorithm/dijkstra/gradlew.bat",
+      "algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java",
+      "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "refactoring/chartsmart/java/build.gradle",
+      "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/chartsmart/java/gradlew",
+      "refactoring/chartsmart/java/gradlew.bat",
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+      "refactoring/gildedrose/js/jest.config.ts",
+      "refactoring/gildedrose/js/package-lock.json",
+      "refactoring/gildedrose/js/package.json",
+      "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+      "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts",
+      "refactoring/movierental/build.gradle",
+      "refactoring/movierental/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/movierental/gradlew",
+      "refactoring/movierental/gradlew.bat",
+      "refactoring/racingcar/java/build.gradle",
+      "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/racingcar/java/gradlew",
+      "refactoring/racingcar/java/gradlew.bat",
+      "refactoring/racingcar/java/leaderboard/build.gradle",
+      "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "refactoring/racingcar/java/textconverter/build.gradle",
+      "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+      "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+      "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "refactoring/tennis/java/build.gradle",
+      "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/tennis/java/gradlew",
+      "refactoring/tennis/java/gradlew.bat",
+      "refactoring/trivia/java/build.gradle",
+      "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.jar",
+      "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "refactoring/trivia/java/gradlew",
+      "refactoring/trivia/java/gradlew.bat",
+      "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+      "tdd/bowlinggame/build.gradle",
+      "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/bowlinggame/gradlew",
+      "tdd/bowlinggame/gradlew.bat",
+      "tdd/bowlinggame/java/build.gradle",
+      "tdd/bowlinggame/java/src/main/java/bowlinggame/BowlingGame.java",
+      "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+      "tdd/gameoflife/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/gameoflife/gradlew",
+      "tdd/gameoflife/gradlew.bat",
+      "tdd/gameoflife/java/src/main/java/gameoflife/GameOfLife.java",
+      "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+      "tdd/minesweeper/java/build.gradle",
+      "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/minesweeper/java/gradlew",
+      "tdd/minesweeper/java/gradlew.bat",
+      "tdd/minesweeper/java/src/main/java/minesweeper/MineSweeper.java",
+      "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+      "tdd/rpg-combat/java/build.gradle",
+      "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/rpg-combat/java/gradlew",
+      "tdd/rpg-combat/java/gradlew.bat",
+      "tdd/rpg-combat/java/src/main/java/org/rpg/Dummy.java",
+      "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+      "tdd/stringcalculator/build.gradle",
+      "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.jar",
+      "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "tdd/stringcalculator/gradlew",
+      "tdd/stringcalculator/gradlew.bat",
+      "tdd/stringcalculator/java/build.gradle",
+      "tdd/stringcalculator/java/src/main/java/stringcalculator/StringCalculator.java",
+      "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java"
+    ],
+    "unexpected_files": [
+      "algorithm/dijkstra/java/build.gradle",
+      "refactoring/gildedrose/js/tsconfig.json",
+      "refactoring/movierental/java/build.gradle"
+    ],
+    "missing_planned_files": [
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testMainWindow.Windows_11.received.png",
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testBarChartWindow.Windows_11.received.png",
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testPieChartWindow.Windows_11.received.png",
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testBarChartSmallWindow.Windows_11.received.png",
+      "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testPieChartSmallWindow.Windows_11.received.png"
+    ],
+    "dependency_changes_verified": [
+      "All ten requested JCenter repository declarations now use Maven Central.",
+      "All eleven requested Gradle wrappers are pinned to Gradle 8.10.2 with regenerated wrapper companions.",
+      "Legacy Gradle configurations were migrated to implementation/testImplementation in the planned roots and authorized nested build files.",
+      "SLF4J API 2.0.13 and JUnit 4.13.2 targets are present in every applicable legacy Gradle manifest.",
+      "Racing Car root Mockito is 5.12.0; nested String Calculator Mockito is 5.12.0 and Guava is 33.2.1-jre.",
+      "ChartSmart, Tennis, Minesweeper, and RPG Combat use JUnit Jupiter 5.10.3 and Java 17 compatibility.",
+      "Gilded Rose uses the approved TypeScript 5.5.4, Jest 29.7.0, ts-jest 29.2.6, Mocha 10.6.1, Chai 4.5.0, Node types 22.20.2, ts-node 10.9.2, rimraf 5.0.10 and associated compatible type packages.",
+      "jest-extended-snapshot and ApprovalTests were removed as planned after their integrations were no longer used."
+    ],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/src/main/java/bowlinggame/BowlingGame.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/src/main/java/stringcalculator/StringCalculator.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/gameoflife/java/src/main/java/gameoflife/GameOfLife.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/minesweeper/java/src/main/java/minesweeper/MineSweeper.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/src/main/java/org/rpg/Dummy.java",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts",
+      "outcome": "passed",
+      "detail": "All required strings are present and all forbidden strings are absent."
+    }
+  ],
+  "command_results": [
+    {
+      "type": "build",
+      "command": "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper build; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "All 18 declared Gradle root/submodule contexts completed `build`; BUILD SUCCESSFUL for every context."
+    },
+    {
+      "type": "build",
+      "command": "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper clean build; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "All 18 declared Gradle root/submodule contexts completed `clean build`; BUILD SUCCESSFUL for every context."
+    },
+    {
+      "type": "build",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm install; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "npm install completed: dependencies up to date; 418 packages audited. npm reported 9 audit findings (4 moderate, 5 high), which did not fail the declared command."
+    },
+    {
+      "type": "build",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run compile; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "TypeScript compilation completed successfully after rimraf cleanup."
+    },
+    {
+      "type": "existing_test",
+      "command": "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper test; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "All 18 declared Gradle test contexts completed successfully."
+    },
+    {
+      "type": "existing_test",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run test:jest; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Jest: 2 test suites passed, 2 tests passed."
+    },
+    {
+      "type": "existing_test",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run test:mocha; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "After repair, Mocha executed the planned TypeScript suite: 1 passing (ordinary item preserved name and changed sellIn/quality to 4/9)."
+    },
+    {
+      "type": "generated_test",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run compile; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Focused TypeScript smoke compile completed successfully."
+    },
+    {
+      "type": "generated_test",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\algorithm\\dijkstra'; try { .\\gradlew.bat test --tests dijkstra.DijkstraAlgorithmTest; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Focused DijkstraAlgorithmTest passed. Initial sandbox-only wrapper download denial was retried with network permission; code/test result passed."
+    },
+    {
+      "type": "generated_test",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\chartsmart\\java'; try { .\\gradlew.bat test --tests chartsmart.ChartSmartTest; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Focused ChartSmartTest passed. Initial sandbox-only wrapper download denial was retried with network permission; code/test result passed."
+    },
+    {
+      "type": "generated_test",
+      "command": "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run test:mocha; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Mocha explicitly selected test/mocha/**/*.spec.ts and reported 1 passing; zero-test success is no longer possible for this declared command."
+    }
+  ],
+  "repairs_applied": [
+    {
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+      "reason": "The exact planned content check required direct JComboBox component assertions.",
+      "summary": "Replaced equivalent local-variable item assertions with the exact direct component expressions; behavior and coverage are unchanged."
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+      "reason": "The exact planned content check required the variable name `character`.",
+      "summary": "Renamed the local test variable from `dummy` to `character`; assertions and behavior are unchanged."
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "reason": "The declared Mocha command exited 0 while running zero tests and did not exercise the planned deterministic Mocha spec.",
+      "summary": "Made test:mocha explicitly load ts-node/register and tsconfig-paths/register and select test/mocha/**/*.spec.ts; rerun reported 1 passing."
+    }
+  ],
+  "repair_rounds": 1,
+  "browser_check_results": [],
+  "final_commit_ref": "63ff813",
+  "rejection_reasons": [],
+  "recommendations": [
+    "Review the 9 npm audit findings separately; they are outside the approved pinned dependency set and did not break build or tests.",
+    "Plan a later Gradle 9 deprecation cleanup for ChartSmart, Tennis, Minesweeper, and RPG Combat; Gradle 8.10.2 validation passes."
+  ]
+}

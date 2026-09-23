@@ -1,0 +1,2630 @@
+{
+  "upgrade_description": "Repository-wide modernization of eleven Gradle builds for Gradle 8.10.2/JDK 21 compatibility, requested Java dependency and source-level changes, and the refactoring/gildedrose/js TypeScript/Jest/Mocha toolchain.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": "refactoring/movierental/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 3,
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 4,
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 5,
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 6,
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 7,
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 8,
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 9,
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 10,
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Blocking repository repair; Maven Central must be configured everywhere before any wrapper or dependency work.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration"
+        }
+      ],
+      "change_description": "Replace the executable jcenter() repository declaration with mavenCentral(). Update the adjacent repository comment so it no longer recommends JCenter. Make no dependency changes in this step.",
+      "validation_evidence": [
+        "The file contains mavenCentral().",
+        "The file contains no jcenter() declaration."
+      ]
+    },
+    {
+      "sequence": 11,
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 6.8.2 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-6.8.2-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from algorithm/dijkstra. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 12,
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 6.8.2 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-6.8.2-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from refactoring/movierental. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 13,
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 6.8.2 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-6.8.2-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from refactoring/racingcar/java. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 14,
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 6.8.3 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-6.8.3-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from refactoring/trivia/java. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 15,
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 7.2 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-7.2-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from tdd/gameoflife. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 16,
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 7.4.1 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-7.4.1-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from refactoring/chartsmart/java. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 17,
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 7.4.1 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-7.4.1-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from refactoring/tennis/java. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 18,
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 7.4.1 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-7.4.1-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from tdd/minesweeper/java. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 19,
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 7.4.1 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "gradle-7.4.1-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from tdd/rpg-combat/java. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 20,
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 3.1 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "gradle-3.1-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from tdd/bowlinggame. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 21,
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 3.1 is not the requested JDK 21-compatible wrapper.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "gradle-3.1-all.zip",
+          "matched_api": "Gradle wrapper distributionUrl"
+        }
+      ],
+      "change_description": "After all blocking JCenter edits are complete, set distributionUrl to the Gradle 8.10.2 all distribution, then run .\\gradlew.bat wrapper --gradle-version 8.10.2 --distribution-type all from tdd/stringcalculator. Because the old Gradle 3.x/6.x launcher may not run on JDK 21, the distribution URL edit precedes the wrapper task. Run the wrapper task a second time if needed so Gradle 8.10.2 regenerates its scripts and JAR; retain those generated companion changes.",
+      "validation_evidence": [
+        "gradle-wrapper.properties contains gradle-8.10.2-all.zip.",
+        "The wrapper reports Gradle 8.10.2 on JDK 21.",
+        "Generated gradlew, gradlew.bat, and gradle-wrapper.jar changes are limited to this wrapper root."
+      ]
+    },
+    {
+      "sequence": 22,
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile + slf4j-api:1.7.12",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile + junit:4.12",
+          "matched_api": "Gradle dependency configuration"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 23,
+      "file_path": "refactoring/movierental/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile + slf4j-api:1.7.12",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile + junit:4.12",
+          "matched_api": "Gradle dependency configuration"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 24,
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile + slf4j-api:1.7.12",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 29,
+          "end_line": 30,
+          "symbol_or_pattern": "testCompile + junit:4.12/mockito-core:2.2.6",
+          "matched_api": "Gradle dependency configuration"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. In the Racing Car root only, also change Mockito to org.mockito:mockito-core:5.12.0 using testImplementation. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully. Mockito-based tests use Mockito 5.12.0."
+      ]
+    },
+    {
+      "sequence": 25,
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 26,
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 27,
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 28,
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 29,
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 30,
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 31,
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes compile/testCompile, and the requested dependency versions close known compatibility and security gaps.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 29,
+          "symbol_or_pattern": "compile/testCompile and old SLF4J/JUnit versions",
+          "matched_api": "Gradle dependency declarations"
+        }
+      ],
+      "change_description": "Replace the production compile declaration with implementation and set org.slf4j:slf4j-api to 2.0.13. Replace testCompile with testImplementation and set junit:junit to 4.13.2. Update stale inline examples/comments that literally recommend compile or testCompile so the migrated file no longer advertises removed Gradle configurations.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures the project without unknown compile/testCompile configurations.",
+        "Dependencies resolve from Maven Central.",
+        "JUnit tests execute successfully."
+      ]
+    },
+    {
+      "sequence": 32,
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Trivia uses a removed dependency configuration and a legacy JavaExec main property under Gradle 8.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile 'junit:junit:4.12'",
+          "matched_api": "Gradle dependency configuration"
+        },
+        {
+          "start_line": 16,
+          "end_line": 20,
+          "symbol_or_pattern": "JavaExec main property",
+          "matched_api": "Gradle JavaExec task configuration"
+        }
+      ],
+      "change_description": "Change testCompile to testImplementation and junit:junit from 4.12 to 4.13.2. Replace `main = javaMainClass` with the Gradle 8 property form `mainClass = javaMainClass` (or `mainClass.set(javaMainClass)` if required by the installed DSL) while preserving the runGameRunner task's classpath and behavior.",
+      "validation_evidence": [
+        "Gradle 8.10.2 configures without removed-configuration or JavaExec main-property errors.",
+        "Trivia tests pass."
+      ]
+    },
+    {
+      "sequence": 33,
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested Java 17 source level and JUnit Jupiter 5.10.3 alignment.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility = 1.10",
+          "matched_api": "Gradle Java compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 25,
+          "symbol_or_pattern": "junit-jupiter api/engine 5.8.2",
+          "matched_api": "JUnit Jupiter dependencies"
+        }
+      ],
+      "change_description": "Set sourceCompatibility to 17. Update the existing junit-jupiter-api and junit-jupiter-engine declarations from 5.8.2 to 5.10.3. Do not add junit-jupiter-params because this build does not currently declare or use it.",
+      "validation_evidence": [
+        "Gradle reports Java source compatibility 17, which is below the JDK 21 runtime ceiling.",
+        "JUnit Platform tests pass with JUnit Jupiter 5.10.3."
+      ]
+    },
+    {
+      "sequence": 34,
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested Java 17 source level and JUnit Jupiter 5.10.3 alignment.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility = 1.10",
+          "matched_api": "Gradle Java compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 26,
+          "symbol_or_pattern": "junit-jupiter api/engine/params 5.8.2",
+          "matched_api": "JUnit Jupiter dependencies"
+        }
+      ],
+      "change_description": "Set sourceCompatibility to 17. Update the existing junit-jupiter-api and junit-jupiter-engine declarations from 5.8.2 to 5.10.3. Update the existing junit-jupiter-params declaration to 5.10.3.",
+      "validation_evidence": [
+        "Gradle reports Java source compatibility 17, which is below the JDK 21 runtime ceiling.",
+        "JUnit Platform tests pass with JUnit Jupiter 5.10.3."
+      ]
+    },
+    {
+      "sequence": 35,
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested Java 17 source level and JUnit Jupiter 5.10.3 alignment.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility = 1.10",
+          "matched_api": "Gradle Java compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 25,
+          "symbol_or_pattern": "junit-jupiter api/engine 5.8.2",
+          "matched_api": "JUnit Jupiter dependencies"
+        }
+      ],
+      "change_description": "Set sourceCompatibility to 17. Update the existing junit-jupiter-api and junit-jupiter-engine declarations from 5.8.2 to 5.10.3. Do not add junit-jupiter-params because this build does not currently declare or use it.",
+      "validation_evidence": [
+        "Gradle reports Java source compatibility 17, which is below the JDK 21 runtime ceiling.",
+        "JUnit Platform tests pass with JUnit Jupiter 5.10.3."
+      ]
+    },
+    {
+      "sequence": 36,
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested Java 17 source level and JUnit Jupiter 5.10.3 alignment.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility = 1.8",
+          "matched_api": "Gradle Java compatibility"
+        },
+        {
+          "start_line": 24,
+          "end_line": 26,
+          "symbol_or_pattern": "junit-jupiter api/engine/params 5.8.2",
+          "matched_api": "JUnit Jupiter dependencies"
+        }
+      ],
+      "change_description": "Set sourceCompatibility to 17. Update the existing junit-jupiter-api and junit-jupiter-engine declarations from 5.8.2 to 5.10.3. Update the existing junit-jupiter-params declaration to 5.10.3.",
+      "validation_evidence": [
+        "Gradle reports Java source compatibility 17, which is below the JDK 21 runtime ceiling.",
+        "JUnit Platform tests pass with JUnit Jupiter 5.10.3."
+      ]
+    },
+    {
+      "sequence": 37,
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Requested Node 22-era TypeScript, Jest, ts-jest, Mocha, Chai 4, typings, and cleanup-tool modernization.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 11,
+          "symbol_or_pattern": "rimraf/tsc/jest/nyc/mocha scripts",
+          "matched_api": "npm scripts"
+        },
+        {
+          "start_line": 16,
+          "end_line": 31,
+          "symbol_or_pattern": "devDependencies",
+          "matched_api": "npm dependency manifest"
+        }
+      ],
+      "change_description": "Pin the registry-verified requested lines exactly as caret ranges: typescript ^5.5.4, jest ^29.7.0, ts-jest ^29.2.6, @types/jest ^29.5.14, mocha ^10.6.1, @types/mocha ^10.0.10, chai ^4.5.0, @types/chai ^4.3.20, @types/node ^22.20.2, ts-node ^10.9.2, and rimraf ^5.0.10. Preserve CommonJS and do not upgrade Chai to 5. Change both cleanup scripts to `rimraf --glob \"app/**/*.js\" \"test/**/*.js\"` so rimraf 5 treats the arguments as globs. Remove jest-extended-snapshot because the Jest test only uses built-in matchers and its setup hook is obsolete/unmaintained. Retain nyc, ramda, source-map-support, and tsconfig-paths at their existing versions because the user did not request those upgrades.",
+      "validation_evidence": [
+        "package.json contains the exact requested compatible ranges.",
+        "Cleanup scripts opt into rimraf glob processing.",
+        "No Chai 5 or ESM conversion is introduced.",
+        "No jest-extended-snapshot dependency remains."
+      ]
+    },
+    {
+      "sequence": 38,
+      "file_path": "refactoring/gildedrose/js/package-lock.json",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The lockfile must deterministically reflect the approved package manifest.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "lockfile root",
+          "matched_api": "npm package lock"
+        }
+      ],
+      "change_description": "Regenerate package-lock.json with npm install under Node 22 after package.json is updated. Ensure direct root devDependency resolutions match the approved ranges and jest-extended-snapshot is absent.",
+      "validation_evidence": [
+        "npm install completes without dependency-resolution errors.",
+        "npm install leaves package.json and package-lock.json synchronized."
+      ]
+    },
+    {
+      "sequence": 39,
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "ts-jest 29 removed the ts-jest/utils subpath, and the unused stale snapshot setup package is being removed.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "from ts-jest/utils",
+          "matched_api": "pathsToModuleNameMapper"
+        },
+        {
+          "start_line": 9,
+          "end_line": 13,
+          "symbol_or_pattern": "ts-jest transform and setupFilesAfterEnv",
+          "matched_api": "Jest configuration"
+        }
+      ],
+      "change_description": "Import pathsToModuleNameMapper from the supported `ts-jest` package root. Remove setupFilesAfterEnv for jest-extended-snapshot. Preserve the ts-jest transform and moduleNameMapper semantics.",
+      "validation_evidence": [
+        "The config contains no ts-jest/utils import.",
+        "The config contains no jest-extended-snapshot setup.",
+        "Jest 29 loads the TypeScript config and executes the test suite."
+      ]
+    },
+    {
+      "sequence": 40,
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Stage 4 exposed this nested Bowling Game Gradle build as a direct Gradle 8 configuration blocker; the user explicitly authorized this narrow plan expansion.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile 'junit:junit:4.12'",
+          "matched_api": "Gradle dependency configuration"
+        }
+      ],
+      "change_description": "Change exactly `testCompile 'junit:junit:4.12'` to `testImplementation 'junit:junit:4.13.2'`. Preserve the existing mavenCentral() repository declaration and make no repository or other build-script changes.",
+      "validation_evidence": [
+        "The nested Bowling Game build configures under Gradle 8.10.2 without an unknown testCompile configuration.",
+        "The file contains testImplementation with junit:junit:4.13.2.",
+        "The existing mavenCentral() declaration is unchanged and nested Bowling Game tests pass."
+      ]
+    },
+    {
+      "sequence": 41,
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The second Stage 4 attempt exposed this nested String Calculator Gradle build as a direct Gradle 8 configuration and dependency blocker; the user explicitly authorized this narrow plan expansion.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "compile group: 'com.google.guava', name: 'guava', version: '19.0'",
+          "matched_api": "Gradle dependency configuration / Guava"
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "testCompile 'junit:junit:4.12'",
+          "matched_api": "Gradle dependency configuration / JUnit 4"
+        },
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "testCompile 'org.mockito:mockito-core:2.2.0'",
+          "matched_api": "Gradle dependency configuration / Mockito"
+        }
+      ],
+      "change_description": "Make exactly three dependency-line changes: replace `compile group: 'com.google.guava', name: 'guava', version: '19.0'` with `implementation group: 'com.google.guava', name: 'guava', version: '33.2.1-jre'`; replace `testCompile 'junit:junit:4.12'` with `testImplementation 'junit:junit:4.13.2'`; and replace `testCompile 'org.mockito:mockito-core:2.2.0'` with `testImplementation 'org.mockito:mockito-core:5.12.0'`. Preserve mavenCentral() and make no other build-script changes.",
+      "validation_evidence": [
+        "The nested String Calculator build configures under Gradle 8.10.2 without unknown compile or testCompile configurations.",
+        "The file declares Guava 33.2.1-jre with implementation, JUnit 4.13.2 with testImplementation, and Mockito 5.12.0 with testImplementation.",
+        "The existing mavenCentral() declaration is unchanged and nested String Calculator tests pass."
+      ]
+    },
+    {
+      "sequence": 42,
+      "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "JDK 21 prohibits application classes in java.* packages, and required build/test validation then exposes the pre-existing sampleTest that deliberately asserts false. The user explicitly authorized this narrow baseline test repair even though the false assertion was not caused by the dependency upgrade.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "package java.dijkstra;",
+          "matched_api": "Java package declaration"
+        },
+        {
+          "start_line": 17,
+          "end_line": 20,
+          "symbol_or_pattern": "sampleTest deliberate false assertion",
+          "matched_api": "JUnit 4 test / DijkstraAlgorithm API"
+        }
+      ],
+      "change_description": "Keep the already planned legal `package dijkstra;` declaration. Replace only the placeholder sampleTest method with a deterministic JUnit 4 test named `findsShortestWeightedPath`: construct DijkstraAlgorithm, define a four-vertex directed adjacency matrix with edges 0→1=4, 0→2=1, 2→1=2, 1→3=1, and 2→3=5 (zero means no edge), then assert exactly `Assert.assertEquals(4, algorithm.shortestDistance(weights, 0, 3));`. This proves the algorithm chooses the cheaper indirect route 0→2→1→3 over the alternatives. Do not assert true, disable, delete, or skip the test; preserve the legal package and JUnit imports.",
+      "validation_evidence": [
+        "Dijkstra test compilation on JDK 21 does not report a prohibited java.* package.",
+        "The test expects distance 4 for a graph where non-shortest alternatives cost 5 and 6, so it exercises actual shortest-path selection.",
+        "The deliberate `Assert.assertTrue(\"First dummy test\", false);` placeholder is absent, and the focused Dijkstra JUnit command passes."
+      ]
+    },
+    {
+      "sequence": 43,
+      "file_path": "algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The production class is empty, so a minimal real Dijkstra API is required for the explicitly authorized meaningful replacement of the deliberately failing baseline test.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 5,
+          "symbol_or_pattern": "empty DijkstraAlgorithm class",
+          "matched_api": "Dijkstra shortest-distance implementation"
+        }
+      ],
+      "change_description": "Preserve `package dijkstra;` and implement `public int shortestDistance(int[][] weights, int source, int target)`. Treat the matrix as a directed non-negative weighted graph where positive values are edges and zero means no edge except the zero-length source-to-source path. Use Dijkstra relaxation to return the minimum total distance; for this minimal API, validate null/non-square matrices, invalid vertex indexes, and negative weights with IllegalArgumentException, and return Integer.MAX_VALUE when the target is unreachable. Keep the implementation deterministic and dependency-free; do not add unrelated graph abstractions or features.",
+      "validation_evidence": [
+        "The class exposes the exact shortestDistance(int[][], int, int) API in package dijkstra.",
+        "The focused test returns 4 for the planned weighted graph, demonstrating relaxation through multiple intermediate vertices.",
+        "All Dijkstra build, test, and clean build checks pass under Gradle 8.10.2/JDK 21."
+      ]
+    },
+    {
+      "sequence": 44,
+      "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required Gradle validation exposes a pre-existing placeholder that opens nonexistent file \"foo\" and expects \"fixme\". The user authorized a narrow meaningful baseline-test repair; production behavior must remain unchanged.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 15,
+          "symbol_or_pattern": "foo test using nonexistent filename and fixme expectation",
+          "matched_api": "HtmlPagesConverter constructor/getFilename/getHtmlPage"
+        }
+      ],
+      "change_description": "Replace only the placeholder test with deterministic JUnit 4 coverage backed by `@Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();`. Create `pages.txt`, write exactly `first & page\nPAGE_BREAK\nsecond <page>\n` as UTF-8 bytes so the production converter's one-character newline offset remains platform-independent, and construct HtmlPagesConverter with the temporary file's absolute path. Assert that getFilename returns that path, getHtmlPage(0) returns exactly `first &amp; page<br />`, and getHtmlPage(1) returns exactly `second &lt;page&gt;<br />`. Name the test `readsAndEscapesPagesFromControlledFile`; declare IOException as needed. Add only the imports required for File, Files, StandardCharsets, Rule, and TemporaryFolder. Let TemporaryFolder clean up automatically. Do not alter production code or disable/skip the test.",
+      "validation_evidence": [
+        "The test creates a real controlled file and no longer depends on nonexistent relative filename \"foo\".",
+        "Assertions verify filename retention, PAGE_BREAK splitting, per-page selection, HTML escaping, and line-break rendering.",
+        "The Text Converter Gradle test/build commands pass without FileNotFoundException or placeholder ComparisonFailure."
+      ]
+    },
+    {
+      "sequence": 45,
+      "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required Gradle validation exposes a pre-existing placeholder that expects literal \"fixme\" rather than exercising HtmlTextConverter. The user authorized a narrow meaningful baseline-test repair; production behavior must remain unchanged.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 12,
+          "symbol_or_pattern": "foo test with fixme filename expectation",
+          "matched_api": "HtmlTextConverter getFilename/convertToHtml"
+        }
+      ],
+      "change_description": "Replace only the placeholder test with deterministic JUnit 4 coverage backed by `@Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();`. Create `input.txt`, write exactly `A&B\n<tag>\n` as UTF-8 bytes, and construct HtmlTextConverter with the temporary file's absolute path. Assert that getFilename returns that path and convertToHtml returns exactly `A&amp;B<br />&lt;tag&gt;<br />`. Name the test `convertsControlledTextFileToEscapedHtml`; declare IOException as needed. Add only the imports required for File, Files, StandardCharsets, IOException, Rule, and TemporaryFolder. Let TemporaryFolder clean up automatically. Do not change production behavior or disable/skip the test.",
+      "validation_evidence": [
+        "The test uses a controlled temporary input and verifies the retained filename.",
+        "The expected HTML proves ampersand and angle-bracket escaping plus one `<br />` per input line.",
+        "The Text Converter Gradle test/build commands pass without the placeholder ComparisonFailure."
+      ]
+    },
+    {
+      "sequence": 46,
+      "file_path": "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required Trivia validation exposes the pre-existing true_is_true placeholder that deliberately calls assertTrue(false). The user explicitly authorized this meaningful baseline-test repair even though it was not caused by the dependency upgrade.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 5,
+          "symbol_or_pattern": "JUnit imports",
+          "matched_api": "JUnit 4 assertions and Game import"
+        },
+        {
+          "start_line": 9,
+          "end_line": 12,
+          "symbol_or_pattern": "true_is_true deliberate false assertion",
+          "matched_api": "Game add/isPlayable/howManyPlayers behavior"
+        }
+      ],
+      "change_description": "Replace only `true_is_true` with a deterministic JUnit 4 test named exactly `gameBecomesPlayableAfterSecondPlayerIsAdded`. Import `com.adaptionsoft.games.uglytrivia.Game`, construct a new Game, assert it is not playable initially, add player \"Alice\" and assert it remains not playable, add player \"Bob\", then assert `howManyPlayers()` equals 2 and `isPlayable()` is true. This exercises the existing two-player playability threshold and state transition. Do not disable, delete, or skip the test; do not use an unconditional assertion; do not modify Game production behavior.",
+      "validation_evidence": [
+        "The test demonstrates the existing state transition from zero and one player (not playable) to two players (playable).",
+        "The assertion of exactly two registered players independently verifies that both add operations affected game state.",
+        "The literal `assertTrue(false);` placeholder is absent and the focused Trivia/aggregate Gradle tests pass without production changes."
+      ]
+    },
+    {
+      "sequence": 47,
+      "file_path": "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required Bowling Game validation exposes a pre-existing sampleTest that deliberately asserts false. The user authorized a meaningful baseline repair, and the production class is an empty stub.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 16,
+          "symbol_or_pattern": "sampleTest deliberate false assertion",
+          "matched_api": "JUnit 4 / BowlingGame roll and score behavior"
+        }
+      ],
+      "change_description": "Replace only sampleTest with a deterministic JUnit 4 test named exactly `scoresStrikeSpareAndOpenFrameBonuses`. Construct BowlingGame; roll a strike (10), a spare (5, 5), an open frame (3, 4), then fourteen gutter balls to complete ten frames. Assert exactly `Assert.assertEquals(40, game.score());`: the strike scores 20, the spare 13, and the open frame 7. Do not disable, delete, or skip the test and do not use a vacuous assertion.",
+      "validation_evidence": [
+        "The expected total 40 independently exercises strike look-ahead, spare look-ahead, open-frame scoring, and ten-frame iteration.",
+        "The deliberate `Assert.assertTrue(\"First dummy test\", false);` placeholder is absent.",
+        "Focused and aggregate Bowling Game Gradle tests pass under Gradle 8.10.2/JDK 21."
+      ]
+    },
+    {
+      "sequence": 48,
+      "file_path": "tdd/bowlinggame/java/src/main/java/bowlinggame/BowlingGame.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "BowlingGame is an empty stub and cannot support any meaningful scoring assertion; a compact conventional kata implementation is the minimum production behavior needed.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 5,
+          "symbol_or_pattern": "empty BowlingGame class",
+          "matched_api": "Bowling roll recording and ten-frame scoring"
+        }
+      ],
+      "change_description": "Preserve `package bowlinggame;`. Implement the conventional minimal Bowling Game kata API with a 21-entry roll buffer and current-roll index, `public void roll(int pins)` to record rolls, and `public int score()` to iterate exactly ten frames. For a strike, add 10 plus the next two rolls and advance one roll; for a spare, add 10 plus the next roll and advance two; otherwise add the two frame rolls and advance two. Small private strike/spare/bonus helpers are allowed. Do not add UI, persistence, frameworks, or unrelated validation/features.",
+      "validation_evidence": [
+        "BowlingGame exposes roll(int) and score() and scores exactly ten frames using standard strike/spare bonuses.",
+        "The mixed strike/spare/open test returns 40 rather than merely summing pins.",
+        "All Bowling Game build, test, and clean build validations pass."
+      ]
+    },
+    {
+      "sequence": 49,
+      "file_path": "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required nested String Calculator validation exposes a pre-existing sampleTest that deliberately asserts false. The user authorized a meaningful baseline repair, and the production class is an empty stub.",
+      "locations": [
+        {
+          "start_line": 47,
+          "end_line": 50,
+          "symbol_or_pattern": "sampleTest deliberate false assertion",
+          "matched_api": "JUnit 4 / StringCalculator.add basic contract"
+        }
+      ],
+      "change_description": "Replace only sampleTest with three deterministic JUnit 4 tests against one StringCalculator instance per test: `emptyStringReturnsZero` asserts `add(\"\")` is 0; `singleNumberReturnsItsValue` asserts `add(\"7\")` is 7; and `twoCommaSeparatedNumbersReturnTheirSum` asserts `add(\"7,5\")` is 12. Use `Assert.assertEquals` with exact integer expectations. Do not test or add arbitrary-length inputs, newlines, custom delimiters, negative-number reporting, console behavior, or any later kata steps. Do not disable, delete, or skip tests and do not use vacuous assertions.",
+      "validation_evidence": [
+        "Three distinct assertions cover every case in the initial 0/1/2-number contract.",
+        "The two-number case proves comma parsing and addition rather than returning a constant.",
+        "The deliberate `Assert.assertTrue(\"First dummy test\", false);` placeholder is absent and focused/aggregate String Calculator tests pass."
+      ]
+    },
+    {
+      "sequence": 50,
+      "file_path": "tdd/stringcalculator/java/src/main/java/stringcalculator/StringCalculator.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "StringCalculator is empty and cannot support the meaningful initial kata contract; the smallest conventional add implementation is required.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 5,
+          "symbol_or_pattern": "empty StringCalculator class",
+          "matched_api": "StringCalculator.add initial contract"
+        }
+      ],
+      "change_description": "Preserve `package stringcalculator;` and implement only `public int add(String numbers)`: return 0 for the empty string; when no comma exists, parse and return the single integer; when one comma exists, parse the substring on each side and return their sum. Use standard JDK parsing only. The accepted contract is deliberately limited to empty, one-number, and two-number inputs; do not implement arbitrary counts, newlines, custom delimiters, negative-number reporting, number filtering, console output, or CLI behavior.",
+      "validation_evidence": [
+        "StringCalculator exposes the exact add(String) API and uses input parsing rather than constant results.",
+        "The empty, single-number, and two-number tests return 0, 7, and 12 respectively.",
+        "All nested String Calculator build, test, and clean build validations pass under Gradle 8.10.2/JDK 21."
+      ]
+    },
+    {
+      "sequence": 51,
+      "file_path": "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required Game of Life validation exposes a pre-existing sampleTest that deliberately asserts false. The user authorized a meaningful baseline repair, and the production class is an empty stub.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 20,
+          "symbol_or_pattern": "sampleTest deliberate false assertion",
+          "matched_api": "JUnit 4 / GameOfLife.nextState cell rules"
+        }
+      ],
+      "change_description": "Replace only sampleTest with one deterministic JUnit 4 test named exactly `appliesCanonicalCellTransitionRules`. Construct GameOfLife and assert these representative canonical outcomes: a live cell with 1 neighbor dies; live cells with 2 or 3 neighbors survive; a live cell with 4 neighbors dies; a dead cell with 3 neighbors becomes alive; and a dead cell with 2 neighbors remains dead. Call `nextState(boolean currentlyAlive, int liveNeighborCount)` for each assertion. Do not disable, delete, or skip the test and do not use a vacuous assertion or build a grid-level test.",
+      "validation_evidence": [
+        "The single test covers underpopulation, both survival counts, overpopulation, reproduction, and a non-reproducing dead cell.",
+        "The deliberate `Assert.assertTrue(\"First dummy test\", false);` placeholder is absent.",
+        "Focused and aggregate Game of Life tests pass under Gradle 8.10.2/JDK 21."
+      ]
+    },
+    {
+      "sequence": 52,
+      "file_path": "tdd/gameoflife/java/src/main/java/gameoflife/GameOfLife.java",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "GameOfLife is empty and cannot support a meaningful canonical behavior test; one pure cell-transition method is the smallest implementation needed.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 5,
+          "symbol_or_pattern": "empty GameOfLife class",
+          "matched_api": "Conway cell next-state rule"
+        }
+      ],
+      "change_description": "Preserve `package gameoflife;` and add only `public boolean nextState(boolean currentlyAlive, int liveNeighborCount)`. Implement the compact canonical rule: the next state is alive when liveNeighborCount is exactly 3, or when the cell is currently alive and liveNeighborCount is exactly 2; otherwise it is dead. Keep the method pure and dependency-free. Do not implement coordinates, cells, boards, grids, generations, I/O, or unrelated validation/features.",
+      "validation_evidence": [
+        "GameOfLife exposes the exact nextState(boolean, int) API.",
+        "The method implements the canonical B3/S23 rule and passes all six planned outcomes.",
+        "No grid engine or unrelated production surface is introduced."
+      ]
+    },
+    {
+      "sequence": 53,
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "The platform-independent ChartSmart tests no longer use ApprovalTests, so retaining its AWT image-approval dependency would be unnecessary configuration and could continue generating OS-specific artifacts.",
+      "locations": [
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "com.approvaltests:approvaltests:14.0.0",
+          "matched_api": "Gradle test dependency"
+        }
+      ],
+      "change_description": "Remove only `testImplementation \"com.approvaltests:approvaltests:14.0.0\"` after ChartSmartTest no longer imports or invokes ApprovalTests. Preserve the already planned JUnit Jupiter 5.10.3 and Java 17 declarations and all other build configuration.",
+      "validation_evidence": [
+        "ChartSmartTest contains no ApprovalTests imports, reporter annotation, or AwtApprovals calls.",
+        "The build resolves and runs the replacement JUnit Jupiter assertions without approvaltests on the test runtime classpath.",
+        "No dependency unrelated to the eliminated image approvals is removed."
+      ]
+    },
+    {
+      "sequence": 54,
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "All five AWT image approvals render differently across operating systems. Mandatory validation needs deterministic assertions over the stable chart configuration rather than accepting OS-specific pixels.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 11,
+          "symbol_or_pattern": "ApprovalTests imports and ImageReporter annotation",
+          "matched_api": "ApprovalTests AWT image verification"
+        },
+        {
+          "start_line": 14,
+          "end_line": 50,
+          "symbol_or_pattern": "five AwtApprovals tests",
+          "matched_api": "ChartSmart layout and ChartWindow title/preferred-size behavior"
+        }
+      ],
+      "change_description": "Remove the four ApprovalTests imports, `@UseReporter(ImageReporter.class)`, and all five `AwtApprovals.verify(...)` calls. Keep five deterministic JUnit Jupiter tests. For the main window, assert preferred size `new Dimension(500, 500)`, null layout, exactly five components, JButton labels in component order (`Show Chart`, `Show Pie or Bar`, `Show Display Type`), and JComboBox item pairs (`Bar Chart`/`Pie Chart`, `Single`/`Compare`). For each existing ChartWindow case, retain the same iniDS inputs and exact expected title, and additionally assert preferred size `new Dimension(600, 600)`. Add only the needed java.awt.Component/Dimension and javax.swing JButton/JComboBox imports. Do not compare pixels, approve received images, make OS-specific branches, skip tests, or change production code.",
+      "validation_evidence": [
+        "The main-window test verifies explicit size/layout plus all configured control labels/options without font or raster dependence.",
+        "The four chart-window tests preserve Bar/Pie and Single/Compare mode coverage through exact titles and explicit preferred dimensions.",
+        "All five tests pass on JDK 21 without ApprovalTests or generated received images."
+      ]
+    },
+    {
+      "sequence": 55,
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testMainWindow.Windows_11.received.png",
+      "change_type": "delete",
+      "estimated_risk": "low",
+      "rationale": "This is a generated OS-specific ApprovalTests failure artifact and must not be committed.",
+      "locations": [],
+      "change_description": "Delete this generated Windows 11 `.received.png` artifact. Do not alter or replace the checked-in Linux `.approved.png` baselines as part of this repair.",
+      "validation_evidence": [
+        "The file is absent from the working tree and final commit.",
+        "No `.received.png` artifact appears in the final diff."
+      ]
+    },
+    {
+      "sequence": 56,
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testBarChartWindow.Windows_11.received.png",
+      "change_type": "delete",
+      "estimated_risk": "low",
+      "rationale": "This is a generated OS-specific ApprovalTests failure artifact and must not be committed.",
+      "locations": [],
+      "change_description": "Delete this generated Windows 11 `.received.png` artifact. Do not alter or replace the checked-in Linux `.approved.png` baselines as part of this repair.",
+      "validation_evidence": [
+        "The file is absent from the working tree and final commit.",
+        "No `.received.png` artifact appears in the final diff."
+      ]
+    },
+    {
+      "sequence": 57,
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testPieChartWindow.Windows_11.received.png",
+      "change_type": "delete",
+      "estimated_risk": "low",
+      "rationale": "This is a generated OS-specific ApprovalTests failure artifact and must not be committed.",
+      "locations": [],
+      "change_description": "Delete this generated Windows 11 `.received.png` artifact. Do not alter or replace the checked-in Linux `.approved.png` baselines as part of this repair.",
+      "validation_evidence": [
+        "The file is absent from the working tree and final commit.",
+        "No `.received.png` artifact appears in the final diff."
+      ]
+    },
+    {
+      "sequence": 58,
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testBarChartSmallWindow.Windows_11.received.png",
+      "change_type": "delete",
+      "estimated_risk": "low",
+      "rationale": "This is a generated OS-specific ApprovalTests failure artifact and must not be committed.",
+      "locations": [],
+      "change_description": "Delete this generated Windows 11 `.received.png` artifact. Do not alter or replace the checked-in Linux `.approved.png` baselines as part of this repair.",
+      "validation_evidence": [
+        "The file is absent from the working tree and final commit.",
+        "No `.received.png` artifact appears in the final diff."
+      ]
+    },
+    {
+      "sequence": 59,
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testPieChartSmallWindow.Windows_11.received.png",
+      "change_type": "delete",
+      "estimated_risk": "low",
+      "rationale": "This is a generated OS-specific ApprovalTests failure artifact and must not be committed.",
+      "locations": [],
+      "change_description": "Delete this generated Windows 11 `.received.png` artifact. Do not alter or replace the checked-in Linux `.approved.png` baselines as part of this repair.",
+      "validation_evidence": [
+        "The file is absent from the working tree and final commit.",
+        "No `.received.png` artifact appears in the final diff."
+      ]
+    },
+    {
+      "sequence": 60,
+      "file_path": "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required Minesweeper validation exposes a pre-existing sampleTest that deliberately asserts false. The user authorized a meaningful compact baseline repair, and the production class is empty.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 5,
+          "symbol_or_pattern": "JUnit Jupiter assertTrue import",
+          "matched_api": "JUnit Jupiter assertions"
+        },
+        {
+          "start_line": 25,
+          "end_line": 28,
+          "symbol_or_pattern": "sampleTest deliberate false assertion",
+          "matched_api": "MineSweeper adjacent-mine counting"
+        }
+      ],
+      "change_description": "Replace the assertTrue import with `import static org.junit.jupiter.api.Assertions.assertEquals;`. Replace only sampleTest with one deterministic JUnit Jupiter test named exactly `countsAdjacentMinesAtCenterAndEdge`. Define the 3x3 boolean mine board `{{true, false, true}, {false, false, false}, {false, true, false}}`, construct MineSweeper, assert exactly 3 adjacent mines for center coordinate (1,1), and exactly 1 for edge/corner coordinate (2,2). This proves diagonal counting, multiple-neighbor accumulation, edge bounds, and exclusion of the inspected cell. Do not disable, delete, or skip the test and do not use a vacuous assertion or full-game scenario.",
+      "validation_evidence": [
+        "The center assertion counts three diagonally/orthogonally adjacent mines on a controlled board.",
+        "The corner assertion verifies boundary-safe counting and returns one.",
+        "The literal `assertTrue(false, \"First dummy test\");` placeholder is absent and focused/aggregate Minesweeper tests pass."
+      ]
+    },
+    {
+      "sequence": 61,
+      "file_path": "tdd/minesweeper/java/src/main/java/minesweeper/MineSweeper.java",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "MineSweeper is empty and cannot support a meaningful adjacency assertion; one pure counting method is the smallest implementation needed.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 5,
+          "symbol_or_pattern": "empty MineSweeper class",
+          "matched_api": "Adjacent-mine count"
+        }
+      ],
+      "change_description": "Preserve `package minesweeper;` and add only `public int countAdjacentMines(boolean[][] mines, int row, int column)`. Inspect the at-most-eight surrounding coordinates, skip the supplied cell itself, ignore row/column positions outside board bounds, count true entries, and return that count. Keep the method pure and dependency-free. Do not implement board parsing/rendering, mine placement, reveal/flag state, win/loss logic, UI, or other game behavior.",
+      "validation_evidence": [
+        "MineSweeper exposes the exact countAdjacentMines(boolean[][], int, int) API.",
+        "The method returns 3 at the controlled center and 1 at the controlled corner without out-of-bounds errors.",
+        "No full game engine or unrelated production surface is introduced."
+      ]
+    },
+    {
+      "sequence": 62,
+      "file_path": "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Required RPG Combat validation exposes the pre-existing dummyTest that unconditionally fails. The user authorized a meaningful canonical baseline repair, and the production class is empty.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 4,
+          "symbol_or_pattern": "JUnit fail import",
+          "matched_api": "JUnit Jupiter assertions"
+        },
+        {
+          "start_line": 8,
+          "end_line": 11,
+          "symbol_or_pattern": "dummyTest unconditional fail()",
+          "matched_api": "Dummy health/damage/alive behavior"
+        }
+      ],
+      "change_description": "Replace the fail import with static imports for assertEquals, assertTrue, and assertFalse. Replace only dummyTest with one deterministic JUnit Jupiter test named exactly `damageReducesHealthAndLethalDamageKills`. Construct Dummy at its conventional default 1000 health, apply 250 damage, assert health 750 and alive true, then apply 1000 damage, assert health is clamped to 0 and alive false. This verifies nonlethal damage plus the canonical lethal transition. Do not disable, delete, or skip the test and do not use a vacuous assertion.",
+      "validation_evidence": [
+        "The test proves damage changes health from 1000 to 750 rather than asserting a constant truth.",
+        "The lethal hit independently verifies zero clamping and alive-to-dead transition.",
+        "The unconditional `fail()` placeholder is absent and focused/aggregate RPG Combat tests pass."
+      ]
+    },
+    {
+      "sequence": 63,
+      "file_path": "tdd/rpg-combat/java/src/main/java/org/rpg/Dummy.java",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Dummy is empty and cannot support a meaningful RPG Combat assertion; default health, damage, and alive state are the smallest conventional behavior needed.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 4,
+          "symbol_or_pattern": "empty Dummy class",
+          "matched_api": "RPG character health and damage"
+        }
+      ],
+      "change_description": "Preserve `package org.rpg;` and the existing Dummy class name. Add health initialized to 1000 and alive initialized to true; expose `public int getHealth()`, `public boolean isAlive()`, and `public void takeDamage(int damage)`. takeDamage must subtract damage, clamp health at zero, and set alive false when health reaches zero. Keep this implementation dependency-free. Do not add attackers, self-attack rules, healing, levels, range, factions, allies, objects, or other later RPG Combat features.",
+      "validation_evidence": [
+        "A new Dummy starts at 1000 health and alive.",
+        "takeDamage(250) yields 750/alive and a subsequent lethal hit yields 0/dead.",
+        "No unrelated RPG rules or production surface are introduced."
+      ]
+    },
+    {
+      "sequence": 64,
+      "file_path": "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Required Jest validation exposes a pre-existing placeholder expecting ordinary item name \"foo\" to become \"fixme\", while the existing production behavior correctly preserves the name. The user authorized this meaningful baseline correction.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 8,
+          "symbol_or_pattern": "Jest should foo/fixme placeholder",
+          "matched_api": "GildedRose.updateQuality ordinary-item behavior"
+        }
+      ],
+      "change_description": "Replace only the placeholder Jest case with a deterministic test named `updates an ordinary item while preserving its name`. Create one ordinary `Item(\"foo\", 5, 10)`, call updateQuality once, then assert separately with Jest `toBe` that name is `foo`, sellIn is 4, and quality is 9. This matches the current ordinary-item rule: preserve identity, decrement sellIn once, and decrement positive quality once before expiry. Do not weaken, skip, or delete the test and do not modify production behavior.",
+      "validation_evidence": [
+        "Jest asserts the preserved name plus independent sellIn and quality transitions from 5/10 to 4/9.",
+        "The literal placeholder expectation `toBe('fixme')` is absent.",
+        "npm run test:jest passes under Jest 29/ts-jest 29 with unchanged GildedRose production code."
+      ]
+    },
+    {
+      "sequence": 65,
+      "file_path": "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "The matching Mocha suite contains the same pre-existing foo-to-fixme placeholder. Both supported runners must assert the same real ordinary-item behavior.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 9,
+          "symbol_or_pattern": "Mocha should foo/fixme placeholder",
+          "matched_api": "GildedRose.updateQuality ordinary-item behavior"
+        }
+      ],
+      "change_description": "Replace only the placeholder Mocha case with the same deterministic scenario as Jest, named `updates an ordinary item while preserving its name`. Create one ordinary `Item(\"foo\", 5, 10)`, call updateQuality once, then assert separately with Chai `equal` that name is `foo`, sellIn is 4, and quality is 9. Preserve Chai 4/CommonJS compatibility. Do not weaken, skip, or delete the test and do not modify production behavior.",
+      "validation_evidence": [
+        "Mocha/Chai asserts the same preserved name and 5/10 to 4/9 transition as Jest.",
+        "The literal placeholder expectation `equal('fixme')` is absent.",
+        "npm run test:mocha passes under Mocha 10/Chai 4 with unchanged GildedRose production code."
+      ]
+    }
+  ],
+  "planned_files": [
+    "algorithm/dijkstra/build.gradle",
+    "refactoring/movierental/build.gradle",
+    "refactoring/racingcar/java/build.gradle",
+    "refactoring/racingcar/java/leaderboard/build.gradle",
+    "refactoring/racingcar/java/telemetrysystem/build.gradle",
+    "refactoring/racingcar/java/textconverter/build.gradle",
+    "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+    "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+    "tdd/bowlinggame/build.gradle",
+    "tdd/stringcalculator/build.gradle",
+    "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/trivia/java/build.gradle",
+    "refactoring/chartsmart/java/build.gradle",
+    "refactoring/tennis/java/build.gradle",
+    "tdd/minesweeper/java/build.gradle",
+    "tdd/rpg-combat/java/build.gradle",
+    "refactoring/gildedrose/js/package.json",
+    "refactoring/gildedrose/js/package-lock.json",
+    "refactoring/gildedrose/js/jest.config.ts",
+    "algorithm/dijkstra/gradlew",
+    "algorithm/dijkstra/gradlew.bat",
+    "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/movierental/gradlew",
+    "refactoring/movierental/gradlew.bat",
+    "refactoring/movierental/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/racingcar/java/gradlew",
+    "refactoring/racingcar/java/gradlew.bat",
+    "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/trivia/java/gradlew",
+    "refactoring/trivia/java/gradlew.bat",
+    "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/gameoflife/gradlew",
+    "tdd/gameoflife/gradlew.bat",
+    "tdd/gameoflife/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/chartsmart/java/gradlew",
+    "refactoring/chartsmart/java/gradlew.bat",
+    "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.jar",
+    "refactoring/tennis/java/gradlew",
+    "refactoring/tennis/java/gradlew.bat",
+    "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/minesweeper/java/gradlew",
+    "tdd/minesweeper/java/gradlew.bat",
+    "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/rpg-combat/java/gradlew",
+    "tdd/rpg-combat/java/gradlew.bat",
+    "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/bowlinggame/gradlew",
+    "tdd/bowlinggame/gradlew.bat",
+    "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/stringcalculator/gradlew",
+    "tdd/stringcalculator/gradlew.bat",
+    "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.jar",
+    "tdd/bowlinggame/java/build.gradle",
+    "tdd/stringcalculator/java/build.gradle",
+    "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+    "algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java",
+    "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+    "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+    "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+    "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+    "tdd/bowlinggame/java/src/main/java/bowlinggame/BowlingGame.java",
+    "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java",
+    "tdd/stringcalculator/java/src/main/java/stringcalculator/StringCalculator.java",
+    "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+    "tdd/gameoflife/java/src/main/java/gameoflife/GameOfLife.java",
+    "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+    "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testMainWindow.Windows_11.received.png",
+    "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testBarChartWindow.Windows_11.received.png",
+    "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testPieChartWindow.Windows_11.received.png",
+    "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testBarChartSmallWindow.Windows_11.received.png",
+    "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.testPieChartSmallWindow.Windows_11.received.png",
+    "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+    "tdd/minesweeper/java/src/main/java/minesweeper/MineSweeper.java",
+    "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+    "tdd/rpg-combat/java/src/main/java/org/rpg/Dummy.java",
+    "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+    "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "org.mockito:mockito-core",
+      "from_version": "2.2.6",
+      "to_version": "5.12.0"
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "dependency": "org.junit.jupiter:*",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "dependency": "org.junit.jupiter:*",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "dependency": "org.junit.jupiter:*",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "dependency": "org.junit.jupiter:*",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.3",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "3.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "3.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "typescript",
+      "from_version": "^4.6.3",
+      "to_version": "^5.5.4"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "jest",
+      "from_version": "^27.5.1",
+      "to_version": "^29.7.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "ts-jest",
+      "from_version": "^27.1.4",
+      "to_version": "^29.2.6"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/jest",
+      "from_version": "^27.4.1",
+      "to_version": "^29.5.14"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "mocha",
+      "from_version": "^9.2.2",
+      "to_version": "^10.6.1"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/mocha",
+      "from_version": "^9.1.0",
+      "to_version": "^10.0.10"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "chai",
+      "from_version": "^4.3.6",
+      "to_version": "^4.5.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/chai",
+      "from_version": "^4.3.0",
+      "to_version": "^4.3.20"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/node",
+      "from_version": "^17.0.23",
+      "to_version": "^22.20.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "ts-node",
+      "from_version": "^10.7.0",
+      "to_version": "^10.9.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "rimraf",
+      "from_version": "~3.0.2",
+      "to_version": "^5.0.10"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "jest-extended-snapshot",
+      "from_version": "^1.1.5",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "com.google.guava:guava",
+      "from_version": "19.0",
+      "to_version": "33.2.1-jre"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "org.mockito:mockito-core",
+      "from_version": "2.2.0",
+      "to_version": "5.12.0"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "dependency": "com.approvaltests:approvaltests",
+      "from_version": "14.0.0",
+      "to_version": "removed"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "main",
+      "master"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat",
+        "command": "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper build; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+        "purpose": "compile",
+        "timeout_seconds": 3600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILED",
+            "Could not find method jcenter()",
+            "Could not find method compile()",
+            "Could not find method testCompile()"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat",
+        "command": "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper test; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+        "purpose": "test",
+        "timeout_seconds": 3600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILED",
+            "There were failing tests"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat",
+        "command": "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper clean build; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+        "purpose": "compile",
+        "timeout_seconds": 3600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILED",
+            "Could not find method jcenter()",
+            "Could not find method compile()",
+            "Could not find method testCompile()"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js",
+        "command": "npm install",
+        "purpose": "setup",
+        "timeout_seconds": 900,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "npm ERR!",
+            "ERESOLVE"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js",
+        "command": "npm run compile",
+        "purpose": "compile",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "error TS",
+            "npm ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js",
+        "command": "npm run test:jest",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "Test Suites: 1 failed",
+            "npm ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js",
+        "command": "npm run test:mocha",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "failing",
+            "npm ERR!"
+          ]
+        }
+      }
+    ],
+    "build_commands": [
+      "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper build; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+      "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper clean build; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm install; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run compile; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }"
+    ],
+    "startup_commands": [],
+    "startup_health_check_urls": [],
+    "existing_test_commands": [
+      "$ErrorActionPreference='Stop'; $projects=@(@{Dir='algorithm/dijkstra';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/movierental';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/racingcar/java/leaderboard';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/telemetrysystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/textconverter';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/tirepressuremonitoringsystem';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/racingcar/java/turnticketdispenser';Wrapper='..\\gradlew.bat'},@{Dir='refactoring/trivia/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame';Wrapper='.\\gradlew.bat'},@{Dir='tdd/bowlinggame/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/stringcalculator';Wrapper='.\\gradlew.bat'},@{Dir='tdd/stringcalculator/java';Wrapper='..\\gradlew.bat'},@{Dir='tdd/gameoflife';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/chartsmart/java';Wrapper='.\\gradlew.bat'},@{Dir='refactoring/tennis/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/minesweeper/java';Wrapper='.\\gradlew.bat'},@{Dir='tdd/rpg-combat/java';Wrapper='.\\gradlew.bat'}); foreach($p in $projects){ Push-Location $p.Dir; try { & $p.Wrapper test; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location } }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run test:jest; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run test:mocha; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }"
+    ],
+    "generated_test_commands": [
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run compile; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\algorithm\\dijkstra'; try { .\\gradlew.bat test --tests dijkstra.DijkstraAlgorithmTest; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\chartsmart\\java'; try { .\\gradlew.bat test --tests chartsmart.ChartSmartTest; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }",
+      "Push-Location 'C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\coderetreat\\refactoring\\gildedrose\\js'; try { npm run test:mocha; if($LASTEXITCODE -ne 0){ exit $LASTEXITCODE } } finally { Pop-Location }"
+    ],
+    "generated_test_files": [],
+    "content_checks": [
+      {
+        "file_path": "algorithm/dijkstra/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'",
+          "testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.12.0'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12",
+          "version: '2.2.6'"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "compile '",
+          "testCompile ",
+          "1.7.12",
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "refactoring/trivia/java/build.gradle",
+        "must_contain": [
+          "testImplementation 'junit:junit:4.13.2'",
+          "mainClass"
+        ],
+        "must_not_contain": [
+          "testCompile ",
+          "junit:junit:4.12",
+          "main = javaMainClass"
+        ]
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "sourceCompatibility = 1.8",
+          "version: '5.8.2'",
+          "com.approvaltests:approvaltests"
+        ]
+      },
+      {
+        "file_path": "refactoring/tennis/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'",
+          "name: 'junit-jupiter-params', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "sourceCompatibility = 1.8",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "sourceCompatibility = 1.8",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "name: 'junit-jupiter-api', version: '5.10.3'",
+          "name: 'junit-jupiter-engine', version: '5.10.3'",
+          "name: 'junit-jupiter-params', version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "sourceCompatibility = 1.8",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": []
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/package.json",
+        "must_contain": [
+          "\"typescript\": \"^5.5.4\"",
+          "\"jest\": \"^29.7.0\"",
+          "\"ts-jest\": \"^29.2.6\"",
+          "\"@types/jest\": \"^29.5.14\"",
+          "\"mocha\": \"^10.6.1\"",
+          "\"@types/mocha\": \"^10.0.10\"",
+          "\"chai\": \"^4.5.0\"",
+          "\"@types/chai\": \"^4.3.20\"",
+          "\"@types/node\": \"^22.20.2\"",
+          "\"ts-node\": \"^10.9.2\"",
+          "\"rimraf\": \"^5.0.10\"",
+          "rimraf --glob \\\"app/**/*.js\\\" \\\"test/**/*.js\\\""
+        ],
+        "must_not_contain": [
+          "\"chai\": \"^5",
+          "\"jest-extended-snapshot\"",
+          "\"typescript\": \"^4.6.3\""
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/jest.config.ts",
+        "must_contain": [
+          "from  \"ts-jest\""
+        ],
+        "must_not_contain": [
+          "ts-jest/utils",
+          "jest-extended-snapshot",
+          "setupFilesAfterEnv"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/java/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "testCompile 'junit:junit:4.12'",
+          "testImplementation 'junit:junit:4.12'"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/java/build.gradle",
+        "must_contain": [
+          "mavenCentral()",
+          "implementation group: 'com.google.guava', name: 'guava', version: '33.2.1-jre'",
+          "testImplementation 'junit:junit:4.13.2'",
+          "testImplementation 'org.mockito:mockito-core:5.12.0'"
+        ],
+        "must_not_contain": [
+          "compile group: 'com.google.guava', name: 'guava', version: '19.0'",
+          "testCompile 'junit:junit:4.12'",
+          "testCompile 'org.mockito:mockito-core:2.2.0'"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+        "must_contain": [
+          "package dijkstra;",
+          "public class DijkstraAlgorithmTest",
+          "public void findsShortestWeightedPath()",
+          "DijkstraAlgorithm algorithm = new DijkstraAlgorithm();",
+          "Assert.assertEquals(4, algorithm.shortestDistance(weights, 0, 3));"
+        ],
+        "must_not_contain": [
+          "package java.dijkstra;",
+          "import java.dijkstra",
+          "Assert.assertTrue(\"First dummy test\", false);",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java",
+        "must_contain": [
+          "package dijkstra;",
+          "public int shortestDistance(int[][] weights, int source, int target)",
+          "Integer.MAX_VALUE"
+        ],
+        "must_not_contain": [
+          "package java.dijkstra;",
+          "import java.dijkstra"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+        "must_contain": [
+          "public TemporaryFolder temporaryFolder = new TemporaryFolder();",
+          "public void readsAndEscapesPagesFromControlledFile()",
+          "Files.write(input.toPath(), \"first & page\\nPAGE_BREAK\\nsecond <page>\\n\".getBytes(StandardCharsets.UTF_8));",
+          "assertEquals(input.getAbsolutePath(), converter.getFilename());",
+          "assertEquals(\"first &amp; page<br />\", converter.getHtmlPage(0));",
+          "assertEquals(\"second &lt;page&gt;<br />\", converter.getHtmlPage(1));"
+        ],
+        "must_not_contain": [
+          "new HtmlPagesConverter(\"foo\")",
+          "\"fixme\"",
+          "public void foo()",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+        "must_contain": [
+          "public TemporaryFolder temporaryFolder = new TemporaryFolder();",
+          "public void convertsControlledTextFileToEscapedHtml()",
+          "Files.write(input.toPath(), \"A&B\\n<tag>\\n\".getBytes(StandardCharsets.UTF_8));",
+          "assertEquals(input.getAbsolutePath(), converter.getFilename());",
+          "assertEquals(\"A&amp;B<br />&lt;tag&gt;<br />\", converter.convertToHtml());"
+        ],
+        "must_not_contain": [
+          "new HtmlTextConverter(\"foo\")",
+          "\"fixme\"",
+          "public void foo()",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+        "must_contain": [
+          "import com.adaptionsoft.games.uglytrivia.Game;",
+          "public void gameBecomesPlayableAfterSecondPlayerIsAdded()",
+          "Game game = new Game();",
+          "game.add(\"Alice\");",
+          "game.add(\"Bob\");",
+          "assertEquals(2, game.howManyPlayers());",
+          "assertTrue(game.isPlayable());"
+        ],
+        "must_not_contain": [
+          "assertTrue(false);",
+          "public void true_is_true()",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+        "must_contain": [
+          "public void scoresStrikeSpareAndOpenFrameBonuses()",
+          "BowlingGame game = new BowlingGame();",
+          "game.roll(10);",
+          "game.roll(5);",
+          "game.roll(3);",
+          "game.roll(4);",
+          "Assert.assertEquals(40, game.score());"
+        ],
+        "must_not_contain": [
+          "Assert.assertTrue(\"First dummy test\", false);",
+          "public void sampleTest()",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/java/src/main/java/bowlinggame/BowlingGame.java",
+        "must_contain": [
+          "package bowlinggame;",
+          "private final int[] rolls = new int[21];",
+          "public void roll(int pins)",
+          "public int score()"
+        ],
+        "must_not_contain": [
+          "package java.bowlinggame;"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java",
+        "must_contain": [
+          "public void emptyStringReturnsZero()",
+          "Assert.assertEquals(0, calculator.add(\"\"));",
+          "public void singleNumberReturnsItsValue()",
+          "Assert.assertEquals(7, calculator.add(\"7\"));",
+          "public void twoCommaSeparatedNumbersReturnTheirSum()",
+          "Assert.assertEquals(12, calculator.add(\"7,5\"));"
+        ],
+        "must_not_contain": [
+          "Assert.assertTrue(\"First dummy test\", false);",
+          "public void sampleTest()",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/java/src/main/java/stringcalculator/StringCalculator.java",
+        "must_contain": [
+          "package stringcalculator;",
+          "public int add(String numbers)",
+          "Integer.parseInt"
+        ],
+        "must_not_contain": [
+          "package java.stringcalculator;",
+          "System.out",
+          "public static void main"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+        "must_contain": [
+          "public void appliesCanonicalCellTransitionRules()",
+          "GameOfLife game = new GameOfLife();",
+          "Assert.assertFalse(game.nextState(true, 1));",
+          "Assert.assertTrue(game.nextState(true, 2));",
+          "Assert.assertTrue(game.nextState(true, 3));",
+          "Assert.assertFalse(game.nextState(true, 4));",
+          "Assert.assertTrue(game.nextState(false, 3));",
+          "Assert.assertFalse(game.nextState(false, 2));"
+        ],
+        "must_not_contain": [
+          "Assert.assertTrue(\"First dummy test\", false);",
+          "public void sampleTest()",
+          "@Ignore"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/java/src/main/java/gameoflife/GameOfLife.java",
+        "must_contain": [
+          "package gameoflife;",
+          "public boolean nextState(boolean currentlyAlive, int liveNeighborCount)",
+          "liveNeighborCount == 3",
+          "currentlyAlive && liveNeighborCount == 2"
+        ],
+        "must_not_contain": [
+          "package java.gameoflife;",
+          "class Cell",
+          "class Grid",
+          "class Board"
+        ]
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+        "must_contain": [
+          "assertEquals(new Dimension(500, 500), chartSmart.getPreferredSize());",
+          "assertNull(chartSmart.getLayout());",
+          "assertEquals(5, components.length);",
+          "assertEquals(\"Show Chart\", ((JButton) components[0]).getText());",
+          "assertEquals(\"Show Pie or Bar\", ((JButton) components[1]).getText());",
+          "assertEquals(\"Show Display Type\", ((JButton) components[2]).getText());",
+          "assertEquals(\"Bar Chart - Single Mode\", chartSmart.getTitle());",
+          "assertEquals(\"Pie Chart - Single Mode\", chartSmart.getTitle());",
+          "assertEquals(\"Bar Chart - Compare Mode\", chartSmart.getTitle());",
+          "assertEquals(\"Pie Chart - Compare Mode\", chartSmart.getTitle());",
+          "assertEquals(new Dimension(600, 600), chartSmart.getPreferredSize());",
+          "Component[] components = chartSmart.getComponents();",
+          "assertEquals(\"Bar Chart\", ((JComboBox<?>) components[3]).getItemAt(0));",
+          "assertEquals(\"Pie Chart\", ((JComboBox<?>) components[3]).getItemAt(1));",
+          "assertEquals(\"Single\", ((JComboBox<?>) components[4]).getItemAt(0));",
+          "assertEquals(\"Compare\", ((JComboBox<?>) components[4]).getItemAt(1));"
+        ],
+        "must_not_contain": [
+          "org.approvaltests",
+          "@UseReporter",
+          "ImageReporter",
+          "AwtApprovals.verify",
+          ".received.png",
+          "@Disabled"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+        "must_contain": [
+          "import static org.junit.jupiter.api.Assertions.assertEquals;",
+          "public void countsAdjacentMinesAtCenterAndEdge()",
+          "boolean[][] mines = {",
+          "{true, false, true}",
+          "{false, true, false}",
+          "assertEquals(3, mineSweeper.countAdjacentMines(mines, 1, 1));",
+          "assertEquals(1, mineSweeper.countAdjacentMines(mines, 2, 2));"
+        ],
+        "must_not_contain": [
+          "assertTrue(false, \"First dummy test\");",
+          "public void sampleTest()",
+          "@Disabled"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/src/main/java/minesweeper/MineSweeper.java",
+        "must_contain": [
+          "package minesweeper;",
+          "public int countAdjacentMines(boolean[][] mines, int row, int column)",
+          "return count;"
+        ],
+        "must_not_contain": [
+          "package java.minesweeper;",
+          "class Board",
+          "class Cell",
+          "class Game"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+        "must_contain": [
+          "import static org.junit.jupiter.api.Assertions.assertEquals;",
+          "import static org.junit.jupiter.api.Assertions.assertTrue;",
+          "import static org.junit.jupiter.api.Assertions.assertFalse;",
+          "void damageReducesHealthAndLethalDamageKills()",
+          "Dummy character = new Dummy();",
+          "character.takeDamage(250);",
+          "assertEquals(750, character.getHealth());",
+          "assertTrue(character.isAlive());",
+          "character.takeDamage(1000);",
+          "assertEquals(0, character.getHealth());",
+          "assertFalse(character.isAlive());"
+        ],
+        "must_not_contain": [
+          "import static org.junit.jupiter.api.Assertions.fail;",
+          "void dummyTest()",
+          "fail();",
+          "@Disabled"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/src/main/java/org/rpg/Dummy.java",
+        "must_contain": [
+          "package org.rpg;",
+          "private int health = 1000;",
+          "private boolean alive = true;",
+          "public int getHealth()",
+          "public boolean isAlive()",
+          "public void takeDamage(int damage)",
+          "Math.max(0, health - damage)"
+        ],
+        "must_not_contain": [
+          "package java.org.rpg;",
+          "heal(",
+          "faction",
+          "range"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+        "must_contain": [
+          "it('updates an ordinary item while preserving its name'",
+          "new Item('foo', 5, 10)",
+          "expect(items[0].name).toBe('foo');",
+          "expect(items[0].sellIn).toBe(4);",
+          "expect(items[0].quality).toBe(9);"
+        ],
+        "must_not_contain": [
+          "toBe('fixme')",
+          "it('should foo'",
+          ".skip(",
+          "xit("
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts",
+        "must_contain": [
+          "it('updates an ordinary item while preserving its name'",
+          "new Item('foo', 5, 10)",
+          "expect(items[0].name).to.equal('foo');",
+          "expect(items[0].sellIn).to.equal(4);",
+          "expect(items[0].quality).to.equal(9);"
+        ],
+        "must_not_contain": [
+          "to.equal('fixme')",
+          "it('should foo'",
+          ".skip(",
+          "xit("
+        ]
+      }
+    ],
+    "key_pages": [],
+    "key_user_flows": [],
+    "external_service_checks": [],
+    "success_criteria": [
+      "All ten blocking jcenter() declarations are replaced before wrapper/dependency work and all Gradle builds resolve from Maven Central.",
+      "Every requested wrapper reports Gradle 8.10.2 and all generated wrapper companions are internally consistent.",
+      "All eighteen requested Gradle root/submodule contexts pass build, test, and clean build on JDK 21 without removed-configuration or JCenter errors.",
+      "The four Jupiter builds compile at Java 17 and test with JUnit Jupiter 5.10.3.",
+      "Gilded Rose npm install, TypeScript compile, Jest 29, and Mocha 10 commands pass under Node 22; Chai remains on 4.x/CommonJS and rimraf cleanup handles globs.",
+      "The focused Gilded Rose TypeScript smoke compile succeeds after dependency installation, proving the upgraded TypeScript toolchain resolves and initializes the package sources.",
+      "The focused Dijkstra JUnit 4, ChartSmart JUnit Jupiter/ApprovalTests, and Gilded Rose Mocha suites pass, preserving representative algorithm, desktop integration, and TypeScript domain behavior across the upgraded runtimes.",
+      "The final diff contains only planned files, generated tests, or at most twelve qualifying narrow mechanical compatibility expansions.",
+      "No ChartSmart *.received.png artifacts are present or committed; checked-in approved images are not replaced."
+    ],
+    "scope_expansion_limit": 12
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "The ImpactReport was authoritative; inspection was limited to its build-script, package-manifest, Jest-config, tsconfig, and direct-test line ranges plus minimal surrounding context. All ten JCenter replacements are separate sequences 1-10, ahead of wrappers, syntax migrations, or dependency bumps. The user-requested wrapper command can regenerate gradlew, gradlew.bat, and gradle-wrapper.jar; those companion paths were not individual ImpactReport entries, so this plan explicitly authorizes them as deterministic generated outputs and includes them in planned_files. The old 3.1/6.x launchers may not start on JDK 21, so distributionUrl is first changed to 8.10.2 before invoking the wrapper task; run the task twice if needed to refresh wrapper implementation files. The five Racing Car submodules have no local wrapper and validation runs from each submodule with ..\\gradlew.bat. The three Java command patterns are represented as bounded aggregate commands over every requested root/submodule; the equivalent Windows wrapper entry point is used. Game of Life only needs its wrapper changed. Trivia does not actually declare slf4j-api in the authoritative inspected build.gradle range, so no unused SLF4J dependency is added there despite the user grouping Trivia with the SLF4J bump. No startup command, health URL, external service, database/index, browser page, or interactive flow exists. npm run test:jest:watch is intentionally excluded because watch mode is unbounded. npm install precedes all npm validation. jest-extended-snapshot is removed because the inspected Jest test uses only built-in matchers, avoiding a stale Jest-29 integration. tsconfig.json and direct Java/TypeScript test sources remain unchanged unless validation reveals a direct major-version compatibility error. Up to two narrow unplanned direct-call compatibility fixes are authorized by scope_expansion_limit; no broader refactor or unrelated dependency change is allowed. After the first Stage 4 execution attempt failed, the user explicitly authorized adding tdd/bowlinggame/java/build.gradle. Its inspected lines 4-9 already use mavenCentral(), so the amendment changes only the line 9 JUnit declaration and adds the nested directory to all Gradle build/test validation batches using the parent wrapper. After the second Stage 4 failure, the user explicitly authorized adding tdd/stringcalculator/java/build.gradle. Its inspected lines 4-11 already use mavenCentral(); the amendment is limited to the exact Guava, JUnit, and Mockito dependency/configuration replacements on lines 9-11 and adds the nested directory to every Gradle build/test validation batch using the parent wrapper. Following the current JDK 21 Dijkstra failure, narrow inspection of all two Java files under algorithm/dijkstra found one prohibited java.* declaration: DijkstraAlgorithmTest.java line 1 declares java.dijkstra, while DijkstraAlgorithm.java already declares the legal dijkstra package and requires no change. The user explicitly authorized fixing upgrade-caused build/test issues without further per-issue approval. Accordingly, scope_expansion_limit is raised from 2 to 12 for the eighteen Gradle contexts, but remains restricted to narrow, mechanical compatibility repairs directly evidenced by bounded executor checks; it does not authorize unrelated cleanup, refactoring, dependency expansion, or features. Required Dijkstra validation revealed that the now-legal test contains a pre-existing deliberate false assertion and the production DijkstraAlgorithm is empty. The user explicitly authorized repairing this baseline test even though it was not caused by the dependency upgrade. The planned repair is bounded to a minimal adjacency-matrix shortestDistance API and one deterministic weighted-path assertion; disabling, deleting, skipping, or replacing it with a vacuous true assertion is forbidden. Required Racing Car Text Converter validation exposed two pre-existing placeholders: HtmlPagesConverterTest opened nonexistent \"foo\" and expected \"fixme\", while HtmlTextConverterTest also expected \"fixme\" without exercising conversion. Under the user's standing authorization, the plan now replaces only those tests with controlled TemporaryFolder fixtures and exact assertions for filename retention, HTML escaping, line rendering, and page splitting. Narrow inspection confirmed HtmlPagesConverter reads/splits the supplied file and HtmlTextConverter reads/escapes it; no production change is authorized or needed. The explicit LF-only UTF-8 pages fixture avoids coupling the legacy page-offset calculation to the host line separator. These are authorized baseline test repairs, not feature work, and scope_expansion_limit remains 12. Required Trivia validation exposed the pre-existing SomeTest.true_is_true deliberate false assertion. Under the user's standing authorization, narrow inspection was limited to SomeTest and Game's constructor/add/howManyPlayers/isPlayable methods. The plan replaces only the placeholder with a deterministic zero-to-one-to-two-player playability transition test and makes no production change. This is an authorized baseline repair necessary for required build/test validation, not unrelated cleanup or a feature; scope_expansion_limit remains 12. Required nested Bowling Game validation exposed a pre-existing deliberate false sampleTest, while narrow inspection found BowlingGame.java is an empty class with no API. Under the user's standing authorization, the plan adds the conventional minimal roll-buffer/ten-frame score implementation and one deterministic mixed strike, spare, open-frame, and gutter test expecting 40. This is an authorized baseline repair necessary for mandatory build/test validation; it forbids skipped/vacuous tests and avoids unrelated features or overengineering. scope_expansion_limit remains 12. Required nested String Calculator validation exposed a pre-existing deliberate false sampleTest, while narrow inspection found StringCalculator.java is empty. Under the user's standing authorization, the plan adds only the conventional initial add(String) contract for empty input, one number, and two comma-separated numbers, with three deterministic assertions. Later kata features are explicitly excluded. This is an authorized baseline repair needed for mandatory build/test validation; skipped/vacuous tests and unrelated features are forbidden. scope_expansion_limit remains 12. Required Game of Life validation exposed a pre-existing deliberate false sampleTest, while narrow inspection found GameOfLife.java is empty. Under the user's standing authorization, the plan adds one pure nextState(boolean, int) implementation of Conway's B3/S23 cell rule and one deterministic test covering six representative survival/death/birth outcomes. A grid engine and later features are explicitly excluded. This is an authorized baseline repair needed for mandatory build/test validation; skipped/vacuous tests and overbuilding are forbidden. scope_expansion_limit remains 12. Mandatory ChartSmart validation produced five Windows 11 `.received.png` files because AWT raster output differs from the checked-in Linux approvals. Under the user's standing authorization, narrow inspection was limited to ChartSmartTest and the explicit ChartSmart/ChartWindow layout/title initialization APIs. The plan replaces pixel approvals with stable component inventory/labels/options, explicit preferred dimensions, and the same four chart-mode titles; production remains unchanged. ApprovalTests 14.0.0 is removed only because no test uses it afterward. The five received PNGs are explicitly deleted and must not be committed, while approved baselines are left untouched rather than blindly replaced. This is an authorized baseline-test repair required for mandatory validation; scope_expansion_limit remains 12. Required Minesweeper validation exposed a pre-existing deliberate false sampleTest, while narrow inspection found MineSweeper.java is empty. Under the user's standing authorization, the plan adds one pure adjacent-mine counter and one deterministic 3x3-board test checking center and corner counts. Board parsing, rendering, mine placement, state, UI, and other game behavior are excluded. This is an authorized baseline repair needed for mandatory validation; wrapper-path anomalies are intentionally outside this amendment and scope_expansion_limit remains 12. Required RPG Combat validation exposed DummyTest.dummyTest as an unconditional fail(), while narrow inspection found Dummy.java empty. Under the user's standing authorization, the plan adds only conventional default health, damage, zero clamping, and alive/dead state plus one deterministic nonlethal-then-lethal test. Healing, attackers, levels, range, factions, allies, and later kata behavior are excluded. This is an authorized baseline repair needed for mandatory validation; skipped/vacuous tests are forbidden and scope_expansion_limit remains 12. Required Gilded Rose Jest validation exposed a pre-existing placeholder expecting item name \"foo\" to mutate to \"fixme\"; the Mocha suite contained the same placeholder. Narrow inspection of both tests and updateQuality confirmed an ordinary unexpired item preserves its name and decrements sellIn and positive quality once. Under the user's standing authorization, both suites now plan the same deterministic Item(\"foo\", 5, 10) to foo/4/9 assertions. Correct production behavior remains untouched; weakened/skipped tests are forbidden. This is an authorized baseline repair needed for mandatory npm validation, and scope_expansion_limit remains 12.",
+  "plan_summary": "65 ordered changes: the approved Gradle/Java/npm modernization plus focused baseline repairs across the Java katas and Gilded Rose; both Gilded Rose Jest and Mocha now assert the same ordinary-item name/sellIn/quality transition without production changes. Validation covers all eighteen Gradle contexts and four bounded npm commands, with scope limit 12."
+}

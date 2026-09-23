@@ -1,0 +1,118 @@
+{
+  "decision": "approved",
+  "confidence_score": 1.0,
+  "base_ref": "main",
+  "git_diff_summary": {
+    "changed_files": [
+      ".github/workflows/test.yml",
+      "pom.xml",
+      "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+      "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java",
+      "src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java"
+    ],
+    "planned_files_touched": [
+      ".github/workflows/test.yml",
+      "pom.xml",
+      "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+      "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java",
+      "src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java"
+    ],
+    "unexpected_files": [],
+    "missing_planned_files": [],
+    "dependency_changes_verified": [
+      "pom.xml: Java release changed from 17 to 21",
+      "pom.xml: maven-compiler-plugin pinned to 3.16.0",
+      "pom.xml: com.google.code.gson:gson 2.14.0 removed",
+      ".github/workflows/test.yml: CI Java matrix changed from 17 to 21"
+    ],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {
+      "file_path": "pom.xml",
+      "outcome": "passed",
+      "detail": "All required UTF-8, compiler 3.16.0, release 21, incremental-compilation, profile activation, and dependency-removal assertions passed."
+    },
+    {
+      "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java",
+      "outcome": "passed",
+      "detail": "The renamed class and required unchanged Cyrillic method declarations are present; the old public class identifier is absent."
+    },
+    {
+      "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+      "outcome": "passed",
+      "detail": "The import, static receiver, and constructor use CommonConfiguration; the old class identifier is absent."
+    },
+    {
+      "file_path": ".github/workflows/test.yml",
+      "outcome": "passed",
+      "detail": "The Java matrix is 21, setup-java still consumes matrix.java, and the Maven verify command is unchanged."
+    }
+  ],
+  "command_results": [
+    {
+      "type": "build",
+      "command": "mvn -B clean verify --file pom.xml",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS; compiler:3.16.0 compiled 11 main and 5 test sources with javac release 21; Tests run: 4, Failures: 0, Errors: 0, Skipped: 0."
+    },
+    {
+      "type": "build",
+      "command": "mvn -B verify --file pom.xml",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS; Tests run: 4, Failures: 0, Errors: 0, Skipped: 0."
+    },
+    {
+      "type": "build",
+      "command": "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/examples/SimplePeel.class",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "SimplePeel.class loaded successfully; minor version: 0; major version: 65."
+    },
+    {
+      "type": "startup",
+      "command": "",
+      "outcome": "skipped",
+      "exit_status": -1,
+      "output": "Skipped: this Maven library has no declared startup command or health-check URL."
+    },
+    {
+      "type": "existing_test",
+      "command": "mvn -B clean verify --file pom.xml",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS; compiler:3.16.0 compiled with javac release 21; Tests run: 4, Failures: 0, Errors: 0, Skipped: 0."
+    },
+    {
+      "type": "existing_test",
+      "command": "mvn -B verify --file pom.xml",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS; Tests run: 4, Failures: 0, Errors: 0, Skipped: 0."
+    },
+    {
+      "type": "existing_test",
+      "command": "mvn -B test -Dtest=ExampleTests",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS; ExampleTests: Tests run: 2, Failures: 0, Errors: 0, Skipped: 0."
+    },
+    {
+      "type": "generated_test",
+      "command": "",
+      "outcome": "skipped",
+      "exit_status": -1,
+      "output": "Skipped: the approved ChangePlan declares no generated tests."
+    }
+  ],
+  "repairs_applied": [],
+  "repair_rounds": 0,
+  "browser_check_results": [],
+  "final_commit_ref": "5781fb1",
+  "rejection_reasons": [],
+  "recommendations": [
+    "Confirm the same flag-free clean verify command in the updated Ubuntu GitHub Actions job; this validation host provided Windows evidence and had no usable Linux distribution."
+  ]
+}
