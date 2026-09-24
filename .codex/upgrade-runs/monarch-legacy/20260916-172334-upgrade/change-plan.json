@@ -1,0 +1,412 @@
+{
+  "upgrade_description": "Upgrade monarch-app dependencies for Node 18/20 LTS using the Vue 2.7 interim path: migrate Hapi/Inert, Babel, webpack, Sass, ESLint, Bootstrap, HTTP/date libraries, Gulp, Mocha, Mustache, Underscore, and xml2js; preserve behavior and validate build, startup, lint, Node tests, and key Behave-derived browser workflows.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "package.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The sole manifest controls the Node floor, all requested dependency replacements, and obsolete webpack/lint/start commands.",
+      "locations": [
+        {"start_line": 5, "end_line": 42, "symbol_or_pattern": "scripts", "matched_api": "webpack/eslint/start scripts"},
+        {"start_line": 53, "end_line": 56, "symbol_or_pattern": "engines", "matched_api": "node >= 6.11.2"},
+        {"start_line": 61, "end_line": 119, "symbol_or_pattern": "devDependencies", "matched_api": "Babel 6, webpack 4, Gulp 3, ESLint 5, Mocha 5, node-sass 4"},
+        {"start_line": 121, "end_line": 150, "symbol_or_pattern": "dependencies", "matched_api": "hapi/inert/request/axios/moment/Vue/Bootstrap/Mustache/Underscore/xml2js"}
+      ],
+      "change_description": "Set engines.node to >=18. Replace hapi/inert with @hapi/hapi ^21 and @hapi/inert ^7; consolidate request plus axios 0.18 on axios ^1; remove wait.for; replace moment with dayjs; set Vue and vue-template-compiler to matching ^2.7 versions; set Bootstrap ^5 with @popperjs/core and remove bootstrap-vue/popper.js; update Mustache ^4, Underscore ^1.13, xml2js ^0.6, Mocha ^10, Gulp ^4, ESLint ^8 and an ESLint-8-compatible airbnb-base/plugin set. Replace Babel 6 packages with @babel/core and @babel/preset-env plus babel-loader ^9. Align webpack, webpack-cli, webpack-dev-server and directly coupled loaders/plugins to webpack 5, replacing ExtractTextPlugin with mini-css-extract-plugin and removing eslint-loader/file-loader/url-loader where webpack 5 native mechanisms replace them. Add cross-env for portable environment assignments and direct js-yaml dependency for the Gulp 4 file. Remove obsolete webpack CLI flags (-p, --inline, --colors where unsupported); use webpack --mode production and webpack serve. Keep wbs-lint explicitly scoped to ui/main.js, the four migrated Vue components, and js/index.js; do not add --quiet, --no-ignore, blanket file ignores, or a command that always succeeds. Keep npm start semantically identical but use cross-env so it runs on Windows and POSIX. Preserve the requested phenogrid declaration ^1.3.11 and reinstall exact 1.3.11 into package-lock: this is not a dependency bump, and it is required because the previously resolved 1.5.5 tarball omits index.html used by the checked-in route and browser scenario.",
+      "validation_evidence": ["npm install completes on Node 18 or 20 and emits package-lock.json", "npm run wbs-build and npm run wbs-lint resolve only the new toolchain", "npm run start reaches http://localhost:8080/"]
+    },
+    {
+      "sequence": 2,
+      "file_path": "package-lock.json",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "The impact report identifies absence of a lockfile as a reproducibility and transitive-security gap.",
+      "locations": [],
+      "change_description": "Generate npm lockfileVersion 3 with the repository's supported npm on Node 18/20 after the manifest is finalized; do not hand-edit resolved integrity data. Run npm install phenogrid@1.3.11 --save so the root declaration remains ^1.3.11 while node_modules/phenogrid is locked to exact 1.3.11 with registry integrity sha512-kkoNvVBtOTvffkXYFykIfJnK7i7Oo9dy6Dplk0HuMDVHLbPAj1Mv6ZySlj4v3WAyvVeqLmqEG05F42Ql7zew8w==. Then run the user-required npm install and require a second install to leave package-lock.json unchanged. If 1.3.11 unexpectedly cannot install on the executing Node/npm pair, stop for a plan amendment rather than silently selecting 1.5.5 or another release that lacks the routed demo layout.",
+      "validation_evidence": ["npm install exits zero", "git diff contains package-lock.json", "npm install repeated against the lockfile does not alter it"]
+    },
+    {
+      "sequence": 3,
+      "file_path": ".babelrc",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "All configured Babel names are Babel 6-era.",
+      "locations": [{"start_line": 1, "end_line": 4, "symbol_or_pattern": "Babel config", "matched_api": "env, transform-runtime, syntax-dynamic-import"}],
+      "change_description": "Use @babel/preset-env. Remove the Babel 6 transform-runtime and syntax-dynamic-import plugin names; webpack 5 parses dynamic import and no runtime transform is required unless the build proves otherwise. Keep the file valid strict JSON.",
+      "validation_evidence": ["Babel config contains @babel/preset-env and no unscoped env/transform-runtime/syntax-dynamic-import names", "webpack build transpiles JS successfully"]
+    },
+    {
+      "sequence": 4,
+      "file_path": ".eslintrc",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The parser/config syntax and Vue preset required ESLint 8 migration; Stage 4 then proved that the selected Airbnb/Vue presets expose 2,088 pre-existing findings, including 1,810 CRLF errors, rather than upgrade regressions.",
+      "locations": [{"start_line": 1, "end_line": 26, "symbol_or_pattern": "ESLint config", "matched_api": "babel-eslint/plugin:vue/strongly-recommended/airbnb-base"}],
+      "change_description": "Retain ESLint 8, plugin:vue/recommended and airbnb-base. Establish a compatibility baseline without formatting source: disable linebreak-style because the checked-out legacy files are CRLF and cross-platform line endings are not a correctness defect; disable import/no-unresolved, import/named, import/extensions and import/no-relative-packages for the six webpack-bundled targets because webpack 5 now successfully resolves their aliases/CommonJS exports/package paths. Downgrade only the observed legacy-debt rules to warning: vue/max-attributes-per-line, vue/singleline-html-element-content-newline, import/first, max-len, object-curly-spacing, vue/attributes-order, import/newline-after-import, vue/multiline-html-element-content-newline, indent, brace-style, vue/component-definition-name-casing, no-multiple-empty-lines, vue/order-in-components, vue/html-closing-bracket-newline, vue/mustache-interpolation-spacing, vue/html-closing-bracket-spacing, camelcase, vue/v-on-style, func-names, object-shorthand, semi, prefer-const, operator-linebreak, no-redeclare, import/no-extraneous-dependencies, no-var, no-param-reassign, space-before-blocks, space-before-function-paren, vue/html-indent, vue/require-valid-default-prop, arrow-parens, import/order, arrow-body-style, no-underscore-dangle, vars-on-top, no-use-before-define, consistent-return, vue/no-unused-vars, vue/require-v-for-key, key-spacing, function-paren-newline and space-infix-ops. Do not downgrade unobserved correctness rules such as no-undef, no-unreachable, no-dupe-keys, valid-typeof, vue/no-dupe-attributes or vue/no-mutating-props. Keep vue/no-v-html at its preset warning. Resolve the single vue/no-parsing-error in AnalyzePhenotypes.vue rather than suppressing it.",
+      "validation_evidence": ["Configuration parses under ESLint 8", "npm run wbs-lint exits zero while still printing the finite legacy warning baseline", "A temporary undefined identifier or duplicate key in a lint target still makes ESLint exit nonzero", "No ignore-all pattern, eslint-disable-all directive, --quiet, or unconditional-success shell suffix is introduced"]
+    },
+    {
+      "sequence": 5,
+      "file_path": "webpack.config.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Webpack 5, dev-server 5, Dart Sass and Bootstrap 5 invalidate central portions of this configuration.",
+      "locations": [
+        {"start_line": 8, "end_line": 23, "symbol_or_pattern": "loader/plugin imports", "matched_api": "node-sass, extract-text-webpack-plugin, vue-loader/lib/plugin"},
+        {"start_line": 126, "end_line": 160, "symbol_or_pattern": "plugins", "matched_api": "ExtractTextPlugin, webpack.NamedModulesPlugin, LoaderOptionsPlugin"},
+        {"start_line": 194, "end_line": 209, "symbol_or_pattern": "preLoaders", "matched_api": "eslint-loader"},
+        {"start_line": 218, "end_line": 365, "symbol_or_pattern": "config.module", "matched_api": "cache/devtool/noParse/loader query/sass-loader/file-loader/url-loader/node"},
+        {"start_line": 395, "end_line": 502, "symbol_or_pattern": "config.devServer", "matched_api": "clientLogLevel/noInfo/inline/contentBase/overlay/publicPath/quiet/watchOptions/proxy"}
+      ],
+      "change_description": "Replace node-sass and ExtractTextPlugin imports/configuration with Dart Sass selected through sass-loader's implementation option and MiniCssExtractPlugin (style-loader only in dev-server mode). Remove NamedModulesPlugin and legacy LoaderOptionsPlugin/debug usage. Remove eslint-loader preloader because lint is a separate command. Convert query strings/options to webpack 5 use/options form, set sassOptions.includePaths, use asset/resource for fonts and asset with parser.dataUrlCondition.maxSize for images, and remove the webpack 4 node fallback object; add resolve.fallback false entries only for browser-inapplicable core modules actually referenced. Preserve VueLoaderPlugin for Vue 2.7. Convert devtool 'sourcemap' to 'source-map'. Migrate devServer keys to client.logging/client.overlay, static:false, devMiddleware.publicPath, liveReload/hot, and proxy's dev-server-5 array form with context arrays; retain localhost:8081 and proxying to backend 8080. Replace the SPA proxy bypass callback with router/history fallback behavior supported by v5. Ensure production optimization uses mode rather than removed CLI flags. Keep the phenogrid alias pointed at node_modules/phenogrid/js/phenogrid.js but remove that path from module.noParse: the source contains live CommonJS require() calls for jQuery, jQuery UI and internal modules, so webpack must parse it. Do not switch the application import to dist/phenogrid-bundle.js; although 1.3.11 ships that UMD file for its self-contained demo, the existing shared bundle imports the package's CommonJS main and is correctly handled by source parsing.",
+      "validation_evidence": ["webpack --config webpack.config.js builds without schema validation warnings/errors", "No node-sass, ExtractTextPlugin, NamedModulesPlugin, eslint-loader, file-loader, url-loader, contentBase, inline, quiet, or clientLogLevel configuration remains", "Built JS/CSS/assets and webpack-assets.json are emitted"]
+    },
+    {
+      "sequence": 6,
+      "file_path": "common.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "This is the sole Moment boundary and controls the build banner.",
+      "locations": [{"start_line": 9, "end_line": 24, "symbol_or_pattern": "getInfos", "matched_api": "moment(new Date()).format()"}],
+      "change_description": "Replace require('moment') with require('dayjs') and preserve the ISO-like default formatted build date used in banner text by calling dayjs(new Date()).format().",
+      "validation_evidence": ["common.js imports dayjs and contains no moment import", "webpack banner generation succeeds"]
+    },
+    {
+      "sequence": 7,
+      "file_path": "gulpfile.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gulp 3 dependency arrays and old Node/js-yaml/Buffer APIs fail under Gulp 4 and Node 18.",
+      "locations": [
+        {"start_line": 30, "end_line": 33, "symbol_or_pattern": "aggregate tasks", "matched_api": "gulp.task(name, dependencyArray)"},
+        {"start_line": 44, "end_line": 49, "symbol_or_pattern": "yaml_to_json", "matched_api": "jsyaml.safeLoad and new Buffer"},
+        {"start_line": 128, "end_line": 217, "symbol_or_pattern": "build tasks", "matched_api": "gulp.task with dependency arrays"}
+      ],
+      "change_description": "Define named task functions and compose dependencies with gulp.series/gulp.parallel so make-tmp-dir precedes YAML conversions, conversions precede merge/cat, and teardown runs last. Replace jsyaml.safeLoad with jsyaml.load and every new Buffer(...) with Buffer.from(...). Return the download stream from download-phenopacket-schema and ensure every task returns a stream/promise or calls its callback. Preserve public task names set_up, assemble, make-golr-conf, tear_down, build and default.",
+      "validation_evidence": ["npx gulp --tasks lists all legacy public task names", "npx gulp build exits zero without async completion warnings", "No dependency-array task declarations, safeLoad, or new Buffer remain"]
+    },
+    {
+      "sequence": 8,
+      "file_path": "lib/monarch/api.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The service layer synchronously wraps request through fibers; Node 18 compatibility requires promise propagation, not a mechanical import swap.",
+      "locations": [
+        {"start_line": 14, "end_line": 40, "symbol_or_pattern": "dependency imports", "matched_api": "underscore, request.defaults, wait.for"},
+        {"start_line": 80, "end_line": 89, "symbol_or_pattern": "fetchUrlImplementation", "matched_api": "WaitFor.for(AsyncRequest.get)"},
+        {"start_line": 3195, "end_line": 3204, "symbol_or_pattern": "HTTP post/get", "matched_api": "WaitFor.for(AsyncRequest.post/get)"},
+        {"start_line": 4457, "end_line": 4491, "symbol_or_pattern": "service health checks", "matched_api": "SciGraph/GOlr/OwlSim endpoints"}
+      ],
+      "change_description": "Import axios and remove request/wait.for. Make fetchUrlImplementation, fetchUrlWithExchangeObject and fetchUrl async. Map GET query options to params; map request's form POST behavior to URLSearchParams with application/x-www-form-urlencoded; enable keep-alive agents and preserve effective timeout behavior; set validateStatus so non-2xx statuses remain explicit exchange objects. Map Axios response.status and response.data to the existing {status, content} contract, stringifying non-string response data consistently. Propagate async/await through every Engine method in this file that directly or transitively calls fetchUrl/fetchUrlWithExchangeObject (the targeted cross-check found call sites near lines 860, 870, 878, 936, 1546, 1570, 1608, 1663, 2631, 3804, 3950, 3971, 3995, 4354 and 4693), including getHealthCheck Promise.all/error handling. Preserve public result shapes and thrown error fields.",
+      "validation_evidence": ["No request or wait.for import/call remains", "Axios 1 response mapping preserves status/content", "Hermetic loopback tests prove GET params, form POST, Solr-shaped BBOP response construction, and non-2xx fetchUrl rejection without external DNS", "Live /status and API coverage remain separately recorded against configured services"]
+    },
+    {
+      "sequence": 9,
+      "file_path": "lib/monarch/web/webenv.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Fiber route wrappers and Hapi 16 reply callbacks are incompatible with Node 18 and Hapi 21.",
+      "locations": [
+        {"start_line": 2, "end_line": 2, "symbol_or_pattern": "underscore import", "matched_api": "require('underscore')"},
+        {"start_line": 289, "end_line": 360, "symbol_or_pattern": "route registration", "matched_api": "app.route"}
+      ],
+      "change_description": "Remove wait.for and make GET/POST wrapped handlers async. Await commonHandler.apply(...), return a Hapi response from wrapResponse, and route errors through the existing errorHandler. Convert wrapResponse from reply(output.body) to h.response(output.body), apply type/encoding/content-disposition, status code, and redirect via the Hapi 21 toolkit; do not return the old output envelope after constructing the response. Use route options.cache rather than legacy config where required by Hapi 21.",
+      "validation_evidence": ["No WaitFor.launchFiber or reply(...) remains", "Route handlers return/await Hapi responses", "GET, POST, redirect, content type and attachment response paths remain represented"]
+    },
+    {
+      "sequence": 10,
+      "file_path": "lib/monarch/web/webapp.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The central server combines Hapi 16 lifecycle, deprecated HTTP client/fibers, and callback XML parsing.",
+      "locations": [
+        {"start_line": 132, "end_line": 136, "symbol_or_pattern": "AsyncRequest", "matched_api": "request.defaults"},
+        {"start_line": 202, "end_line": 232, "symbol_or_pattern": "app", "matched_api": "require('hapi'), require('inert'), new Hapi.Server, app.connection, app.register(callback)"},
+        {"start_line": 2611, "end_line": 2627, "symbol_or_pattern": "blog RSS fetch", "matched_api": "WaitFor.for(AsyncRequest.get), xml2js.parseString"},
+        {"start_line": 4914, "end_line": 4925, "symbol_or_pattern": "startServer", "matched_api": "app.start(callback)"}
+      ],
+      "change_description": "Use @hapi/hapi and @hapi/inert. Construct Hapi.server({host:'localhost', port: global.defaultPort || 8080, routes:{cors:true, timeout:{server:false, socket:false}}}); register Inert with await before serving routes, using one initialization promise that startServer awaits. Replace Blogger request/wait.for with awaited axios.get using responseType text, and replace callback parseString with xml2js.parseStringPromise while preserving explicitArray:false/ignoreAttrs:true and cache semantics. Make all handlers that reach async Engine calls or the blog loader async and await them. Convert startServer to async, await initialization and app.start(), then write serverStarted.dat; reject startup on failure and ensure the launcher observes/reports the rejection.",
+      "validation_evidence": ["Only @hapi package imports remain", "Server starts on localhost:8080 and root renders", "Blogger parsing is promise-based and errors reach route error handling", "No request/wait.for/callback app.start remains"]
+    },
+    {
+      "sequence": 11,
+      "file_path": "tests/test-common.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Bounded planned scope expansion: this direct wait.for call was exposed by the required Makefile test path and otherwise prevents Node 18 execution.",
+      "locations": [
+        {"start_line": 5, "end_line": 5, "symbol_or_pattern": "WaitFor import", "matched_api": "require('wait.for')"},
+        {"start_line": 58, "end_line": 63, "symbol_or_pattern": "runTests", "matched_api": "WaitFor.launchFiber"}
+      ],
+      "change_description": "Remove wait.for. Make runTestsHelper await each test function sequentially via Promise.resolve, make runTests async, set process.exitCode to the failure count, and catch/report rejected tests so asynchronous Engine calls are fully observed.",
+      "validation_evidence": ["No wait.for remains in test-common", "A rejected async test increments failure/returns nonzero", "All three Makefile test scripts terminate"]
+    },
+    {
+      "sequence": 12,
+      "file_path": "tests/apitest.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "This historical integration suite is valuable live coverage but depends on configured external GOlr/Solr. Stage 4 proved all four failures are caused solely by DNS failure for solr.monarchinitiative.org, so it cannot be the required hermetic dependency-compatibility gate.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol_or_pattern": "test functions invoking Engine service methods", "matched_api": "testCommon.runTests"}],
+      "change_description": "Keep the async runner conversion and every live assertion unchanged. Classify this command as optional live integration coverage: run it with the beta configuration, capture its result, and if solr.monarchinitiative.org still cannot resolve, report that exact DNS outage as an external-service validation failure/gap. Do not stub the host inside apitest.js, skip individual assertions, convert failures to success, or use it as the hermetic Axios compatibility proof.",
+      "validation_evidence": ["node tests/apitest.js exits deterministically", "No Promise is passed directly to an assertion", "A DNS failure remains a visible nonzero optional-live result tied to the Solr/GOlr external-service check"]
+    },
+    {
+      "sequence": 13,
+      "file_path": "tests/class-info-test.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The async conversion remains valid, but this historical test is wholly live SciGraph coverage. Stage 4 confirmed its sole failure is DNS resolution for scigraph-ontology-dev.monarchinitiative.org; required compatibility is now covered by a hermetic fetchClassInfo fixture in the generated suite.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol_or_pattern": "test functions invoking Engine service methods", "matched_api": "testCommon.runTests"}],
+      "change_description": "Keep the async/await conversion, MONDO identifiers, and all assertions unchanged. Classify the command as optional live integration coverage. Run and record it; if the configured SciGraph host still cannot resolve, retain the nonzero result as an explicit SciGraph external-service gap. Do not redirect this historical test to the fixture, swallow errors, or treat the generated fixture as live service success.",
+      "validation_evidence": ["node tests/class-info-test.js exits deterministically", "No Promise is treated as a result object", "ENOTFOUND remains visibly tied to the SciGraph ontology external-service check"]
+    },
+    {
+      "sequence": 14,
+      "file_path": "tests/phenopacket-test.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The phenopacket contract is local builder-plus-schema behavior; its historical Solr query is only fixture acquisition and would duplicate the already-gapped live GOlr dependency.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol_or_pattern": "test functions invoking Engine service methods", "matched_api": "testCommon.runTests"}],
+      "change_description": "Make this command genuinely hermetic and keep it required. Remove the server config, Engine and fetchSolrDocuments setup. Build a minimal Solr response object in-process with one variant_phenotype document for ClinVarVariant:91577 and a phenotype, including subject/object labels plus subject_closure and subject_closure_map needed by getEntityType. Construct the response with the installed bbop-response-golr package, pass it to buildPhenoPacket, validate the result against tests/resources/phenopacket-schema.json, then preserve the existing negative assertion by corrupting has_location and confirming rejection. Do not contact Solr, weaken schema validation, or replace the real response wrapper with an ad hoc documents-only stub.",
+      "validation_evidence": ["node tests/phenopacket-test.js passes with external network disabled", "A real bbop-response-golr wrapper supplies the fixture documents", "Both valid-packet acceptance and intentionally-invalid-packet rejection are asserted"]
+    },
+    {
+      "sequence": 15,
+      "file_path": "ui/main.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Vue 2.7 is viable, but BootstrapVue 2 cannot coexist with Bootstrap 5.",
+      "locations": [
+        {"start_line": 5, "end_line": 31, "symbol_or_pattern": "frontend imports", "matched_api": "Vue, vue-router, bootstrap-vue"},
+        {"start_line": 109, "end_line": 129, "symbol_or_pattern": "main", "matched_api": "Vue.use and Vue.component"},
+        {"start_line": 158, "end_line": 242, "symbol_or_pattern": "router/root instance", "matched_api": "new Router and new Vue"}
+      ],
+      "change_description": "Keep Vue 2 constructor/router APIs and Vue Router 3. Remove BootstrapVue JS/CSS imports and Vue.use(BootstrapVue). Import Bootstrap 5 CSS from bootstrap/dist/css/bootstrap.min.css; retain the existing Bootstrap JS side effect at js/index.js. Keep all global app component registration unchanged.",
+      "validation_evidence": ["Vue is ^2.7 and no bootstrap-vue import/use remains", "SPA mounts and root route renders without unknown b-* component warnings"]
+    },
+    {
+      "sequence": 16,
+      "file_path": "ui/components/AnalyzePhenotypes.vue",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The key analyze flow uses BootstrapVue forms, alerts and modals unavailable under Bootstrap 5.",
+      "locations": [{"start_line": 20, "end_line": 178, "symbol_or_pattern": "template", "matched_api": "b-form-textarea/b-alert/b-form-group/b-form-checkbox-group/b-form-radio-group/b-modal"}],
+      "change_description": "Replace textareas with native textarea.form-control using existing v-model values. Render groupOptions and geneCurieTypeOptions with v-for native checkbox/radio inputs and labels styled as Bootstrap 5 btn-check/button groups while preserving selectedGroups/geneCurieType values and the Behave-visible compare control. Replace b-alert with dismissible alert markup controlled by existing booleans. Replace b-modal/v-b-modal with component-local selected-phenotype modal state and Bootstrap 5 modal markup, explicit open/close buttons, aria attributes, and existing local-nav content; do not introduce BootstrapVue-compatible substitutes or Vue 3 APIs. Correct the invalid Vue interpolation {{...rejectedPhenotypeCuries}} to a valid deterministic rendering such as {{ rejectedPhenotypeCuries.join(', ') }} so vue/no-parsing-error remains an error-level correctness check.",
+      "validation_evidence": ["No b-form*, b-alert, b-modal or v-b-modal tokens remain", "No {{...rejectedPhenotypeCuries}} interpolation remains and vue/no-parsing-error reports no finding", "Analyze flow can add phenotypes, select compare, enter gene list, submit and render phen_vis_svg"]
+    },
+    {
+      "sequence": 17,
+      "file_path": "ui/components/AssocTable.vue",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Association tables and pagination are BootstrapVue components and high-value detail-page behavior.",
+      "locations": [{"start_line": 9, "end_line": 148, "symbol_or_pattern": "template", "matched_api": "b-table/b-pagination"}],
+      "change_description": "Replace b-table with native responsive Bootstrap table markup driven by computed pagedRows (slicing rows by currentPage/rowsPerPage), preserve field ordering, router links, row click behavior and expandable evidence/reference/source detail rows using explicit expanded-row state. Replace b-pagination with accessible previous/page/next buttons updating currentPage and a computed pageCount; reset/clamp pagination when provider data changes.",
+      "validation_evidence": ["No b-table or b-pagination remains", "Gene/disease association rows, expansion and pagination render and respond"]
+    },
+    {
+      "sequence": 18,
+      "file_path": "ui/components/MonarchAutocomplete.vue",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Autocomplete is a named regression flow and its category controls depend on BootstrapVue directives/components.",
+      "locations": [{"start_line": 20, "end_line": 61, "symbol_or_pattern": "template", "matched_api": "b-form-checkbox-group"}],
+      "change_description": "Replace both b-form-checkbox-group instances with v-for native checkbox inputs bound to the existing selected array, preserving option value/text, names, button-style appearance for home search and stacked plain controls in the filter menu. Replace v-b-tooltip directives with standard title/aria-label attributes so no BootstrapVue directive remains. Preserve input keyboard handlers, autocomplete item click behavior, and selectors/text used by Behave steps.",
+      "validation_evidence": ["No b-form-checkbox-group or v-b-tooltip remains", "Navbar autocomplete submit and item-selection flows navigate correctly"]
+    },
+    {
+      "sequence": 19,
+      "file_path": "ui/components/PhenotypesTable.vue",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Phenotype comparison results rely on BootstrapVue table/pagination.",
+      "locations": [{"start_line": 4, "end_line": 63, "symbol_or_pattern": "template", "matched_api": "b-table/b-pagination"}],
+      "change_description": "Replace b-table with native Bootstrap 5 responsive table markup and computed page slicing while preserving the six field renderers and router links. Replace b-pagination with accessible native pagination controls bound to currentPage and computed pageCount.",
+      "validation_evidence": ["No b-table or b-pagination remains", "Analyze/phenogrid phenotype comparison rows and pagination render"]
+    },
+    {
+      "sequence": 20,
+      "file_path": ".travis.yml",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "CI currently forces Trusty, Node 6 and geckodriver 0.19, which cannot validate Node 18/20 compatibility.",
+      "locations": [
+        {"start_line": 5, "end_line": 49, "symbol_or_pattern": "runtime/browser setup", "matched_api": "Trusty, Node 6.11.2, geckodriver 0.19"},
+        {"start_line": 51, "end_line": 86, "symbol_or_pattern": "install/start/test", "matched_api": "startbeta, make test, behave"}
+      ],
+      "change_description": "Use a supported Linux image and a Node 18/20 matrix. Remove nvm Node 6, Trusty-only packages, hand-pinned geckodriver and obsolete Xvfb setup in favor of current Travis Firefox/Xvfb support. Use npm install (then lockfile-aware install in future), run wbs-build and wbs-lint, start the app with bounded readiness polling on localhost:8080, retain make test and Behave coverage, and always terminate the server.",
+      "validation_evidence": ["CI config contains Node 18 and 20 entries and no Node 6.11.2/Trusty/geckodriver 0.19", "CI repeats build, lint, startup, Node and Behave checks"]
+    },
+    {
+      "sequence": 21,
+      "file_path": "ui/.eslintrc",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Stage 4 discovered that this nested root config overrides the repository config and still controls all Vue targets; it must share the same explicit ESLint 8 compatibility baseline rather than silently diverging.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol_or_pattern": "nested UI ESLint configuration", "matched_api": "root/plugin:vue/recommended/airbnb-base"}],
+      "change_description": "Replace the duplicated standalone rule set with a strict-JSON nested config that extends ../.eslintrc and adds only Vue-target file overrides needed for observed legacy correctness debt: make vue/require-valid-default-prop, vue/no-unused-vars, vue/require-v-for-key and consistent-return warnings for the currently linted migrated components. Do not disable Vue parsing, duplicate-attribute, undefined-component, or mutating-prop checks, and do not ignore .vue files.",
+      "validation_evidence": ["ui/.eslintrc extends ../.eslintrc", "ESLint reports no configuration-cycle or missing-parser error", "Vue correctness rules not named in the baseline remain inherited at recommended severity"]
+    },
+    {
+      "sequence": 22,
+      "file_path": "tests/node18-upgrade.test.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The existing generated dependency-upgrade regression file is the narrowest place for a required offline Axios/BBOP compatibility proof; extending it avoids altering the historical live API suite or adding a new dependency.",
+      "locations": [{"start_line": 1, "end_line": 9999, "symbol_or_pattern": "Node 18/20 dependency upgrade Mocha suite", "matched_api": "Hapi/Inert and async webenv regression tests"}],
+      "change_description": "Retain the self-contained Node http server bound to 127.0.0.1 on an ephemeral port and always close it in teardown/finally. Keep the existing deterministic GOlr/form/unavailable routes and six assertions. Add SciGraph fixture routes under /scigraph/vocabulary/id/{id}.json and /scigraph/graph/{id}.json returning minimal concepts and graph nodes for a fixture MONDO class with label, definition, disease category and identifier. Instantiate bbop.monarch.Engine with scigraph_url pointing at the local /scigraph/ base; call fetchClassInfo for the fixture ID and assert the awaited Axios-backed vocabulary/graph calls yield the expected id, label, definitions and disease category. Do not call public hosts, mock fetchClassInfo itself, or claim this proves live SciGraph availability.",
+      "validation_evidence": ["The generated Mocha command passes with external network disabled", "Existing six Axios/GOlr/Hapi cases remain passing", "A local fetchClassInfo case traverses real Engine vocabulary and graph wrappers and asserts the class shape", "The ephemeral server closes on assertion failure as well as success"]
+    },
+    {
+      "sequence": 23,
+      "file_path": "utils/phenogrid-webpack.config.js",
+      "change_type": "delete",
+      "estimated_risk": "low",
+      "rationale": "This dedicated legacy config has no package script or active caller and its sole output is the absent gen/phenogrid.min.js; the application now imports Phenogrid through the shared webpack bundle.",
+      "locations": [{"start_line": 1, "end_line": 14, "symbol_or_pattern": "standalone Phenogrid webpack entry/output", "matched_api": "node_modules/phenogrid/js/phenogrid.js -> gen/phenogrid.min.js"}],
+      "change_description": "Delete only this obsolete standalone generator after keeping the active shared-bundle alias in webpack.config.js. Do not delete or regenerate unrelated gen assets.",
+      "validation_evidence": ["No tracked source references gen/phenogrid.min.js", "npm run wbs-build includes the package source through js/index.js import 'phenogrid'", "No package script references this config"]
+    },
+    {
+      "sequence": 24,
+      "file_path": "gen/.gitignore",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "gen contains only its README and ignore file, so retaining a phenogrid.min.js ignore entry falsely documents a generated artifact that no active build produces.",
+      "locations": [{"start_line": 1, "end_line": 2, "symbol_or_pattern": "generated bundle ignore entries", "matched_api": "phenogrid.min.js"}],
+      "change_description": "Remove only the phenogrid.min.js entry. Preserve bbop.min.js and every unrelated generated-asset convention.",
+      "validation_evidence": ["gen/.gitignore still contains bbop.min.js", "gen/.gitignore no longer contains phenogrid.min.js", "gen/README.md is unchanged"]
+    }
+  ],
+  "planned_files": [
+    "package.json",
+    "package-lock.json",
+    ".babelrc",
+    ".eslintrc",
+    "webpack.config.js",
+    "common.js",
+    "gulpfile.js",
+    "lib/monarch/api.js",
+    "lib/monarch/web/webenv.js",
+    "lib/monarch/web/webapp.js",
+    "tests/test-common.js",
+    "tests/apitest.js",
+    "tests/class-info-test.js",
+    "tests/phenopacket-test.js",
+    "tests/node18-upgrade.test.js",
+    "ui/main.js",
+    "ui/components/AnalyzePhenotypes.vue",
+    "ui/components/AssocTable.vue",
+    "ui/components/MonarchAutocomplete.vue",
+    "ui/components/PhenotypesTable.vue",
+    "ui/.eslintrc",
+    ".travis.yml",
+    "utils/phenogrid-webpack.config.js",
+    "gen/.gitignore"
+  ],
+  "expected_dependency_changes": [
+    {"file_path":"package.json","dependency":"node engine","from_version":">= 6.11.2","to_version":">=18"},
+    {"file_path":"package.json","dependency":"hapi -> @hapi/hapi","from_version":"^16.6.2","to_version":"^21"},
+    {"file_path":"package.json","dependency":"inert -> @hapi/inert","from_version":"^4.2.1","to_version":"^7"},
+    {"file_path":"package.json","dependency":"babel-core -> @babel/core","from_version":"^6.26.3","to_version":"^7"},
+    {"file_path":"package.json","dependency":"babel-preset-env -> @babel/preset-env","from_version":"^1.7.0","to_version":"^7"},
+    {"file_path":"package.json","dependency":"babel-loader","from_version":"^7.1.4","to_version":"^9"},
+    {"file_path":"package.json","dependency":"webpack","from_version":"^4.17.2","to_version":"^5"},
+    {"file_path":"package.json","dependency":"webpack-cli","from_version":"^3.1.0","to_version":"^5"},
+    {"file_path":"package.json","dependency":"webpack-dev-server","from_version":"^3.1.8","to_version":"^5"},
+    {"file_path":"package.json","dependency":"node-sass -> sass","from_version":"^4.9.3","to_version":"^1"},
+    {"file_path":"package.json","dependency":"sass-loader","from_version":"^7.1.0","to_version":"^16"},
+    {"file_path":"package.json","dependency":"extract-text-webpack-plugin -> mini-css-extract-plugin","from_version":"^4.0.0-beta.0","to_version":"^2"},
+    {"file_path":"package.json","dependency":"html-webpack-plugin","from_version":"^3.2.0","to_version":"^5"},
+    {"file_path":"package.json","dependency":"css-loader","from_version":"^1.0.0","to_version":"^6"},
+    {"file_path":"package.json","dependency":"style-loader","from_version":"^0.23.0","to_version":"^3"},
+    {"file_path":"package.json","dependency":"eslint","from_version":"^5.5.0","to_version":"^8"},
+    {"file_path":"package.json","dependency":"eslint-config-airbnb-base","from_version":"^13.1.0","to_version":"^15"},
+    {"file_path":"package.json","dependency":"eslint-plugin-import","from_version":"^2.14.0","to_version":"^2.29"},
+    {"file_path":"package.json","dependency":"eslint-plugin-vue","from_version":"^4.7.1","to_version":"^9"},
+    {"file_path":"package.json","dependency":"vue","from_version":"^2.5.17","to_version":"^2.7"},
+    {"file_path":"package.json","dependency":"vue-template-compiler","from_version":"^2.5.17","to_version":"^2.7 (exactly aligned with vue)"},
+    {"file_path":"package.json","dependency":"bootstrap","from_version":"^4.1.3","to_version":"^5"},
+    {"file_path":"package.json","dependency":"bootstrap-vue","from_version":"^2.0.0-rc.11","to_version":"removed"},
+    {"file_path":"package.json","dependency":"popper.js -> @popperjs/core","from_version":"^1.14.4","to_version":"^2"},
+    {"file_path":"package.json","dependency":"request","from_version":"^2.88.0","to_version":"removed"},
+    {"file_path":"package.json","dependency":"wait.for","from_version":"^0.6.6","to_version":"removed"},
+    {"file_path":"package.json","dependency":"axios","from_version":"^0.18.0","to_version":"^1"},
+    {"file_path":"package.json","dependency":"moment -> dayjs","from_version":"^2.22.2","to_version":"^1"},
+    {"file_path":"package.json","dependency":"gulp","from_version":"^3.9.1","to_version":"^4"},
+    {"file_path":"package.json","dependency":"mocha","from_version":"^5.2.0","to_version":"^10"},
+    {"file_path":"package.json","dependency":"mustache","from_version":"^2.3.2","to_version":"^4"},
+    {"file_path":"package.json","dependency":"underscore","from_version":"^1.9.1","to_version":"^1.13"},
+    {"file_path":"package.json","dependency":"xml2js","from_version":"^0.4.19","to_version":"^0.6"},
+    {"file_path":"package.json","dependency":"cross-env","from_version":"absent","to_version":"^7"},
+    {"file_path":"package.json","dependency":"js-yaml","from_version":"implicit/transitive","to_version":"^4"},
+    {"file_path":"package.json","dependency":"phenogrid","from_version":"^1.3.11 (declared but not installed in the validation workspace; prior lock resolved 1.5.5)","to_version":"^1.3.11 with package-lock exact 1.3.11"}
+  ],
+  "validation": {
+    "base_branch_candidates": ["master", "main"],
+    "executor_check_commands": [
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npm install","purpose":"setup","timeout_seconds":900,"required":true,"expected_output_checks":{"must_not_contain":["npm ERR!","ERESOLVE"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"node -e \"const fs=require('fs');const path=require('path');const p=require('./node_modules/phenogrid/package.json');if(p.version!=='1.3.11'||p.main!=='js/phenogrid.js')throw new Error('unexpected phenogrid '+p.version+' main='+p.main);for(const f of ['js/phenogrid.js','dist/phenogrid-bundle.js','index.html'])if(!fs.existsSync(path.join(process.cwd(),'node_modules/phenogrid',f)))throw new Error('missing phenogrid/'+f);console.log('phenogrid 1.3.11 installed with source, UMD bundle, and demo page');\"","purpose":"setup","timeout_seconds":60,"required":true,"expected_output_checks":{"must_contain":["phenogrid 1.3.11 installed with source, UMD bundle, and demo page"],"must_not_contain":["unexpected phenogrid","missing phenogrid/"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npm run wbs-build","purpose":"compile","timeout_seconds":900,"required":true,"expected_output_checks":{"must_not_contain":["Module build failed","ValidationError: Invalid options object","ERROR in"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npm run wbs-lint","purpose":"test","timeout_seconds":300,"required":true,"expected_output_checks":{"must_not_contain":["ESLint couldn't find","Parsing error","Definition for rule","Configuration for rule"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npx gulp --tasks","purpose":"compile","timeout_seconds":120,"required":true,"expected_output_checks":{"must_not_contain":["AssertionError","Task never defined"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npx gulp build","purpose":"smoke","timeout_seconds":600,"required":true,"expected_output_checks":{"must_not_contain":["The following tasks did not complete","Did you forget to signal async completion?","TypeError"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js","purpose":"test","timeout_seconds":180,"required":true,"expected_output_checks":{"must_not_contain":["failing","UnhandledPromiseRejection","ENOTFOUND solr.monarchinitiative.org"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"npx cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js","purpose":"test","timeout_seconds":900,"required":true,"expected_output_checks":{"must_not_contain":["#AssertionFailed","## Test Failed:","UnhandledPromiseRejection"]}},
+      {"working_directory":"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy","command":"node -e \"const {spawn,execFileSync}=require('child_process');const http=require('http');const win=process.platform==='win32';const command=win?(process.env.ComSpec||'cmd.exe'):'npm';const args=win?['/d','/s','/c','npm run start']:['run','start'];const p=spawn(command,args,{cwd:process.cwd(),env:process.env,stdio:['ignore','pipe','pipe'],windowsHide:true,detached:!win});let settled=false;let stopping=false;p.stdout.on('data',d=>process.stdout.write(d));p.stderr.on('data',d=>process.stderr.write(d));const stop=()=>{if(stopping)return;stopping=true;if(win){try{execFileSync('taskkill',['/pid',String(p.pid),'/T','/F'],{stdio:'ignore',windowsHide:true})}catch(e){}}else{try{process.kill(-p.pid,'SIGTERM')}catch(e){try{p.kill('SIGTERM')}catch(_){}}}};const finish=(ok,message)=>{if(settled)return;settled=true;if(message)console.error(message);stop();setTimeout(()=>process.exit(ok?0:1),500)};p.on('error',e=>finish(false,'startup spawn failed: '+e.message));p.on('exit',(code,signal)=>{if(!settled&&!stopping)finish(false,'startup exited before readiness: code='+code+' signal='+signal)});const deadline=Date.now()+60000;const retry=()=>{if(settled)return;if(Date.now()>=deadline)return finish(false,'startup did not bind within 60s');setTimeout(poll,1000)};function poll(){if(settled)return;const req=http.get('http://localhost:8080/about/sources',r=>{const status=r.statusCode;r.resume();if(status<500)return finish(true);retry()});req.setTimeout(2000,()=>req.destroy(new Error('probe timeout')));req.on('error',retry)}poll();\"","purpose":"startup","timeout_seconds":75,"required":true,"health_check_url":"http://localhost:8080/about/sources","expected_output_checks":{"must_not_contain":["UnhandledPromiseRejection","Cannot find module","HapiJS Server failed","startup spawn failed","startup exited before readiness","startup did not bind within 60s"]}}
+    ],
+    "build_commands": ["npm install", "node -e \"const fs=require('fs');const path=require('path');const p=require('./node_modules/phenogrid/package.json');if(p.version!=='1.3.11'||p.main!=='js/phenogrid.js')throw new Error('unexpected phenogrid '+p.version+' main='+p.main);for(const f of ['js/phenogrid.js','dist/phenogrid-bundle.js','index.html'])if(!fs.existsSync(path.join(process.cwd(),'node_modules/phenogrid',f)))throw new Error('missing phenogrid/'+f);console.log('phenogrid 1.3.11 installed with source, UMD bundle, and demo page');\"", "npm run wbs-build", "npx gulp --tasks", "npx gulp build"],
+    "startup_commands": ["node -e \"const {spawn,execFileSync}=require('child_process');const http=require('http');const win=process.platform==='win32';const command=win?(process.env.ComSpec||'cmd.exe'):'npm';const args=win?['/d','/s','/c','npm run start']:['run','start'];const p=spawn(command,args,{cwd:process.cwd(),env:process.env,stdio:['ignore','pipe','pipe'],windowsHide:true,detached:!win});let settled=false;let stopping=false;p.stdout.on('data',d=>process.stdout.write(d));p.stderr.on('data',d=>process.stderr.write(d));const stop=()=>{if(stopping)return;stopping=true;if(win){try{execFileSync('taskkill',['/pid',String(p.pid),'/T','/F'],{stdio:'ignore',windowsHide:true})}catch(e){}}else{try{process.kill(-p.pid,'SIGTERM')}catch(e){try{p.kill('SIGTERM')}catch(_){}}}};const finish=(ok,message)=>{if(settled)return;settled=true;if(message)console.error(message);stop();setTimeout(()=>process.exit(ok?0:1),500)};p.on('error',e=>finish(false,'startup spawn failed: '+e.message));p.on('exit',(code,signal)=>{if(!settled&&!stopping)finish(false,'startup exited before readiness: code='+code+' signal='+signal)});const deadline=Date.now()+60000;const retry=()=>{if(settled)return;if(Date.now()>=deadline)return finish(false,'startup did not bind within 60s');setTimeout(poll,1000)};function poll(){if(settled)return;const req=http.get('http://localhost:8080/about/sources',r=>{const status=r.statusCode;r.resume();if(status<500)return finish(true);retry()});req.setTimeout(2000,()=>req.destroy(new Error('probe timeout')));req.on('error',retry)}poll();\""],
+    "startup_health_check_urls": ["http://localhost:8080/about/sources"],
+    "existing_test_commands": ["npm run wbs-lint", "npx cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js"],
+    "generated_test_commands": ["npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js"],
+    "generated_test_files": ["tests/node18-upgrade.test.js"],
+    "content_checks": [
+      {"file_path":"package.json","must_contain":["\"node\": \">=18\"","\"@hapi/hapi\": \"^21\"","\"@hapi/inert\": \"^7\"","\"@babel/core\": \"^7\"","\"@babel/preset-env\": \"^7\"","\"babel-loader\": \"^9\"","\"webpack\": \"^5\"","\"webpack-cli\": \"^5\"","\"webpack-dev-server\": \"^5\"","\"sass\": \"^1\"","\"eslint\": \"^8\"","\"vue\": \"^2.7\"","\"bootstrap\": \"^5\"","\"axios\": \"^1\"","\"dayjs\": \"^1\"","\"gulp\": \"^4\"","\"mocha\": \"^10\"","\"mustache\": \"^4\"","\"underscore\": \"^1.13\"","\"xml2js\": \"^0.6\"","\"phenogrid\": \"^1.3.11\"","\"wbs-lint\": \"eslint ui/main.js ui/components/AnalyzePhenotypes.vue ui/components/AssocTable.vue ui/components/MonarchAutocomplete.vue ui/components/PhenotypesTable.vue js/index.js\""],"must_not_contain":["\"hapi\":","\"inert\":","\"request\":","\"wait.for\":","\"moment\":","\"node-sass\":","\"bootstrap-vue\":","\"babel-core\":","\"babel-preset-env\":","\"extract-text-webpack-plugin\":","\"eslint-loader\":","wbs-lint\": \"eslint --quiet","wbs-lint\": \"eslint --no-ignore" ]},
+      {"file_path":"package-lock.json","must_contain":["\"phenogrid\": \"^1.3.11\"","\"node_modules/phenogrid\": {","\"version\": \"1.3.11\"","\"resolved\": \"https://registry.npmjs.org/phenogrid/-/phenogrid-1.3.11.tgz\"","\"integrity\": \"sha512-kkoNvVBtOTvffkXYFykIfJnK7i7Oo9dy6Dplk0HuMDVHLbPAj1Mv6ZySlj4v3WAyvVeqLmqEG05F42Ql7zew8w==\""],"must_not_contain":["\"node_modules/phenogrid\": {\n      \"version\": \"1.5.5\""]},
+      {"file_path":".eslintrc","must_contain":["\"linebreak-style\": \"off\"","\"import/no-unresolved\": \"off\"","\"import/named\": \"off\"","\"vue/max-attributes-per-line\": \"warn\"","\"no-redeclare\": \"warn\""],"must_not_contain":["\"no-undef\": \"off\"","\"no-unreachable\": \"off\"","\"vue/no-dupe-attributes\": \"off\"","\"vue/no-mutating-props\": \"off\""]},
+      {"file_path":"ui/.eslintrc","must_contain":["\"../.eslintrc\"","\"vue/require-valid-default-prop\": \"warn\"","\"vue/no-unused-vars\": \"warn\"","\"vue/require-v-for-key\": \"warn\"","\"consistent-return\": \"warn\""],"must_not_contain":["\"babel-eslint\"","plugin:vue/strongly-recommended","\"vue/no-parsing-error\": \"off\"","\"vue/no-dupe-attributes\": \"off\""]},
+      {"file_path":".babelrc","must_contain":["\"@babel/preset-env\""],"must_not_contain":["\"env\"","transform-runtime","syntax-dynamic-import"]},
+      {"file_path":"webpack.config.js","must_contain":["require('mini-css-extract-plugin')","implementation: require('sass')","type: 'asset/resource'","devMiddleware:","'phenogrid': path.join(__dirname, 'node_modules/phenogrid/js/phenogrid.js')"],"must_not_contain":["node-sass","ExtractTextPlugin","NamedModulesPlugin","eslint-loader","contentBase:","clientLogLevel:","inline:","quiet:","path.resolve(__dirname, 'node_modules/phenogrid/js/phenogrid.js'),","gen/phenogrid.min.js"]},
+      {"file_path":"gen/.gitignore","must_contain":["bbop.min.js"],"must_not_contain":["phenogrid.min.js"]},
+      {"file_path":"common.js","must_contain":["require('dayjs')"],"must_not_contain":["require('moment')"]},
+      {"file_path":"gulpfile.js","must_contain":["gulp.series(","gulp.parallel(","jsyaml.load(","Buffer.from("],"must_not_contain":["jsyaml.safeLoad(","new Buffer("]},
+      {"file_path":"lib/monarch/api.js","must_contain":["require('axios')","async function"],"must_not_contain":["require('request')","require('wait.for')","WaitFor.for("]},
+      {"file_path":"lib/monarch/web/webenv.js","must_contain":["async function wrappedHandler(request, h)","h.response("],"must_not_contain":["require('wait.for')","WaitFor.launchFiber(","reply("]},
+      {"file_path":"lib/monarch/web/webapp.js","must_contain":["require('@hapi/hapi')","require('@hapi/inert')","await app.register(Inert)","await this.app.start()","parseStringPromise"],"must_not_contain":["require('hapi')","require('inert')","require('request')","require('wait.for')","WaitFor.for("]},
+      {"file_path":"tests/test-common.js","must_contain":["async function runTests("],"must_not_contain":["require('wait.for')","WaitFor.launchFiber("]},
+      {"file_path":"tests/node18-upgrade.test.js","must_contain":["require('http')","127.0.0.1","/solr/golr/select","/scigraph/vocabulary/id/","/scigraph/graph/","fetchClassInfo","application/x-www-form-urlencoded","require('bbop-response-golr')","status, 503"],"must_not_contain":["solr.monarchinitiative.org","solr-dev.monarchinitiative.org","scigraph-ontology-dev.monarchinitiative.org","https://"]},
+      {"file_path":"tests/phenopacket-test.js","must_contain":["require('bbop-response-golr')","ClinVarVariant:91577","phenopacket-schema.json","buildPhenoPacket"],"must_not_contain":["server_config_beta.json","server_config_production.json","fetchSolrDocuments("]},
+      {"file_path":"ui/main.js","must_contain":["import Vue from 'vue';","bootstrap/dist/css/bootstrap.min.css"],"must_not_contain":["bootstrap-vue","Vue.use(BootstrapVue)"]},
+      {"file_path":"ui/components/AnalyzePhenotypes.vue","must_contain":["class=\"form-control\"","class=\"alert alert-danger","rejectedPhenotypeCuries.join(', ')"],"must_not_contain":["<b-form","<b-alert","<b-modal","v-b-modal","{{...rejectedPhenotypeCuries}}"]},
+      {"file_path":"ui/components/AssocTable.vue","must_contain":["<table","class=\"pagination"],"must_not_contain":["<b-table","<b-pagination"]},
+      {"file_path":"ui/components/MonarchAutocomplete.vue","must_contain":["type=\"checkbox\""],"must_not_contain":["<b-form-checkbox-group","v-b-tooltip"]},
+      {"file_path":"ui/components/PhenotypesTable.vue","must_contain":["<table","class=\"pagination"],"must_not_contain":["<b-table","<b-pagination"]},
+      {"file_path":".travis.yml","must_contain":["node_js:","- 18","- 20","npm run wbs-build","npm run wbs-lint"],"must_not_contain":["dist: trusty","v6.11.2","geckodriver-v0.19.0"]}
+    ],
+    "key_pages": [
+      {"url":"http://localhost:8080/about/sources","description":"Sole required browser gate: a checked-in configuration/template page previously observed to render cleanly without SciGraph, Solr/GOlr, OwlSim, Blogger, Biolink, or third-party embeds; inspect the browser console for errors."}
+    ],
+    "key_user_flows": [],
+    "external_service_checks": [],
+    "success_criteria": [
+      "Repository state is repaired before execution: tracked application files are present and the staged mass deletion is either intentionally committed elsewhere or safely removed without discarding user work.",
+      "Install succeeds on Node 18/20 with phenogrid declared as ^1.3.11 and reproducibly locked/installed at 1.3.11 (the smallest requested release that retains js/phenogrid.js, dist/phenogrid-bundle.js and the routed index.html demo); a second npm install leaves the lockfile unchanged, and none of hapi, inert, request, wait.for, moment, node-sass, BootstrapVue or Babel 6 remains.",
+      "npm run wbs-build emits bundles under webpack 5; npm run wbs-lint exits zero under ESLint 8 on the six migrated frontend boundaries, reports the explicit legacy warning baseline, and still fails on an introduced no-undef or duplicate-key/attribute correctness violation.",
+      "Gulp 4 enumerates and executes the build task without dependency-array or async-completion failures.",
+      "The bounded npm run start check receives HTTP status below 500 at the renderable, static http://localhost:8080/about/sources route within 60 seconds, verifies it in a real browser without console errors, and terminates the full process tree; npm start itself remains the invoked user command.",
+      "The required hermetic Node 18/20 Mocha suite and local-fixture phenopacket-test.js pass on all platforms. make test, tests/apitest.js and tests/class-info-test.js are skipped—not failed—because their configured SciGraph/Solr services are retired; they are absent from executor and final command arrays.",
+      "Browser validation is limited to /about/sources, the sole static/non-service-backed page gate. Root, disease, gene, search, autocomplete, analyze, compare, JSON, /page/phenogrid and the Phenogrid 1.3.11 demo are skipped because they load retired SciGraph/Solr/OwlSim integrations or other live dependencies.",
+      "No live external-service probe is a pass/fail gate. By explicit user decision, monarchinitiative.org SciGraph and Solr/GOlr hosts are retired/decommissioned and beta.monarchinitiative.org/owlsim is no longer the legacy OwlSim-beta API; an empty external_service_checks array records that these integrations are intentionally skipped, not working.",
+      "The generated Node 18/20 upgrade test initializes @hapi/hapi with @hapi/inert, passes asynchronous GET success and POST error paths through migrated webenv, hermetically proves Axios GET/form POST/non-2xx behavior plus BBOP GOlr response construction, and traverses real fetchClassInfo vocabulary/graph wrappers against an ephemeral loopback SciGraph fixture.",
+      "No seeded datastore integration test is required unless execution discovers an application-owned write/ingest path; repository inspection found only read/query access to external SciGraph, GOlr/Solr, OwlSim, and Biolink services, so fabricating a raw datastore write would not validate an application contract.",
+      "Diff is limited to planned files plus at most the authorized direct-dependency scope expansions, with no unrelated refactor or Vue 3 rewrite."
+    ],
+    "scope_expansion_limit": 5
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "This validation-scope amendment is an explicit user-approved policy decision and changes no repository code plan. Original planning used committed HEAD because the initial worktree had mass staged deletions; that blocker was resolved on upgrade/node-18-20-dependency-upgrade. Commands run from the repository root. Port 8080 remains inferred from Makefile NODE_PORT, webapp global.defaultPort || 8080, and Behave TARGET. The bounded launcher semantics are unchanged, but readiness/browser validation now uses /about/sources because Stage 4 previously rendered it cleanly and it is backed by checked-in configuration without retired services or known third-party embeds. The user has authoritatively identified scigraph-ontology-dev.monarchinitiative.org, scigraph-data-dev.monarchinitiative.org, solr-dev.monarchinitiative.org and solr.monarchinitiative.org as retired/decommissioned, and beta.monarchinitiative.org/owlsim as the current Monarch site rather than the legacy OwlSim-beta API. Therefore make test, tests/apitest.js, tests/class-info-test.js, every SciGraph/Solr/OwlSim-backed route or flow, and the Phenogrid 1.3.11 demo with its hardcoded beta OwlSim dependency are skipped—not failed—and are absent from executable validation arrays. external_service_checks is intentionally empty so the validator does not probe retired hosts. Required gates remain npm install plus exact Phenogrid package-layout verification, webpack 5 build, ESLint, Gulp task/build checks, the hermetic Node 18/20 Hapi/Axios/BBOP/SciGraph fixture suite, the local phenopacket fixture/schema test, all content checks, bounded npm start, and browser/console validation of /about/sources. Hermetic fixture success proves upgraded client behavior only; it is not evidence that retired integrations work. The residual coverage gap is all legacy search, ontology, disease/gene, autocomplete, analyze, compare, JSON, and Phenogrid service behavior. Re-enabling those gates requires a separately approved endpoint/service migration and new contract fixtures; this dependency upgrade does not authorize that work. Phenogrid 1.3.11 also retains old jQuery/D3 transitive dependencies. The bounded five-file scope allowance remains limited to direct breakages from already-approved dependency upgrades, with no Vue 3 rewrite, endpoint migration, or unrelated audit cleanup.",
+  "plan_summary": "Twenty-four repository changes remain unchanged. Final validation is user-approved and offline-focused: install/layout, webpack, ESLint, Gulp, hermetic Node 18 and phenopacket tests, content checks, bounded startup, and browser validation of static /about/sources. Retired SciGraph/Solr/OwlSim tests, probes, pages, demos and flows are omitted from executable gates and recorded as skipped coverage, not successful integrations."
+}

@@ -1,0 +1,376 @@
+{
+  "upgrade_description": "Upgrade monarch-app dependencies for Node 18/20 LTS: migrate Hapi/Inert, Babel, webpack, Sass, ESLint, Vue 2.7, Bootstrap 5, HTTP/date utilities, Gulp, test/runtime libraries, and set Node >=18.",
+  "affected_files": [
+    {
+      "file_path": "package.json", "change_type": "modify", "usage_type": "configuration", "risk_level": "high",
+      "reason": "Primary npm manifest and command surface for every requested package and the Node engine; the current worktree already contains target ranges while HEAD records the legacy baseline.",
+      "locations": [
+        {"start_line": 5, "end_line": 42, "symbol_or_pattern": "scripts", "matched_api": "npm scripts", "confidence": "high", "reason": "Build, dev-server, start, and lint commands invoke upgraded CLIs."},
+        {"start_line": 53, "end_line": 56, "symbol_or_pattern": "engines", "matched_api": "engines.node", "confidence": "high", "reason": "Node runtime constraint is part of the requested upgrade."},
+        {"start_line": 61, "end_line": 139, "symbol_or_pattern": "dependencies/devDependencies", "matched_api": "requested npm dependencies", "confidence": "high", "reason": "Contains all requested target dependency declarations."}
+      ]
+    },
+    {
+      "file_path": "package-lock.json", "change_type": "modify", "usage_type": "configuration", "risk_level": "high",
+      "reason": "npm lockfile resolves the upgraded package graph and must remain consistent with the manifest.",
+      "locations": [
+        {"start_line": 1, "end_line": 120, "symbol_or_pattern": "root package metadata", "matched_api": "lockfileVersion/dependency ranges", "confidence": "high", "reason": "Root dependency declarations and lockfile metadata."},
+        {"start_line": 121, "end_line": 21960, "symbol_or_pattern": "node_modules entries", "matched_api": "resolved dependency graph", "confidence": "high", "reason": "Contains resolved nodes for the requested upgrades and their transitive dependencies."}
+      ]
+    },
+    {
+      "file_path": ".babelrc", "change_type": "modify", "usage_type": "configuration", "risk_level": "medium",
+      "reason": "Babel 7 preset configuration.",
+      "locations": [{"start_line": 2, "end_line": 2, "symbol_or_pattern": "presets", "matched_api": "@babel/preset-env", "confidence": "high", "reason": "Direct Babel preset reference."}]
+    },
+    {
+      "file_path": ".eslintrc", "change_type": "modify", "usage_type": "configuration", "risk_level": "medium",
+      "reason": "ESLint 8, Airbnb, and Vue 2 parser/rule compatibility configuration.",
+      "locations": [
+        {"start_line": 3, "end_line": 3, "symbol_or_pattern": "parserOptions", "matched_api": "ESLint parserOptions", "confidence": "high", "reason": "Language parsing behavior used by ESLint 8."},
+        {"start_line": 23, "end_line": 26, "symbol_or_pattern": "extends", "matched_api": "plugin:vue/vue2-strongly-recommended, airbnb-base", "confidence": "high", "reason": "Direct upgraded lint-config references."}
+      ]
+    },
+    {
+      "file_path": "ui/.eslintrc", "change_type": "modify", "usage_type": "configuration", "risk_level": "high",
+      "reason": "Nested lint config still references Babel 6-era babel-eslint and a non-Vue-2-specific preset name.",
+      "locations": [
+        {"start_line": 3, "end_line": 5, "symbol_or_pattern": "parserOptions.parser", "matched_api": "babel-eslint", "confidence": "high", "reason": "Direct legacy parser reference crossing the ESLint/Babel major upgrades."},
+        {"start_line": 31, "end_line": 34, "symbol_or_pattern": "extends", "matched_api": "plugin:vue/strongly-recommended, airbnb-base", "confidence": "high", "reason": "Nested config participates in ESLint 8 and Vue linting."}
+      ]
+    },
+    {
+      "file_path": "webpack.config.js", "change_type": "modify", "usage_type": "configuration", "risk_level": "high",
+      "reason": "Primary webpack 5 build and webpack-dev-server 5 configuration, including Babel, Vue, Sass, assets, and Bootstrap aliases.",
+      "locations": [
+        {"start_line": 12, "end_line": 22, "symbol_or_pattern": "plugin imports", "matched_api": "webpack/MiniCssExtractPlugin/HtmlWebpackPlugin/VueLoaderPlugin", "confidence": "high", "reason": "Direct webpack ecosystem imports."},
+        {"start_line": 85, "end_line": 129, "symbol_or_pattern": "plugins", "matched_api": "webpack plugins", "confidence": "high", "reason": "Webpack plugin construction crosses major versions."},
+        {"start_line": 184, "end_line": 341, "symbol_or_pattern": "config.module/resolve", "matched_api": "webpack 5 loaders and aliases", "confidence": "high", "reason": "Babel 7, Sass implementation, Vue loader, Bootstrap, and webpack module configuration."},
+        {"start_line": 347, "end_line": 375, "symbol_or_pattern": "config.devServer", "matched_api": "webpack-dev-server 5", "confidence": "high", "reason": "Development server static, middleware, and proxy schema are breaking-change-sensitive."}
+      ]
+    },
+    {
+      "file_path": "webpack.make.js", "change_type": "modify", "usage_type": "configuration", "risk_level": "high",
+      "reason": "Secondary legacy webpack configuration still contains removed webpack/plugin/dev-server APIs and may be invoked outside package scripts.",
+      "locations": [
+        {"start_line": 3, "end_line": 8, "symbol_or_pattern": "legacy plugin imports", "matched_api": "webpack/extract-text-webpack-plugin", "confidence": "high", "reason": "Direct legacy webpack ecosystem imports."},
+        {"start_line": 392, "end_line": 404, "symbol_or_pattern": "webpack.optimize.UglifyJsPlugin", "matched_api": "removed webpack optimization plugin", "confidence": "high", "reason": "Removed webpack API remains in the file."},
+        {"start_line": 450, "end_line": 474, "symbol_or_pattern": "devServer", "matched_api": "contentBase/proxy object", "confidence": "high", "reason": "webpack-dev-server 3-era configuration surface."}
+      ]
+    },
+    {
+      "file_path": "gulpfile.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Gulp task definitions and composition are directly coupled to Gulp 4 completion semantics.",
+      "locations": [
+        {"start_line": 7, "end_line": 16, "symbol_or_pattern": "require(...) imports", "matched_api": "gulp/del/js-yaml/underscore", "confidence": "high", "reason": "Direct task-runner and upgraded utility imports."},
+        {"start_line": 123, "end_line": 200, "symbol_or_pattern": "task functions", "matched_api": "gulp.src/gulp.dest", "confidence": "high", "reason": "Stream-returning task implementations."},
+        {"start_line": 206, "end_line": 225, "symbol_or_pattern": "task registration", "matched_api": "gulp.series/gulp.parallel/gulp.task", "confidence": "high", "reason": "Gulp 4 orchestration and exported task surface."}
+      ]
+    },
+    {
+      "file_path": "common.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Direct Moment-to-Day.js replacement site used to generate build metadata.",
+      "locations": [{"start_line": 11, "end_line": 16, "symbol_or_pattern": "getBannerInfo date generation", "matched_api": "dayjs().format()", "confidence": "high", "reason": "Direct Day.js import and formatting call."}]
+    },
+    {
+      "file_path": "lib/monarch/web/webapp.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Main Hapi server, route table, Mustache renderer, Axios HTTP client, Inert registration, and xml2js consumer.",
+      "locations": [
+        {"start_line": 20, "end_line": 20, "symbol_or_pattern": "Mustache import", "matched_api": "mustache", "confidence": "high", "reason": "Direct Mustache 4 usage."},
+        {"start_line": 132, "end_line": 132, "symbol_or_pattern": "axios import", "matched_api": "axios", "confidence": "high", "reason": "Direct Axios 1 usage."},
+        {"start_line": 198, "end_line": 227, "symbol_or_pattern": "Hapi server initialization", "matched_api": "@hapi/hapi, @hapi/inert, Hapi.server, app.register", "confidence": "high", "reason": "Direct server and plugin APIs across the Hapi 16-to-21 boundary."},
+        {"start_line": 261, "end_line": 275, "symbol_or_pattern": "static cache route handler", "matched_api": "reply(body).type(...) lifecycle", "confidence": "high", "reason": "Hapi 16 reply callback API remains and is incompatible with Hapi 21."},
+        {"start_line": 2606, "end_line": 2619, "symbol_or_pattern": "remote text/XML fetch", "matched_api": "axios.get, xml2js.parseStringPromise", "confidence": "high", "reason": "Direct upgraded Axios and xml2js APIs."},
+        {"start_line": 4907, "end_line": 4917, "symbol_or_pattern": "startServer", "matched_api": "await registration/start", "confidence": "high", "reason": "Hapi startup lifecycle and exported launcher contract."}
+      ]
+    },
+    {
+      "file_path": "lib/monarch/web/webenv.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Central adapter for all Hapi GET/POST routes and upgraded Underscore usage.",
+      "locations": [
+        {"start_line": 1, "end_line": 2, "symbol_or_pattern": "module imports", "matched_api": "underscore", "confidence": "high", "reason": "Direct Underscore import."},
+        {"start_line": 135, "end_line": 160, "symbol_or_pattern": "makeHapiResponse", "matched_api": "h.redirect/h.response", "confidence": "high", "reason": "Hapi 21 response toolkit boundary."},
+        {"start_line": 254, "end_line": 329, "symbol_or_pattern": "wrapRouteGet/wrapRoutePost", "matched_api": "app.route and async handlers", "confidence": "high", "reason": "Every application route passes through these Hapi adapters."}
+      ]
+    },
+    {
+      "file_path": "lib/monarch/web/webapp_launcher.js", "change_type": "modify", "usage_type": "transitive_dependency", "risk_level": "medium",
+      "reason": "Node process entry point invokes the upgraded Hapi server startup path.",
+      "locations": [{"start_line": 62, "end_line": 64, "symbol_or_pattern": "webapp.startServer", "matched_api": "server startup", "confidence": "high", "reason": "Direct entry into Hapi lifecycle."}]
+    },
+    {
+      "file_path": "lib/monarch/api.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Core backend client contains Axios 1 request/response adaptation and extensive Underscore usage; it talks to configured external services.",
+      "locations": [
+        {"start_line": 14, "end_line": 39, "symbol_or_pattern": "module imports", "matched_api": "underscore/axios/http/https", "confidence": "high", "reason": "Direct upgraded imports and transport agents."},
+        {"start_line": 81, "end_line": 92, "symbol_or_pattern": "fetchUrlImplementation", "matched_api": "axios.get response.data", "confidence": "high", "reason": "Core HTTP response-shape boundary."},
+        {"start_line": 3186, "end_line": 3211, "symbol_or_pattern": "request wrapper", "matched_api": "axios.get/axios.post", "confidence": "high", "reason": "Request-to-Axios migration site with form encoding and response handling."},
+        {"start_line": 4018, "end_line": 4021, "symbol_or_pattern": "GOlr client imports", "matched_api": "bbop GOlr packages", "confidence": "high", "reason": "External search-service client boundary."}
+      ]
+    },
+    {
+      "file_path": "ui/main.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Primary Vue 2.7 application bootstrap and Bootstrap 5 CSS entry.",
+      "locations": [
+        {"start_line": 5, "end_line": 30, "symbol_or_pattern": "Vue/plugin/component imports", "matched_api": "vue, vue-router, vue-good-table, vue-form-wizard, bootstrap", "confidence": "high", "reason": "Direct framework and plugin imports."},
+        {"start_line": 110, "end_line": 112, "symbol_or_pattern": "Vue.use", "matched_api": "Vue plugin API", "confidence": "high", "reason": "Vue 2 plugin registration."},
+        {"start_line": 156, "end_line": 241, "symbol_or_pattern": "Router/New Vue", "matched_api": "Vue 2 app construction", "confidence": "high", "reason": "Primary SPA initialization."}
+      ]
+    },
+    {
+      "file_path": "ui/router/index.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Direct Vue 2 and vue-router 3 initialization.",
+      "locations": [{"start_line": 1, "end_line": 7, "symbol_or_pattern": "Vue.use(Router)", "matched_api": "vue/vue-router", "confidence": "high", "reason": "Direct framework imports and router construction."}]
+    },
+    {
+      "file_path": "js/search_results.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Standalone Vue search UI and Axios calls cover the primary search/navigation flow.",
+      "locations": [
+        {"start_line": 11, "end_line": 12, "symbol_or_pattern": "imports", "matched_api": "vue/axios", "confidence": "high", "reason": "Direct upgraded imports."},
+        {"start_line": 46, "end_line": 46, "symbol_or_pattern": "new Vue", "matched_api": "Vue 2 constructor", "confidence": "high", "reason": "Standalone Vue instance."},
+        {"start_line": 95, "end_line": 201, "symbol_or_pattern": "search/suggest requests", "matched_api": "axios.get", "confidence": "high", "reason": "Search and autocomplete HTTP calls."}
+      ]
+    },
+    {
+      "file_path": "js/exac_table.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Standalone Vue component launcher with Axios 1 call.",
+      "locations": [{"start_line": 10, "end_line": 15, "symbol_or_pattern": "Vue/Axios imports and instance", "matched_api": "vue/axios", "confidence": "high", "reason": "Direct framework usage."}, {"start_line": 92, "end_line": 96, "symbol_or_pattern": "axios.get", "matched_api": "axios", "confidence": "high", "reason": "Direct HTTP request."}]
+    },
+    {
+      "file_path": "js/exac_gene_summary.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Standalone Vue component launcher with Axios 1 call.",
+      "locations": [{"start_line": 10, "end_line": 15, "symbol_or_pattern": "Vue/Axios imports and instance", "matched_api": "vue/axios", "confidence": "high", "reason": "Direct framework usage."}, {"start_line": 58, "end_line": 62, "symbol_or_pattern": "axios.get", "matched_api": "axios", "confidence": "high", "reason": "Direct HTTP request."}]
+    },
+    {
+      "file_path": "ui/monarchAccess/JSONAccess.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Axios 1 data-access module.",
+      "locations": [{"start_line": 1, "end_line": 1, "symbol_or_pattern": "axios import", "matched_api": "axios", "confidence": "high", "reason": "Direct upgraded import."}, {"start_line": 62, "end_line": 62, "symbol_or_pattern": "axios.get", "matched_api": "axios", "confidence": "high", "reason": "Direct request call."}]
+    },
+    {
+      "file_path": "ui/monarchAccess/index.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Shared SPA Axios access layer used by node, graph, associations, and phenotype flows.",
+      "locations": [{"start_line": 2, "end_line": 2, "symbol_or_pattern": "axios import", "matched_api": "axios", "confidence": "high", "reason": "Direct upgraded import."}, {"start_line": 176, "end_line": 409, "symbol_or_pattern": "Axios request methods", "matched_api": "axios.get", "confidence": "high", "reason": "Multiple shared API request paths."}]
+    },
+    {
+      "file_path": "ui/monarchAccess/demo.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "low",
+      "reason": "Demo consumer of the Axios data-access path.",
+      "locations": [{"start_line": 13, "end_line": 18, "symbol_or_pattern": "axios.get", "matched_api": "axios", "confidence": "high", "reason": "Direct request calls."}]
+    },
+    {
+      "file_path": "ui/components/ExacGeneSummary.vue", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Vue SFC with a direct Axios 1 dependency.",
+      "locations": [{"start_line": 54, "end_line": 54, "symbol_or_pattern": "axios import", "matched_api": "axios", "confidence": "high", "reason": "Direct import."}, {"start_line": 102, "end_line": 106, "symbol_or_pattern": "axios.get", "matched_api": "axios", "confidence": "high", "reason": "Component request path."}]
+    },
+    {
+      "file_path": "ui/components/ExacVariantTable.vue", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Vue SFC with a direct Axios 1 dependency.",
+      "locations": [{"start_line": 86, "end_line": 86, "symbol_or_pattern": "axios import", "matched_api": "axios", "confidence": "high", "reason": "Direct import."}, {"start_line": 168, "end_line": 172, "symbol_or_pattern": "axios.get", "matched_api": "axios", "confidence": "high", "reason": "Component request path."}]
+    },
+    {
+      "file_path": "templates/search_results.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Rendered search page still loads Axios 0.16.1 from a CDN, bypassing the upgraded npm package and retaining an obsolete browser client.",
+      "locations": [{"start_line": 86, "end_line": 86, "symbol_or_pattern": "external script", "matched_api": "axios@0.16.1", "confidence": "high", "reason": "Explicit old Axios browser bundle."}]
+    },
+    {
+      "file_path": "css/monarch.scss", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Top-level stylesheet imports Bootstrap Sass through a webpack alias.",
+      "locations": [{"start_line": 3, "end_line": 3, "symbol_or_pattern": "@import bootstrapSCSS", "matched_api": "Bootstrap 5 Sass", "confidence": "high", "reason": "Direct Bootstrap Sass entry."}]
+    },
+    {
+      "file_path": "ui/style/monarch-ng.scss", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "SPA stylesheet directly imports Bootstrap 5 Sass.",
+      "locations": [{"start_line": 5, "end_line": 5, "symbol_or_pattern": "@import bootstrap/scss/bootstrap", "matched_api": "Bootstrap 5 Sass", "confidence": "high", "reason": "Direct Bootstrap Sass entry."}]
+    },
+    {
+      "file_path": "js/index.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Legacy browser bundle directly imports Bootstrap JavaScript.",
+      "locations": [{"start_line": 23, "end_line": 23, "symbol_or_pattern": "import bootstrap", "matched_api": "Bootstrap 5 JavaScript", "confidence": "high", "reason": "Direct Bootstrap runtime import."}]
+    },
+    {
+      "file_path": "templates/navbar.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Primary server-rendered navbar uses Bootstrap 4 data attributes that changed in Bootstrap 5.",
+      "locations": [{"start_line": 13, "end_line": 60, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse/dropdown markup", "confidence": "high", "reason": "Behavioral Bootstrap 5 data-attribute boundary."}]
+    },
+    {
+      "file_path": "ui/components/Navbar.vue", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "SPA navbar uses Bootstrap 4 collapse/dropdown attributes.",
+      "locations": [{"start_line": 13, "end_line": 72, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse/dropdown markup", "confidence": "high", "reason": "Behavioral Bootstrap 5 data-attribute boundary."}]
+    },
+    {
+      "file_path": "templates/golr-table.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Search result table filters use Bootstrap 4 collapse attributes.",
+      "locations": [{"start_line": 11, "end_line": 31, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse markup", "confidence": "high", "reason": "Behavioral Bootstrap 5 data-attribute boundary."}]
+    },
+    {
+      "file_path": "js/styles.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Calls Bootstrap's removed jQuery plugin interface for popovers, tooltips, and modals.",
+      "locations": [{"start_line": 17, "end_line": 21, "symbol_or_pattern": "jQuery Bootstrap plugins", "matched_api": "popover/tooltip/modal", "confidence": "high", "reason": "Bootstrap 5 no longer exposes these jQuery plugin calls in the same form."}]
+    },
+    {
+      "file_path": "js/CytoDraw.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Interactive graph popovers use the legacy Bootstrap jQuery plugin API.",
+      "locations": [{"start_line": 212, "end_line": 231, "symbol_or_pattern": "jQuery(...).popover", "matched_api": "Bootstrap popover plugin", "confidence": "high", "reason": "Bootstrap 5 behavioral API break."}]
+    },
+    {
+      "file_path": "ui/components/Node.vue", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Vue node page styles target legacy Bootstrap data attributes.",
+      "locations": [{"start_line": 704, "end_line": 704, "symbol_or_pattern": "data-toggle selector", "matched_api": "Bootstrap collapse markup", "confidence": "high", "reason": "Selector depends on pre-Bootstrap-5 attribute spelling."}]
+    },
+    {
+      "file_path": "ui/components/NodeSidebar.vue", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Vue node sidebar styles target legacy Bootstrap data attributes.",
+      "locations": [{"start_line": 295, "end_line": 295, "symbol_or_pattern": "data-toggle selector", "matched_api": "Bootstrap collapse markup", "confidence": "high", "reason": "Selector depends on pre-Bootstrap-5 attribute spelling."}]
+    },
+    {
+      "file_path": "templates/page/styles.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "high",
+      "reason": "Bootstrap component showcase contains extensive Bootstrap 3/4 classes, data attributes, tabs, alerts, modal, tooltip, and popover markup.",
+      "locations": [{"start_line": 40, "end_line": 1156, "symbol_or_pattern": "Bootstrap component markup", "matched_api": "data-toggle/data-target/data-dismiss and legacy classes", "confidence": "high", "reason": "Multiple Bootstrap 5 behavioral and class-name breaks."}]
+    },
+    {
+      "file_path": "js/HomePage.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Direct Underscore 1.13 consumer and dormant Bootstrap popover initializer.",
+      "locations": [{"start_line": 4, "end_line": 4, "symbol_or_pattern": "underscore import", "matched_api": "underscore", "confidence": "high", "reason": "Direct upgraded import."}, {"start_line": 249, "end_line": 249, "symbol_or_pattern": "popover", "matched_api": "Bootstrap jQuery plugin", "confidence": "medium", "reason": "Commented but documents legacy initialization behavior."}]
+    },
+    {
+      "file_path": "js/barchart-launcher.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "low",
+      "reason": "Direct Underscore 1.13 consumer.",
+      "locations": [{"start_line": 5, "end_line": 5, "symbol_or_pattern": "underscore import", "matched_api": "underscore", "confidence": "high", "reason": "Direct upgraded import."}]
+    },
+    {
+      "file_path": "js/lib/monarch/widget/facet-filters.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Direct Underscore 1.13 consumer in search facets.",
+      "locations": [{"start_line": 5, "end_line": 5, "symbol_or_pattern": "underscore import", "matched_api": "underscore", "confidence": "high", "reason": "Direct upgraded import."}]
+    },
+    {
+      "file_path": "tests/test-common.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Shared plain-Node integration-test helper directly uses Underscore and core API behavior.",
+      "locations": [{"start_line": 1, "end_line": 5, "symbol_or_pattern": "test helper imports", "matched_api": "underscore/api.js", "confidence": "high", "reason": "Direct upgraded dependency and application API usage."}]
+    },
+    {
+      "file_path": "tests/literature-test.js", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Plain-Node integration test directly uses Underscore and remote literature paths.",
+      "locations": [{"start_line": 1, "end_line": 3, "symbol_or_pattern": "test imports", "matched_api": "underscore/test-common", "confidence": "high", "reason": "Direct upgraded dependency and shared test harness usage."}]
+    },
+    {
+      "file_path": "Makefile", "change_type": "modify", "usage_type": "configuration", "risk_level": "medium",
+      "reason": "Defines the authoritative plain-Node test suite and NODE_PATH invocation semantics under Node 18/20.",
+      "locations": [{"start_line": 29, "end_line": 40, "symbol_or_pattern": "test/APITESTS/test-%", "matched_api": "node tests/*.js", "confidence": "high", "reason": "Repository test command and individual test mapping."}]
+    },
+    {
+      "file_path": ".travis.yml", "change_type": "modify", "usage_type": "configuration", "risk_level": "medium",
+      "reason": "CI validation sequence covers build, lint, server startup, and browser feature tests.",
+      "locations": [{"start_line": 15, "end_line": 26, "symbol_or_pattern": "CI script", "matched_api": "npm build/lint/start and behave", "confidence": "high", "reason": "End-to-end validation orchestration."}]
+    },
+    {
+      "file_path": "tests/node18-upgrade.test.js", "change_type": "create", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Current untracked regression test directly exercises Hapi/Inert registration and Node 18 upgrade behavior.",
+      "locations": [{"start_line": 49, "end_line": 56, "symbol_or_pattern": "Hapi/Inert registration test", "matched_api": "@hapi/hapi/@hapi/inert", "confidence": "high", "reason": "Direct upgraded server-package coverage."}, {"start_line": 64, "end_line": 97, "symbol_or_pattern": "webenv tests", "matched_api": "Hapi response adapter", "confidence": "high", "reason": "Exercises central Hapi compatibility layer."}]
+    },
+    {
+      "file_path": "templates/labs/blog-scratch-base.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Legacy Bootstrap navbar markup in a lab template.",
+      "locations": [{"start_line": 33, "end_line": 93, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse/dropdown", "confidence": "high", "reason": "Pre-Bootstrap-5 markup."}]
+    },
+    {
+      "file_path": "templates/labs/blog-scratch-landing.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Legacy Bootstrap popover attributes in a lab template.",
+      "locations": [{"start_line": 274, "end_line": 310, "symbol_or_pattern": "data-toggle=popover", "matched_api": "Bootstrap popover markup", "confidence": "high", "reason": "Pre-Bootstrap-5 markup."}]
+    },
+    {
+      "file_path": "templates/labs/blog-scratch-nav.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Legacy Bootstrap navbar markup in a lab template.",
+      "locations": [{"start_line": 4, "end_line": 59, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse/dropdown", "confidence": "high", "reason": "Pre-Bootstrap-5 markup."}]
+    },
+    {
+      "file_path": "templates/labs/blog-scratch-test.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "low",
+      "reason": "Commented legacy Bootstrap collapse markup remains in the lab template.",
+      "locations": [{"start_line": 242, "end_line": 242, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse markup", "confidence": "medium", "reason": "Commented legacy markup."}]
+    },
+    {
+      "file_path": "templates/labs/home-page-scratch.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "low",
+      "reason": "Commented legacy Bootstrap collapse markup remains in the lab template.",
+      "locations": [{"start_line": 216, "end_line": 216, "symbol_or_pattern": "data-toggle/data-target", "matched_api": "Bootstrap collapse markup", "confidence": "medium", "reason": "Commented legacy markup."}]
+    },
+    {
+      "file_path": "templates/labs/people-scratch.mustache", "change_type": "modify", "usage_type": "direct_usage", "risk_level": "medium",
+      "reason": "Legacy Bootstrap scrollspy attributes in a lab template.",
+      "locations": [{"start_line": 1, "end_line": 1, "symbol_or_pattern": "data-spy/data-target", "matched_api": "Bootstrap scrollspy markup", "confidence": "high", "reason": "Pre-Bootstrap-5 markup."}]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {"id": "monarch-app", "version": "3.0.0", "type": "internal", "version_source": "package.json"},
+      {"id": "node", "version": ">=18", "type": "external_package", "version_source": "package.json:53"},
+      {"id": "@hapi/hapi", "version": "^21", "type": "external_package", "version_source": "package.json:114"},
+      {"id": "@hapi/inert", "version": "^7", "type": "external_package", "version_source": "package.json:115"},
+      {"id": "@babel/core", "version": "^7", "type": "external_package", "version_source": "package.json:62"},
+      {"id": "@babel/preset-env", "version": "^7", "type": "external_package", "version_source": "package.json:63"},
+      {"id": "babel-loader", "version": "^9", "type": "external_package", "version_source": "package.json:65"},
+      {"id": "webpack", "version": "^5", "type": "external_package", "version_source": "package.json:107"},
+      {"id": "webpack-cli", "version": "^5", "type": "external_package", "version_source": "package.json:109"},
+      {"id": "webpack-dev-server", "version": "^5", "type": "external_package", "version_source": "package.json:110"},
+      {"id": "sass", "version": "^1", "type": "external_package", "version_source": "package.json:99"},
+      {"id": "sass-loader", "version": "^13", "type": "external_package", "version_source": "package.json:100"},
+      {"id": "eslint", "version": "^8", "type": "external_package", "version_source": "package.json:74"},
+      {"id": "eslint-config-airbnb-base", "version": "^15", "type": "external_package", "version_source": "package.json:75"},
+      {"id": "vue", "version": "^2.7", "type": "external_package", "version_source": "package.json:135"},
+      {"id": "bootstrap", "version": "^5", "type": "external_package", "version_source": "package.json:125"},
+      {"id": "axios", "version": "^1", "type": "external_package", "version_source": "package.json:117"},
+      {"id": "dayjs", "version": "^1", "type": "external_package", "version_source": "package.json:126"},
+      {"id": "gulp", "version": "^4", "type": "external_package", "version_source": "package.json:80"},
+      {"id": "mocha", "version": "^10", "type": "external_package", "version_source": "package.json:92"},
+      {"id": "mustache", "version": "^4", "type": "external_package", "version_source": "package.json:131"},
+      {"id": "underscore", "version": "^1.13", "type": "external_package", "version_source": "package.json:134"},
+      {"id": "xml2js", "version": "^0.6", "type": "external_package", "version_source": "package.json:139"},
+      {"id": "GOlr/Solr search services", "version": "unknown", "type": "external_service", "version_source": "conf/server_config_{dev,beta,production}.json:10-12 and conf/golr-views/", "requires_live_verification": true},
+      {"id": "SciGraph ontology/data services", "version": "unknown", "type": "external_service", "version_source": "conf/server_config_{dev,beta,production}.json:6-8", "requires_live_verification": true},
+      {"id": "OwlSim service", "version": "unknown", "type": "external_service", "version_source": "conf/server_config_{dev,beta,production}.json:14", "requires_live_verification": true},
+      {"id": "Monarch Biolink API", "version": "unknown", "type": "external_service", "version_source": "conf/server_config_{dev,beta,production}.json:18", "requires_live_verification": true}
+    ],
+    "edges": [
+      {"from": "monarch-app", "to": "node", "relationship": "runs_on"},
+      {"from": "monarch-app", "to": "@hapi/hapi", "relationship": "serves_http_with"},
+      {"from": "@hapi/hapi", "to": "@hapi/inert", "relationship": "registers_plugin"},
+      {"from": "monarch-app", "to": "@babel/core", "relationship": "transpiles_with"},
+      {"from": "@babel/core", "to": "@babel/preset-env", "relationship": "uses_preset"},
+      {"from": "webpack", "to": "babel-loader", "relationship": "loads_javascript_with"},
+      {"from": "monarch-app", "to": "webpack", "relationship": "builds_with"},
+      {"from": "webpack", "to": "webpack-cli", "relationship": "invoked_by"},
+      {"from": "webpack", "to": "webpack-dev-server", "relationship": "served_in_development_by"},
+      {"from": "webpack", "to": "sass-loader", "relationship": "loads_scss_with"},
+      {"from": "sass-loader", "to": "sass", "relationship": "compiles_with"},
+      {"from": "monarch-app", "to": "eslint", "relationship": "linted_by"},
+      {"from": "eslint", "to": "eslint-config-airbnb-base", "relationship": "extends"},
+      {"from": "monarch-app", "to": "vue", "relationship": "renders_ui_with"},
+      {"from": "monarch-app", "to": "bootstrap", "relationship": "styles_and_controls_ui_with"},
+      {"from": "monarch-app", "to": "axios", "relationship": "performs_http_requests_with"},
+      {"from": "monarch-app", "to": "dayjs", "relationship": "formats_dates_with"},
+      {"from": "monarch-app", "to": "gulp", "relationship": "generates_configuration_with"},
+      {"from": "monarch-app", "to": "mocha", "relationship": "declares_test_runner"},
+      {"from": "monarch-app", "to": "mustache", "relationship": "renders_templates_with"},
+      {"from": "monarch-app", "to": "underscore", "relationship": "uses_utility_library"},
+      {"from": "monarch-app", "to": "xml2js", "relationship": "parses_xml_with"},
+      {"from": "monarch-app", "to": "GOlr/Solr search services", "relationship": "queries"},
+      {"from": "monarch-app", "to": "SciGraph ontology/data services", "relationship": "queries"},
+      {"from": "monarch-app", "to": "OwlSim service", "relationship": "queries"},
+      {"from": "monarch-app", "to": "Monarch Biolink API", "relationship": "queries"}
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 49,
+    "high_risk_count": 22,
+    "breaking_changes": [
+      "Hapi 16 to @hapi/hapi 21 replaces the reply callback lifecycle with return values/the response toolkit; a legacy reply(body).type(...) handler remains at lib/monarch/web/webapp.js:268-271.",
+      "Webpack 4 to 5 and webpack-dev-server 3 to 5 cross plugin, loader, dev-server, proxy, and CLI schema boundaries; webpack.make.js still contains removed APIs.",
+      "Babel 6 to 7 renames core/preset packages and changes loader compatibility; ui/.eslintrc still names babel-eslint.",
+      "Bootstrap 4 to 5 removes the jQuery plugin dependency, changes data attributes to the data-bs-* namespace, drops several legacy classes, and changes Sass assumptions across active templates/components.",
+      "Axios 0.18/request to Axios 1 changes request/response/error semantics; the backend adapter and all browser consumers are direct impact sites, and one template still pins Axios 0.16.1 from a CDN.",
+      "Gulp 3 to 4 requires explicit async completion and composed task functions; gulpfile.js is a direct orchestration boundary.",
+      "ESLint 5 to 8 crosses parser/config/plugin rule changes; both root and nested configs participate.",
+      "Node >=18 removes or changes behavior tolerated by Node 6-era dependencies and scripts; server startup, build tooling, and plain-Node integration tests are runtime-sensitive.",
+      "The Step 2a async checklist was run because async remains at 2.x; no 2.x-to-3.x bump is requested and no q.drain/q.empty/q.saturated assignment was found. The express, socket.io, and uglify-js checklist boundaries are not crossed by a requested direct dependency bump."
+    ],
+    "notes": "The worktree is already dirty with in-progress upgrade edits and generated node_modules/dist/package-lock artifacts. Baseline versions were read from HEAD package.json (Node >=6.11.2; Hapi 16; Inert 4; Babel 6; webpack 4/CLI 3/dev-server 3; node-sass 4; ESLint 5; Vue 2.5; Bootstrap 4; Axios 0.18; request 2; Moment 2; Gulp 3; Mocha 5; Mustache 2; Underscore 1.9; xml2js 0.4), while target versions and line locations reflect the current worktree. No application fixes were applied during analysis."
+  },
+  "coverage_notes": "GitNexus was invoked for monarch-legacy but its index reports 0 files, 0 symbols, and 0 execution flows, so usage discovery and line ranges use rg/targeted reads with reduced graph confidence. Only one non-node_modules package.json exists. Generated node_modules, dist, and cache content was excluded from affected source-file enumeration, except package-lock.json as the package-manager artifact. External GOlr/Solr, SciGraph, OwlSim, and Biolink endpoints are configured but expose no service versions in-repo; all are recorded as unknown and require live verification. The user reports the target datastore/index is empty and declared no additional external services."
+}

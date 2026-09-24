@@ -1,0 +1,92 @@
+{
+  "status": "passed",
+  "branch_name": "upgrade/java-21",
+  "commit_ref": "5781fb1",
+  "files_changed": [
+    ".github/workflows/test.yml",
+    "pom.xml",
+    "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+    "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java",
+    "src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java"
+  ],
+  "changes_applied": [
+    "Added UTF-8 source encoding, pinned maven-compiler-plugin 3.16.0, set release 21, disabled incremental compilation, removed Gson, and disabled the download-sources profile by default in pom.xml.",
+    "Renamed ОбщиеКонфигурация.java to CommonConfiguration.java and changed only the public class identifier.",
+    "Updated the sole BadFruit import, static receiver, and constructor reference to CommonConfiguration.",
+    "Changed the GitHub Actions Java matrix from 17 to 21."
+  ],
+  "changes_skipped": [],
+  "executor_check_results": [
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "mvn -B clean verify --file pom.xml",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS under Java 21.0.12.1. Compiled 11 main and 5 test source files with release 21. Tests run: 4, Failures: 0, Errors: 0, Skipped: 0.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "mvn -B verify --file pom.xml",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS. Tests run: 4, Failures: 0, Errors: 0, Skipped: 0.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "mvn -B test -Dtest=ExampleTests",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS. ExampleTests: Tests run: 2, Failures: 0, Errors: 0, Skipped: 0.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/examples/SimplePeel.class",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "SimplePeel.class reports minor version: 0 and major version: 65.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "git diff --stat",
+      "purpose": "smoke",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Pre-commit diff stat contained only the approved workflow, POM, BadFruit, and configuration rename paths. After staging, Git detected the configuration change as an R090 rename.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    }
+  ],
+  "executor_repairs_applied": [],
+  "executor_repair_rounds": 0,
+  "scope_expansions_applied": [],
+  "scope_expansions_used": 0,
+  "failure_summary": "",
+  "execution_notes": "All declared executor checks passed in order under JDK 21.0.12.1 and Maven 3.9.16. Sandboxed Maven and Git invocations were rerun unchanged with approved access when network and repository-ownership isolation blocked them; these were environment retries, not code repairs. One commit, 5781fb1 (upgrade: java-21), was created. The target repository was clean immediately after the commit. The orchestrator-owned stashes were not accessed, restored, or altered."
+}
