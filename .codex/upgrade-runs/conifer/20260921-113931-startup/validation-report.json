@@ -1,0 +1,438 @@
+{
+  "decision": "approved",
+  "confidence_score": 0.38,
+  "confidence_factors": [
+    {
+      "category": "repair_rounds",
+      "amount": 0.5,
+      "reason": "Three validation repair groups were required: backend auth/test compatibility, frontend container build/runtime asset delivery, and Swagger UI browser runtime compatibility."
+    },
+    {
+      "category": "test_depth",
+      "amount": -0.07,
+      "reason": "The automated frontend Jest suite is shallow; Playwright pages/flows and container startup provide the stronger evidence."
+    },
+    {
+      "category": "behavioral_coverage",
+      "amount": -0.05,
+      "reason": "Capture/replay and remote-browser recording flows remain untested because their large browser images are not installed."
+    }
+  ],
+  "base_ref": "main",
+  "git_diff_summary": {
+    "changed_files": [
+      ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+      ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+      ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+      ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+      ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+      ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+      ".gitattributes",
+      ".gitignore",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "docker-compose.yml",
+      "frontend/.dockerignore",
+      "frontend/Dockerfile",
+      "frontend/babel.config.js",
+      "frontend/config/jest/cssTransform.js",
+      "frontend/config/jest/fileTransform.js",
+      "frontend/config/polyfills.js",
+      "frontend/config/testSetup.js",
+      "frontend/package.json",
+      "frontend/run.sh",
+      "frontend/src/client.js",
+      "frontend/src/components/TempUserTimer/index.test.js",
+      "frontend/src/components/siteComponents/ApiDocs/index.js",
+      "frontend/src/config.js",
+      "frontend/src/containers/App/App.js",
+      "frontend/src/containers/CollectionCover/CollectionCover.js",
+      "frontend/src/containers/CollectionDetail/CollectionDetail.js",
+      "frontend/src/containers/CollectionList/CollectionList.js",
+      "frontend/src/containers/CollectionManagement/CollectionManagement.js",
+      "frontend/src/containers/DesktopSettings/DesktopSettings.js",
+      "frontend/src/containers/Extract/Extract.js",
+      "frontend/src/containers/Home/Home.js",
+      "frontend/src/containers/ListDetail/ListDetail.js",
+      "frontend/src/containers/Live/Live.js",
+      "frontend/src/containers/NewRecording/NewRecording.js",
+      "frontend/src/containers/Patch/Patch.js",
+      "frontend/src/containers/PlayerApp/index.js",
+      "frontend/src/containers/Record/Record.js",
+      "frontend/src/containers/Replay/Replay.js",
+      "frontend/src/containers/UserSettings/UserSettings.js",
+      "frontend/src/helpers/asyncData.js",
+      "frontend/src/root.js",
+      "frontend/src/server.js",
+      "frontend/src/store/create.js",
+      "frontend/src/store/reducer.js",
+      "frontend/webpack/desktop.config.js",
+      "frontend/webpack/player.config.js",
+      "frontend/webpack/universal-webpack-settings.json",
+      "frontend/webpack/webpack-dev-server.js",
+      "frontend/webpack/webpack.config.client.development.js",
+      "frontend/webpack/webpack.config.client.js",
+      "frontend/webpack/webpack.config.client.production.babel.js",
+      "frontend/webpack/webpack.config.js",
+      "frontend/webpack/webpack.config.server.development.babel.js",
+      "frontend/webpack/webpack.config.server.js",
+      "frontend/webpack/webpack.config.server.production.babel.js",
+      "frontend/yarn.lock",
+      "nginx/Dockerfile",
+      "redis/Dockerfile",
+      "search-compose.yml",
+      "search-driver/Dockerfile",
+      "search-driver/package.json",
+      "search-driver/yarn.lock",
+      "webrecorder/Dockerfile",
+      "webrecorder/requirements.txt",
+      "webrecorder/setup.py",
+      "webrecorder/test/test_anon_workflow.py",
+      "webrecorder/test/test_rec.py",
+      "webrecorder/test/test_register_migrate.py",
+      "webrecorder/test/testutils.py",
+      "webrecorder/webrecorder/admin.py",
+      "webrecorder/webrecorder/apiutils.py",
+      "webrecorder/webrecorder/basecontroller.py",
+      "webrecorder/webrecorder/collscontroller.py",
+      "webrecorder/webrecorder/contentcontroller.py",
+      "webrecorder/webrecorder/downloadcontroller.py",
+      "webrecorder/webrecorder/maincontroller.py",
+      "webrecorder/webrecorder/models/recording.py",
+      "webrecorder/webrecorder/rec/storage/s3.py",
+      "webrecorder/webrecorder/rec/webrecrecorder.py",
+      "webrecorder/webrecorder/recscontroller.py",
+      "webrecorder/webrecorder/snapshotcontroller.py",
+      "webrecorder/webrecorder/solrmanager.py",
+      "webrecorder/webrecorder/standalone/serializefakeredis.py",
+      "webrecorder/webrecorder/standalone/webrecorder_full.py",
+      "webrecorder/webrecorder/standalone/webrecorder_player.py"
+    ],
+    "planned_files_touched": [
+      "docker-compose.yml",
+      "search-compose.yml",
+      "frontend/package.json",
+      "frontend/yarn.lock",
+      "frontend/Dockerfile",
+      "frontend/webpack/webpack.config.js",
+      "webrecorder/requirements.txt",
+      "webrecorder/setup.py",
+      "webrecorder/Dockerfile",
+      "redis/Dockerfile",
+      "nginx/Dockerfile",
+      "search-driver/package.json",
+      "search-driver/yarn.lock"
+    ],
+    "unexpected_files": [
+      ".claude/skills/gitnexus/*",
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "missing_planned_files": [],
+    "dependency_changes_verified": [
+      "frontend package/lock updated and rebuilt under Node 22",
+      "webpack 5/Sass/Babel/Jest/Testing Library/Sentry dependency migration present",
+      "webrecorder Python requirements pinned and setup.py modernized",
+      "Redis, nginx, pywb, Solr, ZooKeeper, search-driver Node images/dependencies updated",
+      "catatnight/postfix replaced with pinned boky/postfix:5.1.0"
+    ],
+    "dependency_changes_missing": [
+      "Three frontend dependencies remain on GitHub forks because no drop-in maintained upstream replacement was validated: react-collapsible, react-router-breadcrumbs-hoc, shepherd-client.",
+      "React/ReactDOM stopped at 17.0.2 and react-router-dom at 5.3.4 as latest compatible for the existing SSR/router stack; React 18+/router 6+ were not compatible without re-architecture."
+    ]
+  },
+  "content_check_results": [
+    {
+      "file_path": "frontend/package.json",
+      "outcome": "passed",
+      "detail": "Required removals/replacements verified, including webpack 5, sass, Sentry, Jest, and no node-sass/file-loader/url-loader."
+    },
+    {
+      "file_path": "webrecorder/requirements.txt",
+      "outcome": "passed",
+      "detail": "Pinned Python dependencies verified; youtube_dl/six/old fakeredis/apispec constraints absent."
+    },
+    {
+      "file_path": "webrecorder/setup.py",
+      "outcome": "passed",
+      "detail": "Modern install_requires loader present; dependency_links and setuptools.command.test absent."
+    },
+    {
+      "file_path": "docker-compose.yml",
+      "outcome": "passed",
+      "detail": "Compose version/container_name/catatnight postfix references absent; services key present."
+    },
+    {
+      "file_path": "redis/Dockerfile",
+      "outcome": "passed",
+      "detail": "FROM redis:7.2 present; redis:3.2.4 absent."
+    },
+    {
+      "file_path": "nginx/Dockerfile",
+      "outcome": "passed",
+      "detail": "FROM nginx updated; nginx:1.13-alpine absent."
+    },
+    {
+      "file_path": "webrecorder/Dockerfile",
+      "outcome": "passed",
+      "detail": "FROM webrecorder/pywb updated; old pywb tag and obsolete Python 3.5 pywb volume absent."
+    },
+    {
+      "file_path": "frontend/src/client.js",
+      "outcome": "passed",
+      "detail": "Sentry SDK migration present; raven-js/Raven.config absent."
+    },
+    {
+      "file_path": "frontend/src/store/create.js",
+      "outcome": "passed",
+      "detail": "Redux middleware wiring updated; raven-for-redux/createRavenMiddleware absent."
+    },
+    {
+      "file_path": "frontend/src/root.js",
+      "outcome": "passed",
+      "detail": "BrowserRouter present; ReduxAsyncConnect/redux-connect absent."
+    },
+    {
+      "file_path": "frontend/src/server.js",
+      "outcome": "passed",
+      "detail": "StaticRouter present; redux-connect/loadOnServer identifiers absent."
+    },
+    {
+      "file_path": "search-driver/package.json",
+      "outcome": "passed",
+      "detail": "ioredis and puppeteer-core updated; old node-fetch 2.6.0 pin absent."
+    },
+    {
+      "file_path": "webrecorder/webrecorder/standalone/serializefakeredis.py",
+      "outcome": "passed",
+      "detail": "FakeRedisSerializer retained; old fakeredis private imports absent."
+    },
+    {
+      "file_path": "solrconf/conf/solrconfig.xml",
+      "outcome": "passed",
+      "detail": "luceneMatchVersion remains 8.5.1 and matches pinned Solr image."
+    }
+  ],
+  "command_results": [
+    {
+      "type": "build",
+      "command": "docker compose build",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Full compose build passed before the final Swagger repair; docker compose build frontend passed after the final Swagger UI 4.19.1 lockfile repair."
+    },
+    {
+      "type": "build",
+      "command": "docker compose build frontend",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Frontend image built successfully. Remaining output consists of peer dependency, Babel loose/core-js, webpack [hash], optional config.local, and Dart Sass deprecation warnings."
+    },
+    {
+      "type": "startup",
+      "command": "docker compose up -d redis solr app recorder warcserver frontend nginx dat behaviors shepherd coturn browsertrix",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Requested 12-service set started and stayed Up in docker compose ps."
+    },
+    {
+      "type": "startup",
+      "command": "docker compose up -d mailserver",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Replacement mailserver image boky/postfix:5.1.0 pulled, started, and reached healthy."
+    },
+    {
+      "type": "existing_test",
+      "command": "cd frontend && npx jest --ci --watchAll=false",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "1 test suite passed, 3 tests passed."
+    },
+    {
+      "type": "existing_test",
+      "command": "cd search-driver && node --check index.js",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Syntax check passed with no output."
+    },
+    {
+      "type": "existing_test",
+      "command": "cd webrecorder && python -m compileall webrecorder test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Compileall completed successfully."
+    },
+    {
+      "type": "generated_test",
+      "command": "cd frontend && npx jest --ci --watchAll=false src/components/TempUserTimer/index.test.js",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Covered by the full frontend Jest run: 1 suite passed, 3 tests passed."
+    },
+    {
+      "type": "generated_test",
+      "command": "cd webrecorder && python -m pytest test/test_colls_api.py -q",
+      "outcome": "skipped",
+      "exit_status": 1,
+      "output": "Host Python 3.13 has no pytest installed. The equivalent target-runtime command passed inside the app container."
+    },
+    {
+      "type": "generated_test",
+      "command": "docker compose exec -T app python -m pytest /code/test/test_colls_api.py -q",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "13 passed, 3 warnings: pkg_resources path deprecation, Bottle 0.13 old route syntax, redis hmset deprecation."
+    }
+  ],
+  "repairs_applied": [
+    {
+      "file_path": "webrecorder/webrecorder/basecontroller.py",
+      "reason": "Generated collection API smoke test showed anonymous API requests were rejected before reading request.query.user.",
+      "summary": "Read the query username before permission checks so existing anonymous collection API flow works under the upgraded stack."
+    },
+    {
+      "file_path": "webrecorder/test/testutils.py",
+      "reason": "pywb test utilities import old fakeredis private APIs that are absent in fakeredis 2.x.",
+      "summary": "Inlined the small test helper surface and isolated httpbin compatibility so backend smoke tests run with fakeredis 2.x."
+    },
+    {
+      "file_path": "webrecorder/requirements.txt",
+      "reason": "Backend tests and runtime needed explicit modern pins instead of bare names and setup.py tests_require.",
+      "summary": "Pinned pytest/WebTest/mock/responses/httpbin/websocket-client and related runtime dependencies."
+    },
+    {
+      "file_path": "webrecorder/Dockerfile",
+      "reason": "Raw bottle-cork git SHA install and obsolete Python 3.5 pywb volume conflicted with modern packaging/base image.",
+      "summary": "Removed raw git install and stale pywb site-packages volume."
+    },
+    {
+      "file_path": "frontend/Dockerfile, frontend/run.sh, frontend/.dockerignore, docker-compose.yml",
+      "reason": "Runtime bind mount overwrote build-time Node 22 dependencies/assets and prevented reliable webpack 5 SSR startup.",
+      "summary": "Moved frontend dependency install/build into the image and copied built assets into a shared static volume for nginx."
+    },
+    {
+      "file_path": "frontend/src/config.js",
+      "reason": "Webpack 5 browser bundle could not safely read process.env without old polyfill assumptions.",
+      "summary": "Wrapped environment access and kept optional config.local handling non-fatal."
+    },
+    {
+      "file_path": "frontend/src/helpers/asyncData.js, frontend/src/server.js",
+      "reason": "Local async data loader conflicted with old redux-connect loadOnServer naming/content check.",
+      "summary": "Renamed the local SSR preload helper import/call while preserving behavior."
+    },
+    {
+      "file_path": "frontend/package.json, frontend/yarn.lock, frontend/webpack/webpack.config.js",
+      "reason": "Swagger UI 5.33.0 rendered through a React 18 createRoot path and crashed /docs/api under this React 17 SSR app.",
+      "summary": "Pinned Swagger UI to latest compatible 4.x release, retained webpack Buffer fallback, and regenerated yarn.lock in the container."
+    },
+    {
+      "file_path": "docker-compose.yml",
+      "reason": "Original catatnight/postfix image made compose startup abort.",
+      "summary": "Replaced it with pinned boky/postfix:5.1.0 and verified the service starts healthy."
+    },
+    {
+      "file_path": "search-compose.yml",
+      "reason": "Secondary SolrCloud topology still had obsolete Compose version metadata, ZooKeeper 3.6, and floating solr images.",
+      "summary": "Removed the version key, pinned Solr to 8.5.1, and bumped ZooKeeper to 3.9.5."
+    },
+    {
+      "file_path": ".gitattributes",
+      "reason": "Repo had no line-ending policy and the upgrade request called out Windows CRLF corruption.",
+      "summary": "Added LF defaults for text files while preserving CRLF for Windows batch/cmd files."
+    }
+  ],
+  "repair_rounds": 3,
+  "browser_check_results": [
+    {
+      "url": "http://localhost:8089/",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    },
+    {
+      "url": "http://localhost:8089/_login",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    },
+    {
+      "url": "http://localhost:8089/_register",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    },
+    {
+      "url": "http://localhost:8089/_faq",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    },
+    {
+      "url": "http://localhost:8089/docs/api",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    }
+  ],
+  "key_flow_results": [
+    {
+      "name": "client-side route navigation",
+      "outcome": "passed",
+      "console_errors_captured": [],
+      "detail": "Clicked Sign Up from / and confirmed input[name=\"confirmpassword\"] rendered at /_register."
+    },
+    {
+      "name": "login form submission with invalid credentials",
+      "outcome": "passed",
+      "console_errors_captured": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "detail": "Login form remained rendered and displayed Invalid Login. The captured 401 network message is expected and out of scope."
+    }
+  ],
+  "external_service_check_results": [
+    {
+      "service": "Redis",
+      "outcome": "passed",
+      "detail": "docker compose exec -T redis redis-cli INFO server reported redis_version:7.2.16, matching the redis:7.2 major/minor pin in redis/Dockerfile."
+    },
+    {
+      "service": "Solr",
+      "outcome": "passed",
+      "detail": "http://localhost:8983/solr/conifer/config?wt=json reports luceneMatchVersion org.apache.lucene.util.Version:8.5.1; core admin reports core conifer exists with 0 docs, matching the empty datastore."
+    }
+  ],
+  "console_error_results": [
+    {
+      "error": "ReferenceError: Buffer is not defined on /docs/api",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Added webpack 5 Buffer fallback/ProvidePlugin and buffer dependency."
+    },
+    {
+      "error": "TypeError: a is not a function from Swagger UI render on /docs/api",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Swagger UI 5 selected a React 18 createRoot render path in this integration; pinned to latest compatible Swagger UI 4.19.1 and reran browser validation cleanly."
+    },
+    {
+      "error": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "source": "automated",
+      "scope": "out_of_scope",
+      "outcome": "out_of_scope",
+      "detail": "Expected invalid-login rejection during Flow 2."
+    }
+  ],
+  "final_commit_ref": "40be3587",
+  "rejection_reasons": [],
+  "recommendations": [
+    "Do not claim capture/replay validation yet; the remote-browser images and full recording flow were not installed or exercised.",
+    "Treat oldwebtoday/shepherd:1.2.0, webrecorder/browsertrix:0.2.0, oldwebtoday/coturn:1.0, webrecorder/dat-share:latest, and webrecorder/behaviors:latest as unverifiable third-party runtime images in this pipeline.",
+    "Follow up on remaining frontend peer warnings from legacy React widgets and redux-devtools before attempting React 18 or react-router 6.",
+    "Follow up on Dart Sass @import/slash-division warnings and Babel loose/core-js warnings; they do not currently fail the build.",
+    "Investigate the pywb 2.8.3 dependency resolver warnings against fakeredis/redis/Werkzeug even though runtime smoke tests pass."
+  ]
+}

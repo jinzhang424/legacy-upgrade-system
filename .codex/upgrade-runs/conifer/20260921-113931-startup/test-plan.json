@@ -1,0 +1,40 @@
+{
+  "stage": "test-generation",
+  "repo_path": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\conifer",
+  "branch_name": "upgrade/dependency-modernization",
+  "datastore_has_data": false,
+  "strategy": "Record existing focused tests rather than add duplicate source files.",
+  "frameworks": [
+    {
+      "area": "frontend",
+      "framework": "Jest with jsdom via frontend/package.json",
+      "command": "cd frontend && npx jest --ci --watchAll=false src/components/TempUserTimer/index.test.js"
+    },
+    {
+      "area": "webrecorder",
+      "framework": "pytest with WebTest and fakeredis FullStackTests harness",
+      "command": "cd webrecorder && python -m pytest test/test_colls_api.py -q"
+    }
+  ],
+  "generated_test_files": [
+    "frontend/src/components/TempUserTimer/index.test.js",
+    "webrecorder/test/test_colls_api.py"
+  ],
+  "generated_test_commands": [
+    "cd frontend && npx jest --ci --watchAll=false src/components/TempUserTimer/index.test.js",
+    "cd webrecorder && python -m pytest test/test_colls_api.py -q"
+  ],
+  "smoke_tests": [
+    {
+      "file": "frontend/src/components/TempUserTimer/index.test.js",
+      "value": "Confirms the upgraded React/Jest toolchain can render and assert a small component in CI mode."
+    }
+  ],
+  "integration_tests": [
+    {
+      "file": "webrecorder/test/test_colls_api.py",
+      "value": "Creates a temp collection through the application API, verifies collection get/list read paths return the seeded fixture, and deletes it."
+    }
+  ],
+  "notes": "No new source test files were added because existing focused tests already cover the Stage 3 smoke and empty-datastore integration requirements."
+}

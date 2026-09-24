@@ -56,7 +56,7 @@ Observed 2, preserved 1: BPR 0.50, MBR 0.50. New behaviours: none.
 | Execution, retry | medium | 7 | 1,360,908 | one more runner repair; same 5 failures |
 | Total | | 45 wall | 6,340,056 (5,870,336 cached, 469,720 uncached) | output 74,566 (reasoning 15,074) |
 
-Notional cost: US$7.52, the cheapest run. Main-thread line from the chat: total 171,248, input 147,619 (+1,866,368 cached), output 23,629 (matches the session log). No stage timings were recorded.
+Notional cost: US$7.52, the cheapest run. Main-thread line from the chat: total 171,248, input 147,619 (+1,866,368 cached), output 23,629 (matches the session log). Stage timings recorded by the user: preflight 43 s, analysis 6 m 8 s, planning 4 m 45 s, test generation 3 m, execution 4 m 25 s (halt on the missing executor check) + 12 m 8 s (migration and first `npm test` repairs) + 7 m 3 s (retry); about 38 minutes of agent activity against 45 minutes of wall time.
 
 ## 1.5 LLM configuration
 
