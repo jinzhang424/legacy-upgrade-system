@@ -15,7 +15,7 @@ Across eleven runs (nine on tv-radio, one on codemirror5, one on Conifer, 19 Jun
 | Exact behaviour equivalence rate (EBER) | 0 | every run lost at least one reference behaviour |
 | Behaviour preservation rate (BPR) / missing (MBR) | 0.58 / 0.42 | 74 of 128 observed behaviour cells preserved; best run R11 at 0.87, best tv-radio run R9 at 0.75 |
 | New behaviour rate (NBR) | 0.05 | 4 unrequested additions |
-| Tokens per run | mean 17.5 M, median 10.7 M (94% cached) | all threads, from session logs |
+| Tokens per run | mean 17.5 M, median 10.7 M (94% cached) | R1–R11, input + output over all threads, from the Codex session logs. The comparison runs C1–C3 are counted separately and on a non-commensurable basis; see Cost and efficiency |
 | Notional cost per run | mean US$17.15, median US$12.16; total US$188.67 | GPT-5.5 list prices |
 | Wall time per run | mean 142 min, median 73 min | main Codex thread, includes approval waits (R11: 784 min including a usage-limit lockout) |
 | Dependency coverage | 49 of 51 entries bumped in every full-scope tv-radio run; R11: 74 of 103 frontend entries, all backend pins and base images | the two tv-radio holdouts have no newer release; R11 stopped React at 17 and react-router at 5 |
@@ -191,6 +191,25 @@ Notes on the table:
 
 Manual follow-up after the pipeline stopped (Codex sessions the user ran to fix what the pipeline left broken) added 11.4 M input tokens, 57 thousand output tokens, US$10.52 and 50 minutes of agent time across R7, R8 and R9, on top of the user's own debugging time, which was not recorded.
 
+### Comparison runs (C1 to C3)
+
+The three comparison runs are priced and counted separately because neither the model nor the accounting is the same. Figures are all-thread totals at the end of the upgrade work, taken from the `cost-state` records in the Claude Code session logs (`~/.claude/projects/<slug>/<session>.jsonl`); the same numbers are now recorded at the foot of each chat in `claude_refactored_chats/`.
+
+| Run | Task | Threads | Uncached input | Cache read | Cache write | Output (thinking) | Total tokens | Cached share | Cost (US$) | Wall (min) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| C1 | tv-radio + Solr | 1 + 7, then 1 + 0 | 126,142 | 196,796,343 | 1,487,918 | 517,492 (233,293) | 198,927,895 | 99.94% | 49.46 | 123.2 |
+| C2 | codemirror5 toolchain | 1 + 0 | 1,811 | 4,630,352 | 74,294 | 31,842 (19,411) | 4,738,299 | 99.96% | 1.54 | 31.6 |
+| C3 | Conifer full stack | 1 + 6 | 1,748,543 | 253,828,051 | 1,285,357 | 507,277 (245,991) | 257,369,228 | 99.32% | 62.28 | 332.1 |
+| Total | | 3 + 13 | 1,876,496 | 455,254,746 | 2,847,569 | 1,056,611 (498,695) | 461,035,422 | 99.59% | 113.29 | 486.9 |
+| Mean | | | 625,499 | 151,751,582 | 949,190 | 352,204 | 153,678,474 | | 37.76 | 162.3 |
+| Median | | | 126,142 | 196,796,343 | 1,285,357 | 507,277 | 198,927,895 | | 49.46 | 123.2 |
+
+**These token counts are not comparable with R1 to R11.** Claude Code bills and reports a cache read on every request, so the same context re-read across 400 turns is counted 400 times; Codex reports cached input on the same principle but over far shorter contexts and fewer turns. C3's 257 M against R11's 65 M is an accounting artefact, not four times the work. The figures that do compare across families are **uncached input** (C3 1.75 M against R11 3.15 M), **output tokens** (C3 507 K against R11 202 K), **cost** and **wall time**. Any table placing the two families side by side needs this caveat attached.
+
+On the three paired tasks, by cost: C1 US$49.46 against R9's US$17.00 on the nearest tv-radio equivalent; C2 US$1.54 against R10's US$7.52 on the identical codemirror5 task; C3 US$62.28 against R11's US$52.71 on the identical Conifer task. The direct agent is cheaper only on the smallest task.
+
+Two sub-agent threads dominate C3 (32.4 M and 14.5 M tokens, 18.2% of the run between them) and two dominate C1 (11.5 M and 11.2 M, 12.5%). C2 spawned no sub-agents at all, which is why its total is three orders of magnitude below the other two. A follow-up session for C3 (547,379 tokens, US$0.24) and two environment-preparation sessions for C1 (2,085,696 tokens, US$0.79) are excluded as non-upgrade work.
+
 ## LLM configuration
 
 All eleven runs used GPT-5.5 through OpenAI Codex at medium reasoning effort, except that the planner, executor and validator threads of R4 ran at high effort.
@@ -212,7 +231,25 @@ All eleven runs used GPT-5.5 through OpenAI Codex at medium reasoning effort, ex
 
 ## Component ablation
 
-No controlled ablation exists in this data, so Table 2 of the framework cannot be filled. The ten runs are a longitudinal series in which the tool, the task scope and the user's inputs all changed together, so no pair of runs isolates one component. What the series does show about each component:
+No controlled single-component ablation exists in this data. The eleven pipeline runs are a longitudinal series in which the tool, the task scope and the user's inputs all changed together, so no pair of runs isolates one component. Since 24 September there is, however, one **all-components-removed** configuration: the three comparison runs C1 to C3 gave the same tasks to a general coding agent with no orchestrator, no generated tests, no validation gate and no GitNexus. Table 2 can therefore be filled for two of its rows and not for the other three.
+
+| Configuration | N | FBSR | CSR | TSR | F1 | EBER | Tokens (mean / median) | Cost (mean / median, US$) | Time (mean / median, min) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Full System (R1–R11) | 11 | 0.27 | 0.82 | 0.33 | 0 real (0.57 literal) | 0 | 17.5 M / 10.7 M | 17.15 / 12.16 | 142.3 / 73 |
+| w/o Validation | — | — | — | — | — | — | — | — | — |
+| w/o Generated Test | — | — | — | — | — | — | — | — | — |
+| w/o GitNexus | — | — | — | — | — | — | — | — | — |
+| w/o all four (C1–C3) | 3 | 0 | 1.00 | 0 | n/a (no tests generated) | 0.33 | 153.7 M / 198.9 M | 37.76 / 49.46 | 162.3 / 123.2 |
+
+Three cautions before reading any Δ from that table:
+
+1. **The two rows are not the same experiment.** The comparison runs changed the model and the harness (Sonnet 5 in Claude Code) at the same time as removing the four components, so a difference between the rows confounds "component removed" with "different agent". This is Δ for a configuration, not Δ for a component in the sense of equations 22 and 23.
+2. **The Tokens columns are not commensurable** for the reason given under Comparison runs: the two harnesses count cached input on different scales. Reading a 9× token increase off this table would be wrong. Cost and time do compare.
+3. **N = 3 against N = 11**, on three different codebases, so CSR 1.00 rests on three observations and EBER 0.33 on one (C2, the smallest task in the corpus).
+
+What the two rows do support, stated carefully: removing all four components did not reduce CSR or FBSR — every comparison run built and ran, and none passed its declared checks, exactly as in the pipeline series. It cost more per task on the two large tasks and far less on the small one. Pooled behaviour preservation is 26 of 47 cells (BPR 0.55) against the pipeline's 74 of 128 (0.58), which is within the noise of three tasks. The one component whose absence is visible in the behaviour data is **validation with a real browser**: R11's validator found and repaired two Swagger UI regressions behind HTTP 200s, and C3, which verified the same pages with `curl`, shipped a client bundle that throws on every page and never hydrates — nine of its sixteen lost behaviours trace to that single unverified defect.
+
+What the longitudinal series shows about each component:
 
 **Validation and repair.** The validator caught a real regression twice: the broken client bundle in R8 (through the Playwright console check, then repaired it) and the broken search page and search flow in R9 (through the key-page and key-flow checks). It also repaired Express 5 route syntax in R2. Against that, it approved R1, whose frontend cannot load, and R2, whose frontend requires a removed package; it rejected R3 and R5 only for unplanned agent files in the diff; and in R7 it produced 49 false content-check failures from malformed plan strings and failed both startup checks by probing after the bounded command had already killed the server. Without the validator, FBSR would be unchanged at 0; with it, two of the seven broken-but-committed builds were correctly flagged as broken. In R11 the validation stage (run by the orchestrator after the validator sub-agent hit the usage limit) found and repaired two real Swagger UI regressions behind HTTP 200s, but also edited application access control to satisfy a stale test and approved a build whose collection page crashes.
 
