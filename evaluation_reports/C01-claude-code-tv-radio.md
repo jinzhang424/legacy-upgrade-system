@@ -73,7 +73,7 @@ Three further behaviours sit outside the shared 13. They are reported separately
 | Extra behaviour | Status | Note |
 | --- | --- | --- |
 | Frontend passive-auth runs on page load | **missing (new regression)** | `common.js:160` calls `loginIFrame.load(function(){…})`. jQuery 4 removed the `.load(handler)` event shortcut, so the argument is treated as a URL: `e.indexOf is not a function`. This is the **only** removed-API call site left in first-party frontend JS — the plan's sweep for `.bind()`/`.live()`/`.size()` converted the rest and missed this one |
-| Admin Interface shared scripts load | missing, but **not a regression** | the `Interface/shared/*.js` symlink placeholders are broken in the pre-upgrade checkout too (recorded in R9 and B00 as an environment defect). The run diagnosed it correctly and shipped a fix that does not work |
+| Admin Interface shared scripts load | missing, but **not a regression** | the `Interface/shared/*.js` symlink placeholders are broken in the pre-upgrade checkout too (recorded in R9 as an environment defect; B00 did not re-check them). The run diagnosed it correctly and shipped a fix that does not work |
 | Frontend page formatting | degraded, not root-caused | the user reports "formatting of page is not correct". The templates are internally consistent — no `col-xs-*`, `hidden-*`, `data-toggle`, `panel-*` or `img-responsive` remains in any `.hbs` — but the site's own `uoa-lib-main.css` is still written against Bootstrap 3 markup and was not migrated |
 
 New behaviours (NBR). Counting only observable changes the user did not ask for, following the overview's rule that requested changes do not count: (1) the Admin API now generates a random JWT secret per process when `JWT_TOKEN_SECRET` is unset, replacing a hardcoded checked-in secret — a security improvement, but sessions silently stop surviving a restart; (2) `/libs/client.js` minification failures are now logged rather than silently producing an empty bundle. The `/shared/:file` route and the CLI's now-accurate failure reporting were both requested ("fix all errors"; "confirm the command's own log output shows a real completion line") and are not counted. **NBR = 2 / (8 + 2) = 0.20.**
@@ -82,7 +82,7 @@ Beyond the metric, the run also repaired four pre-existing defects in the refere
 
 ## 1.4 Cost and efficiency
 
-Figures are from the session logs' `cost-state` records, which are authoritative for cost; per-thread token totals are de-duplicated by request id and reconcile with them to within 0.1%.
+Figures are from the session logs' `cost-state` records, which are authoritative for cost; per-thread token totals are de-duplicated by request id and reconcile with them to within 0.2% (the thread rows below sum to 182,180,683 against the session total of 182,453,922).
 
 | Thread | Model | Minutes | Tokens (input + cache + output) | Note |
 | --- | --- | --- | --- | --- |
@@ -115,7 +115,7 @@ Notes:
 | Harness | Claude Code 2.1.280 (upgrade) and 2.1.282 (repair), VS Code extension, auto permission mode, plan mode for the first 3 turns |
 | Reasoning effort | high, on every turn of both sessions |
 | Temperature / max output tokens | not configurable in this harness; not recorded |
-| Input tokens | total 199,010,983 (101,627 + 24,523 uncached), mean = median = 99,505,492 per session |
+| Input tokens | total 198,410,403 (uncached 126,142: 101,627 upgrade + 24,515 repair), mean = median = 99,205,202 per session |
 | Output tokens | total 517,492 (incl. 234,625 thinking) |
 | Total tokens | 198,927,895 |
 | Monetary cost | US$49.46 total; US$44.74 upgrade, US$4.73 repair |
