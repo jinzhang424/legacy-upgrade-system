@@ -1,0 +1,2117 @@
+{
+  "upgrade_description": "Upgrade monarch-app dependencies for Node 18/20 LTS: migrate Hapi/Inert, Babel, webpack, Sass, ESLint, Vue 2.7, Bootstrap 5, HTTP/date utilities, Gulp, test/runtime libraries, and set Node >=18.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "package.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Primary npm manifest and command surface for every requested package and the Node engine; the current worktree already contains target ranges while HEAD records the legacy baseline.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 42,
+          "symbol_or_pattern": "scripts",
+          "matched_api": "npm scripts"
+        },
+        {
+          "start_line": 53,
+          "end_line": 56,
+          "symbol_or_pattern": "engines",
+          "matched_api": "engines.node"
+        },
+        {
+          "start_line": 61,
+          "end_line": 139,
+          "symbol_or_pattern": "dependencies/devDependencies",
+          "matched_api": "requested npm dependencies"
+        }
+      ],
+      "change_description": "Replace the legacy package set with @hapi/hapi ^21 and @hapi/inert ^7; Babel 7 core/preset plus babel-loader ^9; webpack/CLI/dev-server 5 and compatible loaders/plugins; sass in place of node-sass; ESLint 8/Airbnb 15; Vue 2.7 with matching vue-template-compiler while retaining vue-router 3; Bootstrap 5 with @popperjs/core and no bootstrap-vue; Axios 1 with request removed; Day.js with Moment removed; Gulp 4; Mocha 10; Mustache 4; Underscore 1.13; xml2js 0.6; and engines.node >=18. Make npm scripts cross-platform where required by the requested Windows validation, use webpack 5 CLI forms, and make wbs-lint cover ui and js.",
+      "validation_evidence": [
+        "npm install exits 0 on Node 18/20",
+        "npm ls --depth=0 reports the planned direct versions without invalid or extraneous direct packages"
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": "package-lock.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "npm lockfile resolves the upgraded package graph and must remain consistent with the manifest.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 120,
+          "symbol_or_pattern": "root package metadata",
+          "matched_api": "lockfileVersion/dependency ranges"
+        },
+        {
+          "start_line": 121,
+          "end_line": 21960,
+          "symbol_or_pattern": "node_modules entries",
+          "matched_api": "resolved dependency graph"
+        }
+      ],
+      "change_description": "Regenerate with npm 9+ from the final package.json. Confirm lockfileVersion is current, root ranges match the manifest, removed packages are absent as direct dependencies, and the resolved graph has one compatible Vue 2.7 compiler pair and webpack 5 toolchain.",
+      "validation_evidence": [
+        "npm install exits 0 on Node 18/20",
+        "npm ls --depth=0 reports the planned direct versions without invalid or extraneous direct packages"
+      ]
+    },
+    {
+      "sequence": 3,
+      "file_path": ".babelrc",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Babel 7 preset configuration.",
+      "locations": [
+        {
+          "start_line": 2,
+          "end_line": 2,
+          "symbol_or_pattern": "presets",
+          "matched_api": "@babel/preset-env"
+        }
+      ],
+      "change_description": "Use the Babel 7 preset name @babel/preset-env and remove all Babel 6 preset/plugin names.",
+      "validation_evidence": [
+        "npm run wbs-build exits 0",
+        "Generated webpack assets contain JavaScript and CSS bundles and no webpack 4 schema errors"
+      ]
+    },
+    {
+      "sequence": 4,
+      "file_path": ".eslintrc",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "ESLint 8, Airbnb, and Vue 2 parser/rule compatibility configuration.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "parserOptions",
+          "matched_api": "ESLint parserOptions"
+        },
+        {
+          "start_line": 23,
+          "end_line": 26,
+          "symbol_or_pattern": "extends",
+          "matched_api": "plugin:vue/vue2-strongly-recommended, airbnb-base"
+        }
+      ],
+      "change_description": "Set ESLint 8-compatible parserOptions (ECMAScript 2021 modules), retain the project rule overrides, extend plugin:vue/vue2-strongly-recommended plus airbnb-base, and keep browser/node environments explicit.",
+      "validation_evidence": [
+        "npm run wbs-lint exits 0 under ESLint 8"
+      ]
+    },
+    {
+      "sequence": 5,
+      "file_path": "ui/.eslintrc",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Nested lint config still references Babel 6-era babel-eslint and a non-Vue-2-specific preset name.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 5,
+          "symbol_or_pattern": "parserOptions.parser",
+          "matched_api": "babel-eslint"
+        },
+        {
+          "start_line": 31,
+          "end_line": 34,
+          "symbol_or_pattern": "extends",
+          "matched_api": "plugin:vue/strongly-recommended, airbnb-base"
+        }
+      ],
+      "change_description": "Remove babel-eslint, use ESLint 8 native parsing (or the explicitly installed @babel/eslint-parser only if syntax requires it), select plugin:vue/vue2-strongly-recommended, remove trailing-comma JSON errors, and preserve the scoped rule overrides.",
+      "validation_evidence": [
+        "npm run wbs-lint exits 0 under ESLint 8"
+      ]
+    },
+    {
+      "sequence": 6,
+      "file_path": "webpack.config.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Primary webpack 5 build and webpack-dev-server 5 configuration, including Babel, Vue, Sass, assets, and Bootstrap aliases.",
+      "locations": [
+        {
+          "start_line": 12,
+          "end_line": 22,
+          "symbol_or_pattern": "plugin imports",
+          "matched_api": "webpack/MiniCssExtractPlugin/HtmlWebpackPlugin/VueLoaderPlugin"
+        },
+        {
+          "start_line": 85,
+          "end_line": 129,
+          "symbol_or_pattern": "plugins",
+          "matched_api": "webpack plugins"
+        },
+        {
+          "start_line": 184,
+          "end_line": 341,
+          "symbol_or_pattern": "config.module/resolve",
+          "matched_api": "webpack 5 loaders and aliases"
+        },
+        {
+          "start_line": 347,
+          "end_line": 375,
+          "symbol_or_pattern": "config.devServer",
+          "matched_api": "webpack-dev-server 5"
+        }
+      ],
+      "change_description": "Finish webpack 5 migration: use current plugin constructors, asset modules instead of file/url loaders, Babel 7 loader, VueLoaderPlugin for Vue 2.7, sass-loader with implementation require('sass'), webpack 5 resolve fallbacks, and webpack-dev-server 5 static/devMiddleware/client/proxy array schema. Remove stale Babel 6/node-sass comments and ensure Vue aliases resolve to the Vue 2 compiler-capable build.",
+      "validation_evidence": [
+        "npm run wbs-build exits 0",
+        "Generated webpack assets contain JavaScript and CSS bundles and no webpack 4 schema errors"
+      ]
+    },
+    {
+      "sequence": 7,
+      "file_path": "webpack.make.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Secondary legacy webpack configuration still contains removed webpack/plugin/dev-server APIs and may be invoked outside package scripts.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 8,
+          "symbol_or_pattern": "legacy plugin imports",
+          "matched_api": "webpack/extract-text-webpack-plugin"
+        },
+        {
+          "start_line": 392,
+          "end_line": 404,
+          "symbol_or_pattern": "webpack.optimize.UglifyJsPlugin",
+          "matched_api": "removed webpack optimization plugin"
+        },
+        {
+          "start_line": 450,
+          "end_line": 474,
+          "symbol_or_pattern": "devServer",
+          "matched_api": "contentBase/proxy object"
+        }
+      ],
+      "change_description": "Modernize the secondary config so it cannot invoke removed webpack APIs: replace ExtractTextPlugin with MiniCssExtractPlugin, use @babel/preset-env, replace webpack.optimize.UglifyJsPlugin with webpack 5 optimization/minimize behavior, use asset modules, and migrate devServer contentBase/hotOnly/proxy object syntax to v5 static/client/proxy-array syntax.",
+      "validation_evidence": [
+        "npm run wbs-build exits 0",
+        "Generated webpack assets contain JavaScript and CSS bundles and no webpack 4 schema errors"
+      ]
+    },
+    {
+      "sequence": 8,
+      "file_path": "gulpfile.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gulp task definitions and composition are directly coupled to Gulp 4 completion semantics.",
+      "locations": [
+        {
+          "start_line": 7,
+          "end_line": 16,
+          "symbol_or_pattern": "require(...) imports",
+          "matched_api": "gulp/del/js-yaml/underscore"
+        },
+        {
+          "start_line": 123,
+          "end_line": 200,
+          "symbol_or_pattern": "task functions",
+          "matched_api": "gulp.src/gulp.dest"
+        },
+        {
+          "start_line": 206,
+          "end_line": 225,
+          "symbol_or_pattern": "task registration",
+          "matched_api": "gulp.series/gulp.parallel/gulp.task"
+        }
+      ],
+      "change_description": "Use Gulp 4 named task functions and series/parallel composition; return every stream/promise, use the promise-returning del API compatible with the declared version, use js-yaml load, and retain registered task names as compatibility aliases.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 9,
+      "file_path": "common.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Direct Moment-to-Day.js replacement site used to generate build metadata.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 16,
+          "symbol_or_pattern": "getBannerInfo date generation",
+          "matched_api": "dayjs().format()"
+        }
+      ],
+      "change_description": "Replace Moment import and formatting with Day.js while preserving the ISO-like banner timestamp and existing year/revision fields.",
+      "validation_evidence": [
+        "npm run wbs-build exits 0",
+        "Generated webpack assets contain JavaScript and CSS bundles and no webpack 4 schema errors"
+      ]
+    },
+    {
+      "sequence": 10,
+      "file_path": "lib/monarch/web/webapp.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Main Hapi server, route table, Mustache renderer, Axios HTTP client, Inert registration, and xml2js consumer.",
+      "locations": [
+        {
+          "start_line": 20,
+          "end_line": 20,
+          "symbol_or_pattern": "Mustache import",
+          "matched_api": "mustache"
+        },
+        {
+          "start_line": 132,
+          "end_line": 132,
+          "symbol_or_pattern": "axios import",
+          "matched_api": "axios"
+        },
+        {
+          "start_line": 198,
+          "end_line": 227,
+          "symbol_or_pattern": "Hapi server initialization",
+          "matched_api": "@hapi/hapi, @hapi/inert, Hapi.server, app.register"
+        },
+        {
+          "start_line": 261,
+          "end_line": 275,
+          "symbol_or_pattern": "static cache route handler",
+          "matched_api": "reply(body).type(...) lifecycle"
+        },
+        {
+          "start_line": 2606,
+          "end_line": 2619,
+          "symbol_or_pattern": "remote text/XML fetch",
+          "matched_api": "axios.get, xml2js.parseStringPromise"
+        },
+        {
+          "start_line": 4907,
+          "end_line": 4917,
+          "symbol_or_pattern": "startServer",
+          "matched_api": "await registration/start"
+        }
+      ],
+      "change_description": "Use @hapi/hapi and @hapi/inert, register Inert through the awaited initialization promise, replace every Hapi 16 reply callback with returned h.response values, retain route cache/content-type behavior, consume Axios 1 response.data, parse XML with xml2js.parseStringPromise, and await startup before reporting the server URI.",
+      "validation_evidence": [
+        "Bounded npm run start reaches http://localhost:8080/ with status below 500",
+        "API/JSON and navigation flows return expected content"
+      ]
+    },
+    {
+      "sequence": 11,
+      "file_path": "lib/monarch/web/webenv.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Central adapter for all Hapi GET/POST routes and upgraded Underscore usage.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 2,
+          "symbol_or_pattern": "module imports",
+          "matched_api": "underscore"
+        },
+        {
+          "start_line": 135,
+          "end_line": 160,
+          "symbol_or_pattern": "makeHapiResponse",
+          "matched_api": "h.redirect/h.response"
+        },
+        {
+          "start_line": 254,
+          "end_line": 329,
+          "symbol_or_pattern": "wrapRouteGet/wrapRoutePost",
+          "matched_api": "app.route and async handlers"
+        }
+      ],
+      "change_description": "Make the central GET/POST adapters async Hapi 21 handlers accepting (request, h); await common and error handlers; translate redirects through h.redirect and all other outputs through h.response with headers, encoding, and status code preserved. Do not swallow promise rejections.",
+      "validation_evidence": [
+        "Bounded npm run start reaches http://localhost:8080/ with status below 500",
+        "API/JSON and navigation flows return expected content"
+      ]
+    },
+    {
+      "sequence": 12,
+      "file_path": "lib/monarch/web/webapp_launcher.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Node process entry point invokes the upgraded Hapi server startup path.",
+      "locations": [
+        {
+          "start_line": 62,
+          "end_line": 64,
+          "symbol_or_pattern": "webapp.startServer",
+          "matched_api": "server startup"
+        }
+      ],
+      "change_description": "Invoke startServer as a promise and attach a terminal rejection handler that logs the startup failure and sets a nonzero exit code, while preserving config selection and the default port 8080.",
+      "validation_evidence": [
+        "Bounded npm run start reaches http://localhost:8080/ with status below 500",
+        "API/JSON and navigation flows return expected content"
+      ]
+    },
+    {
+      "sequence": 13,
+      "file_path": "lib/monarch/api.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Core backend client contains Axios 1 request/response adaptation and extensive Underscore usage; it talks to configured external services.",
+      "locations": [
+        {
+          "start_line": 14,
+          "end_line": 39,
+          "symbol_or_pattern": "module imports",
+          "matched_api": "underscore/axios/http/https"
+        },
+        {
+          "start_line": 81,
+          "end_line": 92,
+          "symbol_or_pattern": "fetchUrlImplementation",
+          "matched_api": "axios.get response.data"
+        },
+        {
+          "start_line": 3186,
+          "end_line": 3211,
+          "symbol_or_pattern": "request wrapper",
+          "matched_api": "axios.get/axios.post"
+        },
+        {
+          "start_line": 4018,
+          "end_line": 4021,
+          "symbol_or_pattern": "GOlr client imports",
+          "matched_api": "bbop GOlr packages"
+        }
+      ],
+      "change_description": "Complete request-to-Axios 1 adaptation: use keep-alive agents, params for GET, URLSearchParams with the correct content type for form POST, validateStatus to preserve legacy non-2xx handling, map status and response.data into the legacy exchange object, and preserve timeouts. Ensure no request package API remains.",
+      "validation_evidence": [
+        "Bounded npm run start reaches http://localhost:8080/ with status below 500",
+        "API/JSON and navigation flows return expected content"
+      ]
+    },
+    {
+      "sequence": 14,
+      "file_path": "ui/main.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Primary Vue 2.7 application bootstrap and Bootstrap 5 CSS entry.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 30,
+          "symbol_or_pattern": "Vue/plugin/component imports",
+          "matched_api": "vue, vue-router, vue-good-table, vue-form-wizard, bootstrap"
+        },
+        {
+          "start_line": 110,
+          "end_line": 112,
+          "symbol_or_pattern": "Vue.use",
+          "matched_api": "Vue plugin API"
+        },
+        {
+          "start_line": 156,
+          "end_line": 241,
+          "symbol_or_pattern": "Router/New Vue",
+          "matched_api": "Vue 2 app construction"
+        }
+      ],
+      "change_description": "Keep the interim Vue 2.7 architecture: Vue.use, vue-router 3, and new Vue. Load Bootstrap 5 CSS/JS without bootstrap-vue, preserve existing route construction, and guard optional DOM hooks so the upgraded bundle does not throw on pages lacking those elements.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 15,
+      "file_path": "ui/router/index.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Direct Vue 2 and vue-router 3 initialization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 7,
+          "symbol_or_pattern": "Vue.use(Router)",
+          "matched_api": "vue/vue-router"
+        }
+      ],
+      "change_description": "Retain Vue 2.7 plus vue-router 3 initialization and verify imports/constructor calls remain compatible; do not introduce createApp or vue-router 4.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 16,
+      "file_path": "js/search_results.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Standalone Vue search UI and Axios calls cover the primary search/navigation flow.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 12,
+          "symbol_or_pattern": "imports",
+          "matched_api": "vue/axios"
+        },
+        {
+          "start_line": 46,
+          "end_line": 46,
+          "symbol_or_pattern": "new Vue",
+          "matched_api": "Vue 2 constructor"
+        },
+        {
+          "start_line": 95,
+          "end_line": 201,
+          "symbol_or_pattern": "search/suggest requests",
+          "matched_api": "axios.get"
+        }
+      ],
+      "change_description": "Verify Axios 1 calls consume response.data and errors without relying on removed Axios 0.x fields; retain the Vue 2 constructor and preserve search/autocomplete query encoding and result pagination.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 17,
+      "file_path": "js/exac_table.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Standalone Vue component launcher with Axios 1 call.",
+      "locations": [
+        {
+          "start_line": 10,
+          "end_line": 15,
+          "symbol_or_pattern": "Vue/Axios imports and instance",
+          "matched_api": "vue/axios"
+        },
+        {
+          "start_line": 92,
+          "end_line": 96,
+          "symbol_or_pattern": "axios.get",
+          "matched_api": "axios"
+        }
+      ],
+      "change_description": "Normalize the Axios 1 response path to response.data while retaining the standalone Vue 2.7 instance and existing loading/error state.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 18,
+      "file_path": "js/exac_gene_summary.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Standalone Vue component launcher with Axios 1 call.",
+      "locations": [
+        {
+          "start_line": 10,
+          "end_line": 15,
+          "symbol_or_pattern": "Vue/Axios imports and instance",
+          "matched_api": "vue/axios"
+        },
+        {
+          "start_line": 58,
+          "end_line": 62,
+          "symbol_or_pattern": "axios.get",
+          "matched_api": "axios"
+        }
+      ],
+      "change_description": "Normalize the Axios 1 response path to response.data while retaining the standalone Vue 2.7 instance and existing loading/error state.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 19,
+      "file_path": "ui/monarchAccess/JSONAccess.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Axios 1 data-access module.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "axios import",
+          "matched_api": "axios"
+        },
+        {
+          "start_line": 62,
+          "end_line": 62,
+          "symbol_or_pattern": "axios.get",
+          "matched_api": "axios"
+        }
+      ],
+      "change_description": "Keep the shared JSON accessor on Axios 1 and return response.data rather than the Axios response envelope; preserve caller-visible promises.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 20,
+      "file_path": "ui/monarchAccess/index.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Shared SPA Axios access layer used by node, graph, associations, and phenotype flows.",
+      "locations": [
+        {
+          "start_line": 2,
+          "end_line": 2,
+          "symbol_or_pattern": "axios import",
+          "matched_api": "axios"
+        },
+        {
+          "start_line": 176,
+          "end_line": 409,
+          "symbol_or_pattern": "Axios request methods",
+          "matched_api": "axios.get"
+        }
+      ],
+      "change_description": "Audit every shared Axios call for Axios 1 response.data/error semantics and URL parameter encoding, preserving the existing return shapes used by node, association, graph, and phenotype components.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 21,
+      "file_path": "ui/monarchAccess/demo.js",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Demo consumer of the Axios data-access path.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 18,
+          "symbol_or_pattern": "axios.get",
+          "matched_api": "axios"
+        }
+      ],
+      "change_description": "Update the demo Axios consumer to use Axios 1 response.data and explicit rejection handling without changing its demonstrated output.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 22,
+      "file_path": "ui/components/ExacGeneSummary.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue SFC with a direct Axios 1 dependency.",
+      "locations": [
+        {
+          "start_line": 54,
+          "end_line": 54,
+          "symbol_or_pattern": "axios import",
+          "matched_api": "axios"
+        },
+        {
+          "start_line": 102,
+          "end_line": 106,
+          "symbol_or_pattern": "axios.get",
+          "matched_api": "axios"
+        }
+      ],
+      "change_description": "Keep the Vue 2.7 component API and adapt its Axios call to response.data with a deterministic error path.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 23,
+      "file_path": "ui/components/ExacVariantTable.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue SFC with a direct Axios 1 dependency.",
+      "locations": [
+        {
+          "start_line": 86,
+          "end_line": 86,
+          "symbol_or_pattern": "axios import",
+          "matched_api": "axios"
+        },
+        {
+          "start_line": 168,
+          "end_line": 172,
+          "symbol_or_pattern": "axios.get",
+          "matched_api": "axios"
+        }
+      ],
+      "change_description": "Keep the Vue 2.7 component API and adapt its Axios call to response.data with a deterministic error path.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 24,
+      "file_path": "templates/search_results.mustache",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Rendered search page still loads Axios 0.16.1 from a CDN, bypassing the upgraded npm package and retaining an obsolete browser client.",
+      "locations": [
+        {
+          "start_line": 86,
+          "end_line": 86,
+          "symbol_or_pattern": "external script",
+          "matched_api": "axios@0.16.1"
+        }
+      ],
+      "change_description": "Remove the stale commented Axios 0.16.1 CDN include so no obsolete client version can be accidentally re-enabled; the page must use the webpack-bundled Axios 1 client.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 25,
+      "file_path": "css/monarch.scss",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Top-level stylesheet imports Bootstrap Sass through a webpack alias.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "@import bootstrapSCSS",
+          "matched_api": "Bootstrap 5 Sass"
+        }
+      ],
+      "change_description": "Load Bootstrap 5 Sass through the webpack alias using syntax accepted by Dart Sass; preserve Monarch overrides after Bootstrap so intended cascade order remains.",
+      "validation_evidence": [
+        "npm run wbs-build exits 0",
+        "Generated webpack assets contain JavaScript and CSS bundles and no webpack 4 schema errors"
+      ]
+    },
+    {
+      "sequence": 26,
+      "file_path": "ui/style/monarch-ng.scss",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "SPA stylesheet directly imports Bootstrap 5 Sass.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "@import bootstrap/scss/bootstrap",
+          "matched_api": "Bootstrap 5 Sass"
+        }
+      ],
+      "change_description": "Load Bootstrap 5 Sass with Dart Sass-compatible syntax and preserve SPA override ordering.",
+      "validation_evidence": [
+        "npm run wbs-build exits 0",
+        "Generated webpack assets contain JavaScript and CSS bundles and no webpack 4 schema errors"
+      ]
+    },
+    {
+      "sequence": 27,
+      "file_path": "js/index.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Legacy browser bundle directly imports Bootstrap JavaScript.",
+      "locations": [
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "import bootstrap",
+          "matched_api": "Bootstrap 5 JavaScript"
+        }
+      ],
+      "change_description": "Import Bootstrap 5 JavaScript so its data API is registered with Popper 2 available; do not depend on Bootstrap jQuery plugins.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 28,
+      "file_path": "templates/navbar.mustache",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Primary server-rendered navbar uses Bootstrap 4 data attributes that changed in Bootstrap 5.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 60,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse/dropdown markup"
+        }
+      ],
+      "change_description": "Migrate active collapse/dropdown attributes to data-bs-toggle/data-bs-target and Bootstrap 5 spacing/alignment utility names; preserve navbar search form IDs and destination URLs used by browser tests.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 29,
+      "file_path": "ui/components/Navbar.vue",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "SPA navbar uses Bootstrap 4 collapse/dropdown attributes.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 72,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse/dropdown markup"
+        }
+      ],
+      "change_description": "Migrate collapse/dropdown attributes and directional utility classes to Bootstrap 5 while retaining Vue 2 router-links and all existing route destinations.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 30,
+      "file_path": "templates/golr-table.mustache",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Search result table filters use Bootstrap 4 collapse attributes.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 31,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse markup"
+        }
+      ],
+      "change_description": "Migrate collapse triggers to data-bs-toggle/data-bs-target and replace removed btn-default/pull-right classes with Bootstrap 5 equivalents without changing filter target IDs.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 31,
+      "file_path": "js/styles.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Calls Bootstrap's removed jQuery plugin interface for popovers, tooltips, and modals.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 21,
+          "symbol_or_pattern": "jQuery Bootstrap plugins",
+          "matched_api": "popover/tooltip/modal"
+        }
+      ],
+      "change_description": "Replace jQuery .popover/.tooltip/.modal calls with Bootstrap 5 Popover, Tooltip, and Modal instances selected from data-bs-* attributes; preserve the scroll styling and show-button behavior.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 32,
+      "file_path": "js/CytoDraw.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Interactive graph popovers use the legacy Bootstrap jQuery plugin API.",
+      "locations": [
+        {
+          "start_line": 212,
+          "end_line": 231,
+          "symbol_or_pattern": "jQuery(...).popover",
+          "matched_api": "Bootstrap popover plugin"
+        }
+      ],
+      "change_description": "Replace the removed jQuery popover lifecycle with a Bootstrap 5 Popover instance (manual trigger), retain positioning/content behavior, and dispose the instance on mouseout to prevent leaks.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 33,
+      "file_path": "ui/components/Node.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue node page styles target legacy Bootstrap data attributes.",
+      "locations": [
+        {
+          "start_line": 704,
+          "end_line": 704,
+          "symbol_or_pattern": "data-toggle selector",
+          "matched_api": "Bootstrap collapse markup"
+        }
+      ],
+      "change_description": "Update the scoped CSS selector from data-toggle to data-bs-toggle so sidebar collapse styling still applies under Bootstrap 5.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 34,
+      "file_path": "ui/components/NodeSidebar.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue node sidebar styles target legacy Bootstrap data attributes.",
+      "locations": [
+        {
+          "start_line": 295,
+          "end_line": 295,
+          "symbol_or_pattern": "data-toggle selector",
+          "matched_api": "Bootstrap collapse markup"
+        }
+      ],
+      "change_description": "Update the scoped CSS selector from data-toggle to data-bs-toggle so sidebar collapse styling still applies under Bootstrap 5.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 35,
+      "file_path": "templates/page/styles.mustache",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Bootstrap component showcase contains extensive Bootstrap 3/4 classes, data attributes, tabs, alerts, modal, tooltip, and popover markup.",
+      "locations": [
+        {
+          "start_line": 40,
+          "end_line": 1156,
+          "symbol_or_pattern": "Bootstrap component markup",
+          "matched_api": "data-toggle/data-target/data-dismiss and legacy classes"
+        }
+      ],
+      "change_description": "Migrate the Bootstrap component showcase comprehensively: data-bs-* attributes, navbar/toggler markup, grid and spacing utilities, btn-secondary in place of btn-default, cards in place of panels, input-group text/buttons, nav tabs, dismiss buttons, modal markup, visually-hidden text, and Bootstrap 5 popover/tooltip attributes. Preserve element IDs exercised by js/styles.js.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 36,
+      "file_path": "js/HomePage.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Direct Underscore 1.13 consumer and dormant Bootstrap popover initializer.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "underscore import",
+          "matched_api": "underscore"
+        },
+        {
+          "start_line": 249,
+          "end_line": 249,
+          "symbol_or_pattern": "popover",
+          "matched_api": "Bootstrap jQuery plugin"
+        }
+      ],
+      "change_description": "Retain Underscore 1.13-compatible calls and remove or rewrite the dormant Bootstrap jQuery popover example so it does not document an invalid runtime API.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 37,
+      "file_path": "js/barchart-launcher.js",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Direct Underscore 1.13 consumer.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "underscore import",
+          "matched_api": "underscore"
+        }
+      ],
+      "change_description": "Verify the direct Underscore calls against 1.13 and retain their iteratee/result behavior; make only compatibility edits demonstrated necessary by tests.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 38,
+      "file_path": "js/lib/monarch/widget/facet-filters.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Direct Underscore 1.13 consumer in search facets.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "underscore import",
+          "matched_api": "underscore"
+        }
+      ],
+      "change_description": "Verify Underscore 1.13 collection calls preserve search facet ordering/filter behavior and make only direct compatibility edits.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 39,
+      "file_path": "tests/test-common.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Shared plain-Node integration-test helper directly uses Underscore and core API behavior.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 5,
+          "symbol_or_pattern": "test helper imports",
+          "matched_api": "underscore/api.js"
+        }
+      ],
+      "change_description": "Keep the plain-Node helper asynchronous: await promise-returning tests, catch failures, count pass/fail deterministically, and set process.exitCode to the failure count so Node 18 test commands are trustworthy.",
+      "validation_evidence": [
+        "Declared Mocha and plain-Node test commands exit 0 and report no failed assertions"
+      ]
+    },
+    {
+      "sequence": 40,
+      "file_path": "tests/literature-test.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Plain-Node integration test directly uses Underscore and remote literature paths.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 3,
+          "symbol_or_pattern": "test imports",
+          "matched_api": "underscore/test-common"
+        }
+      ],
+      "change_description": "Await or catch testCommon.runTests so remote literature failures produce a nonzero process exit under Node 18; retain Underscore 1.13 collection behavior.",
+      "validation_evidence": [
+        "Declared Mocha and plain-Node test commands exit 0 and report no failed assertions"
+      ]
+    },
+    {
+      "sequence": 41,
+      "file_path": "Makefile",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Defines the authoritative plain-Node test suite and NODE_PATH invocation semantics under Node 18/20.",
+      "locations": [
+        {
+          "start_line": 29,
+          "end_line": 40,
+          "symbol_or_pattern": "test/APITESTS/test-%",
+          "matched_api": "node tests/*.js"
+        }
+      ],
+      "change_description": "Expand the Node test target to cover apitest.js, class-info-test.js, disease-phenotype-test.js, golr-owlsim-test.js, literature-test.js, phenopacket-test.js, and full-tmpl.js.tests. Add an explicit rule for the nonstandard full-tmpl.js.tests filename and retain NODE_PATH for each command.",
+      "validation_evidence": [
+        "Declared Mocha and plain-Node test commands exit 0 and report no failed assertions"
+      ]
+    },
+    {
+      "sequence": 42,
+      "file_path": ".travis.yml",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "CI validation sequence covers build, lint, server startup, and browser feature tests.",
+      "locations": [
+        {
+          "start_line": 15,
+          "end_line": 26,
+          "symbol_or_pattern": "CI script",
+          "matched_api": "npm build/lint/start and behave"
+        }
+      ],
+      "change_description": "Update CI to a supported Node 18/20 runtime, retain install/build/lint/test order, use the cross-platform npm scripts, and bound startup by polling http://localhost:8080/ before feature tests.",
+      "validation_evidence": [
+        "Relevant build, lint, startup, and test commands exit successfully"
+      ]
+    },
+    {
+      "sequence": 43,
+      "file_path": "tests/node18-upgrade.test.js",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "Current untracked regression test directly exercises Hapi/Inert registration and Node 18 upgrade behavior.",
+      "locations": [
+        {
+          "start_line": 49,
+          "end_line": 56,
+          "symbol_or_pattern": "Hapi/Inert registration test",
+          "matched_api": "@hapi/hapi/@hapi/inert"
+        },
+        {
+          "start_line": 64,
+          "end_line": 97,
+          "symbol_or_pattern": "webenv tests",
+          "matched_api": "Hapi response adapter"
+        }
+      ],
+      "change_description": "Create focused Mocha 10 regression tests for @hapi/hapi 21 plus @hapi/inert 7 registration and the asynchronous webenv GET/POST adapters, including response metadata, redirects, and rejected handler mapping.",
+      "validation_evidence": [
+        "Declared Mocha and plain-Node test commands exit 0 and report no failed assertions"
+      ]
+    },
+    {
+      "sequence": 44,
+      "file_path": "templates/labs/blog-scratch-base.mustache",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Legacy Bootstrap navbar markup in a lab template.",
+      "locations": [
+        {
+          "start_line": 33,
+          "end_line": 93,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse/dropdown"
+        }
+      ],
+      "change_description": "Migrate legacy navbar collapse/dropdown markup and classes to Bootstrap 5 data-bs-* and navbar/toggler structure while keeping lab links unchanged.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 45,
+      "file_path": "templates/labs/blog-scratch-landing.mustache",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Legacy Bootstrap popover attributes in a lab template.",
+      "locations": [
+        {
+          "start_line": 274,
+          "end_line": 310,
+          "symbol_or_pattern": "data-toggle=popover",
+          "matched_api": "Bootstrap popover markup"
+        }
+      ],
+      "change_description": "Migrate active popover attributes to data-bs-* and update/remove commented Bootstrap 4 collapse examples so stale markup is not reintroduced.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 46,
+      "file_path": "templates/labs/blog-scratch-nav.mustache",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Legacy Bootstrap navbar markup in a lab template.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 59,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse/dropdown"
+        }
+      ],
+      "change_description": "Migrate legacy navbar collapse/dropdown markup and classes to Bootstrap 5 data-bs-* and navbar/toggler structure while keeping lab links unchanged.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 47,
+      "file_path": "templates/labs/blog-scratch-test.mustache",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Commented legacy Bootstrap collapse markup remains in the lab template.",
+      "locations": [
+        {
+          "start_line": 242,
+          "end_line": 242,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse markup"
+        }
+      ],
+      "change_description": "Update or remove the commented data-toggle/data-target example so the repository no longer carries obsolete Bootstrap behavior.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 48,
+      "file_path": "templates/labs/home-page-scratch.mustache",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Commented legacy Bootstrap collapse markup remains in the lab template.",
+      "locations": [
+        {
+          "start_line": 216,
+          "end_line": 216,
+          "symbol_or_pattern": "data-toggle/data-target",
+          "matched_api": "Bootstrap collapse markup"
+        }
+      ],
+      "change_description": "Update or remove the commented data-toggle/data-target example so the repository no longer carries obsolete Bootstrap behavior.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 49,
+      "file_path": "templates/labs/people-scratch.mustache",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Legacy Bootstrap scrollspy attributes in a lab template.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "data-spy/data-target",
+          "matched_api": "Bootstrap scrollspy markup"
+        }
+      ],
+      "change_description": "Change scrollspy attributes to data-bs-spy/data-bs-target and ensure Bootstrap 5 initializes the target navigation correctly.",
+      "validation_evidence": [
+        "Relevant key page loads in a real browser with no console errors",
+        "Collapse/dropdown/modal/popover or data-loading interaction works under Bootstrap 5/Vue 2.7"
+      ]
+    },
+    {
+      "sequence": 50,
+      "file_path": "tests/disease-phenotype-test.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Explicitly requested plain-Node integration-suite coverage exposed a Node 18 harness boundary omitted from the static ImpactReport; this is a labeled planning scope expansion.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 80,
+          "symbol_or_pattern": "direct-execution test harness",
+          "matched_api": "Node 18 process/promise semantics"
+        }
+      ],
+      "change_description": "Replace the remaining Ringo-only require(\"test\"), print, and system.exit harness with tests/test-common.js and promise-aware Node completion so the user-requested Node suite can execute on Node 18.",
+      "validation_evidence": [
+        "The exact direct node command for this file exits 0 on success and nonzero on assertion/rejection failure"
+      ]
+    },
+    {
+      "sequence": 51,
+      "file_path": "tests/golr-owlsim-test.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Explicitly requested plain-Node integration-suite coverage exposed a Node 18 harness boundary omitted from the static ImpactReport; this is a labeled planning scope expansion.",
+      "locations": [
+        {
+          "start_line": 100,
+          "end_line": 116,
+          "symbol_or_pattern": "direct-execution test harness",
+          "matched_api": "Node 18 process/promise semantics"
+        }
+      ],
+      "change_description": "Attach rejection handling to testCommon.runTests so GOlr/OwlSim integration failures reliably set a nonzero exit code on Node 18.",
+      "validation_evidence": [
+        "The exact direct node command for this file exits 0 on success and nonzero on assertion/rejection failure"
+      ]
+    },
+    {
+      "sequence": 52,
+      "file_path": "tests/full-tmpl.js.tests",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Explicitly requested plain-Node integration-suite coverage exposed a Node 18 harness boundary omitted from the static ImpactReport; this is a labeled planning scope expansion.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 120,
+          "symbol_or_pattern": "direct-execution test harness",
+          "matched_api": "Node 18 process/promise semantics"
+        }
+      ],
+      "change_description": "Keep the synchronous template assertions Node-compatible and ensure assertion failures reach a nonzero process exit when invoked directly by the expanded test target.",
+      "validation_evidence": [
+        "The exact direct node command for this file exits 0 on success and nonzero on assertion/rejection failure"
+      ]
+    }
+  ],
+  "planned_files": [
+    "package.json",
+    "package-lock.json",
+    ".babelrc",
+    ".eslintrc",
+    "ui/.eslintrc",
+    "webpack.config.js",
+    "webpack.make.js",
+    "gulpfile.js",
+    "common.js",
+    "lib/monarch/web/webapp.js",
+    "lib/monarch/web/webenv.js",
+    "lib/monarch/web/webapp_launcher.js",
+    "lib/monarch/api.js",
+    "ui/main.js",
+    "ui/router/index.js",
+    "js/search_results.js",
+    "js/exac_table.js",
+    "js/exac_gene_summary.js",
+    "ui/monarchAccess/JSONAccess.js",
+    "ui/monarchAccess/index.js",
+    "ui/monarchAccess/demo.js",
+    "ui/components/ExacGeneSummary.vue",
+    "ui/components/ExacVariantTable.vue",
+    "templates/search_results.mustache",
+    "css/monarch.scss",
+    "ui/style/monarch-ng.scss",
+    "js/index.js",
+    "templates/navbar.mustache",
+    "ui/components/Navbar.vue",
+    "templates/golr-table.mustache",
+    "js/styles.js",
+    "js/CytoDraw.js",
+    "ui/components/Node.vue",
+    "ui/components/NodeSidebar.vue",
+    "templates/page/styles.mustache",
+    "js/HomePage.js",
+    "js/barchart-launcher.js",
+    "js/lib/monarch/widget/facet-filters.js",
+    "tests/test-common.js",
+    "tests/literature-test.js",
+    "Makefile",
+    ".travis.yml",
+    "tests/node18-upgrade.test.js",
+    "templates/labs/blog-scratch-base.mustache",
+    "templates/labs/blog-scratch-landing.mustache",
+    "templates/labs/blog-scratch-nav.mustache",
+    "templates/labs/blog-scratch-test.mustache",
+    "templates/labs/home-page-scratch.mustache",
+    "templates/labs/people-scratch.mustache",
+    "tests/disease-phenotype-test.js",
+    "tests/golr-owlsim-test.js",
+    "tests/full-tmpl.js.tests"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "package.json",
+      "dependency": "node",
+      "from_version": ">= 6.11.2",
+      "to_version": ">=18"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "npm",
+      "from_version": ">= 5.3.0",
+      "to_version": ">=9"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "hapi",
+      "from_version": "^16.6.2",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "@hapi/hapi",
+      "from_version": "absent",
+      "to_version": "^21"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "inert",
+      "from_version": "^4.2.1",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "@hapi/inert",
+      "from_version": "absent",
+      "to_version": "^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "babel-core",
+      "from_version": "^6.26.3",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "@babel/core",
+      "from_version": "absent",
+      "to_version": "^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "babel-preset-env",
+      "from_version": "^1.7.0",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "@babel/preset-env",
+      "from_version": "absent",
+      "to_version": "^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "babel-loader",
+      "from_version": "^7.1.4",
+      "to_version": "^9"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "babel-eslint",
+      "from_version": "^8.2.3",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "webpack",
+      "from_version": "^4.17.2",
+      "to_version": "^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "webpack-cli",
+      "from_version": "^3.1.0",
+      "to_version": "^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "webpack-dev-server",
+      "from_version": "^3.1.8",
+      "to_version": "^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "assets-webpack-plugin",
+      "from_version": "^3.9.6",
+      "to_version": "^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "html-webpack-plugin",
+      "from_version": "^3.2.0",
+      "to_version": "^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "mini-css-extract-plugin",
+      "from_version": "absent",
+      "to_version": "^2"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "extract-text-webpack-plugin",
+      "from_version": "^4.0.0-beta.0",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "node-sass",
+      "from_version": "^4.9.3",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "sass",
+      "from_version": "absent",
+      "to_version": "^1"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "sass-loader",
+      "from_version": "^7.1.0",
+      "to_version": "^13"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "css-loader",
+      "from_version": "^1.0.0",
+      "to_version": "^6"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "style-loader",
+      "from_version": "^0.23.0",
+      "to_version": "^3"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "postcss-loader",
+      "from_version": "^3.0.0",
+      "to_version": "^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "raw-loader",
+      "from_version": "^1.0.0-beta.0",
+      "to_version": "^4"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "resolve-url-loader",
+      "from_version": "^2.3.0",
+      "to_version": "^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "eslint",
+      "from_version": "^5.5.0",
+      "to_version": "^8"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "eslint-config-airbnb-base",
+      "from_version": "^13.1.0",
+      "to_version": "^15"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "eslint-plugin-import",
+      "from_version": "^2.14.0",
+      "to_version": "^2.29"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "eslint-plugin-vue",
+      "from_version": "^4.7.1",
+      "to_version": "^9"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "eslint-loader",
+      "from_version": "^2.1.0",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "vue",
+      "from_version": "^2.5.17",
+      "to_version": "^2.7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "vue-template-compiler",
+      "from_version": "^2.5.17",
+      "to_version": "^2.7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "bootstrap",
+      "from_version": "^4.1.3",
+      "to_version": "^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "bootstrap-vue",
+      "from_version": "^2.0.0-rc.11",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "popper.js",
+      "from_version": "^1.14.4",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "@popperjs/core",
+      "from_version": "absent",
+      "to_version": "^2"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "axios",
+      "from_version": "^0.18.0",
+      "to_version": "^1"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "request",
+      "from_version": "^2.88.0",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "moment",
+      "from_version": "^2.22.2",
+      "to_version": "removed"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "dayjs",
+      "from_version": "absent",
+      "to_version": "^1"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "gulp",
+      "from_version": "^3.9.1",
+      "to_version": "^4"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "del",
+      "from_version": "^3.0.0",
+      "to_version": "^6"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "js-yaml",
+      "from_version": "legacy/transitive",
+      "to_version": "^4"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "mocha",
+      "from_version": "^5.2.0",
+      "to_version": "^10"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "mustache",
+      "from_version": "^2.3.2",
+      "to_version": "^4"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "underscore",
+      "from_version": "^1.9.1",
+      "to_version": "^1.13"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "xml2js",
+      "from_version": "^0.4.19",
+      "to_version": "^0.6"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "main",
+      "master"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm install",
+        "purpose": "setup",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm ls --depth=0",
+        "purpose": "compile",
+        "timeout_seconds": 120,
+        "required": true
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm run wbs-build",
+        "purpose": "compile",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm run wbs-lint",
+        "purpose": "compile",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+        "purpose": "test",
+        "timeout_seconds": 180,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "failing",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/apitest.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/class-info-test.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/disease-phenotype-test.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/golr-owlsim-test.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/literature-test.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/full-tmpl.js.tests",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "#AssertionFailed",
+            "## Test Failed:",
+            "UnhandledPromiseRejection",
+            "ERR!"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "powershell -NoProfile -Command \"$out='startup.out.log'; $err='startup.err.log'; $p=Start-Process npm.cmd -ArgumentList 'run','start' -WorkingDirectory . -RedirectStandardOutput $out -RedirectStandardError $err -PassThru; try { $ok=$false; for($i=0;$i -lt 90;$i++){ Start-Sleep -Seconds 1; try { $r=Invoke-WebRequest -UseBasicParsing http://localhost:8080/ -TimeoutSec 5; if($r.StatusCode -lt 500){$ok=$true; break} } catch {} }; if(-not $ok){ Get-Content $out,$err -ErrorAction SilentlyContinue; exit 1 } } finally { taskkill.exe /PID $p.Id /T /F 2>$null | Out-Null }\"",
+        "purpose": "startup",
+        "timeout_seconds": 120,
+        "required": true,
+        "health_check_url": "http://localhost:8080/"
+      }
+    ],
+    "build_commands": [
+      "npm run wbs-build"
+    ],
+    "startup_commands": [
+      "powershell -NoProfile -Command \"$out='startup.out.log'; $err='startup.err.log'; $p=Start-Process npm.cmd -ArgumentList 'run','start' -WorkingDirectory . -RedirectStandardOutput $out -RedirectStandardError $err -PassThru; try { $ok=$false; for($i=0;$i -lt 90;$i++){ Start-Sleep -Seconds 1; try { $r=Invoke-WebRequest -UseBasicParsing http://localhost:8080/ -TimeoutSec 5; if($r.StatusCode -lt 500){$ok=$true; break} } catch {} }; if(-not $ok){ Get-Content $out,$err -ErrorAction SilentlyContinue; exit 1 } } finally { taskkill.exe /PID $p.Id /T /F 2>$null | Out-Null }\""
+    ],
+    "startup_health_check_urls": [
+      "http://localhost:8080/"
+    ],
+    "existing_test_commands": [
+      "npm run wbs-lint",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/apitest.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/class-info-test.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/disease-phenotype-test.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/golr-owlsim-test.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/literature-test.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js",
+      "npm exec -- cross-env NODE_PATH=./lib/monarch node tests/full-tmpl.js.tests"
+    ],
+    "generated_test_commands": [
+      "npm exec -- cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js"
+    ],
+    "generated_test_files": [
+      "tests/node18-upgrade.test.js"
+    ],
+    "content_checks": [
+      {
+        "file_path": "package.json",
+        "must_contain": [
+          "\"node\": \">=18\"",
+          "\"@hapi/hapi\": \"^21\"",
+          "\"@hapi/inert\": \"^7\"",
+          "\"@babel/core\": \"^7\"",
+          "\"@babel/preset-env\": \"^7\"",
+          "\"babel-loader\": \"^9\"",
+          "\"webpack\": \"^5\"",
+          "\"webpack-cli\": \"^5\"",
+          "\"webpack-dev-server\": \"^5\"",
+          "\"sass\": \"^1\"",
+          "\"eslint\": \"^8\"",
+          "\"vue\": \"^2.7\"",
+          "\"bootstrap\": \"^5\"",
+          "\"axios\": \"^1\"",
+          "\"dayjs\": \"^1\"",
+          "\"gulp\": \"^4\"",
+          "\"mocha\": \"^10\"",
+          "\"mustache\": \"^4\"",
+          "\"underscore\": \"^1.13\"",
+          "\"xml2js\": \"^0.6\""
+        ],
+        "must_not_contain": [
+          "\"hapi\":",
+          "\"inert\":",
+          "\"babel-core\":",
+          "\"babel-preset-env\":",
+          "\"node-sass\":",
+          "\"bootstrap-vue\":",
+          "\"request\":",
+          "\"moment\":"
+        ]
+      },
+      {
+        "file_path": ".babelrc",
+        "must_contain": [
+          "\"@babel/preset-env\""
+        ],
+        "must_not_contain": [
+          "babel-preset-env"
+        ]
+      },
+      {
+        "file_path": ".eslintrc",
+        "must_contain": [
+          "\"plugin:vue/vue2-strongly-recommended\"",
+          "\"airbnb-base\""
+        ],
+        "must_not_contain": [
+          "babel-eslint"
+        ]
+      },
+      {
+        "file_path": "ui/.eslintrc",
+        "must_contain": [
+          "\"plugin:vue/vue2-strongly-recommended\"",
+          "\"airbnb-base\""
+        ],
+        "must_not_contain": [
+          "babel-eslint",
+          "\"plugin:vue/strongly-recommended\""
+        ]
+      },
+      {
+        "file_path": "webpack.config.js",
+        "must_contain": [
+          "implementation: require('sass')",
+          "static: false",
+          "config.devServer.proxy = [{ context: proxyContexts"
+        ],
+        "must_not_contain": [
+          "contentBase:",
+          "node-sass",
+          "UglifyJsPlugin"
+        ]
+      },
+      {
+        "file_path": "lib/monarch/web/webapp.js",
+        "must_contain": [
+          "require('@hapi/hapi')",
+          "require('@hapi/inert')",
+          "await initializationPromise",
+          "await this.start()"
+        ],
+        "must_not_contain": [
+          "require('hapi')",
+          "require('inert')",
+          "reply(body)"
+        ]
+      },
+      {
+        "file_path": "lib/monarch/web/webenv.js",
+        "must_contain": [
+          "async function wrappedHandler(request, h)",
+          "h.response(output.body)",
+          "await commonHandler.apply"
+        ],
+        "must_not_contain": [
+          "function wrappedHandler(request, reply)"
+        ]
+      },
+      {
+        "file_path": "lib/monarch/api.js",
+        "must_contain": [
+          "require('axios')",
+          "response.data",
+          "new URLSearchParams()"
+        ],
+        "must_not_contain": [
+          "require('request')"
+        ]
+      },
+      {
+        "file_path": "common.js",
+        "must_contain": [
+          "require('dayjs')",
+          "dayjs(new Date()).format()"
+        ],
+        "must_not_contain": [
+          "require('moment')"
+        ]
+      },
+      {
+        "file_path": "gulpfile.js",
+        "must_contain": [
+          "gulp.series(",
+          "gulp.parallel(",
+          "jsyaml.load("
+        ],
+        "must_not_contain": [
+          "jsyaml.safeLoad("
+        ]
+      },
+      {
+        "file_path": "templates/navbar.mustache",
+        "must_contain": [
+          "data-bs-toggle=",
+          "data-bs-target="
+        ],
+        "must_not_contain": [
+          "data-toggle=",
+          "data-target="
+        ]
+      },
+      {
+        "file_path": "ui/components/Navbar.vue",
+        "must_contain": [
+          "data-bs-toggle=",
+          "data-bs-target="
+        ],
+        "must_not_contain": [
+          "data-toggle=",
+          "data-target="
+        ]
+      },
+      {
+        "file_path": "templates/search_results.mustache",
+        "must_contain": [],
+        "must_not_contain": [
+          "axios@0.16.1"
+        ]
+      },
+      {
+        "file_path": "tests/node18-upgrade.test.js",
+        "must_contain": [
+          "require('@hapi/hapi')",
+          "require('@hapi/inert')",
+          "describe('Node 18/20 dependency upgrade'"
+        ],
+        "must_not_contain": []
+      }
+    ],
+    "key_pages": [
+      {
+        "url": "http://localhost:8080/",
+        "description": "Startup/home page and navbar search host; load and inspect console"
+      },
+      {
+        "url": "http://localhost:8080/search/p53",
+        "description": "Search results page with Taxon content"
+      },
+      {
+        "url": "http://localhost:8080/resolve/HP:0006645",
+        "description": "Phenotype ID resolution; also exercise OMIM:600669, UBERON:0000477, MGI:3771021, Coriell:ND24213, bare IDs, and bogus-ID 404 handling"
+      },
+      {
+        "url": "http://localhost:8080/disease/MONDO:0007113#overview",
+        "description": "MONDO disease detail and ontology viewer"
+      },
+      {
+        "url": "http://localhost:8080/disease/MONDO:0008199#overview",
+        "description": "Disease page readable description"
+      },
+      {
+        "url": "http://localhost:8080/gene/NCBIGene:6469#overview",
+        "description": "Gene page readable description"
+      },
+      {
+        "url": "http://localhost:8080/analyze/phenotypes",
+        "description": "Phenotype analysis and gene-list comparison"
+      },
+      {
+        "url": "http://localhost:8080/page/phenogrid",
+        "description": "Phenogrid documentation/iframe page"
+      },
+      {
+        "url": "http://localhost:8080/node_modules/phenogrid/index.html",
+        "description": "Embedded Phenogrid example"
+      },
+      {
+        "url": "http://localhost:8080/about/sources",
+        "description": "Sources page"
+      },
+      {
+        "url": "http://localhost:8080/admin/introspect",
+        "description": "Admin introspection response"
+      }
+    ],
+    "key_user_flows": [
+      {
+        "name": "Navbar search routes",
+        "url": "http://localhost:8080/",
+        "steps": [
+          "Search for food and submit; verify title Search Results: food and food allergy/botulism content",
+          "Search food all; choose food hypersensitivity; verify MONDO:0002497 details",
+          "Search BRCA1; choose Homo sapiens result; verify gene page",
+          "Search Hyper-bet; choose Hyper-beta-alaninemia; verify MONDO:0009378 disease page",
+          "Check browser console"
+        ],
+        "description": "Deterministic maui_autocomplete.feature coverage for Vue/Axios/Bootstrap navigation"
+      },
+      {
+        "name": "ID and URL resolution",
+        "url": "http://localhost:8080/resolve/HP:0006645",
+        "steps": [
+          "Verify redirect to /phenotype/HP:0006645",
+          "Verify /resolve/OMIM:600669, /resolve/UBERON:0000477, /resolve/MGI:3771021, and /resolve/Coriell:ND24213 destinations",
+          "Verify /HP:0006645 bare-ID shortcut",
+          "Verify /resolve/Bogus:123 and /Bogus:123 render Page Not Found",
+          "Check browser console"
+        ],
+        "description": "Hapi route matching and redirect regression coverage"
+      },
+      {
+        "name": "Disease/gene content and ontology",
+        "url": "http://localhost:8080/disease/MONDO:0007113#overview",
+        "steps": [
+          "Wait for #monarch-node and verify Happy Puppet ontology overview",
+          "Open /disease/MONDO:0008199#overview and verify Insidious onset and Progressive",
+          "Open /gene/NCBIGene:6469#overview, wait for spinner to hide, and verify the gene description",
+          "Check browser console"
+        ],
+        "description": "Rendered Mustache/Vue detail-page coverage"
+      },
+      {
+        "name": "Phenotype analysis",
+        "url": "http://localhost:8080/analyze/phenotypes",
+        "steps": [
+          "Add Tremor and Parkinsonism and submit; wait for #phen_vis_svg; verify Parkinson",
+          "Repeat with Microalbuminuria and Microcephaly; verify pru1",
+          "Select compare, enter NCBIGene:3651,MGI:1890773 in gene-list, submit, and verify PDX1",
+          "Check browser console"
+        ],
+        "description": "maui_analyze.feature data and interaction coverage"
+      },
+      {
+        "name": "Phenogrid rendering",
+        "url": "http://localhost:8080/disease/MONDO:0007113#compare",
+        "steps": [
+          "Wait for #phen_vis_svg and verify Phenotype Similarity Comparison",
+          "Open /page/phenogrid and verify title",
+          "Open /node_modules/phenogrid/index.html; wait for #phenogrid_container1_svg; verify Human, Mouse and Fish content",
+          "Check browser console"
+        ],
+        "description": "Widget plus embedded documentation example"
+      },
+      {
+        "name": "API and JSON endpoints",
+        "url": "http://localhost:8080/status",
+        "steps": [
+          "Verify /search/twist and /search/p53 rendered content",
+          "Verify /about/sources.json, /admin/introspect.json, /status, and /robots.txt response content",
+          "Verify valid and invalid /compare/ examples from maui_utilities.feature",
+          "Verify /query/orthologs/NCBIGene:6469.json, /annotate/text query/results, /variant/ClinVarVariant:30599, and /disease/MONDO:0002497.json content",
+          "Check browser console for rendered endpoints"
+        ],
+        "description": "Content-aware endpoint checks; status alone is insufficient"
+      },
+      {
+        "name": "Bootstrap interactions",
+        "url": "http://localhost:8080/",
+        "steps": [
+          "At desktop and narrow viewport open each navbar dropdown",
+          "At narrow viewport toggle navbar collapse twice",
+          "Open a search result filter and close it",
+          "On /page/styles exercise a modal, popover, tooltip, dismissible alert, and tab",
+          "Check browser console"
+        ],
+        "description": "Additional high-risk flow required by Bootstrap 5 migration"
+      }
+    ],
+    "external_service_checks": [
+      {
+        "service": "GOlr/Solr search services",
+        "live_check_command_or_request": "Read conf/server_config_dev.json, then GET each configured golr_url/search_url with 'admin/luke?wt=json&numTerms=0' (PowerShell: Invoke-RestMethod). Compare returned cores/fields with conf/golr-views/*.yaml and conf/golr-conf.json.",
+        "expected_match_file": "conf/server_config_dev.json; conf/golr-views/; conf/golr-conf.json",
+        "mismatch_description": "Endpoint/core is unreachable, configured URL differs from the live core, or fields required by the checked-in GOlr views are absent/incompatible."
+      },
+      {
+        "service": "SciGraph ontology/data services",
+        "live_check_command_or_request": "GET scigraph_url + 'dynamic/metadata' and scigraph_data_url + 'dynamic/metadata' from conf/server_config_dev.json; if metadata is unavailable, issue representative vocabulary and graph queries used by /resolve and detail pages.",
+        "expected_match_file": "conf/server_config_dev.json",
+        "mismatch_description": "Either configured endpoint is unreachable or representative HP/MONDO/UBERON identifiers and graph endpoints do not match the application contract."
+      },
+      {
+        "service": "OwlSim service",
+        "live_check_command_or_request": "Read owlsim_services_url from conf/server_config_dev.json and issue the representative compare request used by /compare/OMIM:270400/NCBIGene:5156,OMIM:249000,OMIM:194050.json.",
+        "expected_match_file": "conf/server_config_dev.json",
+        "mismatch_description": "Configured service is unreachable or its response lacks the expected scoring fields maxSumIC, meanMaxIC, and combinedScore consumed by this repository."
+      },
+      {
+        "service": "Monarch Biolink API",
+        "live_check_command_or_request": "Read biolink_url from conf/server_config_dev.json; GET its status/docs endpoint and a representative entity endpoint used by the application.",
+        "expected_match_file": "conf/server_config_dev.json",
+        "mismatch_description": "Configured base URL is unreachable, advertises an incompatible API shape, or representative response fields required by the app are missing."
+      }
+    ],
+    "success_criteria": [
+      "Installation completes on Node 18 and Node 20 with no direct legacy hapi/inert/Babel 6/node-sass/request/moment/bootstrap-vue packages.",
+      "Webpack 5 development build produces usable JS/CSS assets with Babel 7, Dart Sass, Vue 2.7, and no removed webpack-dev-server schema options.",
+      "ESLint 8 runs across ui and js and exits 0 without suppressing the entire upgraded surface.",
+      "The bounded production startup reaches the renderable root page at http://localhost:8080/ and shuts down cleanly.",
+      "The focused Mocha Node-upgrade suite initializes Hapi 21 with Inert 7 and verifies asynchronous GET/POST adapter response and error semantics; all three tests pass with no failed assertion markers.",
+      "All seven requested direct Node integration/template scripts exit 0 with no failed assertion markers.",
+      "Search/navigation, ID resolution/404s, detail descriptions, ontology viewer, phenotype analysis, Phenogrid, API/JSON endpoints, and Bootstrap interactions pass with no browser console errors.",
+      "Live GOlr/Solr, SciGraph, OwlSim, and Biolink contracts are either verified against checked-in configuration or explicitly reported as environmental blockers; an app root 200 alone is not sufficient.",
+      "Only planned files plus at most the bounded dependency-call-site expansion allowance change; pre-existing unrelated worktree edits and generated artifacts are preserved."
+    ],
+    "scope_expansion_limit": 6
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "The ImpactReport was authoritative, but GitNexus had an empty index, so planning retained its reduced-confidence filesystem evidence. Whole-file reads were required for package.json, the small Babel/ESLint configs, Makefile, webapp_launcher.js, the relevant feature files, and tests/test-common.js because isolated ranges could not establish scripts, ports, harness completion, or exact browser routes; other source inspection stayed around reported ranges. The user explicitly requires Vue 2.7 as an interim step: retain vue-router 3 and the Vue 2 constructor/plugin model; do not introduce Vue 3, vue-router 4, bootstrap-vue-next, or a full rewrite. Existing dirty-worktree changes, untracked node_modules/dist/package-lock/webpack-assets, and user test edits predate execution and must be inventoried and preserved; patch only intended hunks and never clean/reset the worktree. All commands were inferred at the repository root. package.json defines wbs-build, wbs-lint, and start; webapp_launcher.js and webapp.js establish port 8080 and a renderable root page, so http://localhost:8080/ is the startup health/browser URL. npm install is intentionally used instead of npm ci because package-lock.json is an untracked/generated upgrade artifact that must be reconciled to the new manifest. GNU make is unavailable in this workspace, so the seven explicit npm-exec/cross-env Node commands are the documented equivalent of the requested make test suite. The ImpactReport did not include three harness files named explicitly by the user; tests/disease-phenotype-test.js, tests/golr-owlsim-test.js, and tests/full-tmpl.js.tests are therefore labeled scope expansions needed to make that approved suite meaningful on Node 18. External service versions remain unknown and require the declared live checks; failures due solely to unavailable historical services must be reported, not hidden. generated_test_commands/files remain empty for the test-generation stage. A scope expansion limit of 6 is pre-authorized because simultaneous Hapi 16-to-21, webpack/dev-server, Bootstrap 4-to-5, and Axios major transitions have unusually broad direct-call surfaces; it applies only to previously unplanned files whose bounded check fails from a direct call to a dependency already listed here, never to unrelated refactors or new dependency upgrades.",
+  "plan_summary": "Implement 52 line-aware file changes covering the Node 18/20 dependency/toolchain upgrade, retain Vue 2.7, migrate Hapi/webpack/Bootstrap runtime boundaries, and validate through install/build/lint/bounded startup, focused Mocha coverage, seven direct Node tests, browser flows, and external-service contract checks."
+}

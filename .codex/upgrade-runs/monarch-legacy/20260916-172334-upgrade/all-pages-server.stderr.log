@@ -1,0 +1,861 @@
+errorResponse:Cannot read properties of undefined (reading 'filter') (500)
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+AxiosError: getaddrinfo ENOTFOUND scigraph-ontology-dev.monarchinitiative.org
+    at AxiosError.from (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\node_modules\axios\dist\node\axios.cjs:1577:24)
+    at RedirectableRequest.handleRequestError (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\node_modules\axios\dist\node\axios.cjs:4792:25)
+    at RedirectableRequest.emit (node:events:531:35)
+    at eventHandlers.<computed> (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\node_modules\follow-redirects\index.js:56:24)
+    at ClientRequest.emit (node:events:519:28)
+    at emitErrorEvent (node:_http_client:108:11)
+    at TLSSocket.socketErrorListener (node:_http_client:575:5)
+    at TLSSocket.emit (node:events:531:35)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at Axios.request (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\node_modules\axios\dist\node\axios.cjs:6308:43)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async bbop.monarch.Engine.fetchUrlWithExchangeObject (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\lib\monarch\api.js:3205:19)
+    at async bbop.monarch.Engine.querySciGraphVocabServices (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\lib\monarch\api.js:3972:23)
+    at async bbop.monarch.Engine.getVocabularyTermByID (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\lib\monarch\api.js:3781:17)
+    at async bbop.monarch.Engine.fetchClassInfo (C:\Users\jinzh\P4P\legacy-upgrade-system\projects\monarch-legacy\lib\monarch\api.js:2465:15) {
+  isAxiosError: true,
+  code: 'ENOTFOUND',
+  config: [Object: null prototype] {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false,
+      legacyInterceptorReqResOrdering: true,
+      advertiseZstdAcceptEncoding: false,
+      validateStatusUndefinedResolves: true
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 120000,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: {
+      FormData: [Function: FormData] {
+        LINE_BREAK: '\r\n',
+        DEFAULT_CONTENT_TYPE: 'application/octet-stream'
+      },
+      Blob: [class Blob]
+    },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': undefined,
+      'User-Agent': 'axios/1.20.0',
+      'Accept-Encoding': 'gzip, compress, deflate, br'
+    },
+    httpAgent: Agent {
+      _events: [Object: null prototype] {
+        free: [Function (anonymous)],
+        newListener: [Function: maybeEnableKeylog]
+      },
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      options: [Object: null prototype] {
+        keepAlive: true,
+        noDelay: true,
+        path: null
+      },
+      defaultPort: 80,
+      protocol: 'http:',
+      requests: [Object: null prototype] {},
+      sockets: [Object: null prototype] {},
+      freeSockets: [Object: null prototype] {},
+      keepAliveMsecs: 1000,
+      keepAlive: true,
+      maxSockets: Infinity,
+      maxFreeSockets: 256,
+      scheduling: 'lifo',
+      maxTotalSockets: Infinity,
+      totalSocketCount: 0,
+      agentKeepAliveTimeoutBuffer: 1000,
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false
+    },
+    httpsAgent: Agent {
+      _events: [Object: null prototype] {
+        free: [Function (anonymous)],
+        newListener: [Function: maybeEnableKeylog]
+      },
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      options: [Object: null prototype] {
+        keepAlive: true,
+        defaultPort: 443,
+        protocol: 'https:',
+        noDelay: true,
+        path: null
+      },
+      defaultPort: 443,
+      protocol: 'https:',
+      requests: [Object: null prototype] {},
+      sockets: [Object: null prototype] {
+        'scigraph-ontology-dev.monarchinitiative.org:443:::::::::::::::::::::': [
+          TLSSocket {
+            _tlsOptions: [Object],
+            _secureEstablished: false,
+            _securePending: false,
+            _newSessionPending: false,
+            _controlReleased: true,
+            secureConnecting: true,
+            _SNICallback: null,
+            servername: null,
+            alpnProtocol: null,
+            authorized: false,
+            authorizationError: null,
+            encrypted: true,
+            _events: [Object: null prototype],
+            _eventsCount: 11,
+            connecting: false,
+            _hadError: true,
+            _parent: null,
+            _host: 'scigraph-ontology-dev.monarchinitiative.org',
+            _closeAfterHandlingError: false,
+            _readableState: [ReadableState],
+            _writableState: [WritableState],
+            allowHalfOpen: false,
+            _maxListeners: undefined,
+            _sockname: null,
+            _pendingData: 'GET /scigraph/vocabulary/id/UBERON:0000477.json HTTP/1.1\r\n' +
+              'Accept: application/json, text/plain, */*\r\n' +
+              'User-Agent: axios/1.20.0\r\n' +
+              'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+              'Host: scigraph-ontology-dev.monarchinitiative.org\r\n' +
+              'Connection: keep-alive\r\n' +
+              '\r\n',
+            _pendingEncoding: 'latin1',
+            server: undefined,
+            _server: null,
+            ssl: null,
+            _requestCert: true,
+            _rejectUnauthorized: true,
+            parser: null,
+            _httpMessage: [ClientRequest],
+            timeout: 120000,
+            [Symbol(alpncallback)]: null,
+            [Symbol(res)]: [TLSWrap],
+            [Symbol(verified)]: false,
+            [Symbol(pendingSession)]: null,
+            [Symbol(async_id_symbol)]: 56,
+            [Symbol(kHandle)]: null,
+            [Symbol(lastWriteQueueSize)]: 0,
+            [Symbol(timeout)]: [Timeout],
+            [Symbol(kBuffer)]: null,
+            [Symbol(kBufferCb)]: null,
+            [Symbol(kBufferGen)]: null,
+            [Symbol(shapeMode)]: true,
+            [Symbol(kCapture)]: false,
+            [Symbol(kSetNoDelay)]: false,
+            [Symbol(kSetKeepAlive)]: true,
+            [Symbol(kSetKeepAliveInitialDelay)]: 60,
+            [Symbol(kBytesRead)]: 0,
+            [Symbol(kBytesWritten)]: 0,
+            [Symbol(connect-options)]: [Object],
+            [Symbol(axios.http.socketListener)]: true,
+            [Symbol(axios.http.currentReq)]: null
+          }
+        ]
+      },
+      freeSockets: [Object: null prototype] {},
+      keepAliveMsecs: 1000,
+      keepAlive: true,
+      maxSockets: Infinity,
+      maxFreeSockets: 256,
+      scheduling: 'lifo',
+      maxTotalSockets: Infinity,
+      totalSocketCount: 1,
+      agentKeepAliveTimeoutBuffer: 1000,
+      maxCachedSessions: 100,
+      _sessionCache: { map: {}, list: [] },
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false
+    },
+    params: {},
+    method: 'get',
+    url: 'https://scigraph-ontology-dev.monarchinitiative.org/scigraph/vocabulary/id/UBERON:0000477.json',
+    allowAbsoluteUrls: true,
+    data: undefined
+  },
+  request: <ref *1> Writable {
+    _events: {
+      close: undefined,
+      error: [Function: handleRequestError],
+      prefinish: undefined,
+      finish: undefined,
+      drain: undefined,
+      response: [Function: handleResponse],
+      socket: [ [Function: handleRequestSocket], [Function: destroyOnTimeout] ],
+      timeout: undefined,
+      abort: undefined
+    },
+    _writableState: WritableState {
+      highWaterMark: 16384,
+      length: 0,
+      corked: 0,
+      onwrite: [Function: bound onwrite],
+      writelen: 0,
+      bufferedIndex: 0,
+      pendingcb: 0,
+      [Symbol(kState)]: 17581054,
+      [Symbol(kBufferedValue)]: null,
+      [Symbol(kErroredValue)]: Error: getaddrinfo ENOTFOUND scigraph-ontology-dev.monarchinitiative.org
+          at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+        errno: -3008,
+        code: 'ENOTFOUND',
+        syscall: 'getaddrinfo',
+        hostname: 'scigraph-ontology-dev.monarchinitiative.org'
+      }
+    },
+    _maxListeners: undefined,
+    _options: {
+      maxRedirects: 21,
+      maxBodyLength: Infinity,
+      protocol: 'https:',
+      path: '/scigraph/vocabulary/id/UBERON:0000477.json',
+      method: 'GET',
+      headers: [Object: null prototype] {
+        Accept: 'application/json, text/plain, */*',
+        'User-Agent': 'axios/1.20.0',
+        'Accept-Encoding': 'gzip, compress, deflate, br'
+      },
+      agents: {
+        http: Agent {
+          _events: [Object: null prototype] {
+            free: [Function (anonymous)],
+            newListener: [Function: maybeEnableKeylog]
+          },
+          _eventsCount: 2,
+          _maxListeners: undefined,
+          options: [Object: null prototype] {
+            keepAlive: true,
+            noDelay: true,
+            path: null
+          },
+          defaultPort: 80,
+          protocol: 'http:',
+          requests: [Object: null prototype] {},
+          sockets: [Object: null prototype] {},
+          freeSockets: [Object: null prototype] {},
+          keepAliveMsecs: 1000,
+          keepAlive: true,
+          maxSockets: Infinity,
+          maxFreeSockets: 256,
+          scheduling: 'lifo',
+          maxTotalSockets: Infinity,
+          totalSocketCount: 0,
+          agentKeepAliveTimeoutBuffer: 1000,
+          [Symbol(shapeMode)]: false,
+          [Symbol(kCapture)]: false
+        },
+        https: Agent {
+          _events: [Object: null prototype] {
+            free: [Function (anonymous)],
+            newListener: [Function: maybeEnableKeylog]
+          },
+          _eventsCount: 2,
+          _maxListeners: undefined,
+          options: [Object: null prototype] {
+            keepAlive: true,
+            defaultPort: 443,
+            protocol: 'https:',
+            noDelay: true,
+            path: null
+          },
+          defaultPort: 443,
+          protocol: 'https:',
+          requests: [Object: null prototype] {},
+          sockets: [Object: null prototype] {
+            'scigraph-ontology-dev.monarchinitiative.org:443:::::::::::::::::::::': [Array]
+          },
+          freeSockets: [Object: null prototype] {},
+          keepAliveMsecs: 1000,
+          keepAlive: true,
+          maxSockets: Infinity,
+          maxFreeSockets: 256,
+          scheduling: 'lifo',
+          maxTotalSockets: Infinity,
+          totalSocketCount: 1,
+          agentKeepAliveTimeoutBuffer: 1000,
+          maxCachedSessions: 100,
+          _sessionCache: { map: {}, list: [] },
+          [Symbol(shapeMode)]: false,
+          [Symbol(kCapture)]: false
+        }
+      },
+      auth: undefined,
+      family: undefined,
+      beforeRedirect: [Function: dispatchBeforeRedirect],
+      beforeRedirects: [Object: null prototype] { proxy: [Function: beforeRedirect] },
+      http2Options: undefined,
+      createConnection: undefined,
+      hostname: 'scigraph-ontology-dev.monarchinitiative.org',
+      port: '',
+      agent: Agent {
+        _events: [Object: null prototype] {
+          free: [Function (anonymous)],
+          newListener: [Function: maybeEnableKeylog]
+        },
+        _eventsCount: 2,
+        _maxListeners: undefined,
+        options: [Object: null prototype] {
+          keepAlive: true,
+          defaultPort: 443,
+          protocol: 'https:',
+          noDelay: true,
+          path: null
+        },
+        defaultPort: 443,
+        protocol: 'https:',
+        requests: [Object: null prototype] {},
+        sockets: [Object: null prototype] {
+          'scigraph-ontology-dev.monarchinitiative.org:443:::::::::::::::::::::': [ [TLSSocket] ]
+        },
+        freeSockets: [Object: null prototype] {},
+        keepAliveMsecs: 1000,
+        keepAlive: true,
+        maxSockets: Infinity,
+        maxFreeSockets: 256,
+        scheduling: 'lifo',
+        maxTotalSockets: Infinity,
+        totalSocketCount: 1,
+        agentKeepAliveTimeoutBuffer: 1000,
+        maxCachedSessions: 100,
+        _sessionCache: { map: {}, list: [] },
+        [Symbol(shapeMode)]: false,
+        [Symbol(kCapture)]: false
+      },
+      sensitiveHeaders: [],
+      insecureHTTPParser: false,
+      nativeProtocols: {
+        'http:': {
+          _connectionListener: [Function: connectionListener],
+          METHODS: [
+            'ACL',        'BIND',        'CHECKOUT',
+            'CONNECT',    'COPY',        'DELETE',
+            'GET',        'HEAD',        'LINK',
+            'LOCK',       'M-SEARCH',    'MERGE',
+            'MKACTIVITY', 'MKCALENDAR',  'MKCOL',
+            'MOVE',       'NOTIFY',      'OPTIONS',
+            'PATCH',      'POST',        'PROPFIND',
+            'PROPPATCH',  'PURGE',       'PUT',
+            'QUERY',      'REBIND',      'REPORT',
+            'SEARCH',     'SOURCE',      'SUBSCRIBE',
+            'TRACE',      'UNBIND',      'UNLINK',
+            'UNLOCK',     'UNSUBSCRIBE'
+          ],
+          STATUS_CODES: {
+            '100': 'Continue',
+            '101': 'Switching Protocols',
+            '102': 'Processing',
+            '103': 'Early Hints',
+            '200': 'OK',
+            '201': 'Created',
+            '202': 'Accepted',
+            '203': 'Non-Authoritative Information',
+            '204': 'No Content',
+            '205': 'Reset Content',
+            '206': 'Partial Content',
+            '207': 'Multi-Status',
+            '208': 'Already Reported',
+            '226': 'IM Used',
+            '300': 'Multiple Choices',
+            '301': 'Moved Permanently',
+            '302': 'Found',
+            '303': 'See Other',
+            '304': 'Not Modified',
+            '305': 'Use Proxy',
+            '307': 'Temporary Redirect',
+            '308': 'Permanent Redirect',
+            '400': 'Bad Request',
+            '401': 'Unauthorized',
+            '402': 'Payment Required',
+            '403': 'Forbidden',
+            '404': 'Not Found',
+            '405': 'Method Not Allowed',
+            '406': 'Not Acceptable',
+            '407': 'Proxy Authentication Required',
+            '408': 'Request Timeout',
+            '409': 'Conflict',
+            '410': 'Gone',
+            '411': 'Length Required',
+            '412': 'Precondition Failed',
+            '413': 'Payload Too Large',
+            '414': 'URI Too Long',
+            '415': 'Unsupported Media Type',
+            '416': 'Range Not Satisfiable',
+            '417': 'Expectation Failed',
+            '418': "I'm a Teapot",
+            '421': 'Misdirected Request',
+            '422': 'Unprocessable Entity',
+            '423': 'Locked',
+            '424': 'Failed Dependency',
+            '425': 'Too Early',
+            '426': 'Upgrade Required',
+            '428': 'Precondition Required',
+            '429': 'Too Many Requests',
+            '431': 'Request Header Fields Too Large',
+            '451': 'Unavailable For Legal Reasons',
+            '500': 'Internal Server Error',
+            '501': 'Not Implemented',
+            '502': 'Bad Gateway',
+            '503': 'Service Unavailable',
+            '504': 'Gateway Timeout',
+            '505': 'HTTP Version Not Supported',
+            '506': 'Variant Also Negotiates',
+            '507': 'Insufficient Storage',
+            '508': 'Loop Detected',
+            '509': 'Bandwidth Limit Exceeded',
+            '510': 'Not Extended',
+            '511': 'Network Authentication Required'
+          },
+          Agent: [Function: Agent] { defaultMaxSockets: Infinity },
+          ClientRequest: [Function: ClientRequest],
+          IncomingMessage: [Function: IncomingMessage],
+          OutgoingMessage: [Function: OutgoingMessage],
+          Server: [Function: Server],
+          ServerResponse: [Function: ServerResponse],
+          createServer: [Function: createServer],
+          validateHeaderName: [Function: validateHeaderName] {
+            withoutStackTrace: [Function (anonymous)]
+          },
+          validateHeaderValue: [Function: validateHeaderValue] {
+            withoutStackTrace: [Function (anonymous)]
+          },
+          get: [Function: get],
+          request: [Function: request],
+          setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+          maxHeaderSize: [Getter],
+          globalAgent: [Getter/Setter],
+          WebSocket: [Getter],
+          CloseEvent: [Getter],
+          MessageEvent: [Getter]
+        },
+        'https:': {
+          Agent: [Function: Agent],
+          globalAgent: Agent {
+            _events: [Object: null prototype],
+            _eventsCount: 2,
+            _maxListeners: undefined,
+            options: [Object: null prototype],
+            defaultPort: 443,
+            protocol: 'https:',
+            requests: [Object: null prototype] {},
+            sockets: [Object: null prototype] {},
+            freeSockets: [Object: null prototype] {},
+            keepAliveMsecs: 1000,
+            keepAlive: true,
+            maxSockets: Infinity,
+            maxFreeSockets: 256,
+            scheduling: 'lifo',
+            maxTotalSockets: Infinity,
+            totalSocketCount: 0,
+            agentKeepAliveTimeoutBuffer: 1000,
+            maxCachedSessions: 100,
+            _sessionCache: [Object],
+            [Symbol(shapeMode)]: false,
+            [Symbol(kCapture)]: false
+          },
+          Server: [Function: Server],
+          createServer: [Function: createServer],
+          get: [Function: get],
+          request: [Function: request]
+        }
+      },
+      pathname: '/scigraph/vocabulary/id/UBERON:0000477.json'
+    },
+    _ended: true,
+    _ending: true,
+    _redirectCount: 0,
+    _redirects: [],
+    _requestBodyLength: 0,
+    _requestBodyBuffers: [],
+    _eventsCount: 3,
+    _onNativeResponse: [Function (anonymous)],
+    _headerFilter: /^(?:Authorization|Proxy-Authorization|Cookie)$/i,
+    _currentRequest: <ref *2> ClientRequest {
+      _events: [Object: null prototype] {
+        response: [Function: bound onceWrapper] {
+          listener: [Function (anonymous)]
+        },
+        error: [Function: noop]
+      },
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      outputData: [],
+      outputSize: 0,
+      writable: true,
+      destroyed: true,
+      _last: true,
+      chunkedEncoding: false,
+      shouldKeepAlive: true,
+      maxRequestsOnConnectionReached: false,
+      _defaultKeepAlive: true,
+      useChunkedEncodingByDefault: false,
+      sendDate: false,
+      _removedConnection: false,
+      _removedContLen: false,
+      _removedTE: false,
+      strictContentLength: false,
+      _contentLength: 0,
+      _hasBody: true,
+      _trailer: '',
+      finished: true,
+      _headerSent: true,
+      _closed: false,
+      _header: 'GET /scigraph/vocabulary/id/UBERON:0000477.json HTTP/1.1\r\n' +
+        'Accept: application/json, text/plain, */*\r\n' +
+        'User-Agent: axios/1.20.0\r\n' +
+        'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+        'Host: scigraph-ontology-dev.monarchinitiative.org\r\n' +
+        'Connection: keep-alive\r\n' +
+        '\r\n',
+      _keepAliveTimeout: 0,
+      _onPendingData: [Function: nop],
+      agent: Agent {
+        _events: [Object: null prototype] {
+          free: [Function (anonymous)],
+          newListener: [Function: maybeEnableKeylog]
+        },
+        _eventsCount: 2,
+        _maxListeners: undefined,
+        options: [Object: null prototype] {
+          keepAlive: true,
+          defaultPort: 443,
+          protocol: 'https:',
+          noDelay: true,
+          path: null
+        },
+        defaultPort: 443,
+        protocol: 'https:',
+        requests: [Object: null prototype] {},
+        sockets: [Object: null prototype] {
+          'scigraph-ontology-dev.monarchinitiative.org:443:::::::::::::::::::::': [ [TLSSocket] ]
+        },
+        freeSockets: [Object: null prototype] {},
+        keepAliveMsecs: 1000,
+        keepAlive: true,
+        maxSockets: Infinity,
+        maxFreeSockets: 256,
+        scheduling: 'lifo',
+        maxTotalSockets: Infinity,
+        totalSocketCount: 1,
+        agentKeepAliveTimeoutBuffer: 1000,
+        maxCachedSessions: 100,
+        _sessionCache: { map: {}, list: [] },
+        [Symbol(shapeMode)]: false,
+        [Symbol(kCapture)]: false
+      },
+      socketPath: undefined,
+      method: 'GET',
+      maxHeaderSize: undefined,
+      insecureHTTPParser: false,
+      joinDuplicateHeaders: undefined,
+      path: '/scigraph/vocabulary/id/UBERON:0000477.json',
+      _ended: false,
+      res: null,
+      aborted: false,
+      timeoutCb: null,
+      upgradeOrConnect: false,
+      parser: null,
+      maxHeadersCount: null,
+      reusedSocket: false,
+      host: 'scigraph-ontology-dev.monarchinitiative.org',
+      protocol: 'https:',
+      _redirectable: [Circular *1],
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(kNeedDrain)]: false,
+      [Symbol(corked)]: 0,
+      [Symbol(kChunkedBuffer)]: [],
+      [Symbol(kChunkedLength)]: 0,
+      [Symbol(kSocket)]: <ref *3> TLSSocket {
+        _tlsOptions: {
+          allowHalfOpen: undefined,
+          pipe: false,
+          secureContext: SecureContext { context: SecureContext {} },
+          isServer: false,
+          requestCert: true,
+          rejectUnauthorized: true,
+          session: undefined,
+          ALPNProtocols: undefined,
+          requestOCSP: undefined,
+          enableTrace: undefined,
+          pskCallback: undefined,
+          highWaterMark: undefined,
+          onread: undefined,
+          signal: undefined
+        },
+        _secureEstablished: false,
+        _securePending: false,
+        _newSessionPending: false,
+        _controlReleased: true,
+        secureConnecting: true,
+        _SNICallback: null,
+        servername: null,
+        alpnProtocol: null,
+        authorized: false,
+        authorizationError: null,
+        encrypted: true,
+        _events: [Object: null prototype] {
+          close: [
+            [Function: onSocketCloseDestroySSL],
+            [Function],
+            [Function: onClose],
+            [Function: socketCloseListener],
+            [Function]
+          ],
+          end: [ [Function: onConnectEnd], [Function: onReadableStreamEnd] ],
+          error: [
+            [Function: socketErrorListener],
+            [Function: handleSocketError]
+          ],
+          newListener: [Function: keylogNewListener],
+          connect: [ [Function], [Function], [Function] ],
+          secure: [Function: onConnectSecure],
+          session: [Function (anonymous)],
+          free: [Function: onFree],
+          timeout: [ [Function: onTimeout], [Function (anonymous)] ],
+          agentRemove: [Function: onRemove],
+          data: undefined,
+          drain: [Function: ondrain]
+        },
+        _eventsCount: 11,
+        connecting: false,
+        _hadError: true,
+        _parent: null,
+        _host: 'scigraph-ontology-dev.monarchinitiative.org',
+        _closeAfterHandlingError: false,
+        _readableState: ReadableState {
+          highWaterMark: 16384,
+          buffer: [],
+          bufferIndex: 0,
+          length: 0,
+          pipes: [],
+          awaitDrainWriters: null,
+          [Symbol(kState)]: 59779574,
+          [Symbol(kErroredValue)]: Error: getaddrinfo ENOTFOUND scigraph-ontology-dev.monarchinitiative.org
+              at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+            errno: -3008,
+            code: 'ENOTFOUND',
+            syscall: 'getaddrinfo',
+            hostname: 'scigraph-ontology-dev.monarchinitiative.org'
+          }
+        },
+        _writableState: WritableState {
+          highWaterMark: 16384,
+          length: 250,
+          corked: 0,
+          onwrite: [Function: bound onwrite],
+          writelen: 250,
+          bufferedIndex: 0,
+          pendingcb: 1,
+          [Symbol(kState)]: 118260214,
+          [Symbol(kBufferedValue)]: null,
+          [Symbol(kWriteCbValue)]: [Function: bound onFinish],
+          [Symbol(kErroredValue)]: Error: getaddrinfo ENOTFOUND scigraph-ontology-dev.monarchinitiative.org
+              at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+            errno: -3008,
+            code: 'ENOTFOUND',
+            syscall: 'getaddrinfo',
+            hostname: 'scigraph-ontology-dev.monarchinitiative.org'
+          }
+        },
+        allowHalfOpen: false,
+        _maxListeners: undefined,
+        _sockname: null,
+        _pendingData: 'GET /scigraph/vocabulary/id/UBERON:0000477.json HTTP/1.1\r\n' +
+          'Accept: application/json, text/plain, */*\r\n' +
+          'User-Agent: axios/1.20.0\r\n' +
+          'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+          'Host: scigraph-ontology-dev.monarchinitiative.org\r\n' +
+          'Connection: keep-alive\r\n' +
+          '\r\n',
+        _pendingEncoding: 'latin1',
+        server: undefined,
+        _server: null,
+        ssl: null,
+        _requestCert: true,
+        _rejectUnauthorized: true,
+        parser: null,
+        _httpMessage: [Circular *2],
+        timeout: 120000,
+        [Symbol(alpncallback)]: null,
+        [Symbol(res)]: TLSWrap {
+          _parent: TCP {
+            reading: [Getter/Setter],
+            onconnection: null,
+            [Symbol(owner_symbol)]: [Circular *3],
+            [Symbol(handle_onclose)]: [Function: done]
+          },
+          _parentWrap: null,
+          _secureContext: SecureContext { context: SecureContext {} },
+          reading: false,
+          onkeylog: [Function: onkeylog],
+          onhandshakestart: [Function: noop],
+          onhandshakedone: [Function (anonymous)],
+          onocspresponse: [Function: onocspresponse],
+          onnewsession: [Function: onnewsessionclient],
+          onerror: [Function: onerror],
+          [Symbol(owner_symbol)]: [Circular *3]
+        },
+        [Symbol(verified)]: false,
+        [Symbol(pendingSession)]: null,
+        [Symbol(async_id_symbol)]: 56,
+        [Symbol(kHandle)]: null,
+        [Symbol(lastWriteQueueSize)]: 0,
+        [Symbol(timeout)]: Timeout {
+          _idleTimeout: -1,
+          _idlePrev: null,
+          _idleNext: null,
+          _idleStart: 9869,
+          _onTimeout: null,
+          _timerArgs: undefined,
+          _repeat: null,
+          _destroyed: true,
+          [Symbol(refed)]: false,
+          [Symbol(kHasPrimitive)]: false,
+          [Symbol(asyncId)]: 69,
+          [Symbol(triggerId)]: 59,
+          [Symbol(kAsyncContextFrame)]: undefined
+        },
+        [Symbol(kBuffer)]: null,
+        [Symbol(kBufferCb)]: null,
+        [Symbol(kBufferGen)]: null,
+        [Symbol(shapeMode)]: true,
+        [Symbol(kCapture)]: false,
+        [Symbol(kSetNoDelay)]: false,
+        [Symbol(kSetKeepAlive)]: true,
+        [Symbol(kSetKeepAliveInitialDelay)]: 60,
+        [Symbol(kBytesRead)]: 0,
+        [Symbol(kBytesWritten)]: 0,
+        [Symbol(connect-options)]: {
+          rejectUnauthorized: true,
+          ciphers: 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA',
+          checkServerIdentity: [Function: checkServerIdentity],
+          minDHSize: 1024,
+          maxRedirects: 21,
+          maxBodyLength: Infinity,
+          protocol: 'https:',
+          path: null,
+          method: 'GET',
+          headers: [Object: null prototype] {
+            Accept: 'application/json, text/plain, */*',
+            'User-Agent': 'axios/1.20.0',
+            'Accept-Encoding': 'gzip, compress, deflate, br'
+          },
+          agents: { http: [Agent], https: [Agent] },
+          auth: undefined,
+          family: undefined,
+          beforeRedirect: [Function: dispatchBeforeRedirect],
+          beforeRedirects: [Object: null prototype] {
+            proxy: [Function: beforeRedirect]
+          },
+          http2Options: undefined,
+          createConnection: undefined,
+          hostname: 'scigraph-ontology-dev.monarchinitiative.org',
+          port: 443,
+          agent: Agent {
+            _events: [Object: null prototype],
+            _eventsCount: 2,
+            _maxListeners: undefined,
+            options: [Object: null prototype],
+            defaultPort: 443,
+            protocol: 'https:',
+            requests: [Object: null prototype] {},
+            sockets: [Object: null prototype],
+            freeSockets: [Object: null prototype] {},
+            keepAliveMsecs: 1000,
+            keepAlive: true,
+            maxSockets: Infinity,
+            maxFreeSockets: 256,
+            scheduling: 'lifo',
+            maxTotalSockets: Infinity,
+            totalSocketCount: 1,
+            agentKeepAliveTimeoutBuffer: 1000,
+            maxCachedSessions: 100,
+            _sessionCache: [Object],
+            [Symbol(shapeMode)]: false,
+            [Symbol(kCapture)]: false
+          },
+          sensitiveHeaders: [],
+          insecureHTTPParser: false,
+          nativeProtocols: { 'http:': [Object], 'https:': [Object] },
+          pathname: '/scigraph/vocabulary/id/UBERON:0000477.json',
+          _defaultAgent: Agent {
+            _events: [Object: null prototype],
+            _eventsCount: 2,
+            _maxListeners: undefined,
+            options: [Object: null prototype],
+            defaultPort: 443,
+            protocol: 'https:',
+            requests: [Object: null prototype] {},
+            sockets: [Object: null prototype] {},
+            freeSockets: [Object: null prototype] {},
+            keepAliveMsecs: 1000,
+            keepAlive: true,
+            maxSockets: Infinity,
+            maxFreeSockets: 256,
+            scheduling: 'lifo',
+            maxTotalSockets: Infinity,
+            totalSocketCount: 0,
+            agentKeepAliveTimeoutBuffer: 1000,
+            maxCachedSessions: 100,
+            _sessionCache: [Object],
+            [Symbol(shapeMode)]: false,
+            [Symbol(kCapture)]: false
+          },
+          host: 'scigraph-ontology-dev.monarchinitiative.org',
+          keepAlive: true,
+          defaultPort: 443,
+          noDelay: true,
+          servername: 'scigraph-ontology-dev.monarchinitiative.org',
+          _agentKey: 'scigraph-ontology-dev.monarchinitiative.org:443:::::::::::::::::::::',
+          encoding: null,
+          keepAliveInitialDelay: 1000
+        },
+        [Symbol(axios.http.socketListener)]: true,
+        [Symbol(axios.http.currentReq)]: null
+      },
+      [Symbol(kOutHeaders)]: [Object: null prototype] {
+        accept: [ 'Accept', 'application/json, text/plain, */*' ],
+        'user-agent': [ 'User-Agent', 'axios/1.20.0' ],
+        'accept-encoding': [ 'Accept-Encoding', 'gzip, compress, deflate, br' ],
+        host: [ 'Host', 'scigraph-ontology-dev.monarchinitiative.org' ]
+      },
+      [Symbol(errored)]: null,
+      [Symbol(kHighWaterMark)]: 16384,
+      [Symbol(kRejectNonStandardBodyWrites)]: false,
+      [Symbol(kUniqueHeaders)]: null,
+      [Symbol(kError)]: Error: getaddrinfo ENOTFOUND scigraph-ontology-dev.monarchinitiative.org
+          at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+        errno: -3008,
+        code: 'ENOTFOUND',
+        syscall: 'getaddrinfo',
+        hostname: 'scigraph-ontology-dev.monarchinitiative.org'
+      }
+    },
+    _currentUrl: 'https://scigraph-ontology-dev.monarchinitiative.org/scigraph/vocabulary/id/UBERON:0000477.json',
+    _timeout: null,
+    [Symbol(shapeMode)]: true,
+    [Symbol(kCapture)]: false
+  },
+  [cause]: Error: getaddrinfo ENOTFOUND scigraph-ontology-dev.monarchinitiative.org
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'scigraph-ontology-dev.monarchinitiative.org'
+  }
+}
+
+Node.js v22.22.2

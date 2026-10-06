@@ -1,0 +1,126 @@
+{
+ "k1": {
+  "ok": true,
+  "note": "7/7 core running, 11 containers, restarts=0"
+ },
+ "k10": {
+  "ok": true,
+  "note": "3.0.0 52 paths 14 tags"
+ },
+ "k11": {
+  "ok": true,
+  "note": "Created user evmus9z11h with the email evmus9z11h@example.com and the role: 'archivist'"
+ },
+ "k12": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k13": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k14": {
+  "ok": true,
+  "note": "status 200 coll=eval-coll"
+ },
+ "k15": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k16": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k30": {
+  "ok": true,
+  "note": "create status 200 "
+ },
+ "k31": {
+  "ok": true,
+  "note": "put 200 upload coll=temporary-collection recordings size=1823 status={\"size\":6490,\"total_size\":6490,\"total_files\":1,\"files\":0,\"filename\":\"evalupload."
+ },
+ "k2": {
+  "ok": true,
+  "note": "title=\"Conifer | Homepage\" clean; hydrated=true"
+ },
+ "k3": {
+  "ok": true,
+  "note": "clean; hydrated=true"
+ },
+ "k4": {
+  "ok": true,
+  "note": "clean; hydrated=true"
+ },
+ "k5": {
+  "ok": true,
+  "note": "clean; hydrated=true"
+ },
+ "k6": {
+  "ok": true,
+  "note": "clean; hydrated=true"
+ },
+ "k7": {
+  "ok": true,
+  "note": "opblocks=68; clean"
+ },
+ "k8": {
+  "ok": true,
+  "note": "field=1 noReload=true url=/_register"
+ },
+ "k9": {
+  "ok": true,
+  "note": "credsInUrl=false url=/_login"
+ },
+ "k24": {
+  "ok": true,
+  "note": "url=/evmus9z11h"
+ },
+ "k17": {
+  "ok": true,
+  "note": "http 200 len=747 clean; hydrated=true"
+ },
+ "k18": {
+  "ok": true,
+  "note": "http 200 len=331 clean; hydrated=true"
+ },
+ "k19": {
+  "ok": true,
+  "note": "http 200 len=282 clean; hydrated=true"
+ },
+ "k20": {
+  "ok": true,
+  "note": "http 200 len=160 clean; hydrated=true"
+ },
+ "k21": {
+  "ok": true,
+  "note": "http 200 len=513 clean; hydrated=true"
+ },
+ "k22": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k23": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k25": {
+  "ok": true,
+  "note": "status 403 anon=temp-7EEJ4JQ7"
+ },
+ "k26": {
+  "ok": true,
+  "note": "status 200"
+ },
+ "k27": {
+  "ok": true,
+  "note": "status 200 "
+ },
+ "k28": {
+  "ok": true,
+  "note": "running 3.2.4 vs FROM redis:3.2.4"
+ },
+ "k29": {
+  "ok": true,
+  "note": "core luceneMatchVersion=8.5.1 repo=8.5.1 solr=10.0.0"
+ }
+}
