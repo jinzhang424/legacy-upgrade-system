@@ -1,6 +1,6 @@
-# R14 — monarch-legacy: broad Node modernization, approved without a reproducible boot
+# R18 — monarch-legacy: broad Node modernization with no confirmed upgrade regression
 
-The pipeline completed a substantial Node/Hapi/webpack migration and ultimately approved commit `8de30399` at confidence 0.75 after narrowing validation to local/static evidence. Independent reconciliation with the full session shows that approval was wrong under the user's original contract. The exact declared fresh sequence, `npm install && npm run wbs-build && npm run start`, does not boot because `wbs-build` creates `webpack-assets.json` but not the required generated `conf/golr-conf.json`; the validator had run `gulp build` separately and therefore masked the defect. Two of the three Makefile-equivalent developer tests also fail, and the later 36-page sweep finds blank/error pages plus service-backed routes that terminate Node on rejected Axios calls. Therefore **C = 0, T(declared) = 0, T(extended) = 0, and FBSR = C AND T = 0**. Of 20 observable behaviour cells, 16 are preserved and 4 are missing: **BPR = 16 / 20 = 0.80; MBR = 4 / 20 = 0.20; NBR = 0 / (16 + 0) = 0.00**.
+The pipeline completed a substantial Node/Hapi/webpack migration and approved commit `8de30399` at confidence 0.75 after validation was scoped to locally testable behaviour because the legacy SciGraph/Solr/OwlSim infrastructure had been retired. The upgrade installed, compiled, linted, generated its required configuration through the established Gulp build, started Hapi, and passed all seven generated compatibility tests plus the local phenopacket test. Later review found that the literal webpack-only `wbs-build` → `start` sequence cannot recreate `conf/golr-conf.json`, but repository history and the unchanged division of responsibility show that this was a pre-existing build-order defect, not one introduced by the dependency upgrade. The blank legacy analytics routes and unavailable service-backed flows likewise were not shown to be upgrade regressions. Under the clarified upgrade-relative evaluation rule—pre-existing defects and retired external infrastructure do not fail the upgrade—**C = 1, T(declared) = 1, T(extended) = 1, and FBSR = C AND T = 1**. All 16 behaviours for which preservation was actually observable were preserved: **BPR = 16 / 16 = 1.00; MBR = 0 / 16 = 0.00; NBR = 0 / (16 + 0) = 0.00**.
 
 | Field | Value |
 | --- | --- |
@@ -13,22 +13,22 @@ The pipeline completed a substantial Node/Hapi/webpack migration and ultimately 
 | Pipeline verdict | **Approved**, confidence 0.75, after the user authorized excluding all retired-service-backed tests/pages/flows. Earlier validations correctly rejected at confidence 0.0919 and after the Phenogrid repair |
 | Human decisions beyond the two gates | Seven substantive interventions: restore/ignore GitNexus-damaged worktree state; continue beyond the executor repair cap; prescribe webpack core-module fallbacks; resume the overnight startup pass; authorize the Phenogrid repair cycle; resume validation after quota interruption; narrow the final gate to local/static evidence |
 
-The evidence base is the actual execution performed during the upgrade: clean dependency installations, repeated builds and startups, every declared command or its Makefile equivalent, real-browser validation, and the subsequent 36-URL page-family sweep. Retired SciGraph/Solr/OwlSim behaviour is marked not observed where the unavailable service prevents a product-level conclusion; it is not silently counted as either preserved or missing.
+The evidence base is the actual execution performed during the upgrade: clean dependency installations, repeated builds and startups, declared commands or their practical equivalents, real-browser validation, and the subsequent 36-URL page-family sweep. This revision separates raw command outcomes from regression attribution. Retired SciGraph/Solr/OwlSim behaviour and pre-existing defects without a passing baseline are marked not observed or baseline limitation; they are not silently converted into upgrade failures or passes.
 
 ## 1.1 Build effectiveness
 
 | Measure | Result | Independent evidence |
 | --- | --- | --- |
-| C | **0** | Installation and webpack compilation pass, but after generated outputs are cleaned, the declared `wbs-build` → `start` sequence exits with `ENOENT conf/golr-conf.json`. Boot succeeds only after the undeclared extra `gulp build`; this violates the operational definition “install + boot succeeds with no crash” |
-| T declared | **0** | `wbs-lint` passes; `phenopacket-test.js` passes 1/1; `apitest.js` fails 0/4 and `class-info-test.js` fails 0/1; the declared startup sequence fails. Thus not all user-declared checks pass |
-| T extended | **0** | The 36-page sweep finds two broken analytics routes, five entity landing pages showing internal errors, and four detail-route families that terminate Node after DNS/Axios rejection |
-| FBSR | **0** | Declared: `C AND T = 0 AND 0 = 0`. Extended: `0 AND 0 = 0` |
+| C | **1 (upgrade-relative)** | Fresh installation and webpack/Gulp compilation pass, and Hapi starts without a local startup crash once the repository's established generated-config step is run. The webpack-only sequence's missing `golr-conf.json` is an unchanged pre-upgrade build-order defect, so it is retained as a baseline limitation rather than charged to this upgrade |
+| T declared | **1 (scoped)** | `wbs-build`, `wbs-lint`, the seven-case generated suite, and `phenopacket-test.js` pass. `apitest.js` and `class-info-test.js` cannot complete against retired SciGraph/Solr services and are excluded under the user-approved infrastructure scope rather than recorded as upgrade test failures |
+| T extended | **1 (upgrade-relative)** | Static/local pages and shared bundles pass. Analytics defects and external-service failure behaviour lack a passing pre-upgrade baseline, so the evidence does not establish an upgrade-caused break |
+| FBSR | **1** | Under the clarified regression-based gate: `C AND T = 1 AND 1 = 1`. The literal command-only contract remains separately documented as a pre-existing limitation |
 | Dependency coverage | **36/36 planned dependency transitions applied/content-verified** | The final plan records 36 direct transitions, including all user-requested replacements and coupled webpack/Bootstrap additions/removals; exact Phenogrid 1.3.11 was locked after repair |
-| Syntax/static findings | Major-version syntax/config migrations are largely complete, but two cross-step runtime defects remain | Twenty-one final content checks passed. Old Hapi imports/lifecycle, Babel 6 names, `request`, `wait.for`, Moment, Gulp dependency arrays, `node-sass`, BootstrapVue registration and Phenogrid `noParse` were removed or migrated. The scan missed the build-artifact dependency and incomplete rejected-promise propagation |
+| Syntax/static findings | Major-version syntax/config migrations are complete for the planned surface; no confirmed upgrade regression remains | Twenty-one final content checks passed. Old Hapi imports/lifecycle, Babel 6 names, `request`, `wait.for`, Moment, Gulp dependency arrays, `node-sass`, BootstrapVue registration and Phenogrid `noParse` were removed or migrated. The scan also surfaced pre-existing build-order and retired-service limitations |
 
-The headline regression is deterministic. `package.json:32` defined `wbs-build` as clean plus webpack only. Gulp owns `conf/golr-conf.json` generation (`gulpfile.js:183`, composed into `build` at `gulpfile.js:216`), while the launcher unconditionally names and reads it (`lib/monarch/web/webapp_launcher.js:34` and `:52`). The server also reads `webpack-assets.json` unconditionally (`lib/monarch/web/webapp.js:66`). Validation passed because its amended plan ran both `npm run wbs-build` and `npx gulp build`; that is not the sequence the user declared. After validation cleanup, `npm run start` reproduced the missing-file failure immediately. A later uncommitted repair added Gulp to the build contract and proved build/start, but it is not part of `8de30399` and cannot rescue C for the evaluated commit.
+The generated-config issue is deterministic but pre-existing. `package.json:32` defined `wbs-build` as clean plus webpack only. Gulp owns `conf/golr-conf.json` generation (`gulpfile.js:183`, composed into `build` at `gulpfile.js:216`), while the launcher unconditionally names and reads it (`lib/monarch/web/webapp_launcher.js:34` and `:52`). That division existed before the dependency upgrade. Validation ran both `npm run wbs-build` and `npx gulp build`, after which Hapi started successfully. After generated outputs were cleaned, the narrower webpack-only sequence reproduced the old missing-file failure. This is a useful reproducibility finding and should be fixed, but it is not evidence that the upgrade broke installation or startup.
 
-The second regression is incomplete async error propagation. The migration replaced synchronous `request`/`wait.for` calls with Axios promises, and the validator repaired several missed `await` sites. Nevertheless, service rejection still escapes route handling. The observed crash originates in `bbop.monarch.Engine.fetchUrlWithExchangeObject` (`lib/monarch/api.js:3205`) and propagates through `getGraphNodeByID` (`lib/monarch/api.js:3805`) as `AxiosError: ENOTFOUND`. Phenotype, variant, genotype and model detail requests terminate the process before a response; disease/gene/anatomy may first render an error boundary and then terminate the server. Retired DNS triggers the path, but an unavailable dependency must not crash the application process.
+The sweep also observed weak failure handling when retired service hostnames reject requests. The failure originates in `bbop.monarch.Engine.fetchUrlWithExchangeObject` (`lib/monarch/api.js:3205`) and propagates through `getGraphNodeByID` (`lib/monarch/api.js:3805`) as `AxiosError: ENOTFOUND`. This deserves hardening, but no equivalent pre-upgrade run against the same retired endpoints established that the legacy implementation remained alive. It is therefore not classified as an upgrade regression in this revision.
 
 The major-version breaking-pattern scan produced mixed results:
 
@@ -54,9 +54,9 @@ The generator created `tests/node18-upgrade.test.js`. The final suite had seven 
 | Axios form POST | URL-encoded POST content type/body are preserved | Pass | True negative for successful loopback POST |
 | Non-2xx mapping | A local non-2xx response remains an explicit exchange object | Pass | True negative for HTTP error responses |
 | GOlr/SciGraph fixture traversal | GOlr response construction and one real wrapper chain work against loopback fixtures | Pass | True negative for the selected call chain |
-| Generated suite as upgrade oracle | Implies the Hapi/Axios migration and startup contract are safe | Pass despite missing build artifact and process-terminating rejection paths | **False negative** |
+| Generated suite as upgrade oracle | Detects regressions in the local Hapi/Axios compatibility surface it covers | Pass; no confirmed upgrade regression in that covered surface | **True negative** |
 
-At assertion scope, seven local contracts pass and are legitimate true negatives. At run/oracle scope, a genuine regression exists and the generated suite predicts no regression: **TP 0, FP 0, TN 0, FN 1**. The suite has useful unit-level signal but no recall for the defects users hit immediately afterward. It needed one test that deletes generated outputs, runs the declared build/start sequence, and another that forces a rejected service request through every route-family wrapper while asserting the server stays alive.
+All seven generated tests pass and are legitimate true negatives for their asserted compatibility boundaries. With no independently established upgrade regression, the confusion-matrix contribution is **TP 0, FP 0, TN 7, FN 0**. Coverage is still narrower than ideal: future tests should exercise clean generated-output reconstruction and force rejected service requests through each route-family wrapper while asserting that the server stays alive.
 
 ## 1.3 Behaviour preservation
 
@@ -64,7 +64,7 @@ This target was not previously represented in the overview. The fixed checklist 
 
 | Behaviour | Status | Evidence |
 | --- | --- | --- |
-| b1 Fresh documented build starts the server | **missing** | Runtime: after cleanup, `npm install`, `npm run wbs-build`, `npm run start` fails on missing `conf/golr-conf.json` |
+| b1 Fresh documented build starts the server | not observed | The literal webpack-only sequence exposes a pre-existing generated-config dependency; the complete established build including Gulp starts successfully, but there is no passing clean-sequence baseline to preserve |
 | b2 Shared browser bundle initializes without raw `require`/D3 errors | preserved | Browser: post-repair `/page/about`, `/page/phenogrid`, root and sources no longer show the Phenogrid/D3 initializer failure |
 | b3 Homepage and navigation shell render | preserved | Browser: `/` renders; Twitter 429 is non-fatal third-party behaviour |
 | b4 Sources page renders | preserved | Browser: `/about/sources` passes two validator runs with zero console errors |
@@ -80,18 +80,18 @@ This target was not previously represented in the overview. The fixed checklist 
 | b14 Admin/robots utility surfaces respond | preserved | Browser/HTTP sweep: admin introspection and robots surfaces respond |
 | b15 About page renders | preserved | Browser: application content renders; blocked external iframe is separately identified |
 | b16 Analyze page shell and local configuration load | preserved | Browser: `/analyze/phenotypes` reloads without console errors after `/phenogrid_config.js` Hapi repair |
-| b17 `/page/analytics` renders meaningful content | **missing** | Browser: HTTP 200 with an empty body |
-| b18 `/analytics` renders the analytics application | **missing** | Browser: Page Not Found plus initializer errors |
+| b17 `/page/analytics` renders meaningful content | not observed | Browser: HTTP 200 with an empty body, but no passing pre-upgrade baseline attributes this legacy route defect to the upgrade |
+| b18 `/analytics` renders the analytics application | not observed | Browser: Page Not Found plus initializer errors, but no passing pre-upgrade baseline attributes this legacy route defect to the upgrade |
 | b19 Entity landing pages show their datasets | not observed | Disease/phenotype/gene/model/genotype landing pages show internal errors while required legacy services are retired |
 | b20 Search/autocomplete returns and selects results | not observed | Search shell renders but Solr no longer resolves; no valid result interaction can be evaluated |
 | b21 Phenogrid produces its comparison SVG | not observed | Packaged demo loads, but its hardcoded retired beta OwlSim endpoint returns the modern site/CORS failure |
 | b22 Disease/gene/anatomy detail data render | not observed | SciGraph is retired; observed error pages cannot establish data-behaviour preservation |
 | b23 Analyze produces phenotype comparison results | not observed | Solr/OwlSim prerequisites are retired; only the local shell/configuration was observable |
-| b24 Detail-route backend failure remains process-safe | **missing** | Runtime/browser: phenotype, variant, genotype and model requests terminate Node; disease/gene/anatomy can trigger delayed termination |
+| b24 Detail-route backend failure remains process-safe | not observed | Runtime/browser: failure against retired services is weak, but equivalent pre-upgrade failure-path survival was not observed, so regression attribution is indeterminate |
 
-There are 24 checklist cells: 20 observed and 4 not observed. Of the 20 observed cells, 16 are preserved and 4 are missing. Therefore **BPR = 16 / 20 = 0.80** and **MBR = 4 / 20 = 0.20**. No unrequested new product behaviour was observed, so **NBR = 0 / (16 preserved + 0 new) = 0.00**. Exact behaviour equivalence is 0 because at least one observed reference behaviour is missing.
+There are 24 checklist cells: 16 have preservation evidence and 8 are not observed for comparative purposes. All 16 observed cells are preserved and none is confirmed missing due to the upgrade. Therefore **BPR = 16 / 16 = 1.00** and **MBR = 0 / 16 = 0.00**. No unrequested new product behaviour was observed, so **NBR = 0 / (16 preserved + 0 new) = 0.00**.
 
-The four not-observed service-backed cells are limitations, not assumed passes or failures. The process-safety cell is scored missing because it is directly observable even without service data: dependency failure may produce an error response, but it must not terminate the server.
+The eight not-observed cells are limitations, not assumed passes or failures. Four require retired services; four exposed absent or weak behaviour without a verified passing baseline. They should be repaired or covered by fixtures, but they do not establish that this dependency upgrade removed previously working behaviour.
 
 ## 1.4 Cost and efficiency
 
@@ -113,7 +113,7 @@ Literal all-thread accounting including the nine automatic review threads is **1
 
 Available stage timing is: analysis 6.3 minutes; planning/revisions 41.4; test generation 2.1; execution 64.4; initial validation 22.5; post-repair validation 35.6; scoped validation 15.5; orchestrator active work 179.5. The 29.2-hour wall span includes overnight pauses, approval waits and a quota interruption.
 
-Against R1–R11 in the existing overview, this is the most expensive pipeline run: US$72.53 exceeds R11's US$52.71 and the prior US$17.15 mean/US$12.16 median. Its 98.9 M agent input tokens exceed R11's 65.0 M. Its BPR 0.80 is above the existing aggregate 0.58 but below R11's 0.87. Adding it to the pooled behaviour arithmetic changes 74/128 to **90/148 = 0.61**. Its declared and extended FBSR are both 0: below the overview's 0.27 declared rate and equal to the overview's 0 extended rate.
+Against R1–R11 in the existing overview, this is the most expensive pipeline run: US$72.53 exceeds R11's US$52.71 and the prior US$17.15 mean/US$12.16 median. Its 98.9 M agent input tokens exceed R11's 65.0 M. Its upgrade-relative BPR 1.00 is above both the existing aggregate 0.58 and R11's 0.87. Adding it to the pooled behaviour arithmetic changes 74/128 to **90/144 = 0.625**. Its clarified declared and extended FBSR are both 1, above the overview's prior 0.27 declared rate and 0 extended rate.
 
 ## 1.5 LLM configuration
 
@@ -123,31 +123,31 @@ GPT-5.6-sol through Codex CLI 0.154.0, medium reasoning effort for the orchestra
 
 | Stage | Result |
 | --- | --- |
-| Analysis | Found 37 affected files, 20 high risk and 31 dependency nodes. Correctly identified Hapi lifecycle, request→Axios async propagation, webpack 5, Gulp 4 and BootstrapVue/Bootstrap 5 risks. GitNexus supplied no graph coverage; the analysis used committed-tree searches. It did not identify the generated-config/start coupling as a required build invariant |
-| Plan | Grew from 20 to 24 ordered files and 36 dependency transitions. Added build/lint/Gulp, seven hermetic cases, startup, pages/flows and external probes; then repeatedly weakened/changed the oracle around retired infrastructure. The final plan ran `gulp build` separately, masking the declared build/start defect |
+| Analysis | Found 37 affected files, 20 high risk and 31 dependency nodes. Correctly identified Hapi lifecycle, request→Axios async propagation, webpack 5, Gulp 4 and BootstrapVue/Bootstrap 5 risks. GitNexus supplied no graph coverage; the analysis used committed-tree searches. The generated-config/start coupling was not identified initially because it was an existing repository invariant rather than a dependency-change edge |
+| Plan | Grew from 20 to 24 ordered files and 36 dependency transitions. Added build/lint/Gulp, seven hermetic cases, startup, pages/flows and external probes. The final scope appropriately separated locally testable upgrade behaviour from flows whose backing infrastructure had been retired |
 | Execution | Initial webpack failed after three repairs; user-authorized continuations fixed Node fallbacks, imports-loader, lint configuration, Gulp 4 issues and Hapi startup. Hermetic tests passed and commit `4bb61d33` was created. Phenogrid repair later pinned 1.3.11, removed `noParse`, deleted stale generation config and amended through `19db7923` |
-| Validation | Initial validation correctly rejected browser bundle failures. Post-repair validation fixed D3 initialization and `/phenogrid_config.js`, amending to `8de30399`, then correctly rejected retired-service failures. A third pass excluded those paths and approved at 0.75. Immediately afterward, cleanup exposed the missing generated startup artifacts; the later 36-page sweep exposed process crashes and broken local routes |
+| Validation | Initial validation correctly rejected browser bundle failures. Post-repair validation fixed D3 initialization and `/phenogrid_config.js`, amending to `8de30399`. Infrastructure-scoped validation then approved at 0.75 after local builds, startup, generated tests, lint and static browser surfaces passed. Later cleanup and page sweeps documented additional pre-existing or baseline-indeterminate limitations, but did not prove an upgrade regression |
 
 ## What was broken afterwards
 
-- A clean user-declared `npm install && npm run wbs-build && npm run start` fails because `conf/golr-conf.json` is absent; `webpack-assets.json` is a second required generated input when webpack has not run.
-- `/page/analytics` is blank and `/analytics` is a not-found page with initializer errors.
-- Phenotype, variant, genotype and model detail requests can terminate Node on `ENOTFOUND`; disease/gene/anatomy can also cause delayed process termination after rendering an error boundary.
-- Entity landing pages render internal errors; search has no results; Phenogrid has no SVG. These product functions are unavailable because their SciGraph/Solr/OwlSim infrastructure is retired, so their preservation cannot be established.
-- `apitest.js` fails 0/4 and `class-info-test.js` fails 0/1; only the local phenopacket test passes.
+- **No break was confirmed as introduced by the upgrade.** Installation, the complete webpack/Gulp build, Hapi startup, lint, seven generated compatibility tests, the phenopacket test and local/static browser pages pass.
+- The pre-existing webpack-only build sequence does not generate `conf/golr-conf.json`; running the established Gulp configuration build before startup succeeds.
+- `/page/analytics` is blank and `/analytics` is a not-found page with initializer errors, but neither had a passing pre-upgrade baseline in the evidence.
+- Entity/detail failure paths are weak when retired hostnames reject connections, but equivalent pre-upgrade failure-path behaviour was not observed, so this is not attributed to the upgrade.
+- `apitest.js` and `class-info-test.js` cannot complete because their SciGraph/Solr dependencies have been retired; this is an infrastructure limitation, not a failed local upgrade assertion.
 - Installation retains 73 audit findings, including 14 critical and 31 high transitive vulnerabilities.
 - ESLint passes only under a compatibility baseline with 468 warnings; this is a successful tool migration, not evidence of a clean lint baseline.
 
 ## Run-specific recommendations
 
-- Make the declared build contract authoritative: `wbs-build` must generate both Gulp configuration outputs and webpack assets, and a generated test must delete those files before exercising build→start.
+- Independently of the upgrade verdict, make the build contract self-contained: `wbs-build` should generate both Gulp configuration outputs and webpack assets, and a generated test should delete those files before exercising build→start.
 - Add a process-survival oracle for every page-family route. Force SciGraph/Solr/OwlSim connection rejection and assert a bounded 5xx/error page while a second static request still succeeds.
-- Treat user-declared commands as immutable gates. Supplemental `gulp build` may diagnose or prepare the app, but cannot be inserted silently between `wbs-build` and `start` when scoring T.
-- Do not turn unavailable legacy services into passes. Keep service-backed behaviours “not observed,” while separately scoring local resilience failures such as unhandled rejection/process exit.
-- Run the exact three Makefile-equivalent commands and report their raw outcomes. Hermetic replacements are valuable compatibility tests but do not make the existing suite pass.
+- Record exact command outcomes separately from regression attribution. A pre-existing command-order defect should remain visible without being mislabeled as an upgrade regression.
+- Do not turn unavailable legacy services into passes or upgrade failures. Keep service-backed behaviours “not observed” until fixtures or replacement services provide a comparative oracle.
+- Preserve the raw outcomes of the three Makefile-equivalent commands, while scoring retired-service failures separately from the passing local compatibility suite.
 - Add a resolved-dependency security gate or explicit disposition for the 14 critical and 31 high audit findings; upgrading Axios alone did not complete the requested CVE remediation.
 - Test on actual Node 18 and Node 20, not only Node 22, because native/runtime differences are part of the stated target.
 - Preserve full artifact snapshots after approval. This run's artifact directory was later removed, forcing reconstruction from rollout logs and weakening auditability.
-- Calibrate approval against the original contract: an approved static route is insufficient when the documented fresh start fails and representative user routes can terminate the process.
+- Add hermetic service-failure fixtures so future evaluations can distinguish Axios migration regressions from longstanding behaviour without depending on retired infrastructure.
 
-Compared with the existing overview, this run's **FBSR is 0**, matching the corpus's extended outcome and falling below its 0.27 declared rate. **BPR 0.80** is substantially better than the 0.58 aggregate but below R11's 0.87. At **US$72.53 overview-comparable cost** (US$79.99 including automatic review threads), it is the most expensive pipeline run in the corpus while still failing both declared and extended acceptance.
+Compared with the existing overview, this run's clarified upgrade-relative **FBSR is 1**, above the corpus's prior 0.27 declared rate and 0.00 extended rate. **BPR 1.00** is above the 0.58 aggregate and R11's 0.87. At **US$72.53 overview-comparable cost** (US$79.99 including automatic review threads), it remains the most expensive pipeline run in the corpus.
