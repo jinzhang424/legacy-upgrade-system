@@ -2,6 +2,8 @@
 
 Verdict: this was the most complete tv-radio upgrade in the series, but it still did not produce a release that passed the user's own browser acceptance check. Fresh installs of all eight npm modules succeed; the Admin API and frontend processes boot; the frontend homepage, `/search/`, the search-result route and all four ordered index-maintenance commands work against MongoDB 8.2.5 and Solr 10, with the index moving 146,740 → 0 → 4 → 141,675 → 146,745 documents. The pipeline nevertheless reported a clean Admin browser while a fresh checkout serves five Git symlink placeholders as JavaScript, leaving the Ember root empty. More importantly, it upgraded Eonasdan Datetimepicker 3 to 4.17.49 without migrating its callers, producing the user's immediate `option ignoreInputValue is not recognized!` error, and paired Bootstrap 5.3.8 JavaScript with Bootstrap 3.2 CSS and Bootstrap 3-era `data-toggle`/`data-dismiss` markup. C = 1, T (declared) = 0, T (extended) = 0, so FBSR = 0. On the 13-cell corpus checklist all observed cells are preserved, but the two run-specific vendored-UI cells are missing: observed 15, preserved 13, BPR 0.87.
 
+**Repair round, 7 Oct 2026.** Continuing the same iterative repair cycle as the 17 Aug and 19 Aug rounds above, a further bounded validator repair pass amended the branch to `ab60c71`, reaching approval at confidence 0.50 after three repair rounds. The scores in the verdict above describe the branch before this round, at pipeline output `b67004d`; after it, the branch scores C = 1, T (declared) = 1, T (extended) = 1, FBSR = 1, and 15/15 observed behaviours preserved (BPR 1.00). The repair evidence and revised score are recorded below. This round's tokens were not captured, so the token and cost accounting in §1.4 is unchanged.
+
 | Item | Value |
 | --- | --- |
 | Chat | Codex session `01a0095b-21a8-7a21-ace3-1c946d4663ca` (`~/.codex/sessions/2026/08/16/rollout-2026-08-16T18-56-02-01a0095b-21a8-7a21-ace3-1c946d4663ca.jsonl`) and its nine stage/follow-up threads; no `refactored_chats` copy exists |
@@ -11,6 +13,7 @@ Verdict: this was the most complete tv-radio upgrade in the series, but it still
 | Run artifacts | `.codex/upgrade-runs/tv-radio/20260816-185842-upgrade-outdated-dependencies-solr/`: impact report 581,441 bytes, change plan 491,424, execution result 13,800, validation report 18,452 |
 | Tool version | Upgrade skill commit `df2d5f9`; Codex CLI 0.147.0 |
 | Pipeline verdict | rejected, confidence 0.259375, because Memcached, Logstash, SMTP, FTP and FFmpeg were unavailable or unconfigured; it claimed all 13 commands, five browser checks and the homepage search flow passed |
+| Repair round, 7 Oct | `ab60c71`, approved at confidence 0.50 after three repair rounds; 13 repair files, 8/8 generated tests, 30/30 content checks, every declared startup/browser/CLI/service check passed |
 | Human decisions beyond the two gates | 4: retry the external blockers; repair the reported date-picker error and retest FFmpeg; retest all blockers; retest SMTP specifically. The intervening “Did you try…” question is not counted as a decision |
 
 ## 1.1 Build effectiveness
@@ -40,6 +43,22 @@ Live independent checks today were stronger than the original validation report'
 
 These service successes use the later ignored configuration files and existing manually managed containers. They show that the five pipeline rejection reasons were environmental and were eventually cleared; they do not repair the Admin browser regressions or make Solr provisioning reproducible. The updated Solr config has `luceneMatchVersion 10.0.0` in both config files, and the live core is Solr 10, but rebuilding/reloading that configset remains a manual deployment step as the user required.
 
+### 7 Oct repair round verification
+
+The 7 Oct repair round fixed all four actionable findings and one additional browser-revealed URL defect:
+
+| Finding | Repair | Independent validator evidence |
+| --- | --- | --- |
+| Datetimepicker v3 callers against 4.17.49 | completed the v4 migration in `compound-input.js`, including the remaining removed `.widget` access | Create Blank Title date picker opened, accepted day 08, and displayed `08/10/2026`; zero console errors |
+| Bootstrap 5 JS with Bootstrap 3 CSS/markup | established Bootstrap 3.4.1 as the compatibility ceiling and replaced JS, CSS, theme, minified assets and matching WOFF2 font as one unit | browser reports Bootstrap 3.4.1; dropdown opens; modal and backdrop show; subsequent navigation has zero console errors |
+| Windows shared-script placeholders | `Admin/API/app.js` now serves the five canonical source files explicitly instead of serving placeholder text | fresh checkout rendered non-empty `#main_container` with 641 visible characters / 9,757 HTML bytes; `Common` loaded successfully |
+| Legacy Winston adapter | replaced `winston-logstash` usage with a native `winston-transport` TCP/TLS transport with bounded queue and reconnect behaviour | no legacy-adapter startup warning; Logstash 8.15 received unique event `codex-native-winston3-20261007` |
+| Express 5 double-slash Admin API URLs exposed by the repaired UI | normalized browser-side API URL construction in `admin-app.js` | real Admin navigation and API calls completed without `/api//` errors |
+
+All eight package directories were covered, including explicit Utilities evidence. Admin API mode, Admin interface mode and frontend startup passed. The validator exercised a non-empty Admin root, a real date field, modal and dropdown, the frontend homepage, `/search/`, and the homepage television search flow with zero browser errors. The four CLI commands passed in the declared order and Solr reconciled to programme 4, country 250, city 141,365, state 51 and course 5,070. Solr 10, MongoDB 8.2.5, InfluxDB 1.12.4, Memcached 1.6.45, Logstash 8.15, SMTP, FTP and FFmpeg/ffprobe all passed their live checks. The six validation containers were returned to their prior stopped state.
+
+One limitation remains: FFmpeg and ffprobe 9.0 executed successfully, but the repository contains no media fixture for the optional fluent-ffmpeg probe/transcode check. This is recorded as a limitation, not silently treated as exercised media behaviour.
+
 ## 1.2 Generated tests
 
 The generator wrote one `node:test` file with five subtests. All five pass today after fresh installation.
@@ -53,6 +72,8 @@ The generator wrote one `node:test` file with five subtests. All five pass today
 | Uglify input, Solr 10 config and CLI completion markers | checks a filename-to-source map in `app.js`, the two `luceneMatchVersion` values, and only that completion-marker strings exist in `chapman.js` | pass | true negative for Uglify/Solr source shape; weak false assurance for CLI behaviour because it does not execute a command or inspect Solr |
 
 At run-instance level a real post-run violation exists and the generated set is green: actual `y = 1`, prediction `ŷ = 0`. Confusion-matrix contribution: TP 0, FP 0, TN 0, FN 1. Treating the five narrow assertions as five independent instances would hide the integration defect; the corpus scores generated testing at run level for this reason. The missing oracle is direct: load every upgraded vendored plugin with its real callers and exercise at least one Admin date field, modal and dropdown.
+
+The repair expanded the generated file from five to eight subtests. The new checks cover all Datetimepicker callers, coherent Bootstrap JS/CSS/theme versions and absence of Bootstrap 5 data attributes, canonical Admin shared-script serving, native Winston 3 transport inheritance, and normalized Admin API URLs. The repaired suite passes 8/8. This does not alter the original run-level confusion-matrix result above; it records coverage added in the later repair round rather than retroactively crediting the initial pipeline run.
 
 ## 1.3 Behaviour preservation
 
@@ -78,11 +99,13 @@ The first 13 rows are the fixed tv-radio checklist from the overview. Rows b14 a
 
 Observed 15, preserved 13: BPR `13 / 15 = 0.87`. Missing 2: MBR `2 / 15 = 0.13`. Exact behaviour equivalence EBER = 0 because at least one reference behaviour is missing. On the unextended 13-cell corpus checklist, observed 13 and preserved 13 gives BPR 1.00; that number is reported only for comparability and is not the headline because it omits the exact vendored UI the run changed. New unrequested behaviours observed: 0; NBR `0 / (13 preserved + 0 new) = 0`.
 
-Not observed directly: a fully materialised Admin checkout running every editor, modal and dropdown; real outbound mail delivery (MailHog verifies SMTP but is not an external recipient); a destructive Primo export upload; media transcoding of a repository fixture (only FFmpeg/ffprobe execution was rechecked). These limitations are not silently scored as passes.
+Post-repair observed 15, preserved 15: BPR `15 / 15 = 1.00`, MBR `0 / 15 = 0`, and repaired-branch EBER = 1. Rows b14 and b15 move from missing to preserved. No new unrequested behaviour was introduced, so repaired NBR remains `0 / (15 + 0) = 0`. The initial-pipeline-output BPR remains 0.87 at `b67004d`, before this repair round brought the branch to `ab60c71`.
+
+Not observed directly after repair: real outbound mail delivery (MailHog verifies SMTP but is not an external recipient), a destructive Primo export upload, and media transcoding of a repository fixture. The formerly unobserved materialised Admin checkout, editor date field, modal and dropdown are now directly observed and pass.
 
 ## 1.4 Cost and efficiency
 
-The accounting reads the final `token_count` event from the orchestrator and every child rollout. The root log has three counter epochs (16 Aug, 17 Aug, and 19 Aug–27 Sep); each is counted once. The cutoff is the evaluation prompt at 6 Oct 03:32:52 UTC, so none of this report's tokens are included. “Minutes” for root rows is summed `task_complete` duration, excluding days when the conversation was idle; child rows use their session wall time.
+The accounting reads the final `token_count` event from the orchestrator and every child rollout. The root log has three counter epochs (16 Aug, 17 Aug, and 19 Aug–27 Sep); each is counted once. The cutoff is the evaluation prompt at 6 Oct 03:32:52 UTC, so none of this report's tokens are included. “Minutes” for root rows is summed `task_complete` duration, excluding days when the conversation was idle; child rows use their session wall time. The 7 Oct repair round's tokens were not captured and so are not added to these figures.
 
 | Thread | Effort | Minutes | Input tokens | Note |
 | --- | --- | ---: | ---: | --- |
@@ -124,6 +147,7 @@ Stage timings from the child logs are 11.9 minutes analysis, 10.2 planning, 4.2 
 | Plan | Passed human gate. 132 planned files, 86 high risk, 65 dependency/vendored/Solr rows, 14 executor checks, eight external-service checks and scope-expansion limit 8. It explicitly required the declared pages, search flow, CLI completion text and Solr counts, but its generated-test design covered version strings and source patterns rather than vendored UI integration. |
 | Execution | Reported passed at `aa5cf2b`: 86 files changed, one repair round, one scope expansion for `tv-radio-frontend/usage-monitoring.js`. It migrated the Express, async, MongoDB, Uglify, logging, metrics, FTP and Socket.IO call sites well enough for today's runtime checks, but left the date-picker calls and Bootstrap 3 UI contract behind. |
 | Validation | Rejected at confidence 0.259375 and amended to `b67004d` after one source-map repair. It reported 30/30 content checks, 13/13 commands, clean Admin/frontend pages and a clean search flow, plus passing Solr/Mongo/Influx and five environmental failures. The service failures were real for that configuration and later cleared. Its Admin-browser claim is not reproducible from a fresh checkout, and it missed the two vendored-UI regressions; rejection was therefore the right release decision for incomplete reasons. |
+| Repair round (7 Oct) | Fresh validator pass amended the branch to `ab60c71`; three repair rounds fixed Datetimepicker v4 visibility, Bootstrap 3.4.1 asset coherence/font loading, canonical shared-script serving, Express 5 URL normalization and native Winston 3 Logstash transport. Result: approved at confidence 0.50, 8/8 generated tests, 30/30 content checks, all startup/browser/CLI/service checks passed. |
 
 ## What was broken afterwards
 
@@ -132,6 +156,8 @@ Stage timings from the child logs are 11.9 minutes analysis, 10.2 planning, 4.2 
 - A clean Windows checkout serves the five `Admin/Interface/shared` symlink placeholders as literal JavaScript, so the Admin Ember UI is empty. This is inherited rather than introduced, but it refutes the validator's claim that it tested a fresh, working Admin browser.
 - The five original rejection blockers were configuration/service availability, not code repairs: after the user's configuration adjustments, Memcached, Logstash, FTP, FFmpeg/ffprobe and SMTP all passed. Solr configset rebuild/reload remains a manual operational responsibility outside the repo.
 - `winston-logstash` still announces itself as a legacy Winston transport three times on frontend startup. Delivery works today, so this is compatibility debt rather than a scored failure.
+
+Disposition after the 7 Oct repair round, at `ab60c71`: all five items above are resolved or reclassified. Datetimepicker, Bootstrap controls, canonical shared-script serving and native Winston transport are fixed and directly verified. The external services all pass with the adjusted environment. Solr configset rebuild/reload remains a manual deployment responsibility by design, not an application workaround. The only unexercised item is an optional FFmpeg media-fixture probe because the repository has no suitable fixture.
 
 ## Run-specific recommendations
 
@@ -144,4 +170,4 @@ Stage timings from the child logs are 11.9 minutes analysis, 10.2 planning, 4.2 
 - Report initial-pipeline and follow-up usage separately. R19 costs US$21.49 at the gate and US$30.74 through the repair/retest finish; reporting only the main-thread status would hide most of both.
 - Calibrate confidence against product checks. A score of 0.259375 correctly prevented release, but all of its stated code/browser checks were green while the user's first Admin editor interaction failed. Browser depth, not external-service availability alone, should dominate confidence for a vendored UI upgrade.
 
-Compared with the existing overview, R19's extended FBSR is 0, the same as every R1–R11 run after immediate or independent faults are counted; unlike R4, R5 and R11 it also fails declared T under a reproducible fresh-checkout browser. Its extended BPR 0.87 ties R11's best overall result and exceeds the previous best tv-radio run, R9 at 0.75, although the unextended 13-cell corpus checklist is 1.00. Its pipeline-only US$21.49 is above the R1–R11 mean US$17.15 and median US$12.16 and would be the third-highest run after R11 (US$52.71) and R8 (US$22.91). Including the US$9.25 post-run repair/retest work raises it to US$30.74, second only to R11.
+Compared with the existing overview, the original R19 pipeline output's extended FBSR is 0, the same as every R1–R11 run after immediate or independent faults are counted; unlike R4, R5 and R11 it also fails declared T under a reproducible fresh-checkout browser. Its original extended BPR 0.87 ties R11's best overall result and exceeds the previous best tv-radio run, R9 at 0.75, although the unextended 13-cell corpus checklist is 1.00. After the 7 Oct repair round, the branch reaches FBSR 1 and BPR 1.00; these reflect the branch state after that round and are reported separately from the initial-pipeline-output aggregate above. Its pipeline-only US$21.49 is above the R1–R11 mean US$17.15 and median US$12.16 and would be the third-highest run after R11 (US$52.71) and R8 (US$22.91). Including the previously counted US$9.25 post-run repair/retest work raises it to US$30.74, second only to R11; no 7 Oct repair tokens or cost were added.
