@@ -8,6 +8,7 @@ The direct Codex session made the requested two-file Java 17-to-21 upgrade corre
 | Target | `projects/PeelAndSlice.Java`, a single-module Maven library/example project with no executable entry process or service |
 | Upgrade request / validation commands | Java source/target 17 → `release 21`; pin `maven-compiler-plugin` 3.16.0; add `project.build.sourceEncoding=UTF-8`; CI matrix `['17']` → `['21']`. Required validation: `mvn -B clean verify --file pom.xml` on Linux and Windows with no extra flags, unchanged test pass/fail counts, class-file major version 65 |
 | Branch and commit evaluated | Branch `upgrade/codex-raw`; base/HEAD `161e0cdd6a499d7989c1da4564c3788648643f97`; the evaluated upgrade is the uncommitted diff in `pom.xml` and `.github/workflows/test.yml`, so there is **no upgrade commit hash** |
+| Change size | **2 tracked, non-generated files; 9 LoC changed (6 additions, 3 deletions)**. Includes the Maven and CI configuration edits that constitute the entire upgrade; excludes generated build output such as `target/`. No production or test source file changed |
 | Run artifacts | No `$upgrade` artifacts. Evidence is the live two-file diff, build outputs, and the single-thread Codex session log. `.codex/upgrade-runs/PeelAndSlice.Java/20260925-093825-upgrade` belongs to a different run and was excluded |
 | Tool version | Codex CLI 0.154.0 |
 | Pipeline verdict | Not applicable: this was not a pipeline run. The agent reported the Windows build and bytecode checks as passing and explicitly said Linux was “delegated” to the updated workflow; that is not an observed Linux pass |
@@ -23,6 +24,7 @@ Independent verification used Maven 3.9.16, Oracle JDK 21.0.12.1 and JDK 17.0.10
 | T declared | **0** | Windows exact command passed, 4/4 tests passed and bytecode was 65, but the required Linux run was not observed. “All user-declared checks pass” is therefore not established |
 | T extended | **0** | Fresh isolated dependency resolution, base/upgrade comparison and static Java 21 scans found no fault, but extended T cannot pass while the declared Linux cell remains unobserved |
 | FBSR | **0** | Declared: `C AND T = 1 AND 0 = 0`; extended: `1 AND 0 = 0` |
+| Change size | **2 files / 9 LoC** | Non-generated tracked diff: 6 inserted lines + 3 deleted lines across `pom.xml` and `.github/workflows/test.yml`. `target/` and other generated build output are excluded; production/test source change size is 0 files / 0 LoC |
 | Dependency coverage | **All 4 requested configuration changes; no library dependency changes** | `pom.xml:10`, `pom.xml:17`, `pom.xml:19`, `.github/workflows/test.yml:16`. The diff is 6 insertions/3 deletions over two files |
 | Syntax/static findings | **No Java 21 incompatibility found** | All 11 production and 5 test sources compile with `release 21`; scan found no `jdk.internal`, `Unsafe`, SecurityManager, Nashorn, JAXB removal, reflective `newInstance`, `--add-opens`, stale `<source>/<target>`, or Java 17 CI entry. `FrameRate.java:4` imports `com.sun.net.httpserver.HttpContext`, but that is the supported exported `jdk.httpserver` API and compiles under `--release 21` |
 

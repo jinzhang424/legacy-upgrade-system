@@ -8,6 +8,7 @@ The `$upgrade` pipeline produced a correct, minimal two-file Java 21 commit and 
 | Target | `projects/PeelAndSlice.Java`, a single-module Maven library/example project with no executable entry process, web surface, datastore or external service |
 | Upgrade request / validation commands | Java source/target 17 → `release 21`; pin `maven-compiler-plugin` 3.16.0; add `project.build.sourceEncoding=UTF-8`; CI matrix `['17']` → `['21']`; preserve behaviour and existing test outcomes. Required validation: `mvn -B clean verify --file pom.xml` on Linux and Windows with no extra flags and the same test counts as before, plus class-file major version 65 |
 | Branch and commit evaluated | `upgrade/java-21` at `3031e77536ebb321e064883a63b92c3e1f2c2575`; base `161e0cdd6a499d7989c1da4564c3788648643f97` on `main` |
+| Change size | **2 substantive files; 9 LoC changed (6 additions, 3 deletions)**. Measured from `161e0cdd..3031e775`; includes `pom.xml` and `.github/workflows/test.yml`, which are the upgrade itself. Generated Maven build output under `target/` is excluded |
 | Run artifacts | `.codex/upgrade-runs/PeelAndSlice.Java/20260925-093825-upgrade/`: `impact-report.json`, `change-plan.json`, `execution-result.json`, `validation-report.json` |
 | Tool version | Upgrade skill `5acacf4a` at workspace commit `74401589`; Codex CLI 0.154.0 |
 | Pipeline verdict | Approved, confidence 1.0, no repairs and no scope expansions. The validation report recommends running Ubuntu CI but does not let that acknowledged missing requirement block approval |
@@ -23,6 +24,7 @@ Independent verification used Maven 3.9.16 and Oracle JDK 21.0.12.1 on Windows 1
 | T declared | **0** | Windows exact command passed, the 4/0/0/0 test outcome matched the parent, and all classes were version 65. The required Linux run was not observed, so not all declared checks pass |
 | T extended | **0** | Fresh isolated resolution, parent/upgrade comparison, all-class bytecode inspection, `jdeps --jdk-internals`, diff checking and Java 21 breaking-pattern scans found no additional fault. Extended T cannot pass while the declared Linux cell remains unobserved |
 | FBSR | **0** | Declared: `C AND T = 1 AND 0 = 0`; extended: `1 AND 0 = 0` |
+| Substantive change size | **2 files / 9 LoC** | 6 inserted lines + 3 deleted lines = 9 changed LoC: 7 lines in `pom.xml` and 2 in `.github/workflows/test.yml`. Generated Maven build output under `target/` is excluded; no production or test source file changed |
 | Dependency/configuration coverage | **4 of 4 requested edits** | `pom.xml:10` adds UTF-8; `pom.xml:17` pins compiler plugin 3.16.0; `pom.xml:19` selects release 21; `.github/workflows/test.yml:16` selects JDK 21. The diff is 6 insertions and 3 deletions over two files |
 | Syntax/static findings | **No Java 21 incompatibility found** | All 11 production and 5 test source files compile with `release 21`; 12 production and 5 test class files report major version 65. `jdeps --jdk-internals` is empty. Searches found no `jdk.internal`, `sun.misc.Unsafe`, SecurityManager, Nashorn, JAXB-removal, reflective `newInstance`, `--add-opens`, stale `<source>/<target>`, or Java 17 CI entry |
 

@@ -8,6 +8,7 @@ The pipeline upgraded all 12 independent Gradle roots (22 build scripts), the fu
 | Target | `projects/coderetreat` |
 | Upgrade request / validation commands | Gradle 8.10.2, Java 21 runtime/source compatibility 17, exact Java dependencies, Node 22 and the listed TypeScript dependencies; every kata's complete module tree; specifically `npm install && npm run test:jest`, `npm run test:mocha`, then the build/test workflow for every kata |
 | Branch and commit evaluated | `upgrade/modernize-java21-node22-gradle8102`, `736a30251cb7bcbbfa50b85e07aa03c7cd2c7d3f` (base `03473638b07f5cebd74ecb49134223222139c3ec`) |
+| Change size | **38 substantive files; 243 LoC changed (151 additions, 92 deletions)**. Measured from `0347363..736a302`; excludes `package-lock.json` and 36 generated Gradle wrapper scripts/JARs, while retaining wrapper version properties and build/test configuration because those are the upgrade itself |
 | Run artifacts | `.codex/upgrade-runs/coderetreat/20260924-215856-upgrade/{impact-report,change-plan,execution-result,validation-report}.json` |
 | Tool version | Upgrade skill at `5acacf4ae770a74b1875cc66cd3ac84311072175` |
 | Pipeline verdict | **Approved**, confidence 0.90, commit `736a302`, 39 content checks and 19 reported commands, no validator repair |
@@ -23,6 +24,7 @@ Independent verification was performed on 3 October 2026 from a clean archive of
 | T declared | **0** | `npm run test:jest` exited 1; `npm run test:mocha` exited 1 with `No test files found`; those were the commands named by the user |
 | T extended | **0** | Full Gradle `test --continue`: 2 roots passed, 9 failed on existing starter/red tests, and ChartSmart was not observed because its interactive test hung; the original npm workflows also fail |
 | FBSR | **0** | `C AND T(declared) = 1 AND 0 = 0`; extended FBSR is also `1 AND 0 = 0` |
+| Substantive change size | **38 files / 243 LoC** | 151 inserted lines + 92 deleted lines = 243 changed LoC. Excludes the generated npm lockfile and generated `gradlew`, `gradlew.bat`, and `gradle-wrapper.jar` files; production source changed in 0 files |
 | Dependency coverage | **128/128 planned dependency changes; 75/75 planned files** | 12/12 wrapper properties select 8.10.2; all 22 `build.gradle` files declare source compatibility 17; requested Java and npm direct versions match |
 | Syntax/static findings | Requested legacy patterns removed | No active `jcenter()`, `compile`, `testCompile`, malformed `1.10`, or `ts-jest/utils`; remaining `compile`/`testCompile` hits are comments. Rimraf scripts use `--glob` at `refactoring/gildedrose/js/package.json:6` and `:8` |
 
