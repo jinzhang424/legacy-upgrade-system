@@ -1,4 +1,4 @@
-# R17 — monarch-legacy: required SPA build fails after the webpack 5 migration
+# D5 — monarch-legacy: required SPA build fails after the webpack 5 migration
 
 The raw Codex run applied the requested dependency declarations and reported the modernization complete after proving a webpack build, lint, Gulp, webpack-dev-server startup and Hapi `/status` response on Node 22/npm 12. A matched-baseline re-evaluation excludes the clean-build configuration gap, retired SciGraph/Solr/OwlSim dependencies, POSIX-only test recipes, missing original lint file, old native dependency graph and existing security debt because they pre-date the upgrade. With those inherited blockers accommodated, the exact commit builds, lints and boots on Node 20, so **C = 1**. It does not meet the complete required build surface: `npm run mng-build` newly exits 1 under HtmlWebpackPlugin 5. Accordingly **T(declared) = 0 and declared FBSR = 1 AND 0 = 0**. Webpack-dev-server 5 also logs a proxy exception on every request, so **T(extended) = 0 and extended FBSR = 1 AND 0 = 0**. Of 15 observable behaviour cells, 14 are preserved and one is missing: **BPR = 14 / 15 = 0.93; MBR = 1 / 15 = 0.07; NBR = 0 / (14 + 0) = 0.00**.
 
@@ -8,9 +8,9 @@ The raw Codex run applied the requested dependency declarations and reported the
 | Target | `projects/monarch-legacy`, npm package `monarch-app@3.0.0`: Hapi backend, legacy jQuery/Vue 2 browser surfaces, webpack bundles, Gulp-generated configuration, and live SciGraph/Solr/OwlSim dependencies |
 | Upgrade request / validation commands | Node 18/20 compatibility; Hapi/Inert, Babel 7, webpack 5, Sass, ESLint 8, Vue 2.7, Bootstrap 5, Axios 1, Day.js, Gulp 4, Mocha 10, Mustache 4, Underscore 1.13 and xml2js 0.6. Declared checks: `npm install && npm run wbs-build && npm run start`, `npm run wbs-lint`, and `make test` or equivalent `node tests/*.js` commands. Required build-surface check confirmed by the evaluator: `npm run mng-build` |
 | Branch and commit evaluated | `codex-raw-upgrade`, `c4c26eb32c25934905b16117c6bcb0cc6e0fcd5c` (base `e337d87a563ec630aca45492f28a6564f980068b`). The raw session delivered an uncommitted working tree; the user committed that same 28-file upgrade two days later |
-| Change size | **20 production/test source files; 618 LoC changed (321 additions, 297 deletions)**. Measured from `c4c26eb3` against `e337d87a` using the same filter as R18; excludes `package-lock.json`, configuration-only metadata and any generated build/configuration outputs |
+| Change size | **20 production/test source files; 618 LoC changed (321 additions, 297 deletions)**. Measured from `c4c26eb3` against `e337d87a` using the same filter as R13; excludes `package-lock.json`, configuration-only metadata and any generated build/configuration outputs |
 | Run artifacts | None. This was a raw run, so there is no `.codex/upgrade-runs/...` impact report, change plan, execution result or validation report. Evidence was reconstructed from the complete rollout logs, immutable commit, lockfile and fresh installations |
-| Tool version | Codex CLI 0.154.0 |
+| Tool version | Codex CLI |
 | Pipeline verdict | No formal pipeline gate. The raw agent's final answer was a de facto **approval/completion**: it said installation, build, lint, Gulp, webpack-dev-server, startup and `/status` passed, treating the developer-test failures as retired external infrastructure |
 | Human decisions beyond the two gates | No pipeline gates and no substantive human intervention during the run. The only later human action visible here was committing the delivered working tree as `c4c26eb3` |
 
@@ -57,7 +57,7 @@ Therefore the generated-test confusion matrix is **TP 0, FP 0, TN 0, FN 0**: the
 
 ## 1.3 Behaviour preservation
 
-This uses the same fixed 24-cell Monarch checklist introduced in R14. “Not observed” means browser attachment or retired service dependencies prevented a product-level conclusion; those cells are excluded from BPR/MBR. HTTP, process survival, compilation and source-diff evidence are identified explicitly.
+This uses the same fixed 24-cell Monarch checklist introduced in R13. “Not observed” means browser attachment or retired service dependencies prevented a product-level conclusion; those cells are excluded from BPR/MBR. HTTP, process survival, compilation and source-diff evidence are identified explicitly.
 
 | Behaviour | Status | Evidence |
 | --- | --- | --- |
@@ -97,15 +97,15 @@ The nine not-observed cells are limitations, not assumed passes or failures. Bro
 | Raw coding thread | medium | 37.3 wall | 14,456,762 (14,255,488 cached) | Analysis, direct editing, repeated build repairs and validation; 33,411 output tokens |
 | Automatic approval review | low | 1.3 active, overlapping | 34,039 (19,968 cached) | One review of the escalated Gulp/network action; 315 output tokens |
 
-Literal all-thread accounting is **14,490,801 input tokens** (14,275,456 cached; 215,345 uncached), **33,726 output tokens**, and 14,524,527 total tokens. At the overview's GPT-5.5-equivalent rates—US$5/M uncached input, US$0.50/M cached input and US$30/M output—the notional cost is **US$9.23**: `0.215345×5 + 14.275456×0.5 + 0.033726×30 = 9.226`.
+Literal all-thread accounting is **14,490,801 input tokens** (14,275,456 cached; 215,345 uncached), **33,726 output tokens**, and 14,524,527 total tokens. At `gpt-5.6-sol` list rates—US$4/M uncached input, US$0.40/M cached input and US$20/M output—the notional cost is **US$7.25**: `0.215345×4 + 14.275456×0.4 + 0.033726×20 = 7.246`.
 
 There are no formal pipeline-stage timings. The first edit landed 5.2 minutes after task start; the remaining 32.1 minutes interleaved execution, dependency installation, build repair and validation, so manufacturing separate plan/execution/validation durations would be misleading. The 37.3-minute wall time excludes today's evaluation.
 
-Against R1–R11 in the existing overview, US$9.23 is below the US$17.15 mean and US$12.16 median. Input volume, 14.49 M, is below the 17.5 M mean but above the 10.7 M median; wall time is below the 142-minute mean and 73-minute median. Baseline-adjusted BPR 0.93 is above both the existing pooled 0.58 and R11's 0.87. Adding this run to the overview arithmetic changes 74/128 to **88/143 = 0.62**. Its declared FBSR 0 is below the overview's 0.27 rate; its extended FBSR 0 matches the overview's 0.00.
+Against R1–R11 in the existing overview, US$7.25 is below the US$15.96 mean and US$12.16 median. Input volume, 14.49 M, is below the 17.5 M mean but above the 10.7 M median; wall time is below the 142-minute mean and 73-minute median. Baseline-adjusted BPR 0.93 is above both the existing pooled 0.58 and R11's 0.87. Adding this run to the overview arithmetic changes 74/128 to **88/143 = 0.62**. Its declared FBSR 0 is below the overview's 0.27 rate; its extended FBSR 0 matches the overview's 0.00.
 
 ## 1.5 LLM configuration
 
-GPT-5.6-sol through Codex CLI 0.154.0 at medium reasoning effort for the raw coding thread; `codex-auto-review` at low effort for the one approval-review thread. The run used Windows/PowerShell, workspace-write sandboxing, on-request approvals, Node 22.22.2 and npm 12.0.2. The target contract was Node 18/20, but the run did not execute either target runtime. Independent evaluation added Node 20.19.5/npm 10.8.2 and retained Node 22.22.2/npm 12.0.2 for comparison.
+`gpt-5.6-sol` through Codex CLI at medium reasoning effort for the raw coding thread; `codex-auto-review` at low effort for the one approval-review thread. The run used Windows/PowerShell, workspace-write sandboxing, on-request approvals, Node 22.22.2 and npm 12.0.2. The target contract was Node 18/20, but the run did not execute either target runtime. Independent evaluation added Node 20.19.5/npm 10.8.2 and retained Node 22.22.2/npm 12.0.2 for comparison.
 
 ## Stage outcomes
 
@@ -113,7 +113,7 @@ GPT-5.6-sol through Codex CLI 0.154.0 at medium reasoning effort for the raw cod
 | --- | --- |
 | Analysis | Ad hoc repository scans identified Hapi/request/Fibers, webpack, Gulp and BootstrapVue coupling, but there was no impact artifact or fixed validation inventory. It noticed BootstrapVue's Bootstrap 4 caveat yet did not turn that into a blocking check, and it did not trace the remaining `sleep@3.0.0` native dependency |
 | Plan | No durable change plan was produced. The run moved directly from inspection to a broad patch and repaired failures interactively. The absence of an explicit matrix omitted actual Node 18/20 installs, the SPA entry, proxied dev-server requests, browser controls and fresh-tree invariants |
-| Execution | The raw diff touched 28 tracked files; after the R18 source-size exclusions, 20 production/test source files account for 618 changed LoC. Changes covered the dependency manifest/lock, Hapi lifecycle, synchronous Axios worker bridge, webpack 5 config, Gulp 4 tasks and frontend compatibility edits. All named direct dependencies were updated, but Bootstrap 4/5 coexistence, native sleep, the EJS template and proxy migration remained incomplete |
+| Execution | The raw diff touched 28 tracked files; after the R13 source-size exclusions, 20 production/test source files account for 618 changed LoC. Changes covered the dependency manifest/lock, Hapi lifecycle, synchronous Axios worker bridge, webpack 5 config, Gulp 4 tasks and frontend compatibility edits. All named direct dependencies were updated, but Bootstrap 4/5 coexistence, native sleep, the EJS template and proxy migration remained incomplete |
 | Validation | Repeated Node 22/npm 12 installs, legacy webpack build, lint, Gulp, startup and `/status` passed; Makefile/equivalent test failures were correctly associated with retired infrastructure, although the local phenopacket assertion was not isolated. Validation did not run the required `mng-build`, make a representative dev-server request or drive browser controls. Because `mng-build` is part of the required build surface and fails, the completion verdict was wrong even before the extended oracle |
 
 ## What was broken afterwards
@@ -138,4 +138,4 @@ Not counted as broken afterwards: the Node 20 `sleep@3` install failure, Gulp-be
 - Add startup/page smoke tests for `/`, `/status`, `/analyze/phenotypes`, `/analytics` and one proxied dev-server route. The run's `/status`-only smoke test had no sensitivity to the faults users encounter next.
 - Require a formal plan and immutable validation matrix even for raw upgrades. This run spent little time on planning and consequently omitted the exact target runtimes and two first-party entry paths.
 
-Compared with the existing overview, this run's baseline-adjusted **declared FBSR is 0**, below the 0.27 declared rate, and **extended FBSR is 0**, equal to the overview's 0.00 extended rate. **BPR 0.93** is above the 0.58 aggregate and R11's 0.87; adding the run produces 88/143 = 0.62 pooled. Its **US$9.23** all-thread notional cost is below both the US$17.15 mean and US$12.16 median. The corrected result is therefore relatively cheap and high-preservation, but unsuccessful: a required first-party build fails, with a second webpack-5 regression exposed by the extended oracle.
+Compared with the existing overview, this run's baseline-adjusted **declared FBSR is 0**, below the 0.27 declared rate, and **extended FBSR is 0**, equal to the overview's 0.00 extended rate. **BPR 0.93** is above the 0.58 aggregate and R11's 0.87; adding the run produces 88/143 = 0.62 pooled. Its **US$7.25** all-thread notional cost is below both the US$15.96 mean and US$12.16 median. The corrected result is therefore relatively cheap and high-preservation, but unsuccessful: a required first-party build fails, with a second webpack-5 regression exposed by the extended oracle.

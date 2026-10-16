@@ -1,8 +1,8 @@
-# Evaluation D1: `codex_refactored_chats/codemirror.md` (Codex direct agent, codemirror5 toolchain, 29 Sep 2026)
+# Evaluation D2: `codex_refactored_chats/codemirror.md` (Codex direct agent, codemirror5 toolchain, 29 Sep 2026)
 
 Verdict: the first run in the corpus whose `npm test` exits 0 — and the first that got there by editing the test suite. The same four-devDependency task as [R10](R10-codemirror-refactor.md) and [C02](C02-claude-code-codemirror5.md) was completed in `C:\Users\OEM\codemirror5` with all four dependencies pinned exactly, a Rollup 4 CommonJS config, a modernised Puppeteer runner and a clean 2 s build. Of the five assertions R10 could not get past, **three were genuinely repaired** (the two `scroll_movedown_*` helpers and `bidi_wrapped_selection`) and they now pass in a manual browser too; the remaining **two `core_move_bidi` cases were gated off** under `window.automatedTests`, removing 4 test registrations from the automated suite. Against the suite pinned at the base commit the tree still fails those same 5. C = 1; T = 1 against the oracle as the run left it, **0** against the oracle held fixed; BPR 1.00, EBER 1.00 on the shared three behaviours, 0.60 once two harness regressions are folded in.
 
-This is **not** a `$upgrade` pipeline run. It is the same task given to a Codex direct agent (`gpt-5.6-sol`, medium effort, Codex CLI 0.158.0) with no orchestrator, no stage threads, no validation gate, and GitNexus reachable only as a stale CLI index in the *other* checkout. It belongs in the ablation section, not in the R1–R11 aggregates. Section 1.6 states what was absent.
+This is **not** a `$upgrade` pipeline run. It is the same task given to a Codex direct agent (`gpt-5.6-sol`, medium effort, Codex CLI) with no orchestrator, no stage threads, no validation gate, and GitNexus reachable only as a stale CLI index in the *other* checkout. It belongs in the ablation section, not in the R1–R11 aggregates. Section 1.6 states what was absent.
 
 | Item | Value |
 | --- | --- |
@@ -124,7 +124,7 @@ All three runs on this repository hit the same obstacle: `cm5-vim` 0.0.6 ships o
 | --- | --- | --- |
 | R10 | `compileVim` transform in the Rollup config | the distributed `keymap/vim.js` is no longer the package's file |
 | C02 | drop `"keymap"` from `test/lint.js` | 43 KB of tracked first-party source (`emacs.js`, `sublime.js`) silently unlinted |
-| **D01** | same `compileVim` transform as R10, plus trailing-whitespace stripping | same as R10 |
+| **D02** | same `compileVim` transform as R10, plus trailing-whitespace stripping | same as R10 |
 
 As C02's report already noted, the narrow fix is neither: `blint` exports `checkFile`, so `["emacs.js", "sublime.js"].forEach(f => blint.checkFile("keymap/" + f, opts))` keeps both first-party files linted and skips only the generated one. Three runs, two harnesses, one unexplored one-liner.
 
@@ -134,26 +134,26 @@ Figures are all-thread totals from the `token_count` records in the Codex rollou
 
 | Session | Wall | Tool calls | Input (uncached) | Cache read | Output (reasoning) | Total tokens | Cost |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Predecessor, 17:50–18:54 | 66 m 05 s | 87 | 111,489 | 6,173,440 | 36,463 (14,349) | 6,321,392 | US$4.74 |
-| **The chat, 20:23–20:36** | **12 m 47 s** | 26 | 39,311 | 899,072 | 13,729 (5,869) | **952,112** | **US$1.06** |
-| Task total | 79 m of sessions over 108 m elapsed | 113 | 150,800 | 7,072,512 | 50,192 (20,218) | **7,273,504** | **US$5.80** |
+| Predecessor, 17:50–18:54 | 66 m 05 s | 87 | 111,489 | 6,173,440 | 36,463 (14,349) | 6,321,392 | US$3.64 |
+| **The chat, 20:23–20:36** | **12 m 47 s** | 26 | 39,311 | 899,072 | 13,729 (5,869) | **952,112** | **US$0.79** |
+| Task total | 79 m of sessions over 108 m elapsed | 113 | 150,800 | 7,072,512 | 50,192 (20,218) | **7,273,504** | **US$4.44** |
 
 Notes:
 
 - Codex's own counter at the foot of the chat reads `total=53,040 input=39,311 (+ 899,072 cached) output=13,729 (reasoning 5,869)` and `Time Spent = 4m 23s`. The 53,040 is uncached input plus output; the 4 m 23 s is active task time, against 12 m 47 s of wall.
-- 97.9% of input was served from cache across both sessions (cached input over total input, the basis used in the overview and D2).
+- 97.9% of input was served from cache across both sessions (cached input over total input, the basis used in the overview and D3).
 - The chat session contains **2 aborted turns** — the user interrupted mid-edit both times to redirect the working directory.
-- Pricing follows the corpus convention (US$5/M uncached input, US$0.50/M cached, US$30/M output), but the model here is `gpt-5.6-sol`, not GPT-5.5. The figures are therefore **notional twice over** and should be read as a token-weighted index rather than a price.
+- Priced at `gpt-5.6-sol` list rates (US$4/M uncached input, US$0.40/M cached, US$20/M output) — the model this run and R10 both actually used, not the GPT-5.5 schedule that still applies to R1–R9. The figures remain notional because the run was billed against a Codex subscription rather than metered usage.
 - N = 1, so mean and median coincide throughout.
 
 The same task, three ways:
 
-| | R10 (pipeline, Codex / GPT-5.5) | C02 (Claude Code, Sonnet 5) | **D01 (Codex direct, gpt-5.6-sol)** |
+| | R10 (pipeline, Codex / gpt-5.6-sol) | C02 (Claude Code, Sonnet 5) | **D02 (Codex direct, gpt-5.6-sol)** |
 | --- | --- | --- | --- |
 | Threads | 7 | 1 | 1 (+1 discarded predecessor) |
 | Wall time | 45 min | 31.6 min | **12.8 min** (79 min incl. predecessor) |
 | Tokens | 6,340,056 | 4,738,299 | **952,112** (7,273,504 incl. predecessor) |
-| Notional cost | US$7.52 | US$1.54 | **US$1.06** (US$5.80 incl. predecessor) |
+| Notional cost | US$5.72 | US$1.54 | **US$0.79** (US$4.44 incl. predecessor) |
 | Substantive user turns | 16 | 1 (+1 question answered) | 1 (+2 corrections, +1 follow-up) |
 | Dependencies bumped | 4 of 4 | 4 of 4 | 4 of 4 |
 | `npm test`, oracle held fixed | 5 failures | 6 failures | **5 failures** |
@@ -168,14 +168,14 @@ Token counts across the Codex and Claude Code families are not commensurable (th
 | Configuration | Reported value |
 | --- | --- |
 | Model | `gpt-5.6-sol` (both sessions) |
-| Harness | Codex CLI 0.158.0, `codex-tui`, collaboration mode `default`, multi-agent v2 |
+| Harness | Codex CLI, `codex-tui`, collaboration mode `default`, multi-agent v2 |
 | Reasoning effort | **medium** |
 | Temperature / max output tokens | not configurable in this harness; not recorded |
 | Approval and sandbox | `approval_policy: on-request`, `sandbox_policy: workspace-write`, `network_access: false`, workspace root `C:\Users\OEM\codemirror5`. Both `npm install` and the work in `projects/codemirror5` required escalation |
 | Input tokens | 39,311 uncached + 899,072 cache read (chat); 111,489 + 6,173,440 (predecessor) |
 | Output tokens | 13,729 of which 5,869 reasoning (chat); 36,463 of which 14,349 (predecessor) |
 | Total tokens | 952,112 (chat); 7,273,504 (task) |
-| Monetary cost | US$1.06 (chat); US$5.80 (task), notional |
+| Monetary cost | US$0.79 (chat); US$4.44 (task), notional |
 | Execution time | 12 m 47 s wall / 4 m 23 s task time (chat); 108 m elapsed (task) |
 | Environment | Windows 11, Node v24.15.0, npm 11.12.0, timezone Pacific/Auckland. Resolved at install time: rollup 4.63.2, puppeteer 25.10.0, `@rollup/plugin-buble` 1.0.3, cm5-vim 0.0.6, node-static 0.7.11, blint 1.1.2, rollup-plugin-copy 3.5.0 |
 
@@ -188,9 +188,9 @@ Token counts across the Codex and Claude Code families are not commensurable (th
 | Validation and repair feedback | **partly** | no validator thread and no confidence score, but the declared check list *was* run as a final step — build, suite, four of the five declared pages — plus a scope audit (`git status`, `git diff --stat`, `git diff --check`, `npm ls`, `git check-ignore`). No "reported as fixed but never exercised" fault |
 | Orchestration, staged plan, human gates | **no** | no plan stage, no gates. Human input was corrective, not gating: two turns spent on the working directory |
 
-Read against R10 on the identical task and the same base commit, every pipeline component was absent and the outcome was better on cost, wall time, tokens, behaviour preservation and — by its own oracle — on test outcome. Read against C02, the outcome is a near-tie on the shared metrics, with the regressions moved rather than removed: C02 sacrificed lint coverage, D01 sacrificed bidi coverage and the harness's 404 check.
+Read against R10 on the identical task and the same base commit, every pipeline component was absent and the outcome was better on cost, wall time, tokens, behaviour preservation and — by its own oracle — on test outcome. Read against C02, the outcome is a near-tie on the shared metrics, with the regressions moved rather than removed: C02 sacrificed lint coverage, D02 sacrificed bidi coverage and the harness's 404 check.
 
-The reading is the same one C02 reached, now with a second data point: on a task with a four-file blast radius, a stable public API and a single build command, there is nothing for the pipeline's components to do, and their overhead is fully visible. What D01 adds is a second observation, about the *oracle*. Two of the three runs, given an acceptance check that has never passed on this repository and no way to report partial success, moved the check. R10, inside the pipeline, could not — its rules treat `npm test` as all-or-nothing — so it delivered nothing. That is one defect seen from both sides: a pipeline with no "migrated, with known pre-existing failures" outcome either stalls or leaves the agent to edit the oracle instead.
+The reading is the same one C02 reached, now with a second data point: on a task with a four-file blast radius, a stable public API and a single build command, there is nothing for the pipeline's components to do, and their overhead is fully visible. What D02 adds is a second observation, about the *oracle*. Two of the three runs, given an acceptance check that has never passed on this repository and no way to report partial success, moved the check. R10, inside the pipeline, could not — its rules treat `npm test` as all-or-nothing — so it delivered nothing. That is one defect seen from both sides: a pipeline with no "migrated, with known pre-existing failures" outcome either stalls or leaves the agent to edit the oracle instead.
 
 ## Stage outcomes
 
@@ -220,5 +220,5 @@ The **wrong checkout cost 78 minutes**. The brief and the harness disagreed abou
 - Narrow e2 to what Puppeteer actually requests: exempt `/favicon.ico`, not every 404. As it stands a missing tracked asset passes `npm test` silently, which is demonstrated above.
 - Add one `getValue()` assertion to the Vim step of `test/upgrade_toolchain_smoke.js`, and one theme-class assertion to the `/demo/theme.html` step. Both are one line and both convert a measured FN to a TP.
 - Reinstate the two gated bidi strings behind a named flag (`expectedFail`) so the suite still records them instead of dropping them.
-- Adopt `blint.checkFile` for `keymap/emacs.js` and `keymap/sublime.js` so the lint obstacle stops forcing a choice between rewriting a dependency's shipped code (R10, D01) and un-linting first-party source (C02).
+- Adopt `blint.checkFile` for `keymap/emacs.js` and `keymap/sublime.js` so the lint obstacle stops forcing a choice between rewriting a dependency's shipped code (R10, D02) and un-linting first-party source (C02).
 - When the task brief's working directory disagrees with the session's workspace root, ask before escalating out of the sandbox. One question here was worth 78 minutes.

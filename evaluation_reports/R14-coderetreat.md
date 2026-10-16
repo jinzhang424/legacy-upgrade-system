@@ -1,6 +1,6 @@
-# R18 — coderetreat: complete toolchain upgrade, incomplete validation contract
+# R14 — coderetreat: complete toolchain upgrade, incomplete validation contract
 
-The pipeline upgraded all 12 independent Gradle roots (22 build scripts), the complete five-project Racing Car tree, and the Gilded Rose TypeScript toolchain. The exact upgrade commit installs, compiles, and boots its only runnable entry task on Java 21 and Node 22. It nevertheless approved a run without executing the two npm workflows the user originally required, substituting Jest discovery and a Mocha dry run. Fresh independent execution on 4 October 2026 finds `npm run test:jest` failing an unchanged placeholder assertion and `npm run test:mocha` failing with `No test files found`. Thus **C = 1, T(declared) = 0, T(extended) = 0, and FBSR = 0**. No production source changed; 16 observed behaviour cells are preserved and one GUI cell is not observed, so BPR is 1.00. Including the orchestrator, five stage agents, and four automatic guardian-review threads, the run consumed 29.6M input tokens at a notional cost of US$24.89.
+The pipeline upgraded all 12 independent Gradle roots (22 build scripts), the complete five-project Racing Car tree, and the Gilded Rose TypeScript toolchain. The exact upgrade commit installs, compiles, and boots its only runnable entry task on Java 21 and Node 22. It nevertheless approved a run without executing the two npm workflows the user originally required, substituting Jest discovery and a Mocha dry run. Fresh independent execution on 4 October 2026 finds `npm run test:jest` failing an unchanged placeholder assertion and `npm run test:mocha` failing with `No test files found`. Thus **C = 1, T(declared) = 0, T(extended) = 0, and FBSR = 0**. No production source changed; 16 observed behaviour cells are preserved and one GUI cell is not observed, so BPR is 1.00. Including the orchestrator, five stage agents, and four automatic guardian-review threads, the run consumed 29.6M input tokens at a notional cost of US$19.29.
 
 | Field | Value |
 | --- | --- |
@@ -10,7 +10,7 @@ The pipeline upgraded all 12 independent Gradle roots (22 build scripts), the co
 | Branch and commit evaluated | `upgrade/modernize-java21-node22-gradle8102`, upgrade commit `736a30251cb7bcbbfa50b85e07aa03c7cd2c7d3f`, base `03473638b07f5cebd74ecb49134223222139c3ec` |
 | Run artifacts | `.codex/upgrade-runs/coderetreat/20260924-215856-upgrade/{impact-report,change-plan,execution-result,validation-report}.json` |
 | Change size | **38 substantive files; 243 LoC changed (151 additions, 92 deletions)**. Measured from `0347363..736a302`; excludes `package-lock.json` and 36 generated Gradle wrapper scripts/JARs, while retaining wrapper version properties and build/test configuration because those are the upgrade itself |
-| Tool version | Codex CLI 0.154.0; upgrade skill at `5acacf4ae770a74b1875cc66cd3ac84311072175` |
+| Tool version | Codex CLI; upgrade skill at `5acacf4ae770a74b1875cc66cd3ac84311072175` |
 | Pipeline verdict | **Approved**, confidence 0.90, final commit `736a302`; 39/39 content checks passed, 17/19 command records passed and two were skipped (no startup or generated tests), with no validator repair |
 | Human decisions beyond the two gates | Six: authorize the first plan revision; approve the Dijkstra package revision; clarify that intentional red assertions need not be repaired; approve the compilation-only Java plan; approve non-asserting Jest/Mocha validation; continue after the usage-limit pause |
 
@@ -86,13 +86,13 @@ Observed 16, preserved 16: **BPR = 16 / 16 = 1.00**. Missing 0 of 16 observed: *
 | Validation guardian | automatic / not recorded | 11.5 span | 385,340 | Automatic review thread; overlaps validation |
 | Total | — | **614 main-thread wall** | **29,556,218** | 28,345,728 cached; 1,210,490 uncached; output 155,475; reasoning 39,036 |
 
-Notional cost is **US$24.89** using the overview's GPT-5.5-equivalent rates: `(1.210490M × US$5) + (28.345728M × US$0.50) + (0.155475M × US$30) = US$6.05 + US$14.17 + US$4.66 = US$24.89`. The cache share is 95.9%. The complete input count is 5.30 times the orchestrator thread's 5.58M, illustrating why the main-thread status line understates usage. Guardian spans overlap their corresponding stages and are not added to wall time.
+Notional cost is **US$19.29** at `gpt-5.6-sol` list rates: `(1.210490M × US$4) + (28.345728M × US$0.40) + (0.155475M × US$20) = US$4.84 + US$11.34 + US$3.11 = US$19.29`. The cache share is 95.9%. The complete input count is 5.30 times the orchestrator thread's 5.58M, illustrating why the main-thread status line understates usage. Guardian spans overlap their corresponding stages and are not added to wall time.
 
-Against the eleven runs in the overview, 29.6M input tokens exceed the 17.4M mean and 10.5M median. US$24.89 exceeds the existing US$17.15 mean and US$12.16 median and would be the second-highest cost, after R11's US$52.71 and above R8's US$22.91. The 614-minute wall time is more than four times the 142-minute mean and second only to R11's 784 minutes.
+Against the eleven runs in the overview, 29.6M input tokens exceed the 17.4M mean and 10.5M median. US$19.29 exceeds the existing US$15.96 mean and US$12.16 median and would be the third-highest cost, after R11's US$41.36 and R8's US$22.91, just below R4's US$19.45. The 614-minute wall time is more than four times the 142-minute mean and second only to R11's 784 minutes.
 
 ## 1.5 LLM configuration
 
-The orchestrator and five stage agents used GPT-5.6-sol through Codex CLI 0.154.0 at medium effort on Windows 11. The four guardian-review logs do not record a model or effort in session metadata, so those fields cannot be verified; their token usage is nevertheless included. The upgrade-skill revision was `5acacf4`. GitNexus indexing supported discovery, supplemented by exact filesystem and manifest scans. Independent verification used Java 21.0.12.1, Node 22.22.2, npm 12.0.2, and Gradle 8.10.2 wrappers.
+The orchestrator and five stage agents used `gpt-5.6-sol` through Codex CLI at medium effort on Windows 11. The four guardian-review logs do not record a model or effort in session metadata, so those fields cannot be verified; their token usage is nevertheless included. The upgrade-skill revision was `5acacf4`. GitNexus indexing supported discovery, supplemented by exact filesystem and manifest scans. Independent verification used Java 21.0.12.1, Node 22.22.2, npm 12.0.2, and Gradle 8.10.2 wrappers.
 
 ## Stage outcomes
 
@@ -119,7 +119,7 @@ The orchestrator and five stage agents used GPT-5.6-sol through Codex CLI 0.154.
 - Run failing checks on the base under the same JDK, OS, and dependency conditions before attributing them. This is especially important for ChartSmart's five approved-versus-received images.
 - Replace global `skipLibCheck` with separate Jest/Mocha TypeScript configurations or scoped `types` arrays so upgraded declaration packages remain checked.
 - Report multiproject results at child level. Racing Car's leaderboard, telemetry, and alarm suites pass even though text converter makes the aggregate root fail.
-- Include automatic guardian-review logs in usage accounting. In this run they add 1,632,355 input and 4,132 output tokens, raising notional cost by about US$2.92.
+- Include automatic guardian-review logs in usage accounting. In this run they add 1,632,355 input and 4,132 output tokens, raising notional cost by roughly US$2.26 at `gpt-5.6-sol` rates.
 - Surface npm audit and Gradle deprecation output as non-blocking debt with explicit ownership rather than allowing it to disappear behind successful compile commands.
 
-Compared with the overview, this run's declared and extended **FBSR are both 0**: below the existing declared rate of 0.27 and equal to the existing extended rate of 0. Its **BPR is 1.00**, above the previous best of 0.87; adding its 16 observed preserved cells would move the pooled BPR from `74/128 = 0.58` to `90/144 = 0.63`. Its **US$24.89** notional cost is above both existing central measures and would rank second-highest among the pipeline runs.
+Compared with the overview, this run's declared and extended **FBSR are both 0**: below the existing declared rate of 0.27 and equal to the existing extended rate of 0. Its **BPR is 1.00**, above the previous best of 0.87; adding its 16 observed preserved cells would move the pooled BPR from `74/128 = 0.58` to `90/144 = 0.63`. Its **US$19.29** notional cost is above both existing central measures and would rank third-highest among the pipeline runs.

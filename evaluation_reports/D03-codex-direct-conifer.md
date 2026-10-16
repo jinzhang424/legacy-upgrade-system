@@ -1,16 +1,16 @@
-# Evaluation D2: `codex_refactored_chats/conifer.md` (Codex direct agent, Conifer full stack, 30 Sep – 2 Oct 2026)
+# Evaluation D3: `codex_refactored_chats/conifer.md` (Codex direct agent, Conifer full stack, 30 Sep – 2 Oct 2026)
 
 Verdict: the best-preserved Conifer upgrade in the corpus after R11, and the first direct agent to pass the brief's own declared checks. The same full-stack modernization as [R11](R11-conifer.md) and [C03](C03-claude-code-conifer.md) was completed in `C:\Users\OEM\conifer` with 13 services up and zero restarts, a hydrating React 18 / webpack 5 client, every declared page clean in a real browser, both external-service checks passing, all four baseline defects repaired, and — unlike R11 — the anonymous-access check intact. Against a 31-behaviour oracle, **26 behaviours are preserved and 5 are lost**: BPR 0.84, MBR 0.16, EBER 0, NBR 0. Three of the five losses are the same two redis-py regressions that R11 and C03 both shipped (bookmark lists, WARC indexing); the other three are pages that throw a React hydration error (`/{user}`, `/{user}/{coll}/manage`) or return an SSR 500 (`/{user}/_settings`) when a logged-in user opens them.
 
 C = 1, T (declared) = 1, T (independent) = 0, FBSR 1 declared / 0 independent.
 
-This is **not** a `$upgrade` pipeline run. It is the Conifer brief given to a Codex direct agent (`gpt-5.6-sol`, medium effort, Codex CLI 0.159.2) with no orchestrator, no stage threads, no separate validator and no GitNexus (the tool mix is `exec` ×545 and `wait` ×10, nothing else). It belongs in the ablation section next to C03, not in the R1–R11 aggregates. Section 1.6 states what was absent.
+This is **not** a `$upgrade` pipeline run. It is the Conifer brief given to a Codex direct agent (`gpt-5.6-sol`, medium effort, Codex CLI) with no orchestrator, no stage threads, no separate validator and no GitNexus (the tool mix is `exec` ×545 and `wait` ×10, nothing else). It belongs in the ablation section next to C03, not in the R1–R11 aggregates. Section 1.6 states what was absent.
 
 | Item | Value |
 | --- | --- |
 | Chat | `codex_refactored_chats/conifer.md` (2,273 lines; the brief and the agent's command log appear twice in it, once per resumed turn) |
 | Session log | `~/.codex/sessions/2026/09/30/rollout-2026-09-30T19-53-55-01a0f117-….jsonl`, one thread, 559 model requests, no sub-agents. An earlier attempt on the same brief, `rollout-2026-09-30T18-43-47-01a0f0d7-….jsonl`, ran 57 minutes, ended on the account usage limit and is not costed here (24.1 M tokens) |
-| Target | `C:\Users\OEM\conifer` at base commit `c406b480`, the same clone and commit as C03, so the R11 / C03 comparison holds. The brief says to work in `C:\Users\OEM\conifer` this time, so the working-directory problem that hit C02, C03 and D01 did not occur |
+| Target | `C:\Users\OEM\conifer` at base commit `c406b480`, the same clone and commit as C03, so the R11 / C03 comparison holds. The brief says to work in `C:\Users\OEM\conifer` this time, so the working-directory problem that hit C02, C03 and D02 did not occur |
 | Validation commands from user | `docker compose build`; `docker compose up -d` for 12 services (mailserver omitted); readiness on `http://localhost:8089/`; key pages `/_login`, `/_register`, `/_faq`, `/docs/api`; flows "Sign Up client-side navigation" and "invalid login"; live Redis and Solr checks. The brief states that a 200 is not proof and that any `error` or `pageerror` console entry is a genuine failure |
 | State evaluated | uncommitted working tree on `main` at `c406b480`: 123 paths with a content diff (+8,968 / −12,774, of which `yarn.lock` is most of the churn), 11 untracked paths (`.gitattributes`, `UPGRADE_REPORT.md`, `frontend/package-lock.json`, three new helpers, `frontend/validation/`, `frontend/webpack/standalone.config.js`, `shepherd/`, `search-driver/.dockerignore`, `webrecorder/pyproject.toml`), no deletions. `git status` lists 676 entries; the extra ~550 beyond the content diff look like line-ending or stat-only noise (inferred, not itemised). No commit |
 | Change size | **131 authored files; 4,169 LoC changed (1,440 additions, 2,729 deletions)**. Measured from the working tree against `c406b480` with `git diff -w`, the same basis as [C03](C03-claude-code-conifer.md), since nothing was committed: 121 tracked files (+1,106/−2,729) plus ten new ones (+334). That whitespace-insensitive basis is also why the figure is smaller than the +8,968/−12,774 above — it discounts the line-ending churn and the lockfiles. Excluded: the two regenerated lockfiles (+7,790/−9,973), the new `frontend/package-lock.json` (18,845 lines) and the untracked `UPGRADE_REPORT.md` (68 lines); one of the 121 is the `config/webarchives` submodule pointer, which moves with 0 LoC. Manifests, Dockerfiles and Compose files are counted in, as in R11 and C03, because the dependency and container upgrade is the task |
@@ -108,7 +108,7 @@ Observed 31, preserved 26: **BPR 0.84, MBR 0.16, EBER 0.** New behaviours: none 
 
 **The five losses are four distinct causes.**
 
-- **k30 and k31 are the redis-py regressions again.** `create_bookmark_list` passes an absent `before_id` to `zscore`, which redis-py 2 encoded as the string `"None"` and redis-py 8 rejects; the recorder log shows `pywb/recorder/redisindexer.py: self.redis.zadd(z_key, 0, cdx)` raising `ZADD requires at least one element/score pair`. This is the **third run in a row** to ship both (R11, C03, D02). Here it was a deliberate, documented choice: `UPGRADE_REPORT.md` says "the old redis client cannot satisfy current fakeredis; the current client breaks this repository's old `hmset`/`zadd` calls. The image therefore installs pywb without its obsolete dependency metadata, pins current redis/fakeredis, and ports the repository calls". The repository's own calls were ported; pywb's, and the `None` argument to `zscore`, were not, and the harness that would have caught them was repaired to tolerate them.
+- **k30 and k31 are the redis-py regressions again.** `create_bookmark_list` passes an absent `before_id` to `zscore`, which redis-py 2 encoded as the string `"None"` and redis-py 8 rejects; the recorder log shows `pywb/recorder/redisindexer.py: self.redis.zadd(z_key, 0, cdx)` raising `ZADD requires at least one element/score pair`. This is the **third run in a row** to ship both (R11, C03, D03). Here it was a deliberate, documented choice: `UPGRADE_REPORT.md` says "the old redis client cannot satisfy current fakeredis; the current client breaks this repository's old `hmset`/`zadd` calls. The image therefore installs pywb without its obsolete dependency metadata, pins current redis/fakeredis, and ports the repository calls". The repository's own calls were ported; pywb's, and the `None` argument to `zscore`, were not, and the harness that would have caught them was repaired to tolerate them.
 - **k17 and k19 are one defect.** The pages server-render, the client hydrates, and React falls back to client rendering with a minified #418 text-mismatch error, then #423. The original is clean on the same pages. It is not a timezone artefact: the same errors appear with the browser timezone forced to UTC. It only occurs for a logged-in session (the login redirect itself is clean), so the likely cause is SSR rendering the logged-in user page from different data than the client holds; the root cause was not pinned down. Under the brief's own rule ("any `pageerror` is a genuine failure") these count; on content alone both pages render.
 - **k21** is an SSR component that resolves to an object rather than a component, the same family as C03's three SSR 500s, but here confined to the settings route. `/manage` and `/$new` render.
 
@@ -116,7 +116,7 @@ If the console-clean clause is dropped, k17 and k19 pass and BPR is 28/31 = 0.90
 
 Comparison on the same oracle:
 
-| | Original | R11 (pipeline) | C03 (Claude Code) | **D02 (Codex direct)** |
+| | Original | R11 (pipeline) | C03 (Claude Code) | **D03 (Codex direct)** |
 | --- | --- | --- | --- | --- |
 | Preserved / 31 | 31 | 27 | 15 | **26** |
 | BPR | 1.00 | 0.87 | 0.48 | **0.84** |
@@ -130,7 +130,7 @@ Not observed directly, as before: live capture through a remote browser, full-te
 
 ## 1.4 Cost and efficiency
 
-All figures are from the single Codex rollout log. Headline token figures use the log's cumulative `token_count` counter, as D1 did; the per-request `token_usage_record` entries sum 1.2% higher (see the note below).
+All figures are from the single Codex rollout log. Headline token figures use the log's cumulative `token_count` counter, as D2 did; the per-request `token_usage_record` entries sum 1.2% higher (see the note below).
 
 | | Value |
 | --- | --- |
@@ -140,7 +140,7 @@ All figures are from the single Codex rollout log. Headline token figures use th
 | Cache hit rate | 97.7% |
 | Model requests | 559 |
 | Tool calls | 555 (`exec` 545, `wait` 10) |
-| Notional cost | **US$49.99** (US$8.77 uncached input + US$37.42 cache read + US$3.79 output) |
+| Notional cost | **US$39.48** (US$7.02 uncached input + US$29.94 cache read + US$2.53 output) |
 | Context compactions | 3 |
 
 Turn times (Codex records no separate API-time figure; `duration_ms` is wall-clock for the turn, covering model and tool time):
@@ -158,21 +158,21 @@ Elapsed time from first to last record is 46 h 46 m, almost all of it the usage-
 
 Notes:
 
-- The per-request records sum to 77,519,177 input (cached 75,752,576), 136,836 output, **77,656,013** total, i.e. US$50.82. The 929,554-token gap to the cumulative counter is real usage the counter does not include (most likely the interrupted turns' last requests and compaction calls). Either figure is fine for comparison; the cumulative one is used so the line stays consistent with D1 and with the figure Codex itself displays.
-- Pricing follows the corpus convention (US$5/M uncached input, US$0.50/M cached, US$30/M output) but the model is `gpt-5.6-sol`, so the figures are notional twice over, as in D1.
+- The per-request records sum to 77,519,177 input (cached 75,752,576), 136,836 output, **77,656,013** total, i.e. US$40.10 at gpt-5.6-sol rates. The 929,554-token gap to the cumulative counter is real usage the counter does not include (most likely the interrupted turns' last requests and compaction calls). Either figure is fine for comparison; the cumulative one is used so the line stays consistent with D2 and with the figure Codex itself displays.
+- Priced at `gpt-5.6-sol` list rates (US$4/M uncached input, US$0.40/M cached, US$20/M output) — the model this run and R11 both actually used, not the GPT-5.5 schedule that still applies to R1–R9. The figures remain notional because the run was billed against a Codex subscription rather than metered usage.
 - Token counts across the Codex and Claude Code families are not commensurable; compare uncached input, output, cost or wall time.
 - N = 1, so mean and median coincide.
-- An earlier attempt on the same brief (`18-43-47`, 57 min, 24.1 M tokens, about US$17 at the same rates) hit the usage limit and was superseded; it is not included above.
+- An earlier attempt on the same brief (`18-43-47`, 57 min, 24.1 M tokens, roughly US$13 at gpt-5.6-sol rates, estimated from its cache share since the request-level uncached/cached/output split was not logged) hit the usage limit and was superseded; it is not included above.
 
 Same task, three ways:
 
-| | R11 (pipeline, GPT-5.5) | C03 (Claude Code, Sonnet 5) | **D02 (Codex direct, gpt-5.6-sol)** |
+| | R11 (pipeline, gpt-5.6-sol) | C03 (Claude Code, Sonnet 5) | **D03 (Codex direct, gpt-5.6-sol)** |
 | --- | --- | --- | --- |
 | Threads | 8 | 7 | **1** |
 | Active / wall time | 784 min incl. ~3 h lockout | 332 min | **197 min active** (46.8 h elapsed incl. lockout) |
 | Tokens | 65,005,806 | 257,369,228 (not comparable) | **76,726,459** |
 | Uncached input + output | n/a | 2,255,820 | **1,881,147** |
-| Notional cost | US$52.71 | US$62.28 | **US$49.99** |
+| Notional cost | US$41.36 | US$62.28 | **US$39.48** |
 | Substantive user turns | 3 + 2 gates | 3 | **1** |
 | Services up | 12 (+ mailserver) | 13 | **13** |
 | BPR | 0.87 | 0.48 | **0.84** |
@@ -185,7 +185,7 @@ Same task, three ways:
 | Configuration | Reported value |
 | --- | --- |
 | Model | `gpt-5.6-sol` (all turns) |
-| Harness | Codex CLI 0.159.2, `codex-tui`, collaboration mode `default`, source `vscode` |
+| Harness | Codex CLI, `codex-tui`, collaboration mode `default`, source `vscode` |
 | Reasoning effort | **medium** |
 | Temperature / max output tokens | not configurable in this harness; not recorded |
 | Context window | 258,400 tokens, 3 compactions |
@@ -193,7 +193,7 @@ Same task, three ways:
 | Input tokens | 1,754,763 uncached + 74,845,312 cache read |
 | Output tokens | 126,384, of which 34,114 reasoning |
 | Total tokens | 76,726,459 |
-| Monetary cost | US$49.99, notional |
+| Monetary cost | US$39.48, notional |
 | Execution time | ≈ 197 min active; 46 h 46 m elapsed |
 | Environment | Windows 11, Node 24.9.0 in the images. Resolved in the app image: pywb 2.10.0, redis-py 8.1.0, fakeredis 2.38.0, Werkzeug 3.1.9, Bottle 0.13.4, Jinja2 3.1.6; Redis 8.2.10, Solr 8.11.4 |
 

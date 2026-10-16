@@ -86,7 +86,7 @@ redis-py 2 encoded `None` as the literal string `"None"`; redis-py ≥ 3 raises.
 | C (build and boot) | 1 | All 13 Compose services `running` today with **0 restarts** on every one of `app`, `recorder`, `warcserver`, `frontend`, `nginx`, `redis`, `solr`. Both webpack bundles (client and server) compile with zero errors. `python -m compileall /code/webrecorder` exits 0 |
 | T (user's declared checks) | 0 | Startup health check fails the brief's own console rule (`pageerror` on `/`); `/docs/api` renders nothing; Flow 1 is a full page reload; Flow 2 submits over GET and shows no rejection. The two `external_service_checks` pass |
 | CSR / TSR / FBSR | 1.00 / 0.00 / 0.00 | N = 1 |
-| Source change size | **132 files / 3,078 LoC** (118 application source files / 2,679 LoC, plus 14 manifest, container and repo-config files / 399 LoC) | 1,608 inserted + 1,470 deleted, `git diff -w` against `c406b480`, including the nine new files. The regenerated `yarn.lock`, the 26 binary font and SVG assets (0 LoC) and the untracked chat log are excluded; the 633-file CRLF sweep does not inflate the figure, because a line-ending-only change contributes no LoC under `-w`. This is 2.7× [R11](R11-conifer.md)'s 1,143 LoC on the same task and base commit for a BPR of 0.48 against R11's 0.87, and 0.74× [D02](D02-codex-direct-conifer.md)'s 4,169 LoC for a BPR of 0.48 against its 0.84 |
+| Source change size | **132 files / 3,078 LoC** (118 application source files / 2,679 LoC, plus 14 manifest, container and repo-config files / 399 LoC) | 1,608 inserted + 1,470 deleted, `git diff -w` against `c406b480`, including the nine new files. The regenerated `yarn.lock`, the 26 binary font and SVG assets (0 LoC) and the untracked chat log are excluded; the 633-file CRLF sweep does not inflate the figure, because a line-ending-only change contributes no LoC under `-w`. This is 2.7× [R11](R11-conifer.md)'s 1,143 LoC on the same task and base commit for a BPR of 0.48 against R11's 0.87, and 0.74× [D03](D03-codex-direct-conifer.md)'s 4,169 LoC for a BPR of 0.48 against its 0.84 |
 | Frontend Jest | fails | 1 suite, **3 of 3 tests fail**: `TypeError: React.act is not a function` — React 19 moved `act`, and the installed `@testing-library/react` still reaches for `react-dom-test-utils`. The run flagged this and, per the brief's own note that the suite proves little, did not chase it |
 | Developer pytest suite | still unrunnable | `pytest`, `webtest`, `mock` and `responses` are all absent from the app image. `setup.py` was correctly modernized (`tests_require` → `extras_require['test']`, `dependency_links` and the `setup.py test` command removed) and CI was updated to `pip install -e .[test]`, but `webrecorder/Dockerfile` still only runs `pip install -r requirements.txt`. **Not one of the 33 test files was executed during the run** |
 | Baseline defects repaired | 4 of 4 | (1) the Werkzeug/Jinja2 deadlock — solved better than R11 by replacing the `werkzeug.user_agent` dependency entirely with a `ua-parser`-backed shim in `utils.py` and pinning `werkzeug==3.1.7` to match pywb exactly, plus `jinja2.contextfunction` → `pass_context` across 12 call sites; (2) the `ulimit` shell builtin removed from the three uWSGI commands, relying on the existing `ulimits:` directive; (3) the `exec $@` word-splitting bug in pywb's entrypoint worked around with `env -u UWSGI_MOUNT uwsgi …`, which also fixes a second, undocumented defect — the base image bakes `UWSGI_MOUNT=/=/pywb/pywb/apps/wayback.py`, which double-mounted pywb's own app and crashed under modern gevent; (4) `catatnight/postfix` replaced with `boky/postfix`, and the `mailserver` service now starts healthy and is back in the stack |
@@ -211,16 +211,16 @@ Notes:
 - The 40 `WebSearch` requests (all billed to Haiku) are the live-version research that produced the Babel, ESLint, Immutable and pywb decisions above. US$2.13 for the component that kept the run off four wrong version choices is the best-value line in the table.
 - Wall time includes long idle stretches: the run used six `ScheduleWakeup` calls to poll for background agents. API time is 33% of wall, tool time a further 24%.
 - N = 1, so mean and median coincide for every figure.
-- Cost is not directly comparable with R1–R11, which are priced at GPT-5.5 list, and token counts are not comparable at all: Claude Code bills and reports cache reads per request, so 253.8 M here is not 4× the work of R11's 65.0 M.
+- Cost is not directly comparable with R1–R11 generally, which are priced at GPT-5.5 list, except R11 itself, which ran on `gpt-5.6-sol` and is priced at that model's list (US$4/M uncached input, US$0.40/M cached input, US$20/M output); token counts are not comparable at all: Claude Code bills and reports cache reads per request, so 253.8 M here is not 4× the work of R11's 65.0 M.
 
 Against R11, the same task through the full pipeline:
 
-| | R11 (pipeline, Codex / GPT-5.5) | C03 (Claude Code, Sonnet 5) |
+| | R11 (pipeline, Codex / gpt-5.6-sol) | C03 (Claude Code, Sonnet 5) |
 | --- | --- | --- |
 | Threads | 8 | 7 (1 + 6) |
 | Wall time | 784 min (incl. ~3 h usage lockout) | **332 min** |
 | Tokens | 65,005,806 | 257,369,228 (not comparable) |
-| Notional cost | **US$52.71** | US$62.28 |
+| Notional cost | **US$41.36** | US$62.28 |
 | Substantive user turns | 3 decisions plus 2 stage gates | **3** |
 | Services up | 12 (+ mailserver) | 13 |
 | Baseline defects repaired | 4 of 4 | 4 of 4 |
@@ -234,7 +234,7 @@ Against R11, the same task through the full pipeline:
 | Browser verification | Playwright, by the validator | **none** |
 | Committed | `40be3587` | **no** |
 
-The pipeline cost 18% less and took 2.4× longer, and the difference in outcome is almost entirely one component: R11's validator drove a real browser and this run did not. That single capability is worth nine of this run's sixteen lost behaviours, and it is the only thing that would have caught the one-line `process` defect.
+The pipeline cost 51% less and took 2.4× longer, and the difference in outcome is almost entirely one component: R11's validator drove a real browser and this run did not. That single capability is worth nine of this run's sixteen lost behaviours, and it is the only thing that would have caught the one-line `process` defect.
 
 ## 1.5 LLM configuration
 

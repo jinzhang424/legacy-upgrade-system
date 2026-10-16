@@ -1,4 +1,4 @@
-# R15 — PeelAndSlice.Java: correct Java 21 edit, incomplete cross-platform proof
+# D4 — PeelAndSlice.Java: correct Java 21 edit, incomplete cross-platform proof
 
 The direct Codex session made the requested two-file Java 17-to-21 upgrade correctly and preserved every behaviour observed in this small Maven project. Independent verification on 4 October 2026 resolved all dependencies into empty local repositories, built the base and upgraded trees, reproduced 4/4 passing tests in each under JDK 21, packaged the jar, and found major version 65 in all 17 production and test class files. No source or runtime dependency changed, and a Java 21 breaking-pattern scan found no incompatible use. However, the user's declared contract required the exact Maven build to pass on both Windows and Linux. Windows passed with no Maven flags; Linux was neither run during the session nor independently available today, and changing a GitHub Actions matrix without running it is not evidence that the workflow passed. Under the overview's binary definitions, **C = 1, T(declared) = 0, T(extended) = 0, and FBSR = 0**. The narrow observed behaviour set is fully preserved: **BPR = 1.00, MBR = 0, NBR = 0**. No product defect was found; the failed score is an incomplete validation contract and the result remains an uncommitted working-tree artifact.
 
@@ -10,7 +10,7 @@ The direct Codex session made the requested two-file Java 17-to-21 upgrade corre
 | Branch and commit evaluated | Branch `upgrade/codex-raw`; base/HEAD `161e0cdd6a499d7989c1da4564c3788648643f97`; the evaluated upgrade is the uncommitted diff in `pom.xml` and `.github/workflows/test.yml`, so there is **no upgrade commit hash** |
 | Change size | **2 tracked, non-generated files; 9 LoC changed (6 additions, 3 deletions)**. Includes the Maven and CI configuration edits that constitute the entire upgrade; excludes generated build output such as `target/`. No production or test source file changed |
 | Run artifacts | No `$upgrade` artifacts. Evidence is the live two-file diff, build outputs, and the single-thread Codex session log. `.codex/upgrade-runs/PeelAndSlice.Java/20260925-093825-upgrade` belongs to a different run and was excluded |
-| Tool version | Codex CLI 0.154.0 |
+| Tool version | Codex CLI |
 | Pipeline verdict | Not applicable: this was not a pipeline run. The agent reported the Windows build and bytecode checks as passing and explicitly said Linux was “delegated” to the updated workflow; that is not an observed Linux pass |
 | Human decisions beyond the two gates | No analysis/plan gates existed and the user made no intervention during the upgrade. The later evaluation clarification only established that no pipeline artifacts should exist |
 
@@ -67,13 +67,13 @@ Observed 5, preserved 5: **BPR = 5 / 5 = 1.00; MBR = 0 / 5 = 0.00**. No unreques
 | Main Codex thread | medium | 2.27 wall | 186,956 total, 153,728 cached | Single upgrade turn; 33,228 uncached input, 2,468 output tokens including 619 reasoning tokens; no sub-agents or automatic review threads |
 | Total |  | **2.27 wall** | **186,956** | One thread only |
 
-Notional cost at the overview's GPT-5.5-equivalent rates is **US$0.32**: `0.033228 × $5 + 0.153728 × $0.50 + 0.002468 × $30 = $0.317`. This is an accounting comparison, not the user's subscription charge. Formal pipeline stage timings do not exist; the session log records 136.35 seconds from task start to completion, including inspection, edit, Maven execution and bytecode inspection.
+Notional cost at `gpt-5.6-sol` list rates is **US$0.24**: `0.033228 × $4 + 0.153728 × $0.40 + 0.002468 × $20 = $0.244`. This is an accounting comparison, not the user's subscription charge. Formal pipeline stage timings do not exist; the session log records 136.35 seconds from task start to completion, including inspection, edit, Maven execution and bytecode inspection.
 
-Against R1–R11 in the overview, this is roughly 54 times cheaper than the US$17.15 mean, 38 times cheaper than the US$12.16 median, and 24 times cheaper than the cheapest listed run (R10, US$7.52). The comparison is not workload-normalized: this run changed two configuration files in a tiny project and had no orchestration or sub-agents.
+Against R1–R11 in the overview, this is roughly 65 times cheaper than the US$15.96 mean, 50 times cheaper than the US$12.16 median, and 23 times cheaper than the cheapest listed run (R10, US$5.72). The comparison is not workload-normalized: this run changed two configuration files in a tiny project and had no orchestration or sub-agents.
 
 ## 1.5 LLM configuration
 
-GPT-5.6-sol through Codex CLI 0.154.0, medium reasoning effort, Default collaboration mode, one thread, Windows 11/PowerShell. The upgrade used Oracle JDK 21.0.12.1 for the successful build and `javap` checks; Maven 3.9.16 initially reported the shell default JDK as 17.0.10, after which the agent selected the installed JDK 21 through `JAVA_HOME`. Network access was restricted in the Codex sandbox, although Maven dependency artifacts needed by the first run were already available; independent evaluation later performed successful fresh repository resolution.
+`gpt-5.6-sol` through Codex CLI, medium reasoning effort, Default collaboration mode, one thread, Windows 11/PowerShell. The upgrade used Oracle JDK 21.0.12.1 for the successful build and `javap` checks; Maven 3.9.16 initially reported the shell default JDK as 17.0.10, after which the agent selected the installed JDK 21 through `JAVA_HOME`. Network access was restricted in the Codex sandbox, although Maven dependency artifacts needed by the first run were already available; independent evaluation later performed successful fresh repository resolution.
 
 ## Stage outcomes
 
@@ -99,4 +99,4 @@ GPT-5.6-sol through Codex CLI 0.154.0, medium reasoning effort, Default collabor
 - Preserve a baseline test-count record before the first `clean`. Here independent reconstruction recovered the 4/0/0/0 baseline under JDK 21, but the upgrade turn itself reported only the post-change count.
 - Do not increase scope to repair the empty tests during this upgrade; instead, record their limited signal. Adding behavioural coverage would be a separate task, consistent with the user's instruction not to fix unrelated issues.
 
-Compared with the existing overview, this run's **declared and extended FBSR are 0**, below the overview's 0.27 declared rate and equal to its 0 extended rate; unlike most failed runs, no regression was found—the score is caused solely by an unobserved required platform. Its **BPR of 1.00** exceeds the overview's 0.58 aggregate and R11's 0.87 best reported run, on a much narrower five-cell checklist. Its **US$0.32 notional cost** is far below every listed R-series run and the US$17.15 mean, reflecting the two-file task and absence of pipeline overhead rather than a like-for-like efficiency win.
+Compared with the existing overview, this run's **declared and extended FBSR are 0**, below the overview's 0.27 declared rate and equal to its 0 extended rate; unlike most failed runs, no regression was found—the score is caused solely by an unobserved required platform. Its **BPR of 1.00** exceeds the overview's 0.58 aggregate and R11's 0.87 best reported run, on a much narrower five-cell checklist. Its **US$0.24 notional cost** is far below every listed R-series run and the US$15.96 mean, reflecting the two-file task and absence of pipeline overhead rather than a like-for-like efficiency win.

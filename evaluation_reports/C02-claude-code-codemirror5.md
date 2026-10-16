@@ -40,7 +40,7 @@ Consequences for the evaluation:
 | C (install and build) | 1 | `npm install` clean (only pre-existing transitive deprecations: `inflight`, `glob@7`). `npm run build` today: exit 0 in **2.4 s**, no warnings beyond Rollup's informational circular-dependency notice, and all four outputs regenerate — `lib/codemirror.js` (402,250 B), `addon/runmode/runmode-standalone.js` (12,058 B), `addon/runmode/runmode.node.js` (11,489 B), and `keymap/vim.js` (238,966 B, byte-identical to `node_modules/cm5-vim/vim.js` at 0.0.6) |
 | T (`npm test`) | 0 | Today: exit 1, **6 assertion failures** in the in-browser suite; the lint stage passes. The six: `core_move_bidi` ×2 ("cursor didn't move right"), `core_rtl_wrapped_selection`, `core_bidi_wrapped_selection`, `scroll_movedown_resize`, `scroll_movedown_hscroll_resize` |
 | CSR / TSR / FBSR | 1.00 / 0.00 / 0.00 | N = 1 |
-| Source change size | **4 files / 26 LoC** | 17 inserted + 9 deleted across `package.json`, the renamed `rollup.config.mjs`, `test/lint.js` and `test/run.js`. The gitignored `package-lock.json` and the untracked chat export are excluded; no test file was generated. On the identical task, [D01](D01-codex-direct-codemirror5.md) changed 6 files / 200 LoC and [R10](R10-codemirror-refactor.md)'s four-file change is not measurable. The whole `test/lint.js` change (+4/−1) is the lint-coverage regression discussed below — a one-line edit to the linted-directory list plus a three-line comment, 5 of this run's 26 LoC |
+| Source change size | **4 files / 26 LoC** | 17 inserted + 9 deleted across `package.json`, the renamed `rollup.config.mjs`, `test/lint.js` and `test/run.js`. The gitignored `package-lock.json` and the untracked chat export are excluded; no test file was generated. On the identical task, [D02](D02-codex-direct-codemirror5.md) changed 6 files / 200 LoC and [R10](R10-codemirror-refactor.md)'s four-file change is not measurable. The whole `test/lint.js` change (+4/−1) is the lint-coverage regression discussed below — a one-line edit to the linted-directory list plus a three-line comment, 5 of this run's 26 LoC |
 | Dependency coverage | 4 of 4 | rollup `^4.63.2`, puppeteer `^25.10.0`, `@rollup/plugin-buble` `^1.0.3`, `cm5-vim` `^0.0.6`. `node-static` (0.7.11) and `blint` (`^1.1.2`) correctly left alone, as instructed |
 | Scope discipline | clean | `git status` is exactly the four intended entries. No change to `lib/`, `addon/`, `mode/`, `src/`, `keymap/` source, `theme/`, `demo/` or `doc/`; no CodeMirror 6 work attempted; scratch scripts and screenshots from the smoke test deleted |
 | Syntax | clean | `rollup.config.mjs`, `test/run.js` and `test/lint.js` all load and execute today |
@@ -82,7 +82,7 @@ Same four-behaviour reference set as R10, so the column is comparable. Per B00 c
 
 Observed 3, preserved 3: **BPR 1.00, MBR 0.00, EBER 1.00.**
 
-This is the only run in the corpus with EBER = 1. Against R11's 0.87 BPR at US$52.71 and R1–R9's pooled 0.58, the reading is not that this agent is better but that this task is the one where the reference behaviour set is small, fully observable, and unentangled with the change being made — a toolchain swap behind a stable public surface. The metric rewards that shape of task, and any comparison across the corpus should say so.
+This is the only run in the corpus with EBER = 1. Against R11's 0.87 BPR at US$41.36 and R1–R9's pooled 0.58, the reading is not that this agent is better but that this task is the one where the reference behaviour set is small, fully observable, and unentangled with the change being made — a toolchain swap behind a stable public surface. The metric rewards that shape of task, and any comparison across the corpus should say so.
 
 Two further behaviours sit outside the shared four. They are reported separately so the denominator stays comparable with R10.
 
@@ -118,14 +118,14 @@ Notes:
 - 27 lines added, 19 removed at the upgrade boundary (the 227/19 in the second record is the transcript file).
 - The Haiku usage is harness housekeeping (session titling), not upgrade work.
 - N = 1, so mean and median coincide for every figure in this section.
-- Cost is not directly comparable with R1–R11, which are priced at GPT-5.5 list. Against R10, the same task through the full pipeline:
+- Cost is not directly comparable with R1–R11 generally, which are priced at GPT-5.5 list, except R10 itself, which ran on `gpt-5.6-sol` and is priced at that model's list (US$4/M uncached input, US$0.40/M cached input, US$20/M output). Against R10, the same task through the full pipeline:
 
-| | R10 (pipeline, Codex / GPT-5.5) | C02 (Claude Code, Sonnet 5) |
+| | R10 (pipeline, Codex / gpt-5.6-sol) | C02 (Claude Code, Sonnet 5) |
 | --- | --- | --- |
 | Threads | 7 (orchestrator + 6 stage threads) | 1 |
 | Wall time | 45 min | **31.6 min** |
 | Tokens | 6,340,056 | **4,738,299** |
-| Notional cost | US$7.52 | **US$1.54** |
+| Notional cost | US$5.72 | **US$1.54** |
 | User turns | 16 | 1 substantive (+1 question answered) |
 | Dependencies bumped | 4 of 4 | 4 of 4 |
 | `npm test` | 5 failures after 4 repair rounds | 6 failures, root-caused to the browser |
@@ -133,7 +133,7 @@ Notes:
 | BPR (B00-corrected) | 1.00 (1 of 1 observed) | **1.00 (3 of 3 observed)** |
 | Committed | no | no |
 
-R10's BPR of 1.00 rests on a single observed behaviour because its validation stage never ran; this run's rests on three, all exercised. On the same task the direct agent was 4.9× cheaper, 1.3× faster, needed one sixteenth of the human turns, and produced a better-diagnosed residual. That is the clearest single-task cost signal in the evaluation, and it lands on the smallest and best-specified task in the set — precisely the regime where orchestration overhead has nothing to buy.
+R10's BPR of 1.00 rests on a single observed behaviour because its validation stage never ran; this run's rests on three, all exercised. On the same task the direct agent was 3.7× cheaper, 1.3× faster, needed one sixteenth of the human turns, and produced a better-diagnosed residual. That is the clearest single-task cost signal in the evaluation, and it lands on the smallest and best-specified task in the set — precisely the regime where orchestration overhead has nothing to buy.
 
 ## 1.5 LLM configuration
 

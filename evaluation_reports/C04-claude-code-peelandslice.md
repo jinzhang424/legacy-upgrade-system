@@ -65,7 +65,7 @@ Pricing: Claude Sonnet 5 at Anthropic's published first-party rates — input $2
 
 Tool-call mix across the full log to date: `Bash` 25, `Read` 8, `Glob` 3, `Edit` 2, `Skill` 1, `Grep` 1 — 40 tool calls total, of which perhaps a dozen (2 edits, ~4 verification `Bash` calls, a handful of `Read`/`Glob`) correspond to the upgrade itself; the remainder is the later token-accounting and report-writing work folded into the same resumed session.
 
-Against the corpus: this is far cheaper than any R- or C-series run in the overview (R1–R12 range US$7.52–US$62.28; C1–C3 range US$1.54–US$62.28), as expected for a target with 11 symbols and no runtime surface against targets with dozens of services and hundreds of files. It is not placed in the overview's cost table because it is not a comparable task size, only a comparable *harness configuration* (direct Claude Code, no orchestrator).
+Against the corpus: this is far cheaper than any R- or C-series run in the overview (R1–R15 range US$2.82–US$56.76; C1–C3 range US$1.54–US$62.28), as expected for a target with 11 symbols and no runtime surface against targets with dozens of services and hundreds of files. It is not placed in the overview's cost table because it is not a comparable task size, only a comparable *harness configuration* (direct Claude Code, no orchestrator).
 
 ## 1.5 LLM configuration
 
