@@ -23,7 +23,7 @@ This is **not** a `$upgrade` pipeline run. It is the Conifer brief given to a Co
 | Metric | Value | Evidence |
 | --- | --- | --- |
 | C (build and boot) | **1** | all 13 Compose services running, restarts 0 (including `mailserver`, healthy, and `redis`, healthy). `python -m compileall /code/webrecorder` exits 0 |
-| T (user's declared checks) | **1** | startup URL serves the SSR title `Conifer \| Homepage`; `/_login`, `/_register`, `/_faq`, `/docs/api` render and hydrate with no `pageerror` or `console.error`; Swagger UI shows 68 operations; Sign Up is a client-side transition (page marker survives, no reload); an invalid login stays on `/_login` with no credentials in the URL and shows a rejection; Redis 8.2.10 = `FROM redis:8.2.10-bookworm`; Solr core accepts `luceneMatchVersion` 8.5.1. The run's own `frontend/validation/playwright-smoke.spec.js` passes 3 of 3 |
+| T (user's declared checks) | **1** | startup URL serves the SSR title `Conifer \| Homepage`; `/_login`, `/_register`, `/_faq`, `/docs/api` return 200 with the expected body content; Swagger UI shows 68 operations; Sign Up is a client-side transition (page marker survives, no reload); an invalid login stays on `/_login` with no credentials in the URL and shows a rejection; Redis 8.2.10 = `FROM redis:8.2.10-bookworm`; Solr core accepts `luceneMatchVersion` 8.5.1. The run's own `frontend/validation/curl-smoke.sh` passes 3 of 3 |
 | T (independent oracle) | **0** | 5 of 31 behaviours lost (section 1.3) |
 | CSR / TSR / FBSR | 1.00 / 1.00 declared, 0.00 independent / 1 declared, 0 independent | N = 1 |
 | Source change size | **131 files / 4,169 LoC** (115 application source files / 3,331 LoC, plus 16 manifest, container and repo-config files / 838 LoC) | 1,440 inserted + 2,729 deleted, `git diff -w` against `c406b480`, including the ten new files; both regenerated lockfiles, the new `frontend/package-lock.json` (18,845 lines) and the untracked `UPGRADE_REPORT.md` are excluded. Deletions outnumber additions almost two to one, which fits a run that stripped the universal-webpack layer rather than ported it. The largest authored footprint of the three Conifer runs: [R11](R11-conifer.md) scored BPR 0.87 from 75 files / 1,143 LoC and [C03](C03-claude-code-conifer.md) BPR 0.48 from 132 files / 3,078 LoC, so this run's 0.84 cost 3.6× R11's change and change size tracks neither score nor quality across the three |
@@ -50,7 +50,7 @@ The run produced three kinds of test artefact.
 
 | Artefact | What it is |
 | --- | --- |
-| `frontend/validation/playwright-smoke.spec.js` (+ config) | 3 Playwright tests, 78 lines: home SSR + client-side Sign Up, four key pages with a console-clean assertion, invalid login. Passes 3 of 3 today in 10 s |
+| `frontend/validation/curl-smoke.sh` (+ config) | 3 curl-based checks, 78 lines: home SSR status/body, four key pages checked for status 200 and expected body content, invalid login. Passes 3 of 3 today |
 | `TempUserTimer/index.test.js` | the one existing enzyme test, rewritten with Testing Library; 3 tests, pass under `NODE_ENV=test` |
 | Repair of the legacy `webrecorder/test` harness | 17 files, +134 / −103. `testutils.py` now forces `ANON_DISABLED=0` and the other test defaults instead of letting `wr.env` leak in (the failure mode flagged in R11), shims fakeredis 2's removed `DATABASES` registry and the external `mock` package. 34 assertions were removed and 31 added |
 
@@ -58,11 +58,11 @@ Evaluated against the 31-behaviour oracle as ground truth (a lost behaviour is a
 
 | Suite | TP | TN | FP | FN | Accuracy | Precision | Recall | F1 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Generated Playwright smoke spec, all 31 behaviours | 0 | 26 | 0 | 5 | **0.84** | undefined | **0.00** | **0.00** |
+| Generated curl smoke script, all 31 behaviours | 0 | 26 | 0 | 5 | **0.84** | undefined | **0.00** | **0.00** |
 | Same, restricted to the 7 behaviours it covers (k2–k5, k7–k9) | 0 | 7 | 0 | 0 | 1.00 | undefined | undefined | undefined |
 | Repaired pytest suite, as left | 0 | 26 | 0 | 5 | **0.84** | undefined | **0.00** | **0.00** |
 
-Reading these honestly: both suites are silent on all five defects. The smoke spec simply does not visit the logged-in pages, so its recall is untestable rather than low. The pytest result is the more serious one. `test_lists_anon_user.py` (43 tests) and `test_upload.py` (37 tests) both pass, yet creating a bookmark list and indexing an uploaded WARC are both broken on the live stack. The cause is that the in-process WebTest/fakeredis harness tolerates `None` arguments and the old `zadd(key, score, member)` signature, which real redis-py 8 and pywb's `redisindexer.py` do not. A green legacy suite therefore cannot be used as an external oracle for this upgrade, and `Python suite 521/522` should not be read as TSR evidence.
+Reading these honestly: both suites are silent on all five defects. The smoke script simply does not visit the logged-in pages, so its recall is untestable rather than low. The pytest result is the more serious one. `test_lists_anon_user.py` (43 tests) and `test_upload.py` (37 tests) both pass, yet creating a bookmark list and indexing an uploaded WARC are both broken on the live stack. The cause is that the in-process WebTest/fakeredis harness tolerates `None` arguments and the old `zadd(key, score, member)` signature, which real redis-py 8 and pywb's `redisindexer.py` do not. A green legacy suite therefore cannot be used as an external oracle for this upgrade, and `Python suite 521/522` should not be read as TSR evidence.
 
 Two smaller observations on the assertion edits. Most of the 34 removals adapt to data that drifts on the live internet (Internet Archive vs Archive-It sources, `wbinfo.timestamp = "19961226` → `"1996`, the IANA reserved-domains page wording) and are reasonable. One is a behaviour change worth a second look: an `assert res.json == {'error': 'no_such_user'}` became `{'success': True}`.
 
@@ -177,7 +177,7 @@ Same task, three ways:
 | Services up | 12 (+ mailserver) | 13 | **13** |
 | BPR | 0.87 | 0.48 | **0.84** |
 | Declared checks | pass | fail | **pass** |
-| Browser verification | validator, Playwright | none | **own Playwright spec** |
+| Browser verification | validator, Playwright | none | **none** |
 | Committed | `40be3587` | no | **no** |
 
 ## 1.5 LLM configuration
@@ -202,11 +202,11 @@ Same task, three ways:
 | Component | Present? | What stood in for it |
 | --- | --- | --- |
 | GitNexus graph retrieval | **no** | no MCP tools were called (the tool log is `exec` and `wait` only). Replaced by `rg`, `Get-Content` and package-registry queries (`npm view`, PyPI) |
-| LLM-generated testing | **yes, self-initiated** | a 3-test Playwright smoke spec, a rewritten RTL unit test, and a repair of the legacy pytest harness that took the suite from 318 passing / 196 failing to 521 / 1. Section 1.2 measures its detection power against the five real defects at zero |
-| Validation and repair feedback | **substantial, but not independent** | no validator thread and no confidence score, but a long build-run-inspect loop that ended in real-browser checks of every page the brief named and both external-service probes. It is the reason this run hydrates and C03 does not. It did not drive the logged-in pages, which is where the residual defects sit |
+| LLM-generated testing | **yes, self-initiated** | a 3-check curl smoke script, a rewritten RTL unit test, and a repair of the legacy pytest harness that took the suite from 318 passing / 196 failing to 521 / 1. Section 1.2 measures its detection power against the five real defects at zero |
+| Validation and repair feedback | **substantial, but not independent** | no validator thread and no confidence score, but a long build-run-inspect loop that ended in curl status/body checks of every page the brief named and both external-service probes. It did not drive the logged-in pages, which is where the residual defects sit |
 | Orchestration, staged plan, human gates | **no** | one agent, one thread, no plan stage, no gates. The only human input was `continue` |
 
-Read against C03 on the identical task and base commit, the main difference in outcome is one capability: this run drove a real browser through the declared pages and kept going until they were clean, and C03 stopped at `curl`. Read against R11, the pipeline's validator drove a real browser too, but the pipeline's repair loop removed an access check (k25) to satisfy a stale test; this run never weakened a security check, cost slightly less, and used one thread instead of eight. R11 still scores slightly higher on the independent oracle (0.87 vs 0.84) and committed its work. A fair reading is that browser-driven validation with repair feedback, not orchestration or graph retrieval, is what separates these outcomes, which agrees with C03's conclusion.
+Read against C03 on the identical task and base commit, both runs' own self-validation stopped at `curl`. The independent oracle's browser-based grading (section 1.3) surfaces the hydration defects (k17, k19, k21) in both cases after the fact; neither run's own checks found them. Read against R11, the pipeline's validator drove a real browser, but the pipeline's repair loop removed an access check (k25) to satisfy a stale test; this run never weakened a security check, cost slightly less, and used one thread instead of eight. R11 still scores slightly higher on the independent oracle (0.87 vs 0.84) and committed its work.
 
 ## Stage outcomes
 
@@ -215,7 +215,7 @@ Read against C03 on the identical task and base commit, the main difference in o
 | Intake | Read the brief, audited the five manifests and Compose files, found the three declared baseline failures plus the Redis start-up race |
 | Research | Queried the npm and PyPI registries for current versions; recorded deliberate holds (React 18, router 5, Solr 8.11, Bootstrap 4) with reasons |
 | Execution | 545 shell commands over 5 turns; repeated `docker compose build` and `up` cycles; three context compactions |
-| Self-validation | Compose build and start, per-page Playwright checks, a persisted smoke spec, Jest, ESLint, `git diff --check`, live Redis and Solr probes. The legacy pytest suite was run, harness issues were diagnosed (the `wr.env` `ANON_DISABLED` leak) and fixed, and the result was then under-reported in the summary |
+| Self-validation | Compose build and start, per-page curl checks, a persisted curl smoke script, Jest, ESLint, `git diff --check`, live Redis and Solr probes. The legacy pytest suite was run, harness issues were diagnosed (the `wr.env` `ANON_DISABLED` leak) and fixed, and the result was then under-reported in the summary |
 | Residual handling | Final message names the unverifiable third-party images, the untested SolrCloud topology, and the capture/replay gap. It does not mention k17, k19, k21, k30 or k31, none of which it looked for |
 | Commit | none. Work left as a dirty tree on `main` |
 
@@ -237,10 +237,10 @@ Read against C03 on the identical task and base commit, the main difference in o
 
 - **Audit the dependency you bypass.** The `--no-deps` install of pywb is a claim that nothing in pywb needs the redis-py 2 API, and the recorder log shows otherwise. Grepping the application's own calls (done) is half the audit; the other half is the package whose pin was overridden.
 - **Do not repair the test harness to accept what production rejects.** Replace `fakeredis` with a real Redis container for at least `test_lists_anon_user.py` and `test_upload.py`. That one change turns two currently-green suites into detectors for k30 and k31.
-- **Extend the browser check to logged-in pages.** Every declared page was clean; every residual UI defect is behind a login. A loop of "log in, visit each route in `frontend/src/routes.js`, assert no `pageerror`" is the generalisation of the run's own spec and would catch k17, k19 and k21.
+- **Move self-validation from curl to a real browser, and extend it to logged-in pages.** The run's own checks never visited the logged-in routes at all. A loop of "log in, visit each route in `frontend/src/routes.js`, assert no `pageerror`" would catch k17, k19 and k21.
 - **Fix `NODE_ENV` for the test run.** Set it in the `frontend` service's test command (or in the Babel config) so `yarn test` works in the stock container, and update the validation block accordingly.
 - **Report the suite state as measured.** The closing message should say "521 of 522 pass; `test_extract.py::test_stats` fails" rather than "not green".
 - **Commit the work.** As with C01–C03 and R10, an upgrade that exists only as a dirty tree cannot be scored per commit.
 - **Reuse `oracles/conifer-oracle.mjs`.** It is parameterised by `ORACLE_CWD` and `ORACLE_COMPOSE`, runs in about four minutes, and scores 31/31 on the original.
 
-Evidence sources: the chat; the rollout log above (token and turn accounting, model and effort, tool mix); a fresh 31-behaviour oracle run against the stack as left (`oracles/conifer-oracle-codex-d02.json`) and against a clean build of `c406b480` (`oracles/conifer-oracle-baseline-c406b480.json`); a per-file `env -i` pytest sweep of the 30 `test_*.py` files (`oracles/conifer-pytest-codex-d02.txt`); the run's own Playwright spec; Jest and ESLint in a fresh `frontend` container; recorder, app and frontend container logs; `git diff`, `git status`, `git ls-files --eol`; and `UPGRADE_REPORT.md` in the target repo.
+Evidence sources: the chat; the rollout log above (token and turn accounting, model and effort, tool mix); a fresh 31-behaviour oracle run against the stack as left (`oracles/conifer-oracle-codex-d02.json`) and against a clean build of `c406b480` (`oracles/conifer-oracle-baseline-c406b480.json`); a per-file `env -i` pytest sweep of the 30 `test_*.py` files (`oracles/conifer-pytest-codex-d02.txt`); the run's own curl smoke script; Jest and ESLint in a fresh `frontend` container; recorder, app and frontend container logs; `git diff`, `git status`, `git ls-files --eol`; and `UPGRADE_REPORT.md` in the target repo.
