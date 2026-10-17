@@ -1,3 +1,5 @@
 .gitnexus
 .mcp.json
-./.claude/settings.json
+.codex/config.toml
+projects
+.playwright-mcp

@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "branch_name": "upgrade/upgrade-outdated-dependencies-20260623",
+  "commit_ref": "a02abaf",
+  "files_changed": [
+    "tv-radio-frontend/app-media.js",
+    "tv-radio-frontend/app.js",
+    "tv-radio-frontend/content/feedback/client-feedback.js",
+    "tv-radio-frontend/content/homepage/client-homepage.js",
+    "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+    "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+    "tv-radio-frontend/content/unisat/client-unisat.js",
+    "tv-radio-frontend/db-provider.js",
+    "tv-radio-frontend/handlebars-partials.js",
+    "tv-radio-frontend/logger.js",
+    "tv-radio-frontend/media/generic-media.js",
+    "tv-radio-frontend/media/programme-media.js",
+    "tv-radio-frontend/media/title-thumbnails.js",
+    "tv-radio-frontend/media/unisat-thumbnails.js",
+    "tv-radio-frontend/metrics.js",
+    "tv-radio-frontend/package-lock.json",
+    "tv-radio-frontend/package.json",
+    "tv-radio-frontend/request-common.js",
+    "tv-radio-frontend/shared/media-access.js",
+    "tv-radio-frontend/test/upgrade-integration.test.js",
+    "tv-radio-frontend/test/upgrade-smoke.test.js",
+    "tv-radio-frontend/usage-monitoring.js"
+  ],
+  "changes_applied": [
+    "Updated frontend dependency manifest and generated package-lock.json.",
+    "Migrated startup-critical Socket.IO, MongoDB, Winston, Influx, Handlebars, Sharp, Nodemailer, uuid, Buffer, and Express 5 route compatibility points.",
+    "Applied approved scope expansions for public-viewer and usage-monitoring wildcard routes.",
+    "Kept vendored browser assets unchanged after inventory because no browser smoke command was supplied."
+  ],
+  "changes_skipped": [
+    {
+      "file_path": "tv-radio-frontend/static/libs",
+      "reason": "Vendored browser assets were inventoried but not replaced; no browser smoke command was supplied and served filenames are route/template sensitive."
+    }
+  ],
+  "executor_check_results": [
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p = Start-Process -FilePath node -ArgumentList 'app.js' -WorkingDirectory (Get-Location) -PassThru -WindowStyle Hidden; try { Start-Sleep -Seconds 12; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -ErrorAction SilentlyContinue; exit 0 } finally { if ($p -and -not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } }\"",
+      "purpose": "startup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "",
+      "repair_attempts": 5
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+      "command": "npm.cmd install --no-audit --no-fund",
+      "purpose": "setup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "up to date in 785ms",
+      "repair_attempts": 0
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+      "command": "node --check app.js",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "",
+      "repair_attempts": 0
+    }
+  ],
+  "executor_repairs_applied": [
+    {
+      "file_path": "tv-radio-frontend/app.js; tv-radio-frontend/content/tv-radio/client-tv-radio.js; tv-radio-frontend/content/unisat/client-unisat.js",
+      "reason": "Express 5 path-to-regexp rejects anonymous wildcard strings.",
+      "summary": "Converted approved wildcard routes to named wildcards while preserving prefixes and handlers.",
+      "command": "startup",
+      "repair_round": 1
+    },
+    {
+      "file_path": "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+      "reason": "User-approved scope expansion after startup exposed Express 5 wildcard and legacy uuid usage in public viewer.",
+      "summary": "Converted the public-viewer OPTIONS wildcard route to a named wildcard and replaced uuid.v4 calls with crypto.randomUUID.",
+      "command": "startup",
+      "repair_round": 2
+    },
+    {
+      "file_path": "tv-radio-frontend/media/generic-media.js",
+      "reason": "Startup exposed additional Express 5 wildcard parsing failures in an approved media file.",
+      "summary": "Converted HLS/DASH segment/init suffix wildcard routes to named path parameters and named standalone media OPTIONS wildcards.",
+      "command": "startup",
+      "repair_round": 3
+    },
+    {
+      "file_path": "tv-radio-frontend/usage-monitoring.js",
+      "reason": "User-approved scope expansion after startup exposed the /media/access/* OPTIONS route.",
+      "summary": "Converted the media access OPTIONS wildcard route to a named wildcard while preserving the existing CORS handler.",
+      "command": "startup",
+      "repair_round": 4
+    },
+    {
+      "file_path": "tv-radio-frontend/metrics.js",
+      "reason": "Startup reached an approved Influx 5 API migration issue.",
+      "summary": "Adapted queued legacy [values, tags] metric tuples to Influx 5 writeMeasurement point objects.",
+      "command": "startup",
+      "repair_round": 5
+    }
+  ],
+  "executor_repair_rounds": 5,
+  "failure_summary": "",
+  "execution_notes": "Created commit a02abaf with the required message. No tv-radio-admin commands were run. The resumed run reran the failed bounded startup command first, then reran frontend npm install and node --check app.js before committing."
+}

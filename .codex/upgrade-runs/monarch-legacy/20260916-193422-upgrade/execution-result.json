@@ -1,0 +1,45 @@
+{
+  "status": "failed",
+  "branch_name": "upgrade/node-18-20-dependency-upgrade",
+  "commit_ref": "",
+  "files_changed": [
+    ".babelrc",
+    ".eslintrc",
+    ".travis.yml",
+    "common.js",
+    "gulpfile.js",
+    "lib/monarch/api.js",
+    "lib/monarch/web/webapp.js",
+    "lib/monarch/web/webenv.js",
+    "package.json",
+    "tests/apitest.js",
+    "tests/class-info-test.js",
+    "tests/phenopacket-test.js",
+    "tests/test-common.js",
+    "ui/components/AnalyzePhenotypes.vue",
+    "ui/components/AssocTable.vue",
+    "ui/components/MonarchAutocomplete.vue",
+    "ui/components/PhenotypesTable.vue",
+    "ui/main.js",
+    "webpack.config.js",
+    "dist/",
+    "node_modules/",
+    "package-lock.json",
+    "tests/node18-upgrade.test.js",
+    "webpack-assets.json"
+  ],
+  "changes_applied": [],
+  "changes_skipped": [
+    {
+      "file_path": "all ordered_changes",
+      "reason": "Pre-execution status gate failed before approved changes could be applied."
+    }
+  ],
+  "executor_check_results": [],
+  "executor_repairs_applied": [],
+  "executor_repair_rounds": 0,
+  "scope_expansions_applied": [],
+  "scope_expansions_used": 0,
+  "failure_summary": "Pre-execution setup halted because the working tree contains pre-existing changed and untracked files other than validation.generated_test_files (which lists only tests/node18-upgrade.test.js). The execute-stage contract forbids proceeding in this state.",
+  "execution_notes": "The current branch matched upgrade/node-18-20-dependency-upgrade. No repository files were modified, no executor checks were run, and no commit was created. Existing worktree contents were left untouched."
+}

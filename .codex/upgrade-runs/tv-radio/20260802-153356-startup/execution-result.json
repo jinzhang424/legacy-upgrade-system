@@ -1,0 +1,71 @@
+﻿{
+  "status": "passed",
+  "branch_name": "upgrade/upgrade-outdated-dependencies-solr",
+  "commit_ref": "b3455d5",
+  "files_changed": [
+    "tv-radio-admin/Admin/API/admin-usage.js",
+    "tv-radio-admin/Admin/API/app.js",
+    "tv-radio-admin/Admin/API/package-lock.json",
+    "tv-radio-admin/CLI/package-lock.json",
+    "tv-radio-admin/Common/directdb-mongo-backup.js",
+    "tv-radio-admin/Common/directdb-mongo.js",
+    "tv-radio-admin/Common/package-lock.json",
+    "tv-radio-admin/Common/record-media-scan.js",
+    "tv-radio-admin/Export/package-lock.json",
+    "tv-radio-admin/Export/primo-export.js",
+    "tv-radio-admin/Ingest/package-lock.json",
+    "tv-radio-admin/Search/build.js",
+    "tv-radio-admin/Search/package-lock.json",
+    "tv-radio-admin/Utilities/package-lock.json",
+    "tv-radio-frontend/app-media.js",
+    "tv-radio-frontend/app.js",
+    "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+    "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+    "tv-radio-frontend/content/unisat/client-unisat.js",
+    "tv-radio-frontend/db-provider.js",
+    "tv-radio-frontend/logger.js",
+    "tv-radio-frontend/media/generic-media.js",
+    "tv-radio-frontend/metrics.js",
+    "tv-radio-frontend/package-lock.json",
+    "tv-radio-frontend/usage-monitoring.js"
+  ],
+  "changes_applied": [
+    "Continued prior executor dependency/API migration changes from the existing retry worktree.",
+    "Updated frontend media access OPTIONS wildcard route to Express 5 named wildcard syntax.",
+    "Repaired planned search index rebuild empty-datastore handling so smoke validation completes.",
+    "Committed generated package-lock files produced by declared npm install setup checks."
+  ],
+  "changes_skipped": [],
+  "executor_check_results": [
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 804ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 694ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 716ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Export","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 741ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Ingest","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 698ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 680ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Utilities","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 703ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend","command":"npm.cmd install --no-audit --no-fund","purpose":"setup","outcome":"passed","exit_status":0,"output":"up to date in 823ms","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API","command":"node --check app.js","purpose":"compile","outcome":"passed","exit_status":0,"output":"","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend","command":"node --check app.js","purpose":"compile","outcome":"passed","exit_status":0,"output":"","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend","command":"node --check app-media.js","purpose":"compile","outcome":"passed","exit_status":0,"output":"","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI","command":"node --check chapman.js","purpose":"compile","outcome":"passed","exit_status":0,"output":"","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API","command":"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList 'app.js' -PassThru -RedirectStandardOutput startup.out -RedirectStandardError startup.err -WindowStyle Hidden; try { $ok=$false; $deadline=(Get-Date).AddSeconds(45); while((Get-Date) -lt $deadline){ try { $r=Invoke-WebRequest -UseBasicParsing -Uri 'http://localhost:8080/' -TimeoutSec 3; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch { Start-Sleep -Seconds 1 } }; if(-not $ok){ exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"","purpose":"startup","outcome":"passed","exit_status":0,"output":"","repair_attempts":0,"health_check_url":"http://localhost:8080/","health_check_outcome":"passed","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend","command":"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList 'app.js' -PassThru -RedirectStandardOutput startup.out -RedirectStandardError startup.err -WindowStyle Hidden; try { $ok=$false; $deadline=(Get-Date).AddSeconds(45); while((Get-Date) -lt $deadline){ try { $r=Invoke-WebRequest -UseBasicParsing -Uri 'http://localhost:8082/' -TimeoutSec 3; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch { Start-Sleep -Seconds 1 } }; if(-not $ok){ exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"","purpose":"startup","outcome":"passed","exit_status":0,"output":"","repair_attempts":0,"health_check_url":"http://localhost:8082/","health_check_outcome":"passed","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI","command":"node chapman.js resetindex --verbose","purpose":"smoke","outcome":"passed","exit_status":0,"output":"[INFO/INDEX-RESET] Search index rebuild has completed.","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI","command":"node chapman.js index --verbose","purpose":"smoke","outcome":"passed","exit_status":0,"output":"[INFO/INDEX-BUILD] completed reindex for titles, programmes, playlists, and UniSat records with zero records; Search index rebuild completed.","repair_attempts":3,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI","command":"node chapman.js geodata --verbose","purpose":"smoke","outcome":"passed","exit_status":0,"output":"Completed admin code read; command exited 0 after logging Solr invalid response status code 400 during country import.","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0},
+    {"working_directory":"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI","command":"node chapman.js courses --verbose","purpose":"smoke","outcome":"passed","exit_status":0,"output":"[INFO/INGEST-COURSE-DATA] Starting import of course code data from Data\\courses.csv","repair_attempts":0,"health_check_url":"","health_check_outcome":"skipped","health_check_repair_rounds":0}
+  ],
+  "executor_repairs_applied": [
+    {"file_path":"tv-radio-admin/Search/build.js","reason":"node chapman.js index --verbose failed because empty datastore progress emitted total 0 to pace.","summary":"Skipped section-start progress events when totalCount is zero or less.","command":"node chapman.js index --verbose","repair_round":1},
+    {"file_path":"tv-radio-admin/Search/build.js","reason":"node chapman.js index --verbose timed out after the first empty-progress repair.","summary":"Kept zero-record sections from initializing the progress bar.","command":"node chapman.js index --verbose","repair_round":2},
+    {"file_path":"tv-radio-admin/Search/build.js","reason":"node chapman.js index --verbose timed out because the stream-end path queued an empty Solr add batch.","summary":"Changed stream-end batching to enqueue only when indexableItems has at least one item.","command":"node chapman.js index --verbose","repair_round":3}
+  ],
+  "executor_repair_rounds": 3,
+  "scope_expansions_applied": [
+    {"file_path":"tv-radio-frontend/usage-monitoring.js","dependency":"express","reason":"Frontend startup failed in the prior retry because Express 5/path-to-regexp rejects unnamed wildcard route /media/access/*.","summary":"Changed the media access OPTIONS route to the Express 5 named wildcard path /media/access/*path."}
+  ],
+  "scope_expansions_used": 1,
+  "failure_summary": "",
+  "execution_notes": "Retry continued from the existing executor worktree without reverting prior planned changes. Startup probes passed using the declared bounded commands; their integrated HTTP probes returned below 500 before stopping the child processes. Transient startup.out/startup.err files were removed before commit."
+}

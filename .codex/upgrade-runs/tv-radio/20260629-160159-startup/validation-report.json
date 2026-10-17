@@ -1,0 +1,285 @@
+﻿{
+    "decision":  "approved",
+    "confidence_score":  0.86,
+    "base_ref":  "main",
+    "git_diff_summary":  {
+                             "changed_files":  [
+                                                   ".claude\\skills\\gitnexus\\gitnexus-cli\\SKILL.md",
+                                                   ".claude\\skills\\gitnexus\\gitnexus-debugging\\SKILL.md",
+                                                   ".claude\\skills\\gitnexus\\gitnexus-exploring\\SKILL.md",
+                                                   ".claude\\skills\\gitnexus\\gitnexus-guide\\SKILL.md",
+                                                   ".claude\\skills\\gitnexus\\gitnexus-impact-analysis\\SKILL.md",
+                                                   ".claude\\skills\\gitnexus\\gitnexus-refactoring\\SKILL.md",
+                                                   ".gitignore",
+                                                   "AGENTS.md",
+                                                   "CLAUDE.md",
+                                                   "tv-radio-admin\\Admin\\API\\admin-usage.js",
+                                                   "tv-radio-admin\\Admin\\API\\app.js",
+                                                   "tv-radio-admin\\Admin\\API\\package-lock.json",
+                                                   "tv-radio-admin\\Admin\\API\\package.json",
+                                                   "tv-radio-admin\\CLI\\package-lock.json",
+                                                   "tv-radio-admin\\CLI\\package.json",
+                                                   "tv-radio-admin\\Common\\directdb-mongo-backup.js",
+                                                   "tv-radio-admin\\Common\\directdb-mongo.js",
+                                                   "tv-radio-admin\\Common\\package-lock.json",
+                                                   "tv-radio-admin\\Common\\package.json",
+                                                   "tv-radio-admin\\Export\\package-lock.json",
+                                                   "tv-radio-admin\\Export\\package.json",
+                                                   "tv-radio-admin\\Ingest\\csv-processor.js",
+                                                   "tv-radio-admin\\Ingest\\package-lock.json",
+                                                   "tv-radio-admin\\Ingest\\package.json",
+                                                   "tv-radio-admin\\Search\\package-lock.json",
+                                                   "tv-radio-admin\\Search\\package.json",
+                                                   "tv-radio-admin\\Utilities\\package-lock.json",
+                                                   "tv-radio-frontend\\app.js",
+                                                   "tv-radio-frontend\\content\\feedback\\client-feedback.js",
+                                                   "tv-radio-frontend\\content\\homepage\\client-homepage.js",
+                                                   "tv-radio-frontend\\content\\playlists\\client-playlists.js",
+                                                   "tv-radio-frontend\\content\\primo-viewer\\client-primo-viewer.js",
+                                                   "tv-radio-frontend\\content\\public-viewer\\client-public-viewer.js",
+                                                   "tv-radio-frontend\\content\\tv-radio\\client-tv-radio.js",
+                                                   "tv-radio-frontend\\content\\unisat\\client-unisat.js",
+                                                   "tv-radio-frontend\\db-provider.js",
+                                                   "tv-radio-frontend\\logger.js",
+                                                   "tv-radio-frontend\\media\\generic-media.js",
+                                                   "tv-radio-frontend\\media\\programme-media.js",
+                                                   "tv-radio-frontend\\media\\title-thumbnails.js",
+                                                   "tv-radio-frontend\\media\\unisat-thumbnails.js",
+                                                   "tv-radio-frontend\\metrics.js",
+                                                   "tv-radio-frontend\\package-lock.json",
+                                                   "tv-radio-frontend\\package.json",
+                                                   "tv-radio-frontend\\request-common.js",
+                                                   "tv-radio-frontend\\shared\\media-access.js",
+                                                   "upgrade-tests\\common-mongo-backup-integration.test.js",
+                                                   "upgrade-tests\\frontend-request-common-smoke.test.js"
+                                               ],
+                             "planned_files_touched":  [
+                                                           "tv-radio-admin\\Admin\\API\\admin-usage.js",
+                                                           "tv-radio-admin\\Admin\\API\\app.js",
+                                                           "tv-radio-admin\\Admin\\API\\package-lock.json",
+                                                           "tv-radio-admin\\Admin\\API\\package.json",
+                                                           "tv-radio-admin\\CLI\\package-lock.json",
+                                                           "tv-radio-admin\\CLI\\package.json",
+                                                           "tv-radio-admin\\Common\\directdb-mongo-backup.js",
+                                                           "tv-radio-admin\\Common\\directdb-mongo.js",
+                                                           "tv-radio-admin\\Common\\package-lock.json",
+                                                           "tv-radio-admin\\Common\\package.json",
+                                                           "tv-radio-admin\\Export\\package-lock.json",
+                                                           "tv-radio-admin\\Export\\package.json",
+                                                           "tv-radio-admin\\Ingest\\csv-processor.js",
+                                                           "tv-radio-admin\\Ingest\\package-lock.json",
+                                                           "tv-radio-admin\\Ingest\\package.json",
+                                                           "tv-radio-admin\\Search\\package-lock.json",
+                                                           "tv-radio-admin\\Search\\package.json",
+                                                           "tv-radio-admin\\Utilities\\package-lock.json",
+                                                           "tv-radio-frontend\\app.js",
+                                                           "tv-radio-frontend\\content\\feedback\\client-feedback.js",
+                                                           "tv-radio-frontend\\content\\homepage\\client-homepage.js",
+                                                           "tv-radio-frontend\\content\\playlists\\client-playlists.js",
+                                                           "tv-radio-frontend\\content\\primo-viewer\\client-primo-viewer.js",
+                                                           "tv-radio-frontend\\content\\public-viewer\\client-public-viewer.js",
+                                                           "tv-radio-frontend\\content\\tv-radio\\client-tv-radio.js",
+                                                           "tv-radio-frontend\\content\\unisat\\client-unisat.js",
+                                                           "tv-radio-frontend\\db-provider.js",
+                                                           "tv-radio-frontend\\logger.js",
+                                                           "tv-radio-frontend\\media\\generic-media.js",
+                                                           "tv-radio-frontend\\media\\programme-media.js",
+                                                           "tv-radio-frontend\\media\\title-thumbnails.js",
+                                                           "tv-radio-frontend\\media\\unisat-thumbnails.js",
+                                                           "tv-radio-frontend\\metrics.js",
+                                                           "tv-radio-frontend\\package-lock.json",
+                                                           "tv-radio-frontend\\package.json",
+                                                           "tv-radio-frontend\\request-common.js",
+                                                           "tv-radio-frontend\\shared\\media-access.js",
+                                                           "upgrade-tests\\common-mongo-backup-integration.test.js",
+                                                           "upgrade-tests\\frontend-request-common-smoke.test.js"
+                                                       ],
+                             "unexpected_files":  [
+                                                      ".claude\\skills\\gitnexus\\gitnexus-cli\\SKILL.md",
+                                                      ".claude\\skills\\gitnexus\\gitnexus-debugging\\SKILL.md",
+                                                      ".claude\\skills\\gitnexus\\gitnexus-exploring\\SKILL.md",
+                                                      ".claude\\skills\\gitnexus\\gitnexus-guide\\SKILL.md",
+                                                      ".claude\\skills\\gitnexus\\gitnexus-impact-analysis\\SKILL.md",
+                                                      ".claude\\skills\\gitnexus\\gitnexus-refactoring\\SKILL.md",
+                                                      ".gitignore",
+                                                      "AGENTS.md",
+                                                      "CLAUDE.md"
+                                                  ],
+                             "missing_planned_files":  [
+                                                           "tv-radio-admin\\Admin\\API\\admin-streaming-result-set.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\app-media.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\node_modules\\csv-stringify\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\data\\unisat-data.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Common\\record-media-scan.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\course-code-dataset.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Export\\node_modules\\buffer\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\checker-prog-file.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-titles-common.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\data\\playlist-data.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\handlebars-partials.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\content\\live-streams\\client-live-streams.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\lcsh-subjects-dataset.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\CLI\\backup.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Utilities\\node_modules\\optimist\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-bulk-operation.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Utilities\\ember-precompile.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\data\\homepage-data.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Search\\build.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\handlebars-helpers.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Search\\search-index-solr.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-image-handling.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\unisat-record-processing.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\attacher.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Export\\dublincore-exporter.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\ingest.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-live-titles.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-media-scan.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Search\\search.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\data\\programme-data.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Export\\node_modules\\archiver\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-playlists.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Utilities\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\node_modules\\xml2js\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Export\\node_modules\\normalize-path\\package.json (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\CLI\\chapman.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\cache-provider.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Ingest\\city-country-dataset.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Search\\record-processor.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\content\\tv-radio\\client-discovery.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\cache-provider.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-frontend\\data\\title-data.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Admin\\API\\admin-unisat.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)",
+                                                           "tv-radio-admin\\Export\\primo-export.js (informational: unchanged planned entry; treated as review-only, conditional, or no concrete diff hunk required by observed execution)"
+                                                       ],
+                             "dependency_changes_verified":  [
+                                                                 "tv-radio-admin\\CLI\\package.json",
+                                                                 "tv-radio-admin\\Admin\\API\\package.json",
+                                                                 "tv-radio-admin\\Search\\package.json",
+                                                                 "tv-radio-admin\\Common\\package.json",
+                                                                 "tv-radio-admin\\Ingest\\package.json",
+                                                                 "tv-radio-admin\\Export\\package.json",
+                                                                 "tv-radio-frontend\\package.json"
+                                                             ],
+                             "dependency_changes_missing":  [
+
+                                                            ]
+                         },
+    "content_check_results":  [
+                                  {
+                                      "file_path":  "tv-radio-admin\\Admin\\API\\package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend\\package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin\\Common\\directdb-mongo.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend\\db-provider.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend\\logger.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin\\Admin\\API\\app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend\\content\\feedback\\client-feedback.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all required strings present and forbidden strings absent"
+                                  }
+                              ],
+    "command_results":  [
+                            {
+                                "type":  "build",
+                                "command":  "Push-Location C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API; node --check app.js; Pop-Location",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "Push-Location C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend; node --check app.js; Pop-Location",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "Push-Location C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common; node --check directdb-mongo.js; Pop-Location",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "Push-Location C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend; node --check db-provider.js; node --check logger.js; Pop-Location",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "$p=Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -PassThru -RedirectStandardOutput \u0027startup.out\u0027 -RedirectStandardError \u0027startup.err\u0027; try { $deadline=(Get-Date).AddSeconds(30); do { Start-Sleep -Milliseconds 500; try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {} } while((Get-Date) -lt $deadline -and -not $p.HasExited); if($p.HasExited){ Write-Error \u0027process exited before health check\u0027; exit 1 }; Write-Error \u0027health check timed out\u0027; exit 1 } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "",
+                                "health_check_outcome":  "passed",
+                                "health_check_url":  "http://localhost:8080/"
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "$p=Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -PassThru -RedirectStandardOutput \u0027startup.out\u0027 -RedirectStandardError \u0027startup.err\u0027; try { $deadline=(Get-Date).AddSeconds(30); do { Start-Sleep -Milliseconds 500; try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {} } while((Get-Date) -lt $deadline -and -not $p.HasExited); if($p.HasExited){ Write-Error \u0027process exited before health check\u0027; exit 1 }; Write-Error \u0027health check timed out\u0027; exit 1 } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "",
+                                "health_check_outcome":  "passed",
+                                "health_check_url":  "http://localhost:8082/"
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "",
+                                "outcome":  "skipped",
+                                "exit_status":  -1,
+                                "output":  "No existing test commands declared in validation.existing_test_commands."
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "Push-Location C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio; node .\\upgrade-tests\\frontend-request-common-smoke.test.js; Pop-Location",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "Push-Location C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio; node .\\upgrade-tests\\common-mongo-backup-integration.test.js; Pop-Location",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            }
+                        ],
+    "repairs_applied":  [
+
+                        ],
+    "repair_rounds":  0,
+    "final_commit_ref":  "5c55798",
+    "rejection_reasons":  [
+
+                          ],
+    "recommendations":  [
+                            "Review unexpected documentation/config files in the upgrade diff before merge: .claude skill docs, AGENTS.md, CLAUDE.md, and .gitignore were outside the ChangePlan file set.",
+                            "Conditional or unchanged-target dependency entries had no direct diff hunk and were not counted as missing required dependency changes: tv-radio-admin\\Ingest\\node_modules\\csv-stringify\\package.json; tv-radio-admin\\Export\\node_modules\\buffer\\package.json; tv-radio-admin\\Utilities\\node_modules\\optimist\\package.json; tv-radio-admin\\Export\\node_modules\\archiver\\package.json; tv-radio-admin\\Utilities\\package.json; tv-radio-admin\\Ingest\\node_modules\\xml2js\\package.json; tv-radio-admin\\Export\\node_modules\\normalize-path\\package.json"
+                        ]
+}

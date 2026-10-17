@@ -1,0 +1,248 @@
+﻿{
+    "decision":  "rejected",
+    "confidence_score":  0.82,
+    "base_ref":  "main",
+    "git_diff_summary":  {
+                             "changed_files":  [
+                                                   ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                   ".gitignore",
+                                                   "AGENTS.md",
+                                                   "CLAUDE.md",
+                                                   "tests/dependency-upgrade-smoke.test.js",
+                                                   "tv-radio-admin/Admin/API/admin-media-scan.js",
+                                                   "tv-radio-admin/Admin/API/admin-unisat.js",
+                                                   "tv-radio-admin/Admin/API/admin-usage.js",
+                                                   "tv-radio-admin/Admin/API/app.js",
+                                                   "tv-radio-admin/Admin/API/package-lock.json",
+                                                   "tv-radio-admin/Admin/API/package.json",
+                                                   "tv-radio-admin/Admin/Interface/index.html",
+                                                   "tv-radio-admin/CLI/chapman.js",
+                                                   "tv-radio-admin/CLI/package-lock.json",
+                                                   "tv-radio-admin/CLI/package.json",
+                                                   "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                   "tv-radio-admin/Common/directdb-mongo.js",
+                                                   "tv-radio-admin/Common/package-lock.json",
+                                                   "tv-radio-admin/Common/package.json",
+                                                   "tv-radio-admin/Export/package-lock.json",
+                                                   "tv-radio-admin/Export/package.json",
+                                                   "tv-radio-admin/Ingest/csv-processor.js",
+                                                   "tv-radio-admin/Ingest/package-lock.json",
+                                                   "tv-radio-admin/Ingest/package.json",
+                                                   "tv-radio-admin/Search/build.js",
+                                                   "tv-radio-admin/Search/package-lock.json",
+                                                   "tv-radio-admin/Search/package.json",
+                                                   "tv-radio-admin/Utilities/package.json",
+                                                   "tv-radio-frontend/app-media.js",
+                                                   "tv-radio-frontend/app.js",
+                                                   "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                   "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                   "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                   "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                   "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                   "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                   "tv-radio-frontend/db-provider.js",
+                                                   "tv-radio-frontend/logger.js",
+                                                   "tv-radio-frontend/media/generic-media.js",
+                                                   "tv-radio-frontend/metrics.js",
+                                                   "tv-radio-frontend/package-lock.json",
+                                                   "tv-radio-frontend/package.json",
+                                                   "tv-radio-frontend/request-common.js",
+                                                   "tv-radio-frontend/shared/media-access.js",
+                                                   "tv-radio-frontend/usage-monitoring.js"
+                                               ],
+                             "planned_files_touched":  [
+                                                           "tv-radio-admin/Admin/API/admin-media-scan.js",
+                                                           "tv-radio-admin/Admin/API/admin-unisat.js",
+                                                           "tv-radio-admin/Admin/API/admin-usage.js",
+                                                           "tv-radio-admin/Admin/API/app.js",
+                                                           "tv-radio-admin/Admin/API/package.json",
+                                                           "tv-radio-admin/Admin/Interface/index.html",
+                                                           "tv-radio-admin/CLI/chapman.js",
+                                                           "tv-radio-admin/CLI/package.json",
+                                                           "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                           "tv-radio-admin/Common/directdb-mongo.js",
+                                                           "tv-radio-admin/Common/package.json",
+                                                           "tv-radio-admin/Export/package.json",
+                                                           "tv-radio-admin/Ingest/csv-processor.js",
+                                                           "tv-radio-admin/Ingest/package.json",
+                                                           "tv-radio-admin/Search/build.js",
+                                                           "tv-radio-admin/Search/package.json",
+                                                           "tv-radio-frontend/app-media.js",
+                                                           "tv-radio-frontend/app.js",
+                                                           "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                           "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                           "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                           "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                           "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                           "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                           "tv-radio-frontend/db-provider.js",
+                                                           "tv-radio-frontend/logger.js",
+                                                           "tv-radio-frontend/media/generic-media.js",
+                                                           "tv-radio-frontend/metrics.js",
+                                                           "tv-radio-frontend/package.json",
+                                                           "tv-radio-frontend/request-common.js",
+                                                           "tv-radio-frontend/shared/media-access.js",
+                                                           "tv-radio-frontend/usage-monitoring.js"
+                                                       ],
+                             "unexpected_files":  [
+                                                      ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                      ".gitignore",
+                                                      "AGENTS.md",
+                                                      "CLAUDE.md",
+                                                      "tv-radio-admin/Utilities/package.json"
+                                                  ],
+                             "missing_planned_files":  [
+
+                                                       ],
+                             "dependency_changes_verified":  [
+                                                                 "tv-radio-admin/Admin/API/package.json",
+                                                                 "tv-radio-admin/CLI/package.json",
+                                                                 "tv-radio-admin/Common/package.json",
+                                                                 "tv-radio-admin/Export/package.json",
+                                                                 "tv-radio-admin/Ingest/package.json",
+                                                                 "tv-radio-admin/Search/package.json",
+                                                                 "tv-radio-frontend/package.json"
+                                                             ],
+                             "dependency_changes_missing":  [
+
+                                                            ]
+                         },
+    "content_check_results":  [
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/db-provider.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/logger.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/Interface/index.html",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/usage-monitoring.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All must_contain strings were present and all must_not_contain strings were absent."
+                                  }
+                              ],
+    "command_results":  [
+                            {
+                                "type":  "build",
+                                "command":  "(tv-radio-admin/Admin/API) node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "(tv-radio-frontend) node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "(tv-radio-admin/Common) node --check directdb-mongo.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "(tv-radio-frontend) node --check db-provider.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "(tv-radio-frontend) node --check logger.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "(tv-radio-admin/Admin/API) bounded node app.js --port 8080 --verbose --interface with http://localhost:8080/ health probe",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "health_check_outcome: passed; wrapper returned 0 after HTTP status below 500 and stopped the process."
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "(tv-radio-frontend) bounded node app.js with http://localhost:8082/ health probe",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "health_check_outcome: passed; wrapper returned 0 after HTTP status below 500 and stopped the process."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "(tv-radio-admin/CLI) node chapman.js index --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "Re-indexed Titles, Programmes, Playlists, and UniSat records; search index rebuild completed."
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "(repo root) node --test tests/dependency-upgrade-smoke.test.js",
+                                "outcome":  "failed",
+                                "exit_status":  1,
+                                "output":  "Initial generated test failed because expected frontend uuid 14.0.0, frontend/Common mongodb 7.3.0, and Ingest csv 6.6.0 did not match ChangePlan dependency targets."
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "(repo root) node --test tests/dependency-upgrade-smoke.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "5 tests passed, 0 failed after generated-test expectation repair."
+                            }
+                        ],
+    "repairs_applied":  [
+                            {
+                                "file_path":  "tests/dependency-upgrade-smoke.test.js",
+                                "reason":  "Generated smoke test assertions did not match expected_dependency_changes in change-plan.json.",
+                                "summary":  "Updated uuid to 14.0.1, frontend/Common mongodb to 7.5.0, and Ingest csv to 6.6.1."
+                            }
+                        ],
+    "repair_rounds":  1,
+    "final_commit_ref":  "3a75d06",
+    "rejection_reasons":  [
+                              "Branch diff contains files not listed in planned_files, ordered_changes, expected_dependency_changes, validation.generated_test_files, validation.content_checks, or generated package-lock files.",
+                              "Unexpected files include repository metadata/docs and tv-radio-admin/Utilities/package.json; the Utilities package change is formatting-only but still outside the approved ChangePlan.",
+                              "Satisfying the ChangePlan success criterion that no files outside planned_files change would require altering unrelated files, which is outside validator repair authority."
+                          ],
+    "recommendations":  [
+                            "Review, revert, or explicitly approve the unexpected files before rerunning final validation.",
+                            "The declared build commands, startup health checks, existing smoke command, generated smoke test, dependency version checks, and content checks all pass after the generated-test repair.",
+                            "Forty planned review-only/conditional files were unchanged and were not counted as missing planned files."
+                        ]
+}

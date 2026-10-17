@@ -11,13 +11,6 @@
             "env": {
                 "PATH_TO_REPO": "C:\\path\\to\\target-repo"
             }
-        },
-        "mem0": {
-            "type": "http",
-            "url": "https://mcp.mem0.ai/mcp/",
-            "headers": {
-                "Authorization": "Token your_mem0_token_here"
-            }
         }
     }
 }

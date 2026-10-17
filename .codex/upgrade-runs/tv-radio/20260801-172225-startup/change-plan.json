@@ -1,0 +1,1498 @@
+﻿{
+    "upgrade_description":  "Upgrade any outdated dependencies found in the tv-radio repo, including compatibility for Solr. Solr configs are under tv-radio-admin/Settings/Solr (schema.xml, solrconfig.xml, solrconfig-records.xml), currently pinned to luceneMatchVersion 4.9. Solr is an external service and must be flagged explicitly; note client-code/config impact for Common/solr-helpers.js and Search/search-index-solr.js. Target the latest version compatible with this codebase\u0027s Solr client usage; infer from config/client code and flag unknowns.",
+    "ordered_changes":  [
+                            {
+                                "sequence":  1,
+                                "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Admin API runtime dependencies are legacy and include major-version jumps for Express, Socket.IO, JWT, Influx, cron, and body parsing.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  17,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, body-parser, compression, cron, express, fluent-ffmpeg, jsonwebtoken, memcached, minimist, influx, socket.io, socketio-jwt, xml2js"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependency entries in the existing dependency block to: async 3.2.6, body-parser 2.3.0, compression 1.8.1, cron 4.4.0, express 5.2.1, fluent-ffmpeg 2.1.3, jsonwebtoken 9.0.3, memcached 2.2.2, minimist 1.2.8, influx 5.12.0, socket.io 4.8.3, socketio-jwt 4.6.2, xml2js 0.6.2. Preserve package name/version and JSON formatting. After editing, inspect Admin/API require sites only for runtime failures surfaced by node app.js; do not preemptively rewrite route files outside the ImpactReport. Add mime-types 3.0.2 to replace the removed Express static MIME registry used by Admin/API/app.js.",
+                                "validation_evidence":  [
+                                                            "package.json contains the exact target dependency versions.",
+                                                            "Admin API bounded startup command reaches http://localhost:8080/ with status below 500.",
+                                                            "No npm lockfile is expected unless the executor deliberately expands scope and records it.",
+                                                            "Admin API package.json contains mime-types 3.0.2 for custom static MIME registration."
+                                                        ]
+                            },
+                            {
+                                "sequence":  2,
+                                "file_path":  "tv-radio-frontend/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Frontend server dependencies are legacy and include major-version jumps for Express, MongoDB, Socket.IO client, Sharp, Nodemailer, Winston, Handlebars, UUID, and Uglify.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  25,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, body-parser, express, gc-stats, handlebars, influx, memcached, minimist, moment, mongodb, nodemailer, on-finished, request, send, sharp, socket.io-client, uglify-js, uuid, walk, winston, winston-logstash"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependency entries in the existing dependency block to: async 3.2.6, body-parser 2.3.0, express 5.2.1, gc-stats 1.4.1, handlebars 4.7.9, influx 5.12.0, memcached 2.2.2, minimist 1.2.8, moment 2.30.1, mongodb 7.5.0, nodemailer 9.0.3, on-finished 2.4.1, request 2.88.2, send 1.2.1, sharp 0.35.3, socket.io-client 4.8.3, uglify-js 3.19.3, uuid 14.0.1, walk 2.3.15, winston 3.19.0, winston-logstash 2.1.0. Keep request because latest is still 2.88.2; replacing it is an architectural scope expansion.",
+                                "validation_evidence":  [
+                                                            "package.json contains the exact target dependency versions.",
+                                                            "Frontend bounded startup command reaches http://localhost:8082/ with status below 500."
+                                                        ]
+                            },
+                            {
+                                "sequence":  3,
+                                "file_path":  "tv-radio-admin/Common/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Common contains MongoDB driver 2.x and fluent-ffmpeg release-candidate dependency shared by admin modules.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "mongodb, async, fluent-ffmpeg"
+                                                  }
+                                              ],
+                                "change_description":  "Update mongodb to 7.5.0, async to 3.2.6, and fluent-ffmpeg to 2.1.3. Treat any MongoDB callback/API break surfaced by startup or CLI commands as a required repair in impacted files found from stack traces, but do not broaden discovery before failures.",
+                                "validation_evidence":  [
+                                                            "Common package dependency block contains mongodb 7.5.0, async 3.2.6, fluent-ffmpeg 2.1.3.",
+                                                            "Admin API, frontend, and CLI index commands complete their declared checks after dependency setup."
+                                                        ]
+                            },
+                            {
+                                "sequence":  4,
+                                "file_path":  "tv-radio-admin/Search/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Search package powers Solr indexing and has old async/moment versions.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, moment"
+                                                  }
+                                              ],
+                                "change_description":  "Update async to 3.2.6 and moment to 2.30.1. Preserve CommonJS package shape.",
+                                "validation_evidence":  [
+                                                            "Search package dependency block contains exact target versions.",
+                                                            "CLI resetindex and index commands complete against seeded/cleaned fixture data."
+                                                        ]
+                            },
+                            {
+                                "sequence":  5,
+                                "file_path":  "tv-radio-admin/Ingest/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Ingest uses old CSV/XML parsing dependencies.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  8,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, xml2js, csv"
+                                                  }
+                                              ],
+                                "change_description":  "Update async to 3.2.6, xml2js to 0.6.2, and csv to 6.6.1. If csv API breakage appears in executor checks, repair only the failing Ingest call sites identified by stack trace.",
+                                "validation_evidence":  [
+                                                            "Ingest package dependency block contains exact target versions.",
+                                                            "CLI courses/geodata/index commands do not fail from ingest parser imports."
+                                                        ]
+                            },
+                            {
+                                "sequence":  6,
+                                "file_path":  "tv-radio-admin/Export/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Export uses old archive, XML, stream buffer, and FTP libraries.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, xmlbuilder, archiver, stream-buffers, ftp"
+                                                  }
+                                              ],
+                                "change_description":  "Update async to 3.2.6, xmlbuilder to 15.1.1, archiver to 8.0.0, stream-buffers to 3.0.3, and ftp to 0.3.10. Keep ftp because 0.3.10 is the latest package version; replacing it is outside this ImpactReport unless a validation failure requires a narrow fix.",
+                                "validation_evidence":  [
+                                                            "Export package dependency block contains exact target versions.",
+                                                            "No replacement transport dependency is introduced without a documented scope expansion."
+                                                        ]
+                            },
+                            {
+                                "sequence":  7,
+                                "file_path":  "tv-radio-admin/CLI/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "low",
+                                "rationale":  "CLI drives required index-maintenance commands and pins legacy minimist.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async, minimist, pace"
+                                                  }
+                                              ],
+                                "change_description":  "Update async to 3.2.6 and minimist to 1.2.8. Keep pace at 0.0.4 because registry metadata indicates it is latest-equal. CLI command failures for resetindex, index, geodata, and courses must block the executor exactly like startup/test failures.",
+                                "validation_evidence":  [
+                                                            "CLI package dependency block contains async 3.2.6, minimist 1.2.8, pace 0.0.4.",
+                                                            "All four user-supplied chapman.js commands exit 0 after fixture setup."
+                                                        ]
+                            },
+                            {
+                                "sequence":  8,
+                                "file_path":  "tv-radio-admin/Utilities/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "low",
+                                "rationale":  "Utilities declares optimist, which is latest-equal but legacy.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "optimist",
+                                                      "matched_api":  "optimist"
+                                                  }
+                                              ],
+                                "change_description":  "Leave optimist at 0.6.1 unless executor intentionally expands scope to replace it with yargs/minimist and updates affected utility entry points. Record no dependency bump for this package because 0.6.1 is the latest registry version.",
+                                "validation_evidence":  [
+                                                            "Utilities package remains valid JSON.",
+                                                            "No unrelated CLI parser replacement is introduced without a documented scope expansion."
+                                                        ]
+                            },
+                            {
+                                "sequence":  9,
+                                "file_path":  "tv-radio-admin/Settings/Solr/schema.xml",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Schema is Solr 4.x-era and uses field/analyzer classes removed or incompatible in modern Solr.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  2,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "schema version",
+                                                      "matched_api":  "schema version 1.5"
+                                                  },
+                                                  {
+                                                      "start_line":  107,
+                                                      "end_line":  124,
+                                                      "symbol_or_pattern":  "Trie*Field",
+                                                      "matched_api":  "solr.TrieIntField, solr.TrieFloatField, solr.TrieLongField, solr.TrieDoubleField, solr.TrieDateField"
+                                                  },
+                                                  {
+                                                      "start_line":  148,
+                                                      "end_line":  364,
+                                                      "symbol_or_pattern":  "SynonymFilterFactory",
+                                                      "matched_api":  "solr.SynonymFilterFactory"
+                                                  }
+                                              ],
+                                "change_description":  "Migrate schema toward Solr 9.10.1 compatibility: update schema version from 1.5 to a modern classic-schema version accepted by Solr 9.x; replace Trie numeric/date field classes with Point field classes while preserving fieldType names used by indexed documents (int, float, long, double, tint, tfloat, tlong, tdouble, tints, tfloats, tlongs, tdoubles, date, tdate, tdates); remove precisionStep attributes where the replacement field classes do not support them; replace SynonymFilterFactory analyzer usages with the graph synonym filter variant accepted by Solr 9.x where appropriate for query/index analyzers, preserving synonyms file paths, ignoreCase, and expand behavior. Do not rename fields or copyField targets.",
+                                "validation_evidence":  [
+                                                            "schema.xml no longer contains solr.TrieIntField, solr.TrieFloatField, solr.TrieLongField, solr.TrieDoubleField, or solr.TrieDateField.",
+                                                            "schema.xml no longer contains schema version=\"1.5\".",
+                                                            "FieldType names referenced by application code remain unchanged."
+                                                        ]
+                            },
+                            {
+                                "sequence":  10,
+                                "file_path":  "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Primary Solr core config is pinned to Lucene 4.9 and declares legacy classes/handlers that must boot under the selected external Solr target.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "luceneMatchVersion",
+                                                      "matched_api":  "luceneMatchVersion 4.9"
+                                                  },
+                                                  {
+                                                      "start_line":  22,
+                                                      "end_line":  46,
+                                                      "symbol_or_pattern":  "directoryFactory|codecFactory|updateHandler",
+                                                      "matched_api":  "solr.NRTCachingDirectoryFactory, solr.SchemaCodecFactory, solr.DirectUpdateHandler2"
+                                                  },
+                                                  {
+                                                      "start_line":  147,
+                                                      "end_line":  196,
+                                                      "symbol_or_pattern":  "requestHandler",
+                                                      "matched_api":  "/select, /query, /get, /update, /update/json, /update/csv"
+                                                  },
+                                                  {
+                                                      "start_line":  256,
+                                                      "end_line":  383,
+                                                      "symbol_or_pattern":  "spellcheck|suggest|terms",
+                                                      "matched_api":  "solr.SpellCheckComponent, solr.SuggestComponent, /spell, /suggest, /terms"
+                                                  }
+                                              ],
+                                "change_description":  "Update luceneMatchVersion from 4.9 to 9.10.1 for the executable compatibility target. Keep the classic /select and /update request handler names because shared-config and both Solr HTTP clients call those paths directly. Replace or remove only config elements rejected by Solr 9.10.1 at core load; likely candidates are obsolete library paths, explicit DirectUpdateHandler2 class declaration details, and unsupported directory/codec settings. Preserve /update/json and /update/csv only if Solr 9.10.1 accepts them; otherwise keep /update and update no client paths because client code currently posts JSON/XML to /update.",
+                                "validation_evidence":  [
+                                                            "solrconfig.xml no longer contains \u003cluceneMatchVersion\u003e4.9\u003c/luceneMatchVersion\u003e.",
+                                                            "The configured /select and /update handlers remain available to direct HTTP clients.",
+                                                            "External Solr 9.10.1 core load succeeds before CLI reset/index commands are accepted as passing."
+                                                        ]
+                            },
+                            {
+                                "sequence":  11,
+                                "file_path":  "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Records Solr config duplicates the 4.x-era settings and must stay in sync with the primary Solr config.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "luceneMatchVersion",
+                                                      "matched_api":  "luceneMatchVersion 4.9"
+                                                  },
+                                                  {
+                                                      "start_line":  22,
+                                                      "end_line":  46,
+                                                      "symbol_or_pattern":  "directoryFactory|codecFactory|updateHandler",
+                                                      "matched_api":  "solr.NRTCachingDirectoryFactory, solr.SchemaCodecFactory, solr.DirectUpdateHandler2"
+                                                  },
+                                                  {
+                                                      "start_line":  213,
+                                                      "end_line":  262,
+                                                      "symbol_or_pattern":  "requestHandler",
+                                                      "matched_api":  "/select, /query, /get, /update, /update/json, /update/csv"
+                                                  },
+                                                  {
+                                                      "start_line":  322,
+                                                      "end_line":  449,
+                                                      "symbol_or_pattern":  "spellcheck|suggest|terms",
+                                                      "matched_api":  "solr.SpellCheckComponent, solr.SuggestComponent, /spell, /suggest, /terms"
+                                                  }
+                                              ],
+                                "change_description":  "Apply the same Solr 9.10.1 compatibility migration as solrconfig.xml: update luceneMatchVersion, preserve /select and /update handler availability, and remove or replace only settings rejected by Solr 9.10.1. Keep this file behaviorally aligned with solrconfig.xml so content and records cores do not diverge.",
+                                "validation_evidence":  [
+                                                            "solrconfig-records.xml no longer contains \u003cluceneMatchVersion\u003e4.9\u003c/luceneMatchVersion\u003e.",
+                                                            "Records core exposes /select and /update paths if loaded by external Solr.",
+                                                            "Changes mirror the primary solrconfig migration."
+                                                        ]
+                            },
+                            {
+                                "sequence":  12,
+                                "file_path":  "tv-radio-admin/shared-config.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Admin runtime maps logical indexes to direct Solr select/update paths used by index-maintenance commands.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  77,
+                                                      "end_line":  102,
+                                                      "symbol_or_pattern":  "search settings",
+                                                      "matched_api":  "host, port, selectPath, updatePath"
+                                                  },
+                                                  {
+                                                      "start_line":  106,
+                                                      "end_line":  113,
+                                                      "symbol_or_pattern":  "SEARCH settings",
+                                                      "matched_api":  "path, selectPath, updatePath"
+                                                  }
+                                              ],
+                                "change_description":  "Do not change host/port/path values unless the external Solr 9.10.1 deployment uses different core names. If core paths change, update selectPath and updatePath together for settings, cityCountrySettings, lcshSubjectSettings, and courseCodeSettings, and keep exports.SEARCH.settings.path equal to exports.search.settings.selectPath. Preserve classic /select and /update suffixes unless the Solr config migration intentionally exposes alternate handlers and all direct clients are updated in the same execution.",
+                                "validation_evidence":  [
+                                                            "settings for every logical index include both selectPath and updatePath.",
+                                                            "exports.SEARCH.settings.path remains synchronized with exports.search.settings.selectPath.",
+                                                            "CLI resetindex, index, geodata, and courses commands use the configured paths successfully."
+                                                        ]
+                            },
+                            {
+                                "sequence":  13,
+                                "file_path":  "tv-radio-admin/shared-config.js.default",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Template Solr endpoint examples should match any path/core naming change made in runtime config.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  50,
+                                                      "end_line":  77,
+                                                      "symbol_or_pattern":  "type: solr",
+                                                      "matched_api":  "host, port, selectPath, updatePath"
+                                                  }
+                                              ],
+                                "change_description":  "Mirror any deliberate Solr path/core-name changes from shared-config.js in the default template. If runtime paths are unchanged, leave template paths unchanged except for comments or values required by the selected Solr deployment. Do not remove selectPath/updatePath keys.",
+                                "validation_evidence":  [
+                                                            "Default template retains selectPath and updatePath for content, geodata, subjects-lcsh, and course-codes.",
+                                                            "No mismatch is introduced between runtime and default config shape."
+                                                        ]
+                            },
+                            {
+                                "sequence":  14,
+                                "file_path":  "tv-radio-frontend/config.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Frontend search config feeds direct Solr select requests.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  50,
+                                                      "end_line":  56,
+                                                      "symbol_or_pattern":  "SEARCH settings",
+                                                      "matched_api":  "host, port, path"
+                                                  }
+                                              ],
+                                "change_description":  "Keep SEARCH.settings.path pointed at the Solr select handler for the content core. If admin shared-config.js changes the content select path, make the same path change here. Preserve the key name path because tv-radio-frontend/solr-search.js reads config.path.",
+                                "validation_evidence":  [
+                                                            "config.SEARCH.settings.path ends with /select.",
+                                                            "Frontend bounded startup reaches http://localhost:8082/ and Solr-backed smoke tests use the configured path."
+                                                        ]
+                            },
+                            {
+                                "sequence":  15,
+                                "file_path":  "tv-radio-frontend/config.js.default",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Frontend default search config should match the runtime config shape and any selected Solr path convention.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  61,
+                                                      "end_line":  67,
+                                                      "symbol_or_pattern":  "SEARCH settings",
+                                                      "matched_api":  "host, port, path"
+                                                  }
+                                              ],
+                                "change_description":  "Mirror any deliberate frontend Solr path change from config.js in the default template. Preserve SEARCH.settings.path and keep it pointed at a /select handler.",
+                                "validation_evidence":  [
+                                                            "Default frontend config retains SEARCH.settings.path.",
+                                                            "Path shape remains compatible with solr-search.js."
+                                                        ]
+                            },
+                            {
+                                "sequence":  16,
+                                "file_path":  "tv-radio-admin/Search/search-index-solr.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "This is the direct admin Solr HTTP client for XML updates, JSON adds, atomic updates, deletes, counts, and proxied search.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  21,
+                                                      "symbol_or_pattern":  "http.request",
+                                                      "matched_api":  "performGeneralXMLCommand"
+                                                  },
+                                                  {
+                                                      "start_line":  50,
+                                                      "end_line":  58,
+                                                      "symbol_or_pattern":  "delete|commit XML",
+                                                      "matched_api":  "\u003cdelete\u003e\u003cquery\u003e*:*\u003c/query\u003e\u003c/delete\u003e, \u003ccommit/\u003e"
+                                                  },
+                                                  {
+                                                      "start_line":  63,
+                                                      "end_line":  89,
+                                                      "symbol_or_pattern":  "addItemsToSearchIndex",
+                                                      "matched_api":  "JSON update to config.updatePath with commit=true"
+                                                  },
+                                                  {
+                                                      "start_line":  118,
+                                                      "end_line":  160,
+                                                      "symbol_or_pattern":  "updateItemsInSearchIndex",
+                                                      "matched_api":  "overwrite true add JSON"
+                                                  },
+                                                  {
+                                                      "start_line":  189,
+                                                      "end_line":  216,
+                                                      "symbol_or_pattern":  "removeItemsFromSearchIndex",
+                                                      "matched_api":  "XML delete query to config.updatePath"
+                                                  },
+                                                  {
+                                                      "start_line":  243,
+                                                      "end_line":  259,
+                                                      "symbol_or_pattern":  "countItemsInSearchIndex",
+                                                      "matched_api":  "selectPath query with wt=json rows=0"
+                                                  },
+                                                  {
+                                                      "start_line":  324,
+                                                      "end_line":  373,
+                                                      "symbol_or_pattern":  "atomic update document",
+                                                      "matched_api":  "set, remove, add, mv-add, mv-remove"
+                                                  },
+                                                  {
+                                                      "start_line":  379,
+                                                      "end_line":  651,
+                                                      "symbol_or_pattern":  "partialUpdate*",
+                                                      "matched_api":  "partialUpdateMultipleItemsUsingPreparedDocuments, partialUpdateItemsInSearchIndexUsingIdentifierList, partialUpdateItemsInSearchIndex"
+                                                  },
+                                                  {
+                                                      "start_line":  787,
+                                                      "end_line":  910,
+                                                      "symbol_or_pattern":  "escapeSolrQuery|performSearch",
+                                                      "matched_api":  "Solr query escaping, performSearch, performSearchOnClientsBehalf"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve exported function names and callback signatures. Keep direct http unless the executor has to support HTTPS from config; if added, select http/https by config protocol without changing callers. Ensure JSON update requests still post arrays/objects to config.updatePath with Content-Type application/json and optional commit=true. Ensure XML delete/commit paths still post to config.updatePath. For Solr 9.10.1 compatibility, prefer adding wt=json to select/count callers when not already supplied by callers; do not replace classic query syntax unless a failing smoke test identifies a specific incompatible query. Fix any Content-Length calculation only if Solr rejects multibyte payloads; if touched, use Buffer.byteLength(finalJSON or cmd, \u0027utf8\u0027) consistently.",
+                                "validation_evidence":  [
+                                                            "Module still exports resetSearchIndex, commitSearchIndex, addItemsToSearchIndex, updateItemsInSearchIndex, removeItemsFromSearchIndex, countItemsInSearchIndex, preparePartialUpdateIndexDocumentJSON, partialUpdateItemsInSearchIndexUsingIdentifierList, performSearch, and performSearchOnClientsBehalf.",
+                                                            "CLI resetindex and index commands successfully exercise delete, add, commit, select/count, and partial update code paths against seeded fixture data.",
+                                                            "No caller import path changes are required."
+                                                        ]
+                            },
+                            {
+                                "sequence":  17,
+                                "file_path":  "tv-radio-admin/Common/solr-helpers.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Common helper serializes strings and dates for indexed Solr documents.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  2,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "cleanString",
+                                                      "matched_api":  "Solr index string sanitization"
+                                                  },
+                                                  {
+                                                      "start_line":  13,
+                                                      "end_line":  50,
+                                                      "symbol_or_pattern":  "formatDate",
+                                                      "matched_api":  "Solr index date formatting"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve cleanString behavior unless tests identify field rejection from Solr 9.10.1. Correct formatDate only if covered by generated fixture tests: it currently uses getUTCDay and zero-based getUTCMonth, which likely serializes wrong Solr date values. If changing, keep return format ISO-like UTC yyyy-MM-ddTHH:mm:ssZ and add fixture assertions in generated tests before executor commit.",
+                                "validation_evidence":  [
+                                                            "Generated tests, when added by the test stage, cover date formatting for known calendar dates and null/invalid input.",
+                                                            "CLI index command can add documents with date fields to Solr."
+                                                        ]
+                            },
+                            {
+                                "sequence":  18,
+                                "file_path":  "tv-radio-frontend/solr-search.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Frontend direct Solr select client assumes classic query parser escaping and Solr JSON response shape.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  18,
+                                                      "symbol_or_pattern":  "http|querystring|clean JSON",
+                                                      "matched_api":  "http.request, querystring.stringify"
+                                                  },
+                                                  {
+                                                      "start_line":  23,
+                                                      "end_line":  91,
+                                                      "symbol_or_pattern":  "escapeSolrQuery",
+                                                      "matched_api":  "Solr query escaping regular expressions"
+                                                  },
+                                                  {
+                                                      "start_line":  97,
+                                                      "end_line":  168,
+                                                      "symbol_or_pattern":  "performSearch",
+                                                      "matched_api":  "config.path select request with querystring"
+                                                  },
+                                                  {
+                                                      "start_line":  189,
+                                                      "end_line":  242,
+                                                      "symbol_or_pattern":  "performBasicSearch|verifySolrResult",
+                                                      "matched_api":  "wt=json, rows, responseHeader, facet_counts"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve exports and callback signatures used by frontend data modules. Keep config.path as the select endpoint. Add or preserve wt=json in query construction. Only change escaping if Solr 9.10.1 rejects a specific generated fixture query; if changed, keep wildcard-allowed and quote-including variants distinct. Fix obvious validation typo in error text only if editing nearby, but do not change behavior expected by callers.",
+                                "validation_evidence":  [
+                                                            "Module still exports escapeSolrQuery, escapeAdvancedSolrQuery, escapeSolrQueryIncludingQuotes, performSearch, performBasicSearch, and verifySolrResult.",
+                                                            "Frontend startup reaches http://localhost:8082/.",
+                                                            "Generated smoke tests cover a seeded search response with responseHeader.status 0, response.numFound, docs, and facet_counts."
+                                                        ]
+                            },
+                            {
+                                "sequence":  19,
+                                "file_path":  "tv-radio-admin/Search/build.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Build orchestrates Solr index reset/add/update/delete/commit flows used by required CLI commands.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  12,
+                                                      "end_line":  12,
+                                                      "symbol_or_pattern":  "require search-index-solr",
+                                                      "matched_api":  "require(__dirname + \"/search-index-solr.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  78,
+                                                      "end_line":  100,
+                                                      "symbol_or_pattern":  "addItemsToSearchIndex|commitSearchIndex",
+                                                      "matched_api":  "Solr add and commit"
+                                                  },
+                                                  {
+                                                      "start_line":  393,
+                                                      "end_line":  403,
+                                                      "symbol_or_pattern":  "resetSearchIndex|commitSearchIndex",
+                                                      "matched_api":  "Solr reset and commit"
+                                                  },
+                                                  {
+                                                      "start_line":  431,
+                                                      "end_line":  856,
+                                                      "symbol_or_pattern":  "addItemsToSearchIndex|removeItemsFromSearchIndex|partialUpdateItemsInSearchIndex",
+                                                      "matched_api":  "Solr add, delete, partial update, commit"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the search-index-solr import and helper call signatures unchanged. If async 3 queue/each semantics surface callback errors, repair only the failing callback pattern in this file. Ensure resetSearchIndex, add/update, remove, and commit flows propagate Solr errors so CLI failures fail validation.",
+                                "validation_evidence":  [
+                                                            "node chapman.js resetindex --verbose and node chapman.js index --verbose exit 0 only after Solr update/commit succeeds.",
+                                                            "Errors from Solr helper calls are not swallowed."
+                                                        ]
+                            },
+                            {
+                                "sequence":  20,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-live-titles.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Admin live-title routes construct Solr queries and proxy Solr responses.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require search-index-solr",
+                                                      "matched_api":  "require(__dirname + \"/../../Search/search-index-solr.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  483,
+                                                      "end_line":  563,
+                                                      "symbol_or_pattern":  "escapeSolrQuery",
+                                                      "matched_api":  "Solr query construction"
+                                                  },
+                                                  {
+                                                      "start_line":  702,
+                                                      "end_line":  702,
+                                                      "symbol_or_pattern":  "performSearchOnClientsBehalf",
+                                                      "matched_api":  "Solr select proxy"
+                                                  }
+                                              ],
+                                "change_description":  "Do not change this file unless search-index-solr export names/signatures change or Express 5 startup exposes a route/middleware incompatibility here. If touched, preserve constructed q/fq option semantics and response proxy behavior.",
+                                "validation_evidence":  [
+                                                            "Import path remains valid.",
+                                                            "Admin API startup has no Express 5 route registration error from this module."
+                                                        ]
+                            },
+                            {
+                                "sequence":  21,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Bulk operations issue Solr partial updates and select-before-update flows.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "require search-index-solr",
+                                                      "matched_api":  "require(__dirname + \"/../../Search/search-index-solr.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  421,
+                                                      "end_line":  544,
+                                                      "symbol_or_pattern":  "partialUpdateItemsInSearchIndexUsingIdentifierList|performSearch|escapeSolrQueryIncludingQuotes",
+                                                      "matched_api":  "Solr partial update, select, query escaping"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve searchIndexSolr import and partial update call signatures. If Solr 9.10.1 rejects multi-valued atomic update payloads, fix payload generation in search-index-solr rather than changing this caller.",
+                                "validation_evidence":  [
+                                                            "No caller-side API churn is introduced.",
+                                                            "Generated Solr fixture smoke covers partial update through the shared helper."
+                                                        ]
+                            },
+                            {
+                                "sequence":  22,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-suggesters.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Suggester routes proxy Solr queries for facets and autocomplete indexes.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "require search-index-solr",
+                                                      "matched_api":  "require(__dirname + \"/../../Search/search-index-solr.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  98,
+                                                      "end_line":  264,
+                                                      "symbol_or_pattern":  "performSearchOnClientsBehalf|escapeSolrQuery",
+                                                      "matched_api":  "Solr select proxy and query escaping"
+                                                  }
+                                              ],
+                                "change_description":  "Keep direct calls to search-index-solr helpers unchanged. If Solr config removes suggest/spell/terms components, verify these routes still query ordinary /select facets and autocomplete fields; do not wire them to /suggest unless a generated smoke test proves the existing query path is insufficient.",
+                                "validation_evidence":  [
+                                                            "Admin API startup loads suggester routes under Express 5.",
+                                                            "Facet/autocomplete query option shapes remain compatible with /select."
+                                                        ]
+                            },
+                            {
+                                "sequence":  23,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-unisat.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Admin UniSat routes perform Solr search/count and validate response shape.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require search-index-solr",
+                                                      "matched_api":  "require(__dirname + \"/../../Search/search-index-solr.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  473,
+                                                      "end_line":  630,
+                                                      "symbol_or_pattern":  "performSearchOnClientsBehalf|escapeSolrQuery|countItemsInSearchIndex",
+                                                      "matched_api":  "Solr select proxy, query escaping, count"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve Solr helper calls and responseHeader/response validation. If helper return behavior changes, adapt only the callback handling in this range so missing Solr response sections still produce explicit errors.",
+                                "validation_evidence":  [
+                                                            "Admin API startup loads UniSat routes.",
+                                                            "Solr count/select fixture smoke validates responseHeader.status and response.numFound handling."
+                                                        ]
+                            },
+                            {
+                                "sequence":  24,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-image-handling.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Image updates can trigger Solr partial updates.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  2,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "require search-index-solr",
+                                                      "matched_api":  "require(__dirname + \"/../../Search/search-index-solr.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  271,
+                                                      "end_line":  271,
+                                                      "symbol_or_pattern":  "partialUpdateItemsInSearchIndexUsingIdentifierList",
+                                                      "matched_api":  "Solr partial update"
+                                                  }
+                                              ],
+                                "change_description":  "Keep partialUpdateItemsInSearchIndexUsingIdentifierList call shape unchanged. Repair only if Express 5/body-parser 2 startup errors point to this file or if shared Solr helper signature changes.",
+                                "validation_evidence":  [
+                                                            "Admin API startup loads this route module.",
+                                                            "Solr partial update helper remains backward compatible for this caller."
+                                                        ]
+                            },
+                            {
+                                "sequence":  25,
+                                "file_path":  "tv-radio-frontend/data/tv-radio-data.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Frontend TV/radio data layer builds Solr queries and validates search/facet results.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  1,
+                                                      "symbol_or_pattern":  "require solr-search",
+                                                      "matched_api":  "require(__dirname + \"/../solr-search.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  122,
+                                                      "end_line":  263,
+                                                      "symbol_or_pattern":  "escapeSolrQueryIncludingQuotes|performSearch",
+                                                      "matched_api":  "Solr query escaping and search"
+                                                  },
+                                                  {
+                                                      "start_line":  637,
+                                                      "end_line":  696,
+                                                      "symbol_or_pattern":  "performSearch",
+                                                      "matched_api":  "Solr select"
+                                                  }
+                                              ],
+                                "change_description":  "Do not alter query construction unless Solr 9.10.1 rejects a specific generated fixture query. Preserve solr-search import, eventTimer callback shape, facet.field/facet.pivot/stats/highlighting parameters, and response handling.",
+                                "validation_evidence":  [
+                                                            "Frontend startup loads data module.",
+                                                            "Generated fixture smoke covers at least one title search with facets and highlighting options."
+                                                        ]
+                            },
+                            {
+                                "sequence":  26,
+                                "file_path":  "tv-radio-frontend/data/unisat-data.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Frontend UniSat data layer depends heavily on Solr responseHeader/response/grouped shapes.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  1,
+                                                      "symbol_or_pattern":  "require solr-search",
+                                                      "matched_api":  "require(__dirname + \"/../solr-search.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  37,
+                                                      "end_line":  236,
+                                                      "symbol_or_pattern":  "performSearch",
+                                                      "matched_api":  "Solr select"
+                                                  },
+                                                  {
+                                                      "start_line":  468,
+                                                      "end_line":  973,
+                                                      "symbol_or_pattern":  "performSearch|escapeSolrQueryIncludingQuotes",
+                                                      "matched_api":  "Solr select and query escaping"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve Solr helper API usage and grouped/facet response expectations. If generated tests identify response-shape differences in Solr 9.10.1, normalize in solr-search.js rather than duplicating response adaptation throughout this file.",
+                                "validation_evidence":  [
+                                                            "Frontend startup loads UniSat data module.",
+                                                            "Generated fixture smoke covers grouped/facet or documents response used by UniSat flows."
+                                                        ]
+                            },
+                            {
+                                "sequence":  27,
+                                "file_path":  "tv-radio-frontend/data/programme-data.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Programme data layer builds Solr programme/title lookups and expects classic responseHeader/response documents.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  1,
+                                                      "symbol_or_pattern":  "require solr-search",
+                                                      "matched_api":  "require(__dirname + \"/../solr-search.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  38,
+                                                      "end_line":  306,
+                                                      "symbol_or_pattern":  "escapeSolrQueryIncludingQuotes|performSearch",
+                                                      "matched_api":  "Solr query escaping and search"
+                                                  },
+                                                  {
+                                                      "start_line":  404,
+                                                      "end_line":  784,
+                                                      "symbol_or_pattern":  "escapeSolrQueryIncludingQuotes|performSearch",
+                                                      "matched_api":  "Solr query escaping and search"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve helper calls and preferLocalShards/wt=json options. If Solr 9.10.1 rejects preferLocalShards outside SolrCloud, handle it centrally or remove only after fixture smoke proves it is incompatible with the target deployment.",
+                                "validation_evidence":  [
+                                                            "Frontend startup loads programme data module.",
+                                                            "Programme Solr smoke checks responseHeader.status, response.numFound, and docs handling."
+                                                        ]
+                            },
+                            {
+                                "sequence":  28,
+                                "file_path":  "tv-radio-frontend/data/title-data.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Title data layer uses frontend Solr helper for direct title lookup and batch title fetches.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  1,
+                                                      "symbol_or_pattern":  "require solr-search",
+                                                      "matched_api":  "require(__dirname + \"/../solr-search.js\")"
+                                                  },
+                                                  {
+                                                      "start_line":  63,
+                                                      "end_line":  368,
+                                                      "symbol_or_pattern":  "escapeSolrQueryIncludingQuotes|performSearch",
+                                                      "matched_api":  "Solr query escaping and search"
+                                                  }
+                                              ],
+                                "change_description":  "Preserve solr-search import and callback response handling. If helper behavior changes, adapt only the callback handling in the cited ranges and keep cache writes unchanged.",
+                                "validation_evidence":  [
+                                                            "Frontend startup loads title data module.",
+                                                            "Generated fixture smoke covers single-title and multi-title Solr lookup paths."
+                                                        ]
+                            },
+                            {
+                                "sequence":  29,
+                                "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Express 5 no longer exposes express.static.mime.define, and Admin API startup fails until the custom mp3/mp4 MIME registration is migrated.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  9,
+                                                      "symbol_or_pattern":  "require declarations",
+                                                      "matched_api":  "require(\"express\") dependency block"
+                                                  },
+                                                  {
+                                                      "start_line":  40,
+                                                      "end_line":  41,
+                                                      "symbol_or_pattern":  "express.static.mime.define",
+                                                      "matched_api":  "express.static.mime.define({\"audio/mpeg3\" : [\"mp3\"]}); express.static.mime.define({\"video/mp4\" : [\"mp4\"]});"
+                                                  }
+                                              ],
+                                "change_description":  "Import mime-types as mimeTypes near the existing require declarations. Replace the two express.static.mime.define calls with mimeTypes.types.mp3 = \"audio/mpeg3\" and mimeTypes.types.mp4 = \"video/mp4\" so Express/send/static MIME lookup sees the custom mappings without using the removed Express 4 API. Keep the existing static middleware routes unchanged.",
+                                "validation_evidence":  [
+                                                            "app.js no longer contains express.static.mime.define.",
+                                                            "app.js imports mime-types and assigns mp3/mp4 custom MIME types.",
+                                                            "Admin API bounded startup reaches http://localhost:8080/ with status below 500."
+                                                        ]
+                            },
+                            {
+                                "sequence":  30,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-usage.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Influx 5 startup validation fails because the Admin API active-stream metric writer uses the old influx 0.x/legacy writePoints(metric, [[values, tags]], callback) shape.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\"influx\")",
+                                                      "matched_api":  "influx package import"
+                                                  },
+                                                  {
+                                                      "start_line":  258,
+                                                      "end_line":  288,
+                                                      "symbol_or_pattern":  "new influx.InfluxDB|writePoints",
+                                                      "matched_api":  "InfluxDB constructor and writePoints payload"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the Influx 5 constructor form `new influx.InfluxDB(config.metrics.config)`. Replace the active-streams write call with the Influx 5 point-object array shape, e.g. one object with `measurement: activeStreamsMetric`, `tags: tags`, and `fields` containing the numeric value; preserve the existing callback/error logging behavior. Do not alter the polling interval, Mongo count selector, socket notifications, or metric/tag names.",
+                                "validation_evidence":  [
+                                                            "admin-usage.js uses new influx.InfluxDB for the client.",
+                                                            "admin-usage.js writePoints call passes an array of point objects instead of metric plus nested values/tags arrays.",
+                                                            "Admin API bounded startup reaches http://localhost:8080/ with status below 500."
+                                                        ]
+                            },
+                            {
+                                "sequence":  31,
+                                "file_path":  "tv-radio-frontend/metrics.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Frontend metrics uses the legacy callable influx constructor, which is incompatible with the upgraded Influx package.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require(\"influx\")",
+                                                      "matched_api":  "influx package import"
+                                                  },
+                                                  {
+                                                      "start_line":  36,
+                                                      "end_line":  36,
+                                                      "symbol_or_pattern":  "influx(config.METRICS.config)",
+                                                      "matched_api":  "legacy callable influx constructor"
+                                                  }
+                                              ],
+                                "change_description":  "Replace the legacy callable influx client creation with `new influx.InfluxDB(config.METRICS.config)` while preserving the null behavior when metrics config is absent. Do not change metric queueing or write aggregation logic unless validation surfaces an Influx 5 payload failure for this file.",
+                                "validation_evidence":  [
+                                                            "metrics.js uses new influx.InfluxDB for client creation.",
+                                                            "Frontend bounded startup reaches http://localhost:8082/ with status below 500."
+                                                        ]
+                            },
+                            {
+                                "sequence":  32,
+                                "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "MongoDB Node driver 7 removes legacy callback APIs used throughout the shared direct database adapter, and startup/CLI validation depends on this adapter.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  68,
+                                                      "end_line":  160,
+                                                      "symbol_or_pattern":  "MongoClient.connect|db.close",
+                                                      "matched_api":  "MongoDB connection/client lifecycle"
+                                                  },
+                                                  {
+                                                      "start_line":  171,
+                                                      "end_line":  365,
+                                                      "symbol_or_pattern":  "count|drop|ensureIndex|findOne|update|remove|insert",
+                                                      "matched_api":  "legacy collection callback APIs"
+                                                  },
+                                                  {
+                                                      "start_line":  423,
+                                                      "end_line":  485,
+                                                      "symbol_or_pattern":  "cursor.count|toArray|findAndModify",
+                                                      "matched_api":  "legacy cursor/findAndModify APIs"
+                                                  },
+                                                  {
+                                                      "start_line":  734,
+                                                      "end_line":  769,
+                                                      "symbol_or_pattern":  "bulk.execute(callback)",
+                                                      "matched_api":  "bulk operation callback API"
+                                                  }
+                                              ],
+                                "change_description":  "Migrate only the existing adapter methods needed for startup and CLI validation from removed MongoDB callback APIs to promise-based MongoDB 7 APIs while preserving the module callback contract. Use MongoClient.connect(...).then(client), store client separately for close(), use countDocuments/createIndex/updateOne/updateMany/deleteOne/deleteMany/insertOne/insertMany/findOneAndUpdate/toArray/forEach as appropriate, and keep existing completion callback signatures. Do not rewrite callers.",
+                                "validation_evidence":  [
+                                                            "directdb-mongo.js no longer passes callbacks to MongoDB driver methods removed in v7.",
+                                                            "The adapter still invokes existing completion callbacks with the same arity used by callers.",
+                                                            "All required CLI index-maintenance commands pass."
+                                                        ]
+                            }
+                        ],
+    "planned_files":  [
+                          "tv-radio-admin/Admin/API/package.json",
+                          "tv-radio-frontend/package.json",
+                          "tv-radio-admin/Common/package.json",
+                          "tv-radio-admin/Search/package.json",
+                          "tv-radio-admin/Ingest/package.json",
+                          "tv-radio-admin/Export/package.json",
+                          "tv-radio-admin/CLI/package.json",
+                          "tv-radio-admin/Utilities/package.json",
+                          "tv-radio-admin/Settings/Solr/schema.xml",
+                          "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                          "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                          "tv-radio-admin/shared-config.js",
+                          "tv-radio-admin/shared-config.js.default",
+                          "tv-radio-frontend/config.js",
+                          "tv-radio-frontend/config.js.default",
+                          "tv-radio-admin/Search/search-index-solr.js",
+                          "tv-radio-admin/Common/solr-helpers.js",
+                          "tv-radio-frontend/solr-search.js",
+                          "tv-radio-admin/Search/build.js",
+                          "tv-radio-admin/Admin/API/admin-live-titles.js",
+                          "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+                          "tv-radio-admin/Admin/API/admin-suggesters.js",
+                          "tv-radio-admin/Admin/API/admin-unisat.js",
+                          "tv-radio-admin/Admin/API/admin-image-handling.js",
+                          "tv-radio-frontend/data/tv-radio-data.js",
+                          "tv-radio-frontend/data/unisat-data.js",
+                          "tv-radio-frontend/data/programme-data.js",
+                          "tv-radio-frontend/data/title-data.js",
+                          "tv-radio-admin/Admin/API/app.js",
+                          "tv-radio-admin/Admin/API/admin-usage.js",
+                          "tv-radio-admin/Common/directdb-mongo.js",
+                          "tv-radio-frontend/metrics.js"
+                      ],
+    "expected_dependency_changes":  [
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "body-parser",
+                                            "from_version":  "1.9.0",
+                                            "to_version":  "2.3.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "compression",
+                                            "from_version":  "1.4.3",
+                                            "to_version":  "1.8.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "cron",
+                                            "from_version":  "1.0.6",
+                                            "to_version":  "4.4.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "express",
+                                            "from_version":  "4.9.5",
+                                            "to_version":  "5.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "fluent-ffmpeg",
+                                            "from_version":  "2.0.0-rc3",
+                                            "to_version":  "2.1.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "jsonwebtoken",
+                                            "from_version":  "^5.4.0",
+                                            "to_version":  "9.0.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "memcached",
+                                            "from_version":  "2.2.0",
+                                            "to_version":  "2.2.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "influx",
+                                            "from_version":  "4.0.0",
+                                            "to_version":  "5.12.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "socket.io",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "4.8.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "socketio-jwt",
+                                            "from_version":  "^4.3.1",
+                                            "to_version":  "4.6.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "xml2js",
+                                            "from_version":  "0.4.4",
+                                            "to_version":  "0.6.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "body-parser",
+                                            "from_version":  "1.9.0",
+                                            "to_version":  "2.3.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "express",
+                                            "from_version":  "4.9.5",
+                                            "to_version":  "5.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "gc-stats",
+                                            "from_version":  "^1.0.0",
+                                            "to_version":  "1.4.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "handlebars",
+                                            "from_version":  "3.0.0",
+                                            "to_version":  "4.7.9"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "influx",
+                                            "from_version":  "4.0.0",
+                                            "to_version":  "5.12.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "memcached",
+                                            "from_version":  "2.2.0",
+                                            "to_version":  "2.2.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "moment",
+                                            "from_version":  "2.10.2",
+                                            "to_version":  "2.30.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "mongodb",
+                                            "from_version":  "^2.0.0",
+                                            "to_version":  "7.5.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "nodemailer",
+                                            "from_version":  "1.4.0",
+                                            "to_version":  "9.0.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "on-finished",
+                                            "from_version":  "^2.2.0",
+                                            "to_version":  "2.4.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "request",
+                                            "from_version":  "^2.87.0",
+                                            "to_version":  "2.88.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "send",
+                                            "from_version":  "0.12.2",
+                                            "to_version":  "1.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "sharp",
+                                            "from_version":  "^0.14.1",
+                                            "to_version":  "0.35.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "socket.io-client",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "4.8.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "uglify-js",
+                                            "from_version":  "^2.4.17",
+                                            "to_version":  "3.19.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "uuid",
+                                            "from_version":  "2.0.1",
+                                            "to_version":  "14.0.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "walk",
+                                            "from_version":  "^2.3.9",
+                                            "to_version":  "2.3.15"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "winston",
+                                            "from_version":  "^1.0.1",
+                                            "to_version":  "3.19.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "winston-logstash",
+                                            "from_version":  "^0.3.0",
+                                            "to_version":  "2.1.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "dependency":  "mongodb",
+                                            "from_version":  "^2.2.24",
+                                            "to_version":  "7.5.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "dependency":  "fluent-ffmpeg",
+                                            "from_version":  "2.0.0-rc3",
+                                            "to_version":  "2.1.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Search/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Search/package.json",
+                                            "dependency":  "moment",
+                                            "from_version":  "2.8.2",
+                                            "to_version":  "2.30.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "dependency":  "xml2js",
+                                            "from_version":  "0.4.4",
+                                            "to_version":  "0.6.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "dependency":  "csv",
+                                            "from_version":  "0.4.0",
+                                            "to_version":  "6.6.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "xmlbuilder",
+                                            "from_version":  "~2.6.1",
+                                            "to_version":  "15.1.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "archiver",
+                                            "from_version":  "~0.14",
+                                            "to_version":  "8.0.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "stream-buffers",
+                                            "from_version":  "2.1.0",
+                                            "to_version":  "3.0.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "ftp",
+                                            "from_version":  "~0.3.8",
+                                            "to_version":  "0.3.10"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "dependency":  "pace",
+                                            "from_version":  "0.0.4",
+                                            "to_version":  "0.0.4"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Utilities/package.json",
+                                            "dependency":  "optimist",
+                                            "from_version":  "0.6.1",
+                                            "to_version":  "0.6.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                            "dependency":  "Solr external service",
+                                            "from_version":  "unknown Solr 4.x-era config with luceneMatchVersion 4.9",
+                                            "to_version":  "Solr 9.10.1 compatibility target; Solr 10.0.0 is latest current but unvalidated for this repo"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                            "dependency":  "Solr external service",
+                                            "from_version":  "unknown Solr 4.x-era config with luceneMatchVersion 4.9",
+                                            "to_version":  "Solr 9.10.1 compatibility target; Solr 10.0.0 is latest current but unvalidated for this repo"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Settings/Solr/schema.xml",
+                                            "dependency":  "Solr schema/Lucene field types",
+                                            "from_version":  "schema version 1.5 with Trie*Field classes",
+                                            "to_version":  "Solr 9.10.1-compatible classic schema with Point field classes"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "mime-types",
+                                            "from_version":  "not present",
+                                            "to_version":  "3.0.2"
+                                        }
+                                    ],
+    "validation":  {
+                       "base_branch_candidates":  [
+                                                      "main",
+                                                      "master"
+                                                  ],
+                       "executor_check_commands":  [
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio",
+                                                           "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$dirs=@(\u0027tv-radio-admin/Admin/API\u0027,\u0027tv-radio-admin/Common\u0027,\u0027tv-radio-admin/Search\u0027,\u0027tv-radio-admin/Ingest\u0027,\u0027tv-radio-admin/Export\u0027,\u0027tv-radio-admin/CLI\u0027,\u0027tv-radio-admin/Utilities\u0027,\u0027tv-radio-frontend\u0027); foreach($d in $dirs){ Push-Location $d; npm.cmd install --no-package-lock --no-audit --no-fund; if($LASTEXITCODE -ne 0){ Pop-Location; exit $LASTEXITCODE }; Pop-Location }\"",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  900,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio",
+                                                           "command":  "node --check tv-radio-admin/Search/search-index-solr.js \u0026\u0026 node --check tv-radio-admin/Common/solr-helpers.js \u0026\u0026 node --check tv-radio-frontend/solr-search.js \u0026\u0026 node --check tv-radio-admin/Search/build.js",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  60,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                                           "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList \u0027app.js\u0027 -PassThru -WindowStyle Hidden -RedirectStandardOutput \u0027C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8080.out.log\u0027 -RedirectStandardError \u0027C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8080.err.log\u0027; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and !$p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                           "purpose":  "startup",
+                                                           "timeout_seconds":  60,
+                                                           "required":  true,
+                                                           "health_check_url":  "http://localhost:8080/"
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList \u0027app.js\u0027 -PassThru -WindowStyle Hidden -RedirectStandardOutput \u0027C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8082.out.log\u0027 -RedirectStandardError \u0027C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8082.err.log\u0027; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and !$p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                           "purpose":  "startup",
+                                                           "timeout_seconds":  60,
+                                                           "required":  true,
+                                                           "health_check_url":  "http://localhost:8082/"
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "node chapman.js resetindex --verbose",
+                                                           "purpose":  "test",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "node chapman.js index --verbose",
+                                                           "purpose":  "test",
+                                                           "timeout_seconds":  600,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "node chapman.js geodata --verbose",
+                                                           "purpose":  "test",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "node chapman.js courses --verbose",
+                                                           "purpose":  "test",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       }
+                                                   ],
+                       "build_commands":  [
+                                              "node --check tv-radio-admin/Search/search-index-solr.js \u0026\u0026 node --check tv-radio-admin/Common/solr-helpers.js \u0026\u0026 node --check tv-radio-frontend/solr-search.js \u0026\u0026 node --check tv-radio-admin/Search/build.js"
+                                          ],
+                       "startup_commands":  [
+                                                "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList \u0027app.js\u0027 -PassThru -WindowStyle Hidden -RedirectStandardOutput \u0027startup-8080.out.log\u0027 -RedirectStandardError \u0027startup-8080.err.log\u0027; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and !$p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList \u0027app.js\u0027 -PassThru -WindowStyle Hidden -RedirectStandardOutput \u0027startup-8082.out.log\u0027 -RedirectStandardError \u0027startup-8082.err.log\u0027; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and !$p.HasExited){ Stop-Process -Id $p.Id -Force } }\""
+                                            ],
+                       "startup_health_check_urls":  [
+                                                         "http://localhost:8080/",
+                                                         "http://localhost:8082/"
+                                                     ],
+                       "existing_test_commands":  [
+                                                      "node chapman.js resetindex --verbose",
+                                                      "node chapman.js index --verbose",
+                                                      "node chapman.js geodata --verbose",
+                                                      "node chapman.js courses --verbose"
+                                                  ],
+                       "generated_test_commands":  [
+                                                       "node generated-tests/solr-module-smoke.test.js",
+                                                       "node generated-tests/solr-roundtrip.integration.test.js"
+                                                   ],
+                       "generated_test_files":  [
+                                                    "generated-tests/solr-module-smoke.test.js",
+                                                    "generated-tests/solr-roundtrip.integration.test.js"
+                                                ],
+                       "content_checks":  [
+                                              {
+                                                  "file_path":  "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                                  "must_contain":  [
+                                                                       "\u003cluceneMatchVersion\u003e9.10.1\u003c/luceneMatchVersion\u003e",
+                                                                       "name=\"/select\"",
+                                                                       "name=\"/update\""
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "\u003cluceneMatchVersion\u003e4.9\u003c/luceneMatchVersion\u003e"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                                  "must_contain":  [
+                                                                       "\u003cluceneMatchVersion\u003e9.10.1\u003c/luceneMatchVersion\u003e",
+                                                                       "name=\"/select\"",
+                                                                       "name=\"/update\""
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "\u003cluceneMatchVersion\u003e4.9\u003c/luceneMatchVersion\u003e"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Settings/Solr/schema.xml",
+                                                  "must_contain":  [
+                                                                       "solr.IntPointField",
+                                                                       "solr.FloatPointField",
+                                                                       "solr.LongPointField",
+                                                                       "solr.DoublePointField",
+                                                                       "solr.DatePointField"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "version=\"1.5\"",
+                                                                           "solr.TrieIntField",
+                                                                           "solr.TrieFloatField",
+                                                                           "solr.TrieLongField",
+                                                                           "solr.TrieDoubleField",
+                                                                           "solr.TrieDateField"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Search/search-index-solr.js",
+                                                  "must_contain":  [
+                                                                       "exports.resetSearchIndex",
+                                                                       "exports.commitSearchIndex",
+                                                                       "exports.addItemsToSearchIndex",
+                                                                       "exports.performSearchOnClientsBehalf"
+                                                                   ],
+                                                  "must_not_contain":  [
+
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/solr-search.js",
+                                                  "must_contain":  [
+                                                                       "exports.performSearch",
+                                                                       "exports.performBasicSearch",
+                                                                       "exports.verifySolrResult"
+                                                                   ],
+                                                  "must_not_contain":  [
+
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                                  "must_contain":  [
+                                                                       "require(\u0027mime-types\u0027)",
+                                                                       "mimeTypes.types.mp3",
+                                                                       "mimeTypes.types.mp4"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "express.static.mime.define"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Admin/API/admin-usage.js",
+                                                  "must_contain":  [
+                                                                       "new influx.InfluxDB",
+                                                                       "measurement: activeStreamsMetric",
+                                                                       "fields:"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "writePoints(activeStreamsMetric, [[values, tags]]"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/metrics.js",
+                                                  "must_contain":  [
+                                                                       "new influx.InfluxDB(config.METRICS.config)"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "influx(config.METRICS.config)"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                                  "must_contain":  [
+                                                                       "MongoClient.connect(connection, options).then",
+                                                                       "countDocuments",
+                                                                       "createIndex",
+                                                                       "insertMany"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "ensureIndex(fields, options, function",
+                                                                           "findAndModify(query",
+                                                                           "bulk.execute(function"
+                                                                       ]
+                                              }
+                                          ],
+                       "success_criteria":  [
+                                                "All planned package manifests contain the exact target dependency versions, with latest-equal legacy packages explicitly unchanged where noted.",
+                                                "Solr external service impact is not skipped: schema.xml, solrconfig.xml, solrconfig-records.xml, shared-config.js, Common/solr-helpers.js, and Search/search-index-solr.js are all addressed in the final diff or explicitly justified as unchanged in executor notes.",
+                                                "Solr config/schema boots under a real Solr 9.10.1-compatible external service before CLI index-maintenance commands are considered passing; Solr 10.0.0 remains an unvalidated follow-up unless the executor proves compatibility.",
+                                                "Admin API and frontend startup commands are bounded, probed through their declared health_check_url, and return HTTP status below 500.",
+                                                "All user-supplied CLI index-maintenance commands exit 0; failures are treated the same as startup/test failures.",
+                                                "Generated smoke/integration tests, once supplied by the test stage, seed and clean their own database/search fixtures because the datastore has no data.",
+                                                "Generated Solr module smoke test imports the upgraded admin/frontend Solr modules and verifies configured /select and /update path shape.",
+                                                "Generated Solr roundtrip integration test seeds a minimal document through Search/search-index-solr.js, verifies it through admin count and frontend Solr search, and deletes the fixture on completion or failure.",
+                                                "Admin API Express 5 compatibility is addressed by replacing express.static.mime.define with mime-types registration in app.js.",
+                                                "Admin API Influx 5 compatibility uses point-object writePoints payloads for active stream metrics.",
+                                                "MongoDB 7 compatibility is handled in the shared directdb-mongo adapter while preserving callback contracts.",
+                                                "Bounded startup command logs are written to the artifact directory rather than committed to the repository."
+                                            ]
+                   },
+    "rollback_strategy":  "Revert the single final execution commit created by the executor.",
+    "planning_notes":  "ImpactReport was treated as authoritative. Targeted ranges were inspected for all affected package manifests, Solr XML/config files, direct Solr helper files, and representative Solr caller ranges. Whole files were not read except that rg confirmed no npm lockfiles were present. Npm target versions were checked with npm view on 2026-08-01. Official Apache Solr download/news pages checked on 2026-08-01 list Solr 10.0.0 as the most recent release and Solr 9.10.1 as the last 9.x release: https://solr.apache.org/downloads and https://solr.apache.org/news.html. Because this repository has no Solr image/service manifest and has Solr 4.x-era config, the executable compatibility target is Solr 9.10.1; moving to Solr 10.0.0 is flagged as unknown until the migrated schema/config and direct HTTP select/update clients are proven against that runtime. The setup command intentionally uses npm install --no-package-lock because no lockfiles currently exist; creating lockfiles would be a scope expansion. User-supplied startup commands were converted to bounded PowerShell wrappers with the supplied health_check_url values. User-supplied CLI commands are recorded exactly and must fail validation on any nonzero exit. Package replacement for deprecated/latest-equal packages such as request, ftp, pace, and optimist is outside this plan unless a declared validation command fails and the executor documents a narrow repair. Scope revised after executor feedback: Admin/API/admin-usage.js, tv-radio-frontend/metrics.js, and Common/directdb-mongo.js are approved dependency-compatibility scope expansions for Influx 5 and MongoDB 7 failures surfaced by bounded startup validation. Startup command log redirection was moved to the artifact directory to avoid committing transient logs.",
+    "plan_summary":  "Plan updates eight npm manifests, migrates Solr schema/config from 4.x-era settings toward Solr 9.10.1 compatibility, preserves direct Solr helper APIs and configured /select and /update paths, and validates with bounded Admin API/frontend startup plus all user-supplied CLI index-maintenance commands. Revised after execution feedback to include Admin/API/app.js Express 5 static MIME compatibility via mime-types. Revised again to include Influx 5 writePoints payload compatibility and MongoDB 7 adapter compatibility surfaced by executor startup checks."
+}

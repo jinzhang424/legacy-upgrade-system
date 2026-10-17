@@ -1,0 +1,191 @@
+{
+  "decision": "approved",
+  "confidence_score": 0.75,
+  "confidence_factors": [
+    {
+      "category": "repair_rounds",
+      "amount": 0.75,
+      "reason": "One transient generated-test timeout was observed; the isolated initialization completed normally and the exact generated-test command passed 7/7 on the required rerun without a code change."
+    }
+  ],
+  "base_ref": "master",
+  "git_diff_summary": {
+    "changed_files": [
+      ".babelrc",
+      ".eslintrc",
+      ".travis.yml",
+      "common.js",
+      "gen/.gitignore",
+      "gulpfile.js",
+      "js/index.js",
+      "js/search_results.js",
+      "lib/monarch/api.js",
+      "lib/monarch/web/webapp.js",
+      "lib/monarch/web/webenv.js",
+      "package-lock.json",
+      "package.json",
+      "tests/apitest.js",
+      "tests/class-info-test.js",
+      "tests/node18-upgrade.test.js",
+      "tests/phenopacket-test.js",
+      "tests/resources/phenopacket-schema.json",
+      "tests/test-common.js",
+      "ui/.eslintrc",
+      "ui/components/AnalyzePhenotypes.vue",
+      "ui/components/AssocTable.vue",
+      "ui/components/MonarchAutocomplete.vue",
+      "ui/components/PhenotypesTable.vue",
+      "ui/main.js",
+      "utils/phenogrid-webpack.config.js",
+      "webpack.config.js"
+    ],
+    "planned_files_touched": [
+      "package.json",
+      "package-lock.json",
+      ".babelrc",
+      ".eslintrc",
+      "webpack.config.js",
+      "common.js",
+      "gulpfile.js",
+      "lib/monarch/api.js",
+      "lib/monarch/web/webenv.js",
+      "lib/monarch/web/webapp.js",
+      "tests/test-common.js",
+      "tests/apitest.js",
+      "tests/class-info-test.js",
+      "tests/phenopacket-test.js",
+      "tests/node18-upgrade.test.js",
+      "ui/main.js",
+      "ui/components/AnalyzePhenotypes.vue",
+      "ui/components/AssocTable.vue",
+      "ui/components/MonarchAutocomplete.vue",
+      "ui/components/PhenotypesTable.vue",
+      "ui/.eslintrc",
+      ".travis.yml",
+      "utils/phenogrid-webpack.config.js",
+      "gen/.gitignore"
+    ],
+    "unexpected_files": [],
+    "missing_planned_files": [],
+    "dependency_changes_verified": [
+      "package.json: Node >=18 and all declared Hapi, Babel, webpack, Sass, ESLint, Vue, Bootstrap, Axios, Day.js, Gulp, Mocha, Mustache, Underscore, xml2js, cross-env, js-yaml, and Phenogrid dependency changes",
+      "package-lock.json: lockfile v3 dependency resolution including exact phenogrid 1.3.11 tarball and integrity"
+    ],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {"file_path": "package.json", "outcome": "passed", "detail": "All required dependency/script strings were present and all forbidden legacy dependency/script strings were absent."},
+    {"file_path": "package-lock.json", "outcome": "passed", "detail": "Phenogrid is declared as ^1.3.11 and resolved exactly to 1.3.11 with the required URL and integrity; no 1.5.5 entry matched."},
+    {"file_path": ".eslintrc", "outcome": "passed", "detail": "Required ESLint 8 compatibility baseline was present without disabling protected correctness rules."},
+    {"file_path": "ui/.eslintrc", "outcome": "passed", "detail": "Required inherited Vue lint baseline was present; forbidden parser/preset/suppressions were absent."},
+    {"file_path": ".babelrc", "outcome": "passed", "detail": "@babel/preset-env was present and Babel 6 preset/plugin names were absent."},
+    {"file_path": "webpack.config.js", "outcome": "passed", "detail": "Required webpack 5, Dart Sass, asset module, dev middleware, and Phenogrid source configuration was present; forbidden legacy configuration was absent."},
+    {"file_path": "gen/.gitignore", "outcome": "passed", "detail": "bbop.min.js remains ignored and obsolete phenogrid.min.js is absent."},
+    {"file_path": "common.js", "outcome": "passed", "detail": "Day.js import is present and Moment import is absent."},
+    {"file_path": "gulpfile.js", "outcome": "passed", "detail": "Gulp 4 composition, js-yaml load, and Buffer.from are present; legacy APIs are absent."},
+    {"file_path": "lib/monarch/api.js", "outcome": "passed", "detail": "Axios and asynchronous implementation are present; request/wait.for calls are absent."},
+    {"file_path": "lib/monarch/web/webenv.js", "outcome": "passed", "detail": "Async Hapi toolkit handler/response patterns are present; wait.for and reply callbacks are absent."},
+    {"file_path": "lib/monarch/web/webapp.js", "outcome": "passed", "detail": "Hapi 21/Inert 7 asynchronous registration, startup, and XML parsing patterns are present; legacy imports/calls are absent."},
+    {"file_path": "tests/test-common.js", "outcome": "passed", "detail": "Async test runner is present and wait.for fiber usage is absent."},
+    {"file_path": "tests/node18-upgrade.test.js", "outcome": "passed", "detail": "Required loopback Hapi/Axios/GOlr/SciGraph fixture coverage is present and retired live service URLs are absent."},
+    {"file_path": "tests/phenopacket-test.js", "outcome": "passed", "detail": "Required local GOlr fixture/schema coverage is present and live server configuration/fetching is absent."},
+    {"file_path": "ui/main.js", "outcome": "passed", "detail": "Vue 2 and Bootstrap 5 CSS remain; BootstrapVue imports/registration are absent."},
+    {"file_path": "ui/components/AnalyzePhenotypes.vue", "outcome": "passed", "detail": "Native Bootstrap form/alert markup and rejected-phenotype rendering are present; BootstrapVue markup/directives are absent."},
+    {"file_path": "ui/components/AssocTable.vue", "outcome": "passed", "detail": "Native table and pagination markup are present; BootstrapVue table/pagination components are absent."},
+    {"file_path": "ui/components/MonarchAutocomplete.vue", "outcome": "passed", "detail": "Native checkbox markup is present; BootstrapVue checkbox and tooltip directives are absent."},
+    {"file_path": "ui/components/PhenotypesTable.vue", "outcome": "passed", "detail": "Native table and pagination markup are present; BootstrapVue table/pagination components are absent."},
+    {"file_path": ".travis.yml", "outcome": "passed", "detail": "Node 18/20 build/lint configuration is present and obsolete Trusty, Node 6, and geckodriver entries are absent."}
+  ],
+  "command_results": [
+    {
+      "type": "build",
+      "command": "npm install",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Added 1594 packages and audited 1595 packages. No npm ERR! or ERESOLVE marker. npm reported 69 dependency vulnerabilities and legacy-package deprecation warnings. The install did not change tracked files."
+    },
+    {
+      "type": "build",
+      "command": "node -e \"const fs=require('fs');const path=require('path');const p=require('./node_modules/phenogrid/package.json');if(p.version!=='1.3.11'||p.main!=='js/phenogrid.js')throw new Error('unexpected phenogrid '+p.version+' main='+p.main);for(const f of ['js/phenogrid.js','dist/phenogrid-bundle.js','index.html'])if(!fs.existsSync(path.join(process.cwd(),'node_modules/phenogrid',f)))throw new Error('missing phenogrid/'+f);console.log('phenogrid 1.3.11 installed with source, UMD bundle, and demo page');\"",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "phenogrid 1.3.11 installed with source, UMD bundle, and demo page"
+    },
+    {
+      "type": "build",
+      "command": "npm run wbs-build",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "webpack 5.111.0 compiled with 22 Sass/deprecation warnings; emitted app.bundle.js, app.bundle.css, assets, source maps, and webpack-assets.json. No declared build error marker appeared."
+    },
+    {
+      "type": "build",
+      "command": "npx gulp --tasks",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Enumerated the legacy public set_up, assemble, make-golr-conf, tear_down, build, and default tasks using Gulp 4 series/parallel composition."
+    },
+    {
+      "type": "build",
+      "command": "npx gulp build",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Gulp build completed in 973 ms with no incomplete-task, async-completion, or TypeError marker."
+    },
+    {
+      "type": "startup",
+      "command": "node -e \"<declared bounded npm run start launcher from validation.startup_commands>\"",
+      "outcome": "passed",
+      "exit_status": 0,
+      "health_check_outcome": "passed",
+      "output": "npm run start launched the Node 22.22.2 process, Hapi reported http://localhost:8080, /about/sources returned HTTP 200, and the bounded command exited 0. Descendants that retained inherited output handles on Windows were explicitly terminated after browser evidence."
+    },
+    {
+      "type": "existing_test",
+      "command": "npm run wbs-lint",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "ESLint completed with 0 errors and the finite 468-warning legacy baseline; no declared configuration or parsing failure marker appeared."
+    },
+    {
+      "type": "existing_test",
+      "command": "npx cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "testPhenoPacketBuilder passed; 1 test passed, 0 failed."
+    },
+    {
+      "type": "generated_test",
+      "command": "npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Final exact rerun: 7 passing in 773 ms. The initial run had one transient 2-second timeout in Hapi/Inert initialization; isolated timing completed in 27 ms and no repair was required."
+    }
+  ],
+  "repairs_applied": [],
+  "repair_rounds": 1,
+  "browser_check_results": [
+    {
+      "url": "http://localhost:8080/about/sources",
+      "description": "Startup health-check browser validation",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    },
+    {
+      "url": "http://localhost:8080/about/sources",
+      "description": "Sole required key page: checked-in Data Sources page",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": []
+    }
+  ],
+  "final_commit_ref": "8de30399",
+  "rejection_reasons": [],
+  "recommendations": [
+    "Retain the amended-scope warning: retired SciGraph, Solr/GOlr, OwlSim, service-backed routes, Behave flows, and Phenogrid live-service behavior were intentionally skipped and are not proven working by this approval.",
+    "Plan a separately approved endpoint/service migration with contract fixtures before re-enabling the skipped integrations.",
+    "Review the 69 vulnerabilities reported by npm and remaining deprecated transitive packages, especially Phenogrid 1.3.11's legacy jQuery/D3 dependency chain, in a separate compatibility/security effort.",
+    "Harden the Windows bounded-startup cleanup because npm/cross-env descendants retained inherited output handles after the launcher process exited; exact validation-created descendants were cleaned after browser verification."
+  ]
+}

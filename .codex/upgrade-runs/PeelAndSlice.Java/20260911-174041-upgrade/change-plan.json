@@ -1,0 +1,309 @@
+{
+  "upgrade_description": "Upgrade projects/PeelAndSlice.Java from Java 17 to Java 21 and make the Maven library build cross-platform while preserving stub method bodies, test logic, and documentation snippets.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "pom.xml",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The POM is the single build-wide control point for source decoding, compiler version and release semantics, dependency resolution, and default profile activation.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 9,
+          "symbol_or_pattern": "project properties insertion point",
+          "matched_api": "project.build.sourceEncoding"
+        },
+        {
+          "start_line": 11,
+          "end_line": 18,
+          "symbol_or_pattern": "maven-compiler-plugin configuration",
+          "matched_api": "org.apache.maven.plugins:maven-compiler-plugin source/target 17"
+        },
+        {
+          "start_line": 37,
+          "end_line": 42,
+          "symbol_or_pattern": "com.google.code.gson:gson",
+          "matched_api": "test dependency gson:2.14.0"
+        },
+        {
+          "start_line": 51,
+          "end_line": 61,
+          "symbol_or_pattern": "download-sources profile activation",
+          "matched_api": "activeByDefault=true"
+        }
+      ],
+      "change_description": "Insert a project-level <properties> block after the project coordinates containing <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>. In maven-compiler-plugin, add <version>3.16.0</version>, replace the separate <source>17</source> and <target>17</target> entries with <release>21</release>, and add <useIncrementalCompilation>false</useIncrementalCompilation> inside its configuration. Delete the complete com.google.code.gson:gson test dependency block. Change only the download-sources profile's <activeByDefault> value from true to false. Preserve all other plugins, dependencies, profile properties, source code, tests, and documentation.",
+      "validation_evidence": [
+        "pom.xml contains the exact UTF-8 encoding property, compiler plugin version 3.16.0, release 21, and disabled incremental compilation settings.",
+        "pom.xml no longer contains source/target 17 or the com.google.code.gson:gson dependency.",
+        "The download-sources profile remains present but is not active by default.",
+        "A flag-free mvn -B clean verify --file pom.xml succeeds and reports Tests run: 4, Failures: 0, Errors: 0."
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Java requires the public class name and source filename to change together; method bodies must remain byte-for-byte logically unchanged.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "public class ОбщиеКонфигурация",
+          "matched_api": "class declaration and Java source filename"
+        }
+      ],
+      "change_description": "Rename this source path to src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java and change only the public class identifier from ОбщиеКонфигурация to CommonConfiguration. Do not change package/import declarations, method names, stub method bodies, formatting unrelated to the identifier, tests, or documentation snippets.",
+      "validation_evidence": [
+        "The old ОбщиеКонфигурация.java path is absent and CommonConfiguration.java exists in the same package.",
+        "The new file declares public class CommonConfiguration.",
+        "The rename diff contains no method-body edits."
+      ]
+    },
+    {
+      "sequence": 3,
+      "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "BadFruit is the sole importer and caller of the renamed configuration class, so its three identifier occurrences must change in lockstep.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "import ОбщиеКонфигурация",
+          "matched_api": "com.spun.llewellyn.talks.legacycode.required.ОбщиеКонфигурация"
+        },
+        {
+          "start_line": 16,
+          "end_line": 17,
+          "symbol_or_pattern": "ОбщиеКонфигурация static and constructor references",
+          "matched_api": "ОбщиеКонфигурация.видыпервоначальногокредита and new ОбщиеКонфигурация"
+        }
+      ],
+      "change_description": "Replace only the imported class identifier, the static receiver at line 16, and the constructor type at line 17 from ОбщиеКонфигурация to CommonConfiguration. Keep the Cyrillic method names, local variable names, method logic, and all other source text unchanged.",
+      "validation_evidence": [
+        "BadFruit imports com.spun.llewellyn.talks.legacycode.required.CommonConfiguration.",
+        "Its static call and constructor use CommonConfiguration, with no remaining ОбщиеКонфигурация occurrence.",
+        "Compilation succeeds without changes to BadFruit's method behavior."
+      ]
+    },
+    {
+      "sequence": 4,
+      "file_path": ".github/workflows/test.yml",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The CI build must provision Java 21 so Maven verifies the same release targeted by the upgraded POM.",
+      "locations": [
+        {
+          "start_line": 13,
+          "end_line": 16,
+          "symbol_or_pattern": "build Java matrix",
+          "matched_api": "matrix.java=['17']"
+        },
+        {
+          "start_line": 26,
+          "end_line": 32,
+          "symbol_or_pattern": "JDK setup and Maven verification",
+          "matched_api": "actions/setup-java matrix.java; mvn -B verify --file pom.xml"
+        }
+      ],
+      "change_description": "Change only the Java matrix literal from java: ['17'] to java: ['21']. Leave the runner, actions, cache settings, distribution, matrix reference, and Maven command unchanged.",
+      "validation_evidence": [
+        "The workflow matrix contains exactly java: ['21'] and no java: ['17'] entry.",
+        "setup-java continues to consume matrix.java and CI continues to invoke mvn -B verify --file pom.xml."
+      ]
+    }
+  ],
+  "planned_files": [
+    "pom.xml",
+    "src/main/java/com/spun/llewellyn/talks/legacycode/required/ОбщиеКонфигурация.java",
+    "src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java",
+    "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+    ".github/workflows/test.yml"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "pom.xml",
+      "dependency": "Java release",
+      "from_version": "17",
+      "to_version": "21"
+    },
+    {
+      "file_path": "pom.xml",
+      "dependency": "org.apache.maven.plugins:maven-compiler-plugin",
+      "from_version": "unversioned",
+      "to_version": "3.16.0"
+    },
+    {
+      "file_path": "pom.xml",
+      "dependency": "com.google.code.gson:gson",
+      "from_version": "2.14.0",
+      "to_version": "removed"
+    },
+    {
+      "file_path": ".github/workflows/test.yml",
+      "dependency": "CI Java matrix",
+      "from_version": "17",
+      "to_version": "21"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "main",
+      "master"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "mvn -B clean verify --file pom.xml",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILURE",
+            "Failures: 1",
+            "Errors: 1"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "mvn -B verify --file pom.xml",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILURE",
+            "Failures: 1",
+            "Errors: 1"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "mvn -B test -Dtest=ExampleTests",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "BUILD FAILURE",
+            "Failures: 1",
+            "Errors: 1"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/examples/SimplePeel.class",
+        "purpose": "compile",
+        "timeout_seconds": 60,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "Error:",
+            "class not found"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+        "command": "git diff --stat",
+        "purpose": "smoke",
+        "timeout_seconds": 30,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": []
+        }
+      }
+    ],
+    "build_commands": [
+      "mvn -B clean verify --file pom.xml",
+      "mvn -B verify --file pom.xml",
+      "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/examples/SimplePeel.class"
+    ],
+    "startup_commands": [],
+    "startup_health_check_urls": [],
+    "existing_test_commands": [
+      "mvn -B clean verify --file pom.xml",
+      "mvn -B verify --file pom.xml",
+      "mvn -B test -Dtest=ExampleTests"
+    ],
+    "generated_test_commands": [],
+    "generated_test_files": [],
+    "content_checks": [
+      {
+        "file_path": "pom.xml",
+        "must_contain": [
+          "<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>",
+          "<artifactId>maven-compiler-plugin</artifactId>",
+          "<version>3.16.0</version>",
+          "<release>21</release>",
+          "<useIncrementalCompilation>false</useIncrementalCompilation>",
+          "<activeByDefault>false</activeByDefault>"
+        ],
+        "must_not_contain": [
+          "<source>17</source>",
+          "<target>17</target>",
+          "<groupId>com.google.code.gson</groupId>",
+          "<artifactId>gson</artifactId>",
+          "<activeByDefault>true</activeByDefault>"
+        ]
+      },
+      {
+        "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/required/CommonConfiguration.java",
+        "must_contain": [
+          "package com.spun.llewellyn.talks.legacycode.required;",
+          "public class CommonConfiguration",
+          "public static void видыпервоначальногокредита()",
+          "public DatabaseConfiguration получитьконфигурациюбазыданных()"
+        ],
+        "must_not_contain": [
+          "public class ОбщиеКонфигурация"
+        ]
+      },
+      {
+        "file_path": "src/main/java/com/spun/llewellyn/talks/legacycode/examples/BadFruit.java",
+        "must_contain": [
+          "import com.spun.llewellyn.talks.legacycode.required.CommonConfiguration;",
+          "CommonConfiguration.видыпервоначальногокредита();",
+          "new CommonConfiguration().получитьконфигурациюбазыданных()"
+        ],
+        "must_not_contain": [
+          "ОбщиеКонфигурация"
+        ]
+      },
+      {
+        "file_path": ".github/workflows/test.yml",
+        "must_contain": [
+          "java: ['21']",
+          "java-version: ${{ matrix.java }}",
+          "run: mvn -B verify --file pom.xml"
+        ],
+        "must_not_contain": [
+          "java: ['17']"
+        ]
+      }
+    ],
+    "key_pages": [],
+    "key_user_flows": [],
+    "external_service_checks": [],
+    "success_criteria": [
+      "All implementation work is performed on branch upgrade/java-21.",
+      "mvn -B clean verify --file pom.xml succeeds under JDK 21 on both Linux and Windows without -Dproject.build.sourceEncoding or -Dmaven.compiler.useIncrementalCompilation overrides and reports Tests run: 4, Failures: 0, Errors: 0.",
+      "mvn -B verify --file pom.xml and mvn -B test -Dtest=ExampleTests succeed under JDK 21.",
+      "The raw javap -verbose output for target/classes/com/spun/llewellyn/talks/legacycode/examples/SimplePeel.class contains major version: 65. On Linux the user-provided display command may append | grep \"major version\"; on PowerShell the equivalent filter is | Select-String -SimpleMatch \"major version\". The unfiltered command is the required cross-platform executor and validator command, and the major-version assertion is unchanged.",
+      "git diff --stat and git diff --name-status show changes only to pom.xml, the rename from ОбщиеКонфигурация.java to CommonConfiguration.java, BadFruit.java, and .github/workflows/test.yml.",
+      "No stub method body, test logic, documentation snippet, unrelated source, dependency, plugin, workflow setting, or existing unrelated working-tree change is modified.",
+      "The final execution is captured in one upgrade commit so rollback is atomic."
+    ],
+    "scope_expansion_limit": 2
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "The four ImpactReport targets were sufficient after inspecting only their reported ranges plus minimal context; no broad source rediscovery was needed. The public Java type rename is represented as one ordered change even though git will show deletion of the old path and creation of the new path; both paths are therefore included in planned_files. This is a Maven library with no startup surface, pages, interactive flows, database/search state, or live external-service configuration, so startup, browser, and external-service checks are empty. Maven resolves declared plugins and dependencies during the required build, so no separate package-install step is needed. The Windows-only baseline command with -Dproject.build.sourceEncoding=UTF-8 and -Dmaven.compiler.useIncrementalCompilation=false is intentionally excluded because those flags must become unnecessary. Raw javap output is used as the cross-platform command; shell-specific grep or Select-String filtering is optional presentation only, and major version 65 remains mandatory. CI currently proves Linux only; Windows must be validated in a Windows environment before final acceptance. A scope expansion allowance of 2 files is pre-authorized only for a direct Java-21/compiler-plugin runtime-discovered failure as defined by the orchestrator; it does not permit changes to stubs, tests, docs, unrelated files, or dependencies outside this plan.",
+  "plan_summary": "Four ordered changes upgrade Maven and CI to Java 21, encode the two Windows workaround settings in pom.xml, remove unused Gson, deactivate source downloading by default, and coordinate the CommonConfiguration rename with its sole caller. Final validation repeats all supplied Maven surfaces, checks Java 21 class-file version 65 without shell-specific dependence, and enforces the approved diff boundary."
+}

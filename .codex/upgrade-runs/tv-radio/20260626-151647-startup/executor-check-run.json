@@ -1,0 +1,335 @@
+﻿[
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 188 packages in 1s\r\n\r\n33 packages are looking for funding\r\n  run `npm fund` for details\r\n\r\n5 vulnerabilities (3 moderate, 2 critical)\r\n\r\nSome issues need review, and may require choosing\r\na different dependency.\r\n\r\nRun `npm audit` for details.\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 18 packages in 1s\r\n\r\nfound 0 vulnerabilities\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 3 packages in 960ms\r\n\r\nfound 0 vulnerabilities\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 135 packages in 1s\r\n\r\n29 packages are looking for funding\r\n  run `npm fund` for details\r\n\r\n2 vulnerabilities (1 moderate, 1 high)\r\n\r\nSome issues need review, and may require choosing\r\na different dependency.\r\n\r\nRun `npm audit` for details.\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 5 packages in 959ms\r\n\r\n1 package is looking for funding\r\n  run `npm fund` for details\r\n\r\nfound 0 vulnerabilities\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Export",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 53 packages in 1s\r\n\r\n7 packages are looking for funding\r\n  run `npm fund` for details\r\n\r\nfound 0 vulnerabilities\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Ingest",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 10 packages in 1s\r\n\r\nfound 0 vulnerabilities\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Utilities",
+        "command":  "npm install",
+        "purpose":  "setup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "\r\nup to date, audited 4 packages in 1s\r\n\r\n2 critical severity vulnerabilities\r\n\r\nTo address all issues (including breaking changes), run:\r\n  npm audit fix --force\r\n\r\nRun `npm audit` for details.\r\n",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check app.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check app-media.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check db-provider.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check logger.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check metrics.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check request-common.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check content\\feedback\\client-feedback.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check media\\generic-media.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check media\\programme-media.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check media\\title-thumbnails.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check media\\unisat-thumbnails.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "node --check shared\\media-access.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check app.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check admin-image-handling.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check admin-media-scan.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check admin-titles-common.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check admin-unisat.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check admin-usage.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check cache-provider.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "node --check unisat-record-processing.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+        "command":  "node --check directdb-mongo.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+        "command":  "node --check directdb-mongo-backup.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+        "command":  "node --check record-media-scan.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Export",
+        "command":  "node --check primo-export.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Ingest",
+        "command":  "node --check ingest.js",
+        "purpose":  "compile",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process -FilePath node -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u002718082\u0027) -PassThru -WindowStyle Hidden; Start-Sleep -Seconds 10; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -Force; exit 0\"",
+        "purpose":  "startup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+        "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process -FilePath node -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u002718080\u0027) -PassThru -WindowStyle Hidden; Start-Sleep -Seconds 10; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -Force; exit 0\"",
+        "purpose":  "startup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio",
+        "command":  "node C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tests\\upgrade-dependency-smoke.test.js",
+        "purpose":  "test",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio",
+        "command":  "node C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tests\\upgrade-source-migration.integration.test.js",
+        "purpose":  "test",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  0
+    }
+]

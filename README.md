@@ -1,59 +1,73 @@
 # Legacy Upgrade System
 
-Multi-agent legacy upgrade pipeline built on Claude Code. Runs entirely inside the Claude Code CLI or VS Code extension — no separate Python process needed.
+Codex-centered legacy upgrade pipeline for multi-stage repository migrations.
+
+The project exposes one user-facing Codex skill: `upgrade`. It coordinates analysis, planning, small smoke/integration test generation, execution, one final validation/repair pass, and a post-validation browser console check, with human approval gates between the major stages.
 
 ## Prerequisites
 
-- [Claude Code CLI](https://claude.ai/code) or Claude Code VS Code extension
-- Node.js 22 (for `npx gitnexus`)
-- Optional: Python 3.10+ only if you run `mem0-mcp-server` instead of the hosted Mem0 MCP
-- Optional: GitNexus 1.3.11 global install (`npm install -g gitnexus@1.3.11`) if you prefer not to use `npx`
+- Codex CLI or Codex desktop
+- Node.js 22, for `npx gitnexus`
+- Optional: GitNexus global install if you prefer not to use `npx`
 
 ## Setup
 
-1. Configure MCP servers (recommended: VS Code / extension):
-   - Copy `.mcp.example.json` to `.mcp.json`.
-   - Set `mcpServers.gitnexus.env.PATH_TO_REPO` to the absolute path of the target repo.
-   - Set `mcpServers.mem0.headers.Authorization` to `Token <your_mem0_token>`.
-   - `.mcp.json` is gitignored.
+1. Configure Codex:
 
-   If you use the Claude Code CLI, register the same MCP servers.
+   ```bash
+   copy .codex\config.example.toml .codex\config.toml
+   ```
 
-2. Provide `PATH_TO_REPO` to the orchestrator:
-   - Set it in `.claude/settings.json` under `env`, or in your shell environment before launching Claude Code.
-   - If it is not set, `/upgrade` will prompt for it.
+2. Edit `.codex/config.toml`:
 
-3. Index the target repository with GitNexus:
+   - Set `PATH_TO_REPO` to the absolute path of the repository you want to upgrade.
+   - Set the GitNexus MCP `PATH_TO_REPO` to the same value.
+
+   To avoid filesystem approval friction in Codex Desktop, keep target repositories inside this workspace, for example:
+
+   ```text
+   projects\target-repo
+   ```
+
+   Then set both `PATH_TO_REPO` values to that repository's absolute path.
+
+3. Make sure `PATH_TO_REPO` exists and points to a repository directory. The `$upgrade` preflight checks this before GitNexus and stops early if the path is missing.
+
+4. Index the target repository with GitNexus:
+
    ```bash
    npx gitnexus analyze <PATH_TO_REPO>
    ```
 
-4. (Optional) Review tool permissions in `.claude/settings.json`.
+   Run this once per repository, or again after large refactors.
 
 ## Run
 
-Open Claude Code in this directory and run:
+Open Codex in this directory and invoke the repo-scoped skill:
 
+```text
+$upgrade
 ```
-/upgrade
-```
 
-If `PATH_TO_REPO` is not set, the orchestrator will prompt you for it.
+If `PATH_TO_REPO` is not configured, the skill will ask for it. If it is configured but the directory does not exist, the skill will ask you to move or clone the target repository under the workspace, such as `projects\<repo-name>`, and update `.codex/config.toml`.
 
-The orchestrator will ask you what upgrade to perform, then guide you through three stages with human-in-the-loop approval gates:
+## Pipeline
 
-1. **Analysis** — GitNexus scans the repository and produces an impact report
-2. **Planning** — Claude designs ordered file changes with rollback procedures
-3. **Execution** — Claude applies changes in batches, validating after each batch
+1. Analysis: maps affected files, dependency graph, risks, and exact line ranges for upgrade-relevant issues.
+2. Planning: creates a line-aware change plan and writes `change-plan.json` with all validation metadata.
+3. Test generation: creates a small set of smoke and integration tests, then records them in `change-plan.json`.
+4. Execution: applies planned changes on an `upgrade/<slug>` branch and creates one final commit.
+5. Final validation/repair: reads only `change-plan.json`, checks git diff alignment, runs build commands and tests, fixes plan-related build/test failures when possible, and amends the final upgrade commit.
+6. Post-validation browser console check: if the upgrade is approved and serves a browser-facing page, asks you to open it, check the developer tools Console tab, and report any errors. Reported errors that are clearly related to the upgrade are repaired (up to 3 rounds) and amended into the same commit.
 
-## Enforcement and fallback
+## Enforcement And Fallback
 
-Mem0 and GitNexus are required by default. If either system is unavailable, the orchestrator will warn and ask whether to proceed without it. Proceeding without Mem0 skips memory recall/storage. Proceeding without GitNexus forces a fallback analysis with reduced confidence.
+GitNexus is expected by default for line-aware analysis. If GitNexus is unavailable, the skill warns and asks whether to proceed without it. Proceeding without GitNexus uses filesystem analysis with reduced confidence.
 
-## Skills
+## Project Layout
 
-| Skill | Description |
-|-------|-------------|
-| `/upgrade` | Full 3-stage pipeline (only user-facing command) |
-
-The analyze/plan/execute stages are internal skills invoked automatically by `/upgrade`.
+- `AGENTS.md`: Codex instructions loaded for this project.
+- `.agents/skills/upgrade/SKILL.md`: the Codex `upgrade` skill.
+- `.codex/config.example.toml`: sanitized local Codex configuration template.
+- `.codex/config.toml`: local Codex configuration, ignored by Git.
+- `.mcp.example.json`: optional MCP template for tools that still read MCP JSON directly.

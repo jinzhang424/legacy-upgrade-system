@@ -1,0 +1,17 @@
+C:\Users\OEM\legacy-upgrade-system\projects\tv-radio\tv-radio-frontend\logger.js:118
+    var transport = new (winston.transports.Logstash)(options);
+                    ^
+
+TypeError: winston.transports.Logstash is not a constructor
+    at _createLogstashTransportInstance (C:\Users\OEM\legacy-upgrade-system\projects\tv-radio\tv-radio-frontend\logger.js:118:21)
+    at Object.<anonymous> (C:\Users\OEM\legacy-upgrade-system\projects\tv-radio\tv-radio-frontend\logger.js:21:23)
+    at Module._compile (node:internal/modules/cjs/loader:1830:14)
+    at Object..js (node:internal/modules/cjs/loader:1961:10)
+    at Module.load (node:internal/modules/cjs/loader:1553:32)
+    at Module._load (node:internal/modules/cjs/loader:1355:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1576:12)
+    at require (node:internal/modules/helpers:153:16)
+    at Object.<anonymous> (C:\Users\OEM\legacy-upgrade-system\projects\tv-radio\tv-radio-frontend\app.js:5:14)
+
+Node.js v24.15.0

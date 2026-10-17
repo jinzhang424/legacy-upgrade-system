@@ -1,0 +1,25 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+PATH_TO_REPO = 'C:\path\to\legacy-upgrade-system\projects\target-repo'
+
+[mcp_servers.gitnexus]
+command = "npx"
+args = [
+    "-y",
+    "gitnexus",
+    "mcp",
+]
+
+[mcp_servers.gitnexus.env]
+PATH_TO_REPO = 'C:\path\to\legacy-upgrade-system\projects\target-repo'
+
+[mcp_servers.playwright]
+command = "npx"
+args = [
+    "-y",
+    "@playwright/mcp@latest",
+    "--headless",
+    "--isolated",
+]

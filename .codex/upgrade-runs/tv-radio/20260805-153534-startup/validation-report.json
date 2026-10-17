@@ -1,0 +1,262 @@
+{
+  "decision": "rejected",
+  "confidence_score": 0.78,
+  "base_ref": "main",
+  "git_diff_summary": {
+    "changed_files": [
+      ".claude/settings.local.json",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "tests/upgrade/admin-socketio-auth-smoke.js",
+      "tests/upgrade/directdb-fixture-integration.js",
+      "tv-radio-admin/Admin/API/admin-usage.js",
+      "tv-radio-admin/Admin/API/app.js",
+      "tv-radio-admin/Admin/API/package-lock.json",
+      "tv-radio-admin/Admin/API/package.json",
+      "tv-radio-admin/Admin/Interface/index.html",
+      "tv-radio-admin/Admin/Interface/libs/ember-template-compiler-v1.13.13.js",
+      "tv-radio-admin/Admin/Interface/libs/ember.debug-v1.13.13.js",
+      "tv-radio-admin/Admin/Interface/libs/ember.prod-v1.13.13.js",
+      "tv-radio-admin/Admin/Interface/libs/jquery-v1.12.4.js",
+      "tv-radio-admin/Admin/Interface/libs/socket.io-1.1.0.js",
+      "tv-radio-admin/Admin/Interface/libs/socket.io-4.8.3.js",
+      "tv-radio-admin/CLI/chapman.js",
+      "tv-radio-admin/CLI/package-lock.json",
+      "tv-radio-admin/CLI/package.json",
+      "tv-radio-admin/Common/directdb-mongo-backup.js",
+      "tv-radio-admin/Common/directdb-mongo.js",
+      "tv-radio-admin/Common/package-lock.json",
+      "tv-radio-admin/Common/package.json",
+      "tv-radio-admin/Common/record-media-scan.js",
+      "tv-radio-admin/Export/package-lock.json",
+      "tv-radio-admin/Export/package.json",
+      "tv-radio-admin/Export/primo-export.js",
+      "tv-radio-admin/Ingest/package-lock.json",
+      "tv-radio-admin/Ingest/package.json",
+      "tv-radio-admin/Search/build.js",
+      "tv-radio-admin/Search/package-lock.json",
+      "tv-radio-admin/Search/package.json",
+      "tv-radio-admin/Settings/Solr/schema.xml",
+      "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+      "tv-radio-admin/Settings/Solr/solrconfig.xml",
+      "tv-radio-admin/Utilities/ember-precompile.js",
+      "tv-radio-admin/Utilities/package-lock.json",
+      "tv-radio-admin/Utilities/package.json",
+      "tv-radio-frontend/app-media.js",
+      "tv-radio-frontend/app.js",
+      "tv-radio-frontend/content/feedback/client-feedback.js",
+      "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+      "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+      "tv-radio-frontend/content/unisat/client-unisat.js",
+      "tv-radio-frontend/db-provider.js",
+      "tv-radio-frontend/logger.js",
+      "tv-radio-frontend/media/generic-media.js",
+      "tv-radio-frontend/media/programme-media.js",
+      "tv-radio-frontend/media/title-thumbnails.js",
+      "tv-radio-frontend/media/unisat-thumbnails.js",
+      "tv-radio-frontend/metrics.js",
+      "tv-radio-frontend/package-lock.json",
+      "tv-radio-frontend/package.json",
+      "tv-radio-frontend/usage-monitoring.js"
+    ],
+    "planned_files_touched": [
+      "tv-radio-admin/Admin/API/admin-usage.js",
+      "tv-radio-admin/Admin/API/app.js",
+      "tv-radio-admin/Admin/API/package.json",
+      "tv-radio-admin/Admin/Interface/index.html",
+      "tv-radio-admin/Admin/Interface/libs/socket.io-1.1.0.js",
+      "tv-radio-admin/CLI/chapman.js",
+      "tv-radio-admin/CLI/package.json",
+      "tv-radio-admin/Common/directdb-mongo-backup.js",
+      "tv-radio-admin/Common/directdb-mongo.js",
+      "tv-radio-admin/Common/package.json",
+      "tv-radio-admin/Common/record-media-scan.js",
+      "tv-radio-admin/Export/package.json",
+      "tv-radio-admin/Export/primo-export.js",
+      "tv-radio-admin/Ingest/package.json",
+      "tv-radio-admin/Search/build.js",
+      "tv-radio-admin/Search/package.json",
+      "tv-radio-admin/Settings/Solr/schema.xml",
+      "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+      "tv-radio-admin/Settings/Solr/solrconfig.xml",
+      "tv-radio-admin/Utilities/ember-precompile.js",
+      "tv-radio-admin/Utilities/package.json",
+      "tv-radio-frontend/app-media.js",
+      "tv-radio-frontend/app.js",
+      "tv-radio-frontend/content/feedback/client-feedback.js",
+      "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+      "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+      "tv-radio-frontend/content/unisat/client-unisat.js",
+      "tv-radio-frontend/db-provider.js",
+      "tv-radio-frontend/logger.js",
+      "tv-radio-frontend/media/generic-media.js",
+      "tv-radio-frontend/media/programme-media.js",
+      "tv-radio-frontend/media/title-thumbnails.js",
+      "tv-radio-frontend/media/unisat-thumbnails.js",
+      "tv-radio-frontend/metrics.js",
+      "tv-radio-frontend/package.json"
+    ],
+    "unexpected_files": [
+      ".claude/settings.local.json",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "tv-radio-admin/Admin/API/package-lock.json",
+      "tv-radio-admin/Admin/Interface/libs/ember-template-compiler-v1.13.13.js",
+      "tv-radio-admin/Admin/Interface/libs/ember.debug-v1.13.13.js",
+      "tv-radio-admin/Admin/Interface/libs/ember.prod-v1.13.13.js",
+      "tv-radio-admin/Admin/Interface/libs/jquery-v1.12.4.js",
+      "tv-radio-admin/Admin/Interface/libs/socket.io-4.8.3.js",
+      "tv-radio-admin/CLI/package-lock.json",
+      "tv-radio-admin/Common/package-lock.json",
+      "tv-radio-admin/Export/package-lock.json",
+      "tv-radio-admin/Ingest/package-lock.json",
+      "tv-radio-admin/Search/package-lock.json",
+      "tv-radio-admin/Utilities/package-lock.json",
+      "tv-radio-frontend/package-lock.json",
+      "tv-radio-frontend/usage-monitoring.js"
+    ],
+    "missing_planned_files": [
+      "tv-radio-admin/Admin/API/admin-image-handling.js",
+      "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+      "tv-radio-admin/Search/search-index-solr.js",
+      "tv-radio-frontend/solr-search.js",
+      "tv-radio-frontend/cache-provider.js",
+      "tv-radio-admin/Export/dublincore-exporter.js",
+      "tv-radio-admin/Ingest/ingest.js",
+      "tv-radio-admin/Utilities/ember-precompile.sh",
+      "tv-radio-admin/Admin/Interface/app/views.js",
+      "tv-radio-admin/Admin/Interface/app/data/model-base.js",
+      "tv-radio-admin/Admin/Interface/app/data/model-workspace.js",
+      "tv-radio-admin/Admin/Interface/app/interface/title-editor.js",
+      "tv-radio-admin/Admin/Interface/app/interface-controls/chosen-select.js",
+      "tv-radio-admin/shared-config.js",
+      "tv-radio-frontend/config.js",
+      "tv-radio-admin/Admin/Interface/libs/jquery-v1.11.0.js",
+      "tv-radio-admin/Admin/Interface/libs/ember-template-compiler-v1.13.3.js",
+      "tv-radio-admin/Admin/Interface/libs/ember.prod-v1.13.3.js",
+      "tv-radio-admin/Admin/Interface/libs/ember.debug-v1.13.3.js"
+    ],
+    "dependency_changes_verified": [
+      "tv-radio-admin/Admin/API/package.json",
+      "tv-radio-admin/Admin/Interface/index.html",
+      "tv-radio-admin/CLI/package.json",
+      "tv-radio-admin/Common/package.json",
+      "tv-radio-admin/Export/package.json",
+      "tv-radio-admin/Ingest/package.json",
+      "tv-radio-admin/Search/package.json",
+      "tv-radio-admin/Utilities/package.json",
+      "tv-radio-frontend/package.json"
+    ],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {"file_path": "tv-radio-admin/Admin/API/package.json", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-frontend/package.json", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-admin/Utilities/package.json", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-admin/Utilities/ember-precompile.js", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-admin/Admin/Interface/index.html", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-admin/Settings/Solr/schema.xml", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-admin/Settings/Solr/solrconfig.xml", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."},
+    {"file_path": "tv-radio-admin/Settings/Solr/solrconfig-records.xml", "outcome": "passed", "detail": "All required strings present and forbidden strings absent."}
+  ],
+  "command_results": [
+    {"type": "build", "command": "node --check app.js in tv-radio-admin/Admin/API", "outcome": "passed", "exit_status": 0, "output": ""},
+    {"type": "build", "command": "node --check app.js in tv-radio-frontend", "outcome": "passed", "exit_status": 0, "output": ""},
+    {"type": "startup", "command": "powershell wrapper: node app.js in tv-radio-admin/Admin/API and probe http://localhost:8080/", "outcome": "failed", "exit_status": 0, "output": "Declared startup wrapper exited 0 and HTTP probe returned 200. Playwright rendered { \"status\": \"ok\" } but captured console error for missing /favicon.ico, so health_check_outcome=failed under the strict browser-console rule."},
+    {"type": "startup", "command": "powershell wrapper: node app.js in tv-radio-frontend and probe http://localhost:8082/", "outcome": "failed", "exit_status": 0, "output": "Declared startup wrapper exited 0 and HTTP probe returned 200. After repair, Playwright rendered the TV and Radio homepage but captured console error for missing /favicon.ico, so health_check_outcome=failed under the strict browser-console rule."},
+    {"type": "existing_test", "command": "node chapman.js resetindex --verbose", "outcome": "passed", "exit_status": 0, "output": "[INFO/INDEX-RESET] Search index rebuild has completed."},
+    {"type": "existing_test", "command": "node chapman.js index --verbose", "outcome": "passed", "exit_status": 0, "output": "Re-indexing titles/programmes/playlists/UniSat records completed successfully; Search index rebuild completed."},
+    {"type": "existing_test", "command": "node chapman.js geodata --verbose", "outcome": "passed", "exit_status": 0, "output": "Exited 0. Logged: unable to add country data to search index due to Solr 400."},
+    {"type": "existing_test", "command": "node chapman.js courses --verbose", "outcome": "passed", "exit_status": 0, "output": "[INFO/INGEST-COURSE-DATA] Starting import of course code data from courses.csv."},
+    {"type": "generated_test", "command": "node C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tests\\upgrade\\admin-socketio-auth-smoke.js", "outcome": "passed", "exit_status": 0, "output": "Exited 0. Logged setup warnings for missing media paths."},
+    {"type": "generated_test", "command": "node C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tests\\upgrade\\directdb-fixture-integration.js", "outcome": "passed", "exit_status": 0, "output": ""}
+  ],
+  "repairs_applied": [
+    {
+      "file_path": "tv-radio-frontend/app.js",
+      "reason": "Playwright captured in-scope ReferenceError failures caused by /libs/client.js serving filename tokens after the planned uglify-js major upgrade.",
+      "summary": "Changed the UglifyJS v3 minification input to read each planned client source file and pass an object of filename-to-source contents, restoring the generated browser bundle."
+    }
+  ],
+  "repair_rounds": 1,
+  "browser_check_results": [
+    {
+      "url": "http://localhost:8080/",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8080/favicon.ico:0"
+      ]
+    },
+    {
+      "url": "http://localhost:8082/",
+      "navigation_outcome": "loaded",
+      "content_rendered": true,
+      "console_errors_captured": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8082/favicon.ico:0"
+      ]
+    }
+  ],
+  "console_error_results": [
+    {
+      "error": "ReferenceError: common is not defined at http://localhost:8082/libs/client.js:1:1",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Caused by the planned uglify-js major upgrade in tv-radio-frontend/app.js; fixed by passing actual file contents to UglifyJS."
+    },
+    {
+      "error": "ReferenceError: Common_SetupErrorHandler is not defined at http://localhost:8082/:17:43",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Downstream symptom of the broken /libs/client.js bundle; fixed by the UglifyJS input repair."
+    },
+    {
+      "error": "ReferenceError: Discovery_SetCurrentSearchSettings is not defined at http://localhost:8082/:322:17",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Downstream symptom of the broken /libs/client.js bundle; fixed by the UglifyJS input repair."
+    },
+    {
+      "error": "ReferenceError: Common_PassiveAuth_Perform is not defined at http://localhost:8082/:636:13",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Downstream symptom of the broken /libs/client.js bundle; fixed by the UglifyJS input repair."
+    },
+    {
+      "error": "ReferenceError: TVRadio_Homepage_Setup is not defined at HTMLDocument.<anonymous> (http://localhost:8082/:498:13)",
+      "source": "automated",
+      "scope": "in_scope",
+      "outcome": "fixed",
+      "detail": "Downstream symptom of the broken /libs/client.js bundle; fixed by the UglifyJS input repair."
+    },
+    {
+      "error": "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8080/favicon.ico:0",
+      "source": "automated",
+      "scope": "out_of_scope",
+      "outcome": "out_of_scope",
+      "detail": "Missing favicon is not tied to ordered_changes, planned_files, or expected dependency changes."
+    },
+    {
+      "error": "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8082/favicon.ico:0",
+      "source": "automated",
+      "scope": "out_of_scope",
+      "outcome": "out_of_scope",
+      "detail": "Missing favicon is not tied to ordered_changes, planned_files, or expected dependency changes."
+    }
+  ],
+  "final_commit_ref": "44970c6",
+  "rejection_reasons": [
+    "Startup health check failed under the strict Playwright console rule because http://localhost:8080/ emitted a 404 console error for /favicon.ico.",
+    "Startup health check failed under the strict Playwright console rule because http://localhost:8082/ emitted a 404 console error for /favicon.ico.",
+    "Unexpected files remain in the diff, including local agent files and package-lock/vendored asset files not explicitly listed by the ChangePlan."
+  ],
+  "recommendations": [
+    "Decide whether missing favicon console 404s should be accepted as out-of-scope noise or addressed by a separately approved favicon/static route change.",
+    "Review unexpected .claude/settings.local.json, AGENTS.md, and CLAUDE.md changes before merging.",
+    "Consider adding package-lock.json files and replacement vendored asset filenames explicitly to future ChangePlans when npm install and browser library replacement are expected."
+  ]
+}

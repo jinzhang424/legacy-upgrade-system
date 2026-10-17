@@ -1,0 +1,395 @@
+﻿{
+    "decision":  "rejected",
+    "confidence_score":  0.42,
+    "base_ref":  "main",
+    "git_diff_summary":  {
+                             "changed_files":  [
+                                                   ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                   ".gitignore",
+                                                   "AGENTS.md",
+                                                   "CLAUDE.md",
+                                                   "tests/admin-programmes-api.integration.test.js",
+                                                   "tests/dependency-upgrade-smoke.test.js",
+                                                   "tv-radio-admin/Admin/API/admin-live-titles.js",
+                                                   "tv-radio-admin/Admin/API/admin-media-scan.js",
+                                                   "tv-radio-admin/Admin/API/admin-unisat.js",
+                                                   "tv-radio-admin/Admin/API/admin-usage.js",
+                                                   "tv-radio-admin/Admin/API/app.js",
+                                                   "tv-radio-admin/Admin/API/package-lock.json",
+                                                   "tv-radio-admin/Admin/API/package.json",
+                                                   "tv-radio-admin/Admin/Interface/index.html",
+                                                   "tv-radio-admin/CLI/chapman.js",
+                                                   "tv-radio-admin/CLI/package-lock.json",
+                                                   "tv-radio-admin/CLI/package.json",
+                                                   "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                   "tv-radio-admin/Common/directdb-mongo.js",
+                                                   "tv-radio-admin/Common/package-lock.json",
+                                                   "tv-radio-admin/Common/package.json",
+                                                   "tv-radio-admin/Export/package-lock.json",
+                                                   "tv-radio-admin/Export/package.json",
+                                                   "tv-radio-admin/Ingest/city-country-dataset.js",
+                                                   "tv-radio-admin/Ingest/course-code-dataset.js",
+                                                   "tv-radio-admin/Ingest/csv-processor.js",
+                                                   "tv-radio-admin/Ingest/package-lock.json",
+                                                   "tv-radio-admin/Ingest/package.json",
+                                                   "tv-radio-admin/Search/build.js",
+                                                   "tv-radio-admin/Search/package-lock.json",
+                                                   "tv-radio-admin/Search/package.json",
+                                                   "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                                   "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                                   "tv-radio-admin/Utilities/package-lock.json",
+                                                   "tv-radio-admin/Utilities/package.json",
+                                                   "tv-radio-frontend/app-media.js",
+                                                   "tv-radio-frontend/app.js",
+                                                   "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                   "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                   "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                   "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                   "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                   "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                   "tv-radio-frontend/db-provider.js",
+                                                   "tv-radio-frontend/logger.js",
+                                                   "tv-radio-frontend/media/generic-media.js",
+                                                   "tv-radio-frontend/metrics.js",
+                                                   "tv-radio-frontend/package-lock.json",
+                                                   "tv-radio-frontend/package.json",
+                                                   "tv-radio-frontend/request-common.js",
+                                                   "tv-radio-frontend/shared/media-access.js",
+                                                   "tv-radio-frontend/usage-monitoring.js"
+                                               ],
+                             "planned_files_touched":  [
+                                                           "tests/admin-programmes-api.integration.test.js",
+                                                           "tests/dependency-upgrade-smoke.test.js",
+                                                           "tv-radio-admin/Admin/API/admin-live-titles.js",
+                                                           "tv-radio-admin/Admin/API/admin-media-scan.js",
+                                                           "tv-radio-admin/Admin/API/admin-unisat.js",
+                                                           "tv-radio-admin/Admin/API/admin-usage.js",
+                                                           "tv-radio-admin/Admin/API/app.js",
+                                                           "tv-radio-admin/Admin/API/package.json",
+                                                           "tv-radio-admin/CLI/chapman.js",
+                                                           "tv-radio-admin/CLI/package.json",
+                                                           "tv-radio-admin/Common/directdb-mongo.js",
+                                                           "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                           "tv-radio-admin/Common/package.json",
+                                                           "tv-radio-admin/Export/package.json",
+                                                           "tv-radio-admin/Ingest/city-country-dataset.js",
+                                                           "tv-radio-admin/Ingest/course-code-dataset.js",
+                                                           "tv-radio-admin/Ingest/csv-processor.js",
+                                                           "tv-radio-admin/Ingest/package.json",
+                                                           "tv-radio-admin/Search/build.js",
+                                                           "tv-radio-admin/Search/package.json",
+                                                           "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                                           "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                                           "tv-radio-admin/Utilities/package.json",
+                                                           "tv-radio-frontend/app.js",
+                                                           "tv-radio-frontend/app-media.js",
+                                                           "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                           "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                           "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                           "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                           "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                           "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                           "tv-radio-frontend/db-provider.js",
+                                                           "tv-radio-frontend/logger.js",
+                                                           "tv-radio-frontend/media/generic-media.js",
+                                                           "tv-radio-frontend/metrics.js",
+                                                           "tv-radio-frontend/package.json",
+                                                           "tv-radio-frontend/request-common.js",
+                                                           "tv-radio-frontend/shared/media-access.js"
+                                                       ],
+                             "unexpected_files":  [
+                                                      ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                      ".gitignore",
+                                                      "AGENTS.md",
+                                                      "CLAUDE.md",
+                                                      "tv-radio-admin/Admin/Interface/index.html",
+                                                      "tv-radio-frontend/usage-monitoring.js"
+                                                  ],
+                             "missing_planned_files":  [
+
+                                                       ],
+                             "dependency_changes_verified":  [
+                                                                 "tv-radio-admin/Admin/API/package.json",
+                                                                 "tv-radio-admin/CLI/package.json",
+                                                                 "tv-radio-admin/Common/package.json",
+                                                                 "tv-radio-admin/Export/package.json",
+                                                                 "tv-radio-admin/Ingest/package.json",
+                                                                 "tv-radio-admin/Search/package.json",
+                                                                 "tv-radio-frontend/package.json"
+                                                             ],
+                             "dependency_changes_missing":  [
+
+                                                            ]
+                         },
+    "content_check_results":  [
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: 2.1.3 deprecated; forbidden present: "
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/CLI/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: 2.1.3 deprecated; forbidden present: "
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Ingest/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Search/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: 1.4.1 deprecated; 2.88.2 deprecated; forbidden present: "
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                      "outcome":  "failed",
+                                      "detail":  "missing: express.get(\"/search\"; forbidden present: "
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/admin-live-titles.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/admin-unisat.js",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Settings/Solr/solrconfig.xml",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+                                      "outcome":  "passed",
+                                      "detail":  "all declared strings satisfied"
+                                  }
+                              ],
+    "command_results":  [
+                            {
+                                "type":  "build",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API\"; node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend\"; node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\"; node --check chapman.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API\"; $out=Join-Path $env:TEMP \u0027chapman-admin-api-startup.out.log\u0027; $err=Join-Path $env:TEMP \u0027chapman-admin-api-startup.err.log\u0027; Remove-Item -LiteralPath $out,$err -ErrorAction SilentlyContinue; $p=Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -PassThru -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err; try { $deadline=(Get-Date).AddSeconds(45); $ok=$false; do { Start-Sleep -Milliseconds 500; try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 3; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch { if($p.HasExited){ break } } } while((Get-Date) -lt $deadline); if(-not $ok){ Write-Output \u0027STDOUT:\u0027; if(Test-Path $out){ Get-Content -LiteralPath $out }; Write-Output \u0027STDERR:\u0027; if(Test-Path $err){ Get-Content -LiteralPath $err }; exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }",
+                                "outcome":  "failed",
+                                "exit_status":  0,
+                                "output":  "bounded startup command exited 0; HTTP probe passed; Playwright rendered JSON but captured favicon.ico 404 console error",
+                                "health_check_outcome":  "failed"
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend\"; $out=Join-Path $env:TEMP \u0027tv-radio-frontend-startup.out.log\u0027; $err=Join-Path $env:TEMP \u0027tv-radio-frontend-startup.err.log\u0027; Remove-Item -LiteralPath $out,$err -ErrorAction SilentlyContinue; $p=Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -PassThru -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err; try { $deadline=(Get-Date).AddSeconds(45); $ok=$false; do { Start-Sleep -Milliseconds 500; try { $r=Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 3; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch { if($p.HasExited){ break } } } while((Get-Date) -lt $deadline); if(-not $ok){ Write-Output \u0027STDOUT:\u0027; if(Test-Path $out){ Get-Content -LiteralPath $out }; Write-Output \u0027STDERR:\u0027; if(Test-Path $err){ Get-Content -LiteralPath $err }; exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }",
+                                "outcome":  "failed",
+                                "exit_status":  0,
+                                "output":  "bounded startup command exited 0; HTTP probe passed; Playwright rendered homepage but captured favicon.ico 404 console error",
+                                "health_check_outcome":  "failed"
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\"; node chapman.js resetindex --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "[INFO/INDEX-RESET] Search index rebuild has completed."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\"; node chapman.js index --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "Re-indexing 0 titles/programmes/playlists/UniSat records completed; [INFO/INDEX-BUILD] Search index rebuild has completed."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\"; node chapman.js geodata --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "Imported 251 country, 138998 city, 2476 NZ city, and 51 US State records; ingest completed."
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI\"; node chapman.js courses --verbose",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  "Imported 5070 course code records; ingest completed."
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "cd \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\"; node --test tests\\dependency-upgrade-smoke.test.js tests\\admin-programmes-api.integration.test.js",
+                                "outcome":  "failed",
+                                "exit_status":  1,
+                                "output":  "After 3 repair rounds: 5 pass, 1 fail. Remaining failure: TypeError dbProvider.getMultipleRecordsUsingQuery is not a function at admin-playlists.js:43 during admin programme integration cleanup."
+                            }
+                        ],
+    "repairs_applied":  [
+                            {
+                                "file_path":  "tests/dependency-upgrade-smoke.test.js",
+                                "reason":  "Generated smoke test expected csv 6.6.1 but upgraded manifest declares 6.6.3.",
+                                "summary":  "Updated generated assertion to csv 6.6.3."
+                            },
+                            {
+                                "file_path":  "tests/admin-programmes-api.integration.test.js",
+                                "reason":  "Generated integration harness passed an incomplete/null logger into traced route paths.",
+                                "summary":  "Added no-op logWarning/logDebug and passed logger as traceLogger."
+                            },
+                            {
+                                "file_path":  "tests/admin-programmes-api.integration.test.js",
+                                "reason":  "Generated integration harness lacked updateMultipleRecords required by programme delete cleanup.",
+                                "summary":  "Added no-op updateMultipleRecords mock."
+                            }
+                        ],
+    "repair_rounds":  3,
+    "browser_check_results":  [
+                                  {
+                                      "url":  "http://localhost:8080/",
+                                      "description":  "startup Admin API root",
+                                      "navigation_outcome":  "loaded",
+                                      "content_rendered":  true,
+                                      "console_errors_captured":  [
+                                                                      "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8080/favicon.ico:0"
+                                                                  ]
+                                  },
+                                  {
+                                      "url":  "http://localhost:8082/",
+                                      "description":  "startup frontend homepage",
+                                      "navigation_outcome":  "loaded",
+                                      "content_rendered":  true,
+                                      "console_errors_captured":  [
+                                                                      "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8082/favicon.ico:0"
+                                                                  ]
+                                  },
+                                  {
+                                      "url":  "http://localhost:8082/search/",
+                                      "description":  "Frontend search page; high-risk because search/template rendering code is not exercised by homepage-only load.",
+                                      "navigation_outcome":  "loaded",
+                                      "content_rendered":  false,
+                                      "console_errors_captured":  [
+                                                                      "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8082/favicon.ico:0"
+                                                                  ],
+                                      "detail":  "Snapshot rendered ERROR !!!65A2A34B-6B4F-422B-A8C2-FDF8F198042A"
+                                  },
+                                  {
+                                      "url":  "http://localhost:8080/",
+                                      "description":  "Admin Interface root page served by Admin/API Express 5 route/static stack.",
+                                      "navigation_outcome":  "loaded",
+                                      "content_rendered":  true,
+                                      "console_errors_captured":  [
+                                                                      "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8080/favicon.ico:0"
+                                                                  ]
+                                  }
+                              ],
+    "key_flow_results":  [
+                             {
+                                 "name":  "frontend homepage search",
+                                 "outcome":  "failed",
+                                 "console_errors_captured":  [
+
+                                                             ],
+                                 "detail":  "Filled homepage search textbox with news, clicked Search, navigated to http://localhost:8082/search/news, snapshot rendered ERROR !!!EA2FDB90-BE99-4CC4-9ABB-57736A2E6312."
+                             }
+                         ],
+    "external_service_check_results":  [
+                                           {
+                                               "service":  "Solr",
+                                               "outcome":  "failed",
+                                               "detail":  "Solr admin cores responded, but live cores report managed-schema.xml/configVersion 0 and searched container paths only exposed default configset files; live config was not verified to match tv-radio-admin/Settings/Solr/schema.xml, solrconfig.xml, and solrconfig-records.xml."
+                                           },
+                                           {
+                                               "service":  "MongoDB",
+                                               "outcome":  "passed",
+                                               "detail":  "mongodb 7 driver connected to mongodb://127.0.0.1:27017 and serverInfo returned MongoDB 8.2.11."
+                                           },
+                                           {
+                                               "service":  "Memcached",
+                                               "outcome":  "passed",
+                                               "detail":  "memcached client 2.2.2 set/get against 127.0.0.1:11211 returned value ok."
+                                           }
+                                       ],
+    "console_error_results":  [
+                                  {
+                                      "error":  "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8080/favicon.ico:0",
+                                      "source":  "automated",
+                                      "scope":  "out_of_scope",
+                                      "outcome":  "out_of_scope",
+                                      "detail":  "Browser-requested favicon is not mentioned in ordered_changes, planned_files, or dependency changes."
+                                  },
+                                  {
+                                      "error":  "Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8082/favicon.ico:0",
+                                      "source":  "automated",
+                                      "scope":  "out_of_scope",
+                                      "outcome":  "out_of_scope",
+                                      "detail":  "Browser-requested favicon is not mentioned in ordered_changes, planned_files, or dependency changes."
+                                  }
+                              ],
+    "final_commit_ref":  "9a60a71",
+    "rejection_reasons":  [
+                              "Required content checks failed in package.json files and tv-radio-frontend/content/tv-radio/client-tv-radio.js.",
+                              "Startup browser checks captured console error entries for favicon.ico 404s.",
+                              "Key page http://localhost:8082/search/ rendered an application error marker instead of real content.",
+                              "Declared key user flow frontend homepage search rendered an application error marker after navigating to /search/news.",
+                              "Generated test command still fails after three repair rounds: dbProvider.getMultipleRecordsUsingQuery is not a function in the generated admin programme integration test harness.",
+                              "Solr external service check failed because live Solr config/schema was not verified to match the repo Solr XML files."
+                          ],
+    "recommendations":  [
+                            "Fix the generated admin programme integration harness or route setup so playlist-side dbProvider calls are mocked or avoided, then rerun generated tests.",
+                            "Investigate frontend search route rendering errors for /search/ and /search/news under Express 5.",
+                            "Clarify or correct content_check strings that require literal deprecated markers in package.json files and express route strings in a frontend client file.",
+                            "Manually rebuild/reload the Docker Solr configset from the repo Solr XML files and rerun the Solr live comparison."
+                        ]
+}

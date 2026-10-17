@@ -1,0 +1,398 @@
+﻿{
+    "decision":  "rejected",
+    "confidence_score":  0.78,
+    "base_ref":  "main",
+    "git_diff_summary":  {
+                             "changed_files":  [
+                                                   ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                   ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                   ".gitignore",
+                                                   "AGENTS.md",
+                                                   "CLAUDE.md",
+                                                   "tests/upgrade-dependency-smoke.test.js",
+                                                   "tests/upgrade-source-migration.integration.test.js",
+                                                   "tv-radio-admin/Admin/API/admin-usage.js",
+                                                   "tv-radio-admin/Admin/API/app.js",
+                                                   "tv-radio-admin/Admin/API/package-lock.json",
+                                                   "tv-radio-admin/Admin/API/package.json",
+                                                   "tv-radio-admin/CLI/package-lock.json",
+                                                   "tv-radio-admin/CLI/package.json",
+                                                   "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                   "tv-radio-admin/Common/directdb-mongo.js",
+                                                   "tv-radio-admin/Common/package-lock.json",
+                                                   "tv-radio-admin/Common/package.json",
+                                                   "tv-radio-admin/Export/package-lock.json",
+                                                   "tv-radio-admin/Export/package.json",
+                                                   "tv-radio-admin/Ingest/csv-processor.js",
+                                                   "tv-radio-admin/Ingest/package-lock.json",
+                                                   "tv-radio-admin/Ingest/package.json",
+                                                   "tv-radio-admin/Search/package-lock.json",
+                                                   "tv-radio-admin/Search/package.json",
+                                                   "tv-radio-admin/Utilities/package-lock.json",
+                                                   "tv-radio-frontend/app.js",
+                                                   "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                   "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                   "tv-radio-frontend/content/live-streams/client-live-streams.js",
+                                                   "tv-radio-frontend/content/playlists/client-playlists.js",
+                                                   "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                   "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                   "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                   "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                   "tv-radio-frontend/db-provider.js",
+                                                   "tv-radio-frontend/logger.js",
+                                                   "tv-radio-frontend/media/generic-media.js",
+                                                   "tv-radio-frontend/metrics.js",
+                                                   "tv-radio-frontend/package-lock.json",
+                                                   "tv-radio-frontend/package.json",
+                                                   "tv-radio-frontend/request-common.js",
+                                                   "tv-radio-frontend/shared/media-access.js"
+                                               ],
+                             "planned_files_touched":  [
+                                                           "tv-radio-admin/Admin/API/admin-usage.js",
+                                                           "tv-radio-admin/Admin/API/app.js",
+                                                           "tv-radio-admin/Admin/API/package.json",
+                                                           "tv-radio-admin/CLI/package.json",
+                                                           "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                                           "tv-radio-admin/Common/directdb-mongo.js",
+                                                           "tv-radio-admin/Common/package.json",
+                                                           "tv-radio-admin/Export/package.json",
+                                                           "tv-radio-admin/Ingest/csv-processor.js",
+                                                           "tv-radio-admin/Ingest/package.json",
+                                                           "tv-radio-admin/Search/package.json",
+                                                           "tv-radio-frontend/app.js",
+                                                           "tv-radio-frontend/content/feedback/client-feedback.js",
+                                                           "tv-radio-frontend/content/homepage/client-homepage.js",
+                                                           "tv-radio-frontend/content/live-streams/client-live-streams.js",
+                                                           "tv-radio-frontend/content/playlists/client-playlists.js",
+                                                           "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                                           "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                                           "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                                           "tv-radio-frontend/content/unisat/client-unisat.js",
+                                                           "tv-radio-frontend/db-provider.js",
+                                                           "tv-radio-frontend/logger.js",
+                                                           "tv-radio-frontend/media/generic-media.js",
+                                                           "tv-radio-frontend/metrics.js",
+                                                           "tv-radio-frontend/package.json",
+                                                           "tv-radio-frontend/request-common.js",
+                                                           "tv-radio-frontend/shared/media-access.js"
+                                                       ],
+                             "unexpected_files":  [
+                                                      ".claude/skills/gitnexus/gitnexus-cli/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-debugging/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-exploring/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-guide/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md",
+                                                      ".claude/skills/gitnexus/gitnexus-refactoring/SKILL.md",
+                                                      ".gitignore",
+                                                      "AGENTS.md",
+                                                      "CLAUDE.md"
+                                                  ],
+                             "missing_planned_files":  [
+
+                                                       ],
+                             "dependency_changes_verified":  [
+                                                                 "tv-radio-frontend/package.json",
+                                                                 "tv-radio-admin/Admin/API/package.json",
+                                                                 "tv-radio-admin/Common/package.json",
+                                                                 "tv-radio-admin/Search/package.json",
+                                                                 "tv-radio-admin/CLI/package.json",
+                                                                 "tv-radio-admin/Export/package.json",
+                                                                 "tv-radio-admin/Ingest/package.json",
+                                                                 "tv-radio-admin/Utilities/package.json (no-op target already satisfied)"
+                                                             ],
+                             "dependency_changes_missing":  [
+
+                                                            ]
+                         },
+    "content_check_results":  [
+                                  {
+                                      "file_path":  "tv-radio-frontend/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Search/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/CLI/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Export/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Ingest/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Utilities/package.json",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/logger.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-frontend/db-provider.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  },
+                                  {
+                                      "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                      "outcome":  "passed",
+                                      "detail":  "All required strings present and forbidden strings absent"
+                                  }
+                              ],
+    "command_results":  [
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check app-media.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check db-provider.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check logger.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check metrics.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check request-common.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check content\\feedback\\client-feedback.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check media\\generic-media.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check media\\programme-media.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check media\\title-thumbnails.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check media\\unisat-thumbnails.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] node --check shared\\media-access.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check app.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check admin-image-handling.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check admin-media-scan.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check admin-titles-common.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check admin-unisat.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check admin-usage.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check cache-provider.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] node --check unisat-record-processing.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common] node --check directdb-mongo.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common] node --check directdb-mongo-backup.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common] node --check record-media-scan.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Export] node --check primo-export.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "build",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Ingest] node --check ingest.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend] powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process -FilePath node -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u002718082\u0027) -PassThru -WindowStyle Hidden; Start-Sleep -Seconds 10; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -Force; exit 0\"",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "startup",
+                                "command":  "[C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API] powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process -FilePath node -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u002718080\u0027) -PassThru -WindowStyle Hidden; Start-Sleep -Seconds 10; if ($p.HasExited) { exit $p.ExitCode }; Stop-Process -Id $p.Id -Force; exit 0\"",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "existing_test",
+                                "command":  "",
+                                "outcome":  "skipped",
+                                "exit_status":  0,
+                                "output":  "No existing_test commands declared"
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "node C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tests\\upgrade-dependency-smoke.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            },
+                            {
+                                "type":  "generated_test",
+                                "command":  "node C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tests\\upgrade-source-migration.integration.test.js",
+                                "outcome":  "passed",
+                                "exit_status":  0,
+                                "output":  ""
+                            }
+                        ],
+    "repairs_applied":  [
+
+                        ],
+    "repair_rounds":  0,
+    "final_commit_ref":  "2fce97d",
+    "rejection_reasons":  [
+                              "Diff contains unplanned files unrelated to the approved ChangePlan: .claude/skills/gitnexus/gitnexus-cli/SKILL.md, .claude/skills/gitnexus/gitnexus-debugging/SKILL.md, .claude/skills/gitnexus/gitnexus-exploring/SKILL.md, .claude/skills/gitnexus/gitnexus-guide/SKILL.md, .claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md, .claude/skills/gitnexus/gitnexus-refactoring/SKILL.md, .gitignore, AGENTS.md, CLAUDE.md"
+                          ],
+    "recommendations":  [
+                            "Review or remove unplanned root/.claude changes in a separate controlled step; validator did not modify them because they are unrelated to plan-related build/test/content-check repairs.",
+                            "Package-lock files were treated as expected npm install artifacts based on the ChangePlan planning notes.",
+                            "Existing tests were skipped because no existing_test commands were declared."
+                        ]
+}

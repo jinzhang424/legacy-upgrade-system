@@ -1,0 +1,1311 @@
+﻿{
+    "planned_files":  [
+                          "tv-radio-admin/Admin/API/admin-bulk-operation.js",
+                          "tv-radio-admin/Admin/API/admin-image-handling.js",
+                          "tv-radio-admin/Admin/API/admin-live-titles.js",
+                          "tv-radio-admin/Admin/API/admin-media-scan.js",
+                          "tv-radio-admin/Admin/API/admin-playlists.js",
+                          "tv-radio-admin/Admin/API/admin-streaming-result-set.js",
+                          "tv-radio-admin/Admin/API/admin-titles-common.js",
+                          "tv-radio-admin/Admin/API/admin-unisat.js",
+                          "tv-radio-admin/Admin/API/admin-usage.js",
+                          "tv-radio-admin/Admin/API/app.js",
+                          "tv-radio-admin/Admin/API/cache-provider.js",
+                          "tv-radio-admin/Admin/API/package.json",
+                          "tv-radio-admin/Admin/API/unisat-record-processing.js",
+                          "tv-radio-admin/CLI/backup.js",
+                          "tv-radio-admin/CLI/chapman.js",
+                          "tv-radio-admin/CLI/package.json",
+                          "tv-radio-admin/Common/directdb-mongo.js",
+                          "tv-radio-admin/Common/directdb-mongo-backup.js",
+                          "tv-radio-admin/Common/package.json",
+                          "tv-radio-admin/Common/record-media-scan.js",
+                          "tv-radio-admin/Export/dublincore-exporter.js",
+                          "tv-radio-admin/Export/package.json",
+                          "tv-radio-admin/Export/primo-export.js",
+                          "tv-radio-admin/Ingest/attacher.js",
+                          "tv-radio-admin/Ingest/checker-prog-file.js",
+                          "tv-radio-admin/Ingest/city-country-dataset.js",
+                          "tv-radio-admin/Ingest/course-code-dataset.js",
+                          "tv-radio-admin/Ingest/csv-processor.js",
+                          "tv-radio-admin/Ingest/ingest.js",
+                          "tv-radio-admin/Ingest/lcsh-subjects-dataset.js",
+                          "tv-radio-admin/Ingest/package.json",
+                          "tv-radio-admin/Search/build.js",
+                          "tv-radio-admin/Search/package.json",
+                          "tv-radio-admin/Search/record-processor.js",
+                          "tv-radio-admin/Search/search.js",
+                          "tv-radio-admin/Search/search-index-solr.js",
+                          "tv-radio-admin/Utilities/ember-precompile.js",
+                          "tv-radio-admin/Utilities/package.json",
+                          "tv-radio-frontend/app.js",
+                          "tv-radio-frontend/app-media.js",
+                          "tv-radio-frontend/cache-provider.js",
+                          "tv-radio-frontend/content/feedback/client-feedback.js",
+                          "tv-radio-frontend/content/homepage/client-homepage.js",
+                          "tv-radio-frontend/content/live-streams/client-live-streams.js",
+                          "tv-radio-frontend/content/playlists/client-playlists.js",
+                          "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                          "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                          "tv-radio-frontend/content/tv-radio/client-discovery.js",
+                          "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                          "tv-radio-frontend/content/unisat/client-unisat.js",
+                          "tv-radio-frontend/data/homepage-data.js",
+                          "tv-radio-frontend/data/playlist-data.js",
+                          "tv-radio-frontend/data/programme-data.js",
+                          "tv-radio-frontend/data/title-data.js",
+                          "tv-radio-frontend/data/unisat-data.js",
+                          "tv-radio-frontend/db-provider.js",
+                          "tv-radio-frontend/handlebars-helpers.js",
+                          "tv-radio-frontend/handlebars-partials.js",
+                          "tv-radio-frontend/logger.js",
+                          "tv-radio-frontend/media/generic-media.js",
+                          "tv-radio-frontend/media/programme-media.js",
+                          "tv-radio-frontend/media/title-thumbnails.js",
+                          "tv-radio-frontend/media/unisat-thumbnails.js",
+                          "tv-radio-frontend/metrics.js",
+                          "tv-radio-frontend/package.json",
+                          "tv-radio-frontend/request-common.js",
+                          "tv-radio-frontend/shared/media-access.js"
+                      ],
+    "validation":  {
+                       "base_branch_candidates":  [
+                                                      "main",
+                                                      "master"
+                                                  ],
+                       "existing_test_commands":  [
+
+                                                  ],
+                       "build_commands":  [
+                                              "powershell -Command \"foreach ($d in @(\u0027tv-radio-admin/Admin/API\u0027,\u0027tv-radio-admin/CLI\u0027,\u0027tv-radio-admin/Common\u0027,\u0027tv-radio-admin/Export\u0027,\u0027tv-radio-admin/Ingest\u0027,\u0027tv-radio-admin/Search\u0027,\u0027tv-radio-admin/Utilities\u0027,\u0027tv-radio-frontend\u0027)) { Push-Location $d; npm install --package-lock-only --ignore-scripts --no-audit --no-fund; npm install --ignore-scripts --no-audit --no-fund; Pop-Location }\""
+                                          ],
+                       "content_checks":  [
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "\"uuid\": \"2.0.1\"",
+                                                                           "\"mongodb\": \"^2.0.0\"",
+                                                                           "\"winston\": \"^1.0.1\""
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "\"uuid\": \"14.0.0\"",
+                                                                       "\"mongodb\": \"7.3.0\"",
+                                                                       "\"winston\": \"3.19.0\""
+                                                                   ],
+                                                  "file_path":  "tv-radio-frontend/package.json"
+                                              },
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "\"express\": \"4.9.5\"",
+                                                                           "\"socket.io\": \"1.1.0\"",
+                                                                           "\"jsonwebtoken\": \"^5.4.0\""
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "\"express\": \"5.2.1\"",
+                                                                       "\"socket.io\": \"4.8.3\"",
+                                                                       "\"jsonwebtoken\": \"9.0.3\""
+                                                                   ],
+                                                  "file_path":  "tv-radio-admin/Admin/API/package.json"
+                                              },
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "\"mongodb\": \"^2.2.24\""
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "\"mongodb\": \"7.3.0\""
+                                                                   ],
+                                                  "file_path":  "tv-radio-admin/Common/package.json"
+                                              },
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "\"csv\": \"0.4.0\""
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "\"csv\": \"6.6.0\""
+                                                                   ],
+                                                  "file_path":  "tv-radio-admin/Ingest/package.json"
+                                              },
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "\"archiver\" : \"~0.14\"",
+                                                                           "\"xmlbuilder\" : \"~2.6.1\""
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "\"archiver\": \"8.0.0\"",
+                                                                       "\"xmlbuilder\": \"15.1.1\""
+                                                                   ],
+                                                  "file_path":  "tv-radio-admin/Export/package.json"
+                                              },
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "new (winston.Logger)"
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "winston.createLogger"
+                                                                   ],
+                                                  "file_path":  "tv-radio-frontend/logger.js"
+                                              },
+                                              {
+                                                  "must_not_contain":  [
+                                                                           "GridStore"
+                                                                       ],
+                                                  "must_contain":  [
+                                                                       "MongoClient"
+                                                                   ],
+                                                  "file_path":  "tv-radio-frontend/db-provider.js"
+                                              }
+                                          ],
+                       "generated_test_files":  [
+                                                    "tests/dependency-upgrade-smoke.test.js"
+                                                ],
+                       "success_criteria":  [
+                                                "All package manifests parse and contain expected target versions.",
+                                                "Dependency installation completes for all eight npm package directories.",
+                                                "Source files no longer contain removed APIs: uuid.v4 object calls, mongo.GridStore, new (winston.Logger), and csv.parse().from.path.",
+                                                "Entry modules listed in the ImpactReport can be required or smoke-tested without module load errors.",
+                                                "Any retained deprecated package risk is documented by the executor.",
+                                                "Generated dependency-upgrade smoke test passes with Node built-in test runner.",
+                                                "Generated tests confirm all eight package manifests parse and core dependency targets match the upgrade plan.",
+                                                "Generated tests confirm high-risk source migrations no longer use removed uuid, mongodb GridStore, winston Logger, socketio-jwt authorize, or csv from.path APIs.",
+                                                "Generated tests confirm Dublin Core XML and Primo archive export paths retain expected generation/finalization calls."
+                                            ],
+                       "generated_test_commands":  [
+                                                       "node --test tests/dependency-upgrade-smoke.test.js"
+                                                   ]
+                   },
+    "upgrade_description":  "upgrade any outdated dependencies found",
+    "plan_summary":  "Update all reported npm manifests to latest observed versions, then make targeted compatibility edits for major-version API breaks in uuid, mongodb, Socket.IO, winston, nodemailer, csv, xmlbuilder, archiver, sharp/send, Express/body-parser, and related callback-based modules.",
+    "expected_dependency_changes":  [
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "2.3.0",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "1.9.0",
+                                            "dependency":  "body-parser"
+                                        },
+                                        {
+                                            "to_version":  "1.8.1",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "1.4.3",
+                                            "dependency":  "compression"
+                                        },
+                                        {
+                                            "to_version":  "4.4.0",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "1.0.6",
+                                            "dependency":  "cron"
+                                        },
+                                        {
+                                            "to_version":  "5.2.1",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "4.9.5",
+                                            "dependency":  "express"
+                                        },
+                                        {
+                                            "to_version":  "2.1.3",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "2.0.0-rc3",
+                                            "dependency":  "fluent-ffmpeg"
+                                        },
+                                        {
+                                            "to_version":  "9.0.3",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "^5.4.0",
+                                            "dependency":  "jsonwebtoken"
+                                        },
+                                        {
+                                            "to_version":  "2.2.2",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "2.2.0",
+                                            "dependency":  "memcached"
+                                        },
+                                        {
+                                            "to_version":  "1.2.8",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "1.1.0",
+                                            "dependency":  "minimist"
+                                        },
+                                        {
+                                            "to_version":  "5.12.0",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "4.0.0",
+                                            "dependency":  "influx"
+                                        },
+                                        {
+                                            "to_version":  "4.8.3",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "1.1.0",
+                                            "dependency":  "socket.io"
+                                        },
+                                        {
+                                            "to_version":  "4.6.2",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "^4.3.1",
+                                            "dependency":  "socketio-jwt"
+                                        },
+                                        {
+                                            "to_version":  "0.6.2",
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "from_version":  "0.4.4",
+                                            "dependency":  "xml2js"
+                                        },
+                                        {
+                                            "to_version":  "7.3.0",
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "from_version":  "^2.2.24",
+                                            "dependency":  "mongodb"
+                                        },
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "2.1.3",
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "from_version":  "2.0.0-rc3",
+                                            "dependency":  "fluent-ffmpeg"
+                                        },
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-admin/Search/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "2.30.1",
+                                            "file_path":  "tv-radio-admin/Search/package.json",
+                                            "from_version":  "2.8.2",
+                                            "dependency":  "moment"
+                                        },
+                                        {
+                                            "to_version":  "0.6.1",
+                                            "file_path":  "tv-radio-admin/Utilities/package.json",
+                                            "from_version":  "0.6.1",
+                                            "dependency":  "optimist"
+                                        },
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "1.2.8",
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "from_version":  "1.1.0",
+                                            "dependency":  "minimist"
+                                        },
+                                        {
+                                            "to_version":  "0.0.4",
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "from_version":  "0.0.4",
+                                            "dependency":  "pace"
+                                        },
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "0.6.2",
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "from_version":  "0.4.4",
+                                            "dependency":  "xml2js"
+                                        },
+                                        {
+                                            "to_version":  "6.6.0",
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "from_version":  "0.4.0",
+                                            "dependency":  "csv"
+                                        },
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "15.1.1",
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "from_version":  "~2.6.1",
+                                            "dependency":  "xmlbuilder"
+                                        },
+                                        {
+                                            "to_version":  "8.0.0",
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "from_version":  "~0.14",
+                                            "dependency":  "archiver"
+                                        },
+                                        {
+                                            "to_version":  "3.0.3",
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "from_version":  "2.1.0",
+                                            "dependency":  "stream-buffers"
+                                        },
+                                        {
+                                            "to_version":  "0.3.10",
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "from_version":  "~0.3.8",
+                                            "dependency":  "ftp"
+                                        },
+                                        {
+                                            "to_version":  "3.2.6",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "dependency":  "async"
+                                        },
+                                        {
+                                            "to_version":  "2.3.0",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "1.9.0",
+                                            "dependency":  "body-parser"
+                                        },
+                                        {
+                                            "to_version":  "5.2.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "4.9.5",
+                                            "dependency":  "express"
+                                        },
+                                        {
+                                            "to_version":  "1.4.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^1.0.0",
+                                            "dependency":  "gc-stats"
+                                        },
+                                        {
+                                            "to_version":  "4.7.9",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "3.0.0",
+                                            "dependency":  "handlebars"
+                                        },
+                                        {
+                                            "to_version":  "5.12.0",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "4.0.0",
+                                            "dependency":  "influx"
+                                        },
+                                        {
+                                            "to_version":  "2.2.2",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "2.2.0",
+                                            "dependency":  "memcached"
+                                        },
+                                        {
+                                            "to_version":  "1.2.8",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "1.1.0",
+                                            "dependency":  "minimist"
+                                        },
+                                        {
+                                            "to_version":  "2.30.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "2.10.2",
+                                            "dependency":  "moment"
+                                        },
+                                        {
+                                            "to_version":  "7.3.0",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^2.0.0",
+                                            "dependency":  "mongodb"
+                                        },
+                                        {
+                                            "to_version":  "9.0.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "1.4.0",
+                                            "dependency":  "nodemailer"
+                                        },
+                                        {
+                                            "to_version":  "2.4.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^2.2.0",
+                                            "dependency":  "on-finished"
+                                        },
+                                        {
+                                            "to_version":  "2.88.2",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^2.87.0",
+                                            "dependency":  "request"
+                                        },
+                                        {
+                                            "to_version":  "1.2.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "0.12.2",
+                                            "dependency":  "send"
+                                        },
+                                        {
+                                            "to_version":  "0.35.1",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^0.14.1",
+                                            "dependency":  "sharp"
+                                        },
+                                        {
+                                            "to_version":  "4.8.3",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "1.1.0",
+                                            "dependency":  "socket.io-client"
+                                        },
+                                        {
+                                            "to_version":  "3.19.3",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^2.4.17",
+                                            "dependency":  "uglify-js"
+                                        },
+                                        {
+                                            "to_version":  "14.0.0",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "2.0.1",
+                                            "dependency":  "uuid"
+                                        },
+                                        {
+                                            "to_version":  "2.3.15",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^2.3.9",
+                                            "dependency":  "walk"
+                                        },
+                                        {
+                                            "to_version":  "3.19.0",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^1.0.1",
+                                            "dependency":  "winston"
+                                        },
+                                        {
+                                            "to_version":  "2.0.5",
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "from_version":  "^0.3.0",
+                                            "dependency":  "winston-logstash"
+                                        }
+                                    ],
+    "rollback_strategy":  "Revert the single final execution commit created by the executor.",
+    "planning_notes":  "Loaded the full ImpactReport and treated it as authoritative. Inspected package manifests and targeted source snippets/call patterns around reported locations; larger files were inspected with targeted rg searches rather than full-file reads. Planned source changes are limited to affected files from the ImpactReport. Deprecated packages request, fluent-ffmpeg, gc-stats, ftp, optimist, and pace are not replaced with different packages unless install/runtime validation forces documented scope expansion.",
+    "ordered_changes":  [
+                            {
+                                "change_type":  "modify",
+                                "sequence":  1,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  5,
+                                                      "start_line":  5
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "body-parser",
+                                                      "matched_api":  "body-parser",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "compression",
+                                                      "matched_api":  "compression",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "cron",
+                                                      "matched_api":  "cron",
+                                                      "end_line":  8,
+                                                      "start_line":  8
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "express",
+                                                      "matched_api":  "express",
+                                                      "end_line":  9,
+                                                      "start_line":  9
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "fluent-ffmpeg",
+                                                      "matched_api":  "fluent-ffmpeg",
+                                                      "end_line":  10,
+                                                      "start_line":  10
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "jsonwebtoken",
+                                                      "matched_api":  "jsonwebtoken",
+                                                      "end_line":  11,
+                                                      "start_line":  11
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "memcached",
+                                                      "matched_api":  "memcached",
+                                                      "end_line":  12,
+                                                      "start_line":  12
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "minimist",
+                                                      "matched_api":  "minimist",
+                                                      "end_line":  13,
+                                                      "start_line":  13
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "influx",
+                                                      "matched_api":  "influx",
+                                                      "end_line":  14,
+                                                      "start_line":  14
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "socket.io",
+                                                      "matched_api":  "socket.io",
+                                                      "end_line":  15,
+                                                      "start_line":  15
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "socketio-jwt",
+                                                      "matched_api":  "socketio-jwt",
+                                                      "end_line":  16,
+                                                      "start_line":  16
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "xml2js",
+                                                      "matched_api":  "xml2js",
+                                                      "end_line":  17,
+                                                      "start_line":  17
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  2,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  5,
+                                                      "start_line":  5
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "minimist",
+                                                      "matched_api":  "minimist",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "pace",
+                                                      "matched_api":  "pace",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/CLI/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "medium"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  3,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "mongodb",
+                                                      "matched_api":  "mongodb",
+                                                      "end_line":  5,
+                                                      "start_line":  5
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "fluent-ffmpeg",
+                                                      "matched_api":  "fluent-ffmpeg",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Common/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  4,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "xmlbuilder",
+                                                      "matched_api":  "xmlbuilder",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "archiver",
+                                                      "matched_api":  "archiver",
+                                                      "end_line":  8,
+                                                      "start_line":  8
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "stream-buffers",
+                                                      "matched_api":  "stream-buffers",
+                                                      "end_line":  9,
+                                                      "start_line":  9
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "ftp",
+                                                      "matched_api":  "ftp",
+                                                      "end_line":  10,
+                                                      "start_line":  10
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Export/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  5,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "xml2js",
+                                                      "matched_api":  "xml2js",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "csv",
+                                                      "matched_api":  "csv",
+                                                      "end_line":  8,
+                                                      "start_line":  8
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Ingest/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  6,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "moment",
+                                                      "matched_api":  "moment",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Search/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "medium"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  7,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "optimist",
+                                                      "matched_api":  "optimist",
+                                                      "end_line":  5,
+                                                      "start_line":  5
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Utilities/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "medium"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  8,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "async",
+                                                      "matched_api":  "async",
+                                                      "end_line":  5,
+                                                      "start_line":  5
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "body-parser",
+                                                      "matched_api":  "body-parser",
+                                                      "end_line":  6,
+                                                      "start_line":  6
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "express",
+                                                      "matched_api":  "express",
+                                                      "end_line":  7,
+                                                      "start_line":  7
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "gc-stats",
+                                                      "matched_api":  "gc-stats",
+                                                      "end_line":  8,
+                                                      "start_line":  8
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "handlebars",
+                                                      "matched_api":  "handlebars",
+                                                      "end_line":  9,
+                                                      "start_line":  9
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "influx",
+                                                      "matched_api":  "influx",
+                                                      "end_line":  10,
+                                                      "start_line":  10
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "memcached",
+                                                      "matched_api":  "memcached",
+                                                      "end_line":  11,
+                                                      "start_line":  11
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "minimist",
+                                                      "matched_api":  "minimist",
+                                                      "end_line":  12,
+                                                      "start_line":  12
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "moment",
+                                                      "matched_api":  "moment",
+                                                      "end_line":  13,
+                                                      "start_line":  13
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "mongodb",
+                                                      "matched_api":  "mongodb",
+                                                      "end_line":  14,
+                                                      "start_line":  14
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "nodemailer",
+                                                      "matched_api":  "nodemailer",
+                                                      "end_line":  15,
+                                                      "start_line":  15
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "on-finished",
+                                                      "matched_api":  "on-finished",
+                                                      "end_line":  16,
+                                                      "start_line":  16
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "request",
+                                                      "matched_api":  "request",
+                                                      "end_line":  17,
+                                                      "start_line":  17
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "send",
+                                                      "matched_api":  "send",
+                                                      "end_line":  18,
+                                                      "start_line":  18
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "sharp",
+                                                      "matched_api":  "sharp",
+                                                      "end_line":  19,
+                                                      "start_line":  19
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "socket.io-client",
+                                                      "matched_api":  "socket.io-client",
+                                                      "end_line":  20,
+                                                      "start_line":  20
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "uglify-js",
+                                                      "matched_api":  "uglify-js",
+                                                      "end_line":  21,
+                                                      "start_line":  21
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "uuid",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  22,
+                                                      "start_line":  22
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "walk",
+                                                      "matched_api":  "walk",
+                                                      "end_line":  23,
+                                                      "start_line":  23
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "winston",
+                                                      "matched_api":  "winston",
+                                                      "end_line":  24,
+                                                      "start_line":  24
+                                                  },
+                                                  {
+                                                      "symbol_or_pattern":  "winston-logstash",
+                                                      "matched_api":  "winston-logstash",
+                                                      "end_line":  25,
+                                                      "start_line":  25
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Manifest parses as JSON",
+                                                            "Reported dependency keys have expected target versions",
+                                                            "Unreported dependencies are unchanged"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/package.json",
+                                "rationale":  "Update manifest dependencies reported outdated by the ImpactReport.",
+                                "change_description":  "Update only the dependency entries listed in locations to the exact versions declared in expected_dependency_changes for this file. Preserve package metadata and do not add unrelated scripts or dependencies. Retain deprecated packages at their latest reported published version unless install/runtime validation forces a documented scope expansion.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  9,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "uuid require and uuid.v4 calls",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  1,
+                                                      "start_line":  1
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains",
+                                                            "Named uuid v4 binding is present"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/request-common.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace legacy uuid object import with a CommonJS-safe named v4 binding for uuid@14 and replace every uuid.v4() call in this file with that binding, preserving .toUpperCase().",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  10,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "uuid and send imports",
+                                                      "matched_api":  "uuid/send",
+                                                      "end_line":  8,
+                                                      "start_line":  7
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains",
+                                                            "Media access token generation still uppercases UUIDs"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/shared/media-access.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace uuid import and calls with named v4 binding. Review send@1.2.1 streaming usage and keep existing send(request,path).on(...).pipe(response) behavior if supported.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  11,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "uuid/async imports",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  12,
+                                                      "start_line":  11
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/content/public-viewer/client-public-viewer.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace uuid import and all uuid.v4() calls with a named v4 binding; preserve callback flow and error response behavior.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  12,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "uuid/async imports",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  11,
+                                                      "start_line":  10
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/content/primo-viewer/client-primo-viewer.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace uuid import and all uuid.v4() calls with a named v4 binding; preserve existing rendered error-page behavior.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  13,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "moment/async/uuid imports",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  11,
+                                                      "start_line":  9
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/content/homepage/client-homepage.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace uuid import and uuid.v4() calls with named v4 binding. Leave moment and async.parallel usage unchanged unless validation fails.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  14,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "moment/uuid/async imports",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  13,
+                                                      "start_line":  11
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains",
+                                                            "UUID-generated error codes still call .toUpperCase()"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/content/unisat/client-unisat.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace uuid import and every uuid.v4() call with named v4 binding; preserve .toUpperCase() in all error-code branches.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  15,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "moment/uuid/async imports",
+                                                      "matched_api":  "uuid",
+                                                      "end_line":  19,
+                                                      "start_line":  17
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No uuid.v4() remains"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/content/tv-radio/client-tv-radio.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Replace uuid import and every uuid.v4() call, including inline logger metadata, with named v4 binding; preserve callback signatures.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  16,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "nodemailer/request/uuid/async imports",
+                                                      "matched_api":  "nodemailer/uuid/request",
+                                                      "end_line":  13,
+                                                      "start_line":  6
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No legacy nodemailer transport constructor remains",
+                                                            "No uuid.v4() remains",
+                                                            "sendMail callback behavior is preserved"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/content/feedback/client-feedback.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Migrate nodemailer 1.x transport usage to nodemailer.createTransport for nodemailer@9 while preserving sendMail callbacks. Replace uuid import/calls with named v4 binding. Keep request at 2.88.2 unless runtime validation forces documented replacement.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  17,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "mongodb require, MongoClient, GridStore",
+                                                      "matched_api":  "mongodb",
+                                                      "end_line":  4,
+                                                      "start_line":  1
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No mongo.GridStore or new GridStore remains",
+                                                            "MongoClient uses modern client/db separation",
+                                                            "Exported callback API remains"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/db-provider.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Migrate mongodb driver 2.x usage to 7.x. Replace removed GridStore reads/metadata with GridFSBucket. Change MongoClient.connect handling to obtain db via client.db(...) while preserving exported callback APIs.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  18,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "mongodb require and MongoClient",
+                                                      "matched_api":  "mongodb",
+                                                      "end_line":  5,
+                                                      "start_line":  2
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Modern MongoClient client/db semantics are used",
+                                                            "Public callback API remains"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Migrate mongodb connection and collection/cursor usage for mongodb@7 while preserving Common module callback API and connection string behavior.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  19,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "mongodb and async imports",
+                                                      "matched_api":  "mongodb",
+                                                      "end_line":  2,
+                                                      "start_line":  1
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No removed mongodb 2.x-only APIs remain"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Review and update backup-specific mongodb calls after the driver migration; preserve backup output format and async control flow.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  20,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "body-parser/compression/socket.io/socketio-jwt imports",
+                                                      "matched_api":  "express/socket.io/jsonwebtoken",
+                                                      "end_line":  8,
+                                                      "start_line":  2
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Socket.IO server starts with configured path",
+                                                            "No Socket.IO 1.x-only middleware remains",
+                                                            "JWT authorization behavior is preserved"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Upgrade Express 5/body-parser 2/Socket.IO 4 integration. Verify route wildcards and middleware order. Replace Socket.IO 1.x JWT middleware if incompatible with an explicit io.use wrapper using jsonwebtoken@9 verify semantics; preserve existing auth contract.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  21,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "body-parser/socket.io-client/express/async imports",
+                                                      "matched_api":  "express/socket.io-client",
+                                                      "end_line":  16,
+                                                      "start_line":  12
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Entry module loads without dependency API errors",
+                                                            "socket.io-client call is v4-compatible"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/app.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Update Express/body-parser and socket.io-client usage for latest majors. Preserve admin notification URL, middleware order, and server listen behavior.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  22,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "socket.io-client/express imports",
+                                                      "matched_api":  "express/socket.io-client",
+                                                      "end_line":  10,
+                                                      "start_line":  8
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Entry module loads without dependency API errors"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/app-media.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Apply same socket.io-client v4 compatibility update as app.js while preserving standalone media app listen behavior.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  23,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "winston and winston-logstash imports",
+                                                      "matched_api":  "winston",
+                                                      "end_line":  6,
+                                                      "start_line":  1
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No new (winston.Logger) remains",
+                                                            "winston.createLogger is used",
+                                                            "logger module can be required"
+                                                        ],
+                                "file_path":  "tv-radio-frontend/logger.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Migrate winston 1 logger construction to winston.createLogger for winston@3. Update transport construction and winston-logstash registration as required. Preserve exported logger/access/clientErrors and EventTimer helpers.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  24,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "csv import and parser usage",
+                                                      "matched_api":  "csv",
+                                                      "end_line":  3,
+                                                      "start_line":  3
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No .from.path csv chain remains",
+                                                            "Delimiter comma and double-quote escape settings remain"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Ingest/csv-processor.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Migrate csv 0.4 parser usage to csv@6-compatible stream parsing. Replace csv.parse().from.path(...) with modern parser/file stream usage; preserve delimiter, escape, and row callback semantics.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  25,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "csv/xml2js/async imports",
+                                                      "matched_api":  "csv/xml2js",
+                                                      "end_line":  4,
+                                                      "start_line":  2
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No removed csv 0.4-only APIs remain"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Ingest/ingest.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Review csv/xml2js usage after dependency upgrades; update only removed csv APIs and keep xml2js callback parsing unless validation fails.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  26,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "csv/xml2js/async imports",
+                                                      "matched_api":  "csv/xml2js",
+                                                      "end_line":  3,
+                                                      "start_line":  1
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "No removed csv 0.4-only APIs remain"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Ingest/attacher.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Review csv/xml2js usage after dependency upgrades; preserve existing callback contracts and data attachment behavior.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  27,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "xmlbuilder import",
+                                                      "matched_api":  "xmlbuilder",
+                                                      "end_line":  2,
+                                                      "start_line":  2
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Exporter generates XML without module/API errors",
+                                                            "Output includes OAI-PMH and oai_dc:dc roots"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Export/dublincore-exporter.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Verify xmlbuilder@15 import and create/ele/end chain. If needed, adjust entry usage while preserving exact pretty-print options and generated OAI-PMH/oai_dc XML shape.",
+                                "estimated_risk":  "high"
+                            },
+                            {
+                                "change_type":  "modify",
+                                "sequence":  28,
+                                "locations":  [
+                                                  {
+                                                      "symbol_or_pattern":  "stream-buffers/archiver/ftp imports",
+                                                      "matched_api":  "archiver/stream-buffers/ftp",
+                                                      "end_line":  10,
+                                                      "start_line":  6
+                                                  }
+                                              ],
+                                "validation_evidence":  [
+                                                            "Archive finalization still emits data/end events",
+                                                            "FTP export path order remains cwd, put, end"
+                                                        ],
+                                "file_path":  "tv-radio-admin/Export/primo-export.js",
+                                "rationale":  "Source uses an outdated dependency API/import pattern identified in the ImpactReport.",
+                                "change_description":  "Update archiver/stream-buffers/ftp usage for target versions. Preserve tar archive append/pipe/finalize behavior and FTP cwd/put/end sequence; document any forced FTP replacement as scope expansion.",
+                                "estimated_risk":  "high"
+                            }
+                        ]
+}

@@ -1,0 +1,80 @@
+{
+  "decision": "approved",
+  "confidence_score": 1.0,
+  "base_ref": "main",
+  "git_diff_summary": {
+    "changed_files": [
+      ".github/workflows/test.yml",
+      "pom.xml"
+    ],
+    "planned_files_touched": [
+      "pom.xml",
+      ".github/workflows/test.yml"
+    ],
+    "unexpected_files": [],
+    "missing_planned_files": [],
+    "dependency_changes_verified": [
+      "pom.xml: Java compilation changed from source/target 17 to release 21",
+      "pom.xml: org.apache.maven.plugins:maven-compiler-plugin pinned from unpinned to 3.16.0",
+      ".github/workflows/test.yml: CI Java matrix changed from 17 to 21"
+    ],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {
+      "file_path": "pom.xml",
+      "outcome": "passed",
+      "detail": "Contains UTF-8 project source encoding, maven-compiler-plugin 3.16.0, and release 21; source 17 and target 17 elements are absent."
+    },
+    {
+      "file_path": ".github/workflows/test.yml",
+      "outcome": "passed",
+      "detail": "Contains Java matrix 21, keeps setup-java wired to matrix.java, and retains mvn -B verify --file pom.xml; Java matrix 17 is absent."
+    }
+  ],
+  "command_results": [
+    {
+      "type": "build",
+      "command": "mvn -B clean verify --file pom.xml",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Windows 11, Maven 3.9.16, Oracle JDK 21.0.12.1. BUILD SUCCESS. Compiler 3.16.0 compiled 11 main and 5 test sources with release 21. Tests run: 4, Failures: 0, Errors: 0, Skipped: 0. The isolated parent commit baseline also passed with Tests run: 4, Failures: 0, Errors: 0, Skipped: 0."
+    },
+    {
+      "type": "build",
+      "command": "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/required/VideoMaker.class",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "javap successfully inspected VideoMaker.class and positively reported major version: 65."
+    },
+    {
+      "type": "startup",
+      "command": "(none declared)",
+      "outcome": "skipped",
+      "exit_status": 0,
+      "output": "No startup command or health-check URL is declared in the approved ChangePlan."
+    },
+    {
+      "type": "existing_test",
+      "command": "mvn -B clean verify --file pom.xml",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Required existing-test repeat completed with BUILD SUCCESS. Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, matching the independently executed parent-commit baseline."
+    },
+    {
+      "type": "generated_test",
+      "command": "(none declared)",
+      "outcome": "skipped",
+      "exit_status": 0,
+      "output": "No generated tests are declared in the approved ChangePlan."
+    }
+  ],
+  "repairs_applied": [],
+  "repair_rounds": 0,
+  "browser_check_results": [],
+  "final_commit_ref": "3031e77",
+  "rejection_reasons": [],
+  "recommendations": [
+    "Push upgrade/java-21 and observe the existing ubuntu-latest GitHub Actions job to complete the requested Linux validation; Linux CI could not be executed or observed from this Windows validator run."
+  ]
+}

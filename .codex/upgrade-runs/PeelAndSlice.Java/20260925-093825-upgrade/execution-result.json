@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "branch_name": "upgrade/java-21",
+  "commit_ref": "3031e77",
+  "files_changed": [
+    "pom.xml",
+    ".github/workflows/test.yml"
+  ],
+  "changes_applied": [
+    "Added project.build.sourceEncoding=UTF-8, pinned maven-compiler-plugin 3.16.0, and replaced source/target 17 with release 21 in pom.xml.",
+    "Changed the GitHub Actions Java matrix from 17 to 21 without altering the Ubuntu runner or Maven command."
+  ],
+  "changes_skipped": [],
+  "executor_check_results": [
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "mvn -B clean verify --file pom.xml",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "BUILD SUCCESS. Compiled 11 main and 5 test sources with javac release 21 using maven-compiler-plugin 3.16.0. Tests run: 4, Failures: 0, Errors: 0, Skipped: 0.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\PeelAndSlice.Java",
+      "command": "javap -verbose target/classes/com/spun/llewellyn/talks/legacycode/required/VideoMaker.class",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "VideoMaker.class reports minor version 0 and major version 65.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    }
+  ],
+  "executor_repairs_applied": [],
+  "executor_repair_rounds": 0,
+  "scope_expansions_applied": [],
+  "scope_expansions_used": 0,
+  "failure_summary": "",
+  "execution_notes": "Before edits, a clean baseline run of mvn -B clean verify --file pom.xml completed successfully on the unmodified Java 17 configuration with Tests run: 4, Failures: 0, Errors: 0, Skipped: 0. The post-upgrade run completed successfully with the identical 4/0/0/0 counts, so test outcomes were preserved. Both baseline and post-upgrade Maven runs initially needed network permission to resolve Maven Central artifacts; the authoritative runs with dependency access passed. No generated tests, repairs, health checks, or scope expansions were needed. The repository was clean after commit 3031e77. Linux execution remains delegated to the unchanged ubuntu-latest CI job as documented by the approved plan."
+}

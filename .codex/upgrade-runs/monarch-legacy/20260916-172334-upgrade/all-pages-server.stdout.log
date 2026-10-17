@@ -1,0 +1,7 @@
+Starting server. Platform: NodeJS. Environment: dev. Port: 8080.
+NODEVERSION: v22.22.2
+defaultConfigFile: conf/server_config_dev.json golrConfigFile: conf/golr-conf.json
+defaultConfig: {"type":"dev","app_base":"","scigraph_url":"https://scigraph-ontology-dev.monarchinitiative.org/scigraph/","scigraph_data_url":"https://scigraph-data-dev.monarchinitiative.org/scigraph/","golr_url":"https://solr-dev.monarchinitiative.org/solr/golr/","search_url":"https://solr-dev.monarchinitiative.org/solr/search/","owlsim_services_url":"https://beta.monarchinitiative.org/owlsim","analytics_id":"","biolink_url":"https://api-dev.monarchinitiative.org/api/"}
+bbop.monarch.Engine Using pre-set configuration: 
+bbop.monarch.Engine Using pre-set golr configuration: 
+HapiJS Server running at: http://localhost:8080

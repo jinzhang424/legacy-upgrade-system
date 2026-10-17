@@ -1,0 +1,41 @@
+﻿[
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+        "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$wd=\u0027C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend\u0027; $out=Join-Path $wd \u0027startup.out\u0027; $err=Join-Path $wd \u0027startup.err\u0027; $p=Start-Process -FilePath node -ArgumentList \u0027app.js\u0027 -WorkingDirectory $wd -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden; try { $ok=$false; $deadline=(Get-Date).AddSeconds(60); while((Get-Date) -lt $deadline){ Start-Sleep -Seconds 2; try { $r=Invoke-WebRequest -Uri \u0027http://localhost:8082/\u0027 -UseBasicParsing -TimeoutSec 5; if([int]$r.StatusCode -lt 500){ $ok=$true; break } } catch {} ; if($p.HasExited){ break } }; if(-not $ok){ if(Test-Path $err){ Get-Content $err -Tail 80 }; exit 1 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+        "purpose":  "startup",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "",
+        "repair_attempts":  1,
+        "health_check_url":  "http://localhost:8082/",
+        "health_check_outcome":  "passed",
+        "health_check_repair_rounds":  0,
+        "elapsed_seconds":  2.48
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+        "command":  "node chapman.js resetindex --verbose",
+        "purpose":  "smoke",
+        "outcome":  "passed",
+        "exit_status":  0,
+        "output":  "[INFO/INDEX-RESET] Search index rebuild has completed.\r\n",
+        "repair_attempts":  0,
+        "health_check_url":  null,
+        "health_check_outcome":  "skipped",
+        "health_check_repair_rounds":  0,
+        "elapsed_seconds":  0.91
+    },
+    {
+        "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+        "command":  "node chapman.js index --verbose",
+        "purpose":  "smoke",
+        "outcome":  "failed",
+        "exit_status":  1,
+        "output":  "Re-indexing Titles\r\ncmd.exe : C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:325\r\nAt line:22 char:13\r\n+   $output = \u0026 cmd.exe /c $c.command 2\u003e\u00261 | Out-String\r\n+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (C:\\Users\\OEM\\le...st\\async.js:325:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\n            if (fn === null) throw new Error(\"Callback was already called.\");\r\n                                   ^\r\n\r\nError: Callback was already called.\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:325:36\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\node_modules\\async\\dist\\async.js:3680:17\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search\\build.js:287:25\r\n    at C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common\\directdb-mongo.js:32:13\r\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\r\n\r\nNode.js v24.15.0\r\n",
+        "repair_attempts":  0,
+        "health_check_url":  null,
+        "health_check_outcome":  "skipped",
+        "health_check_repair_rounds":  0,
+        "elapsed_seconds":  0.65
+    }
+]

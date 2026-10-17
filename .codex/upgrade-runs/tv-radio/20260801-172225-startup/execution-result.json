@@ -1,0 +1,109 @@
+﻿{
+  "status": "failed",
+  "branch_name": "upgrade/upgrade-outdated-dependencies-solr",
+  "commit_ref": "",
+  "files_changed": [
+    "tv-radio-admin/Admin/API/admin-usage.js",
+    "tv-radio-admin/Admin/API/app.js",
+    "tv-radio-admin/Admin/API/package.json",
+    "tv-radio-admin/CLI/package.json",
+    "tv-radio-admin/Common/directdb-mongo.js",
+    "tv-radio-admin/Common/package.json",
+    "tv-radio-admin/Export/package.json",
+    "tv-radio-admin/Ingest/package.json",
+    "tv-radio-admin/Search/package.json",
+    "tv-radio-admin/Search/search-index-solr.js",
+    "tv-radio-admin/Settings/Solr/schema.xml",
+    "tv-radio-admin/Settings/Solr/solrconfig-records.xml",
+    "tv-radio-admin/Settings/Solr/solrconfig.xml",
+    "tv-radio-frontend/metrics.js",
+    "tv-radio-frontend/package.json",
+    "generated-tests/solr-module-smoke.test.js",
+    "generated-tests/solr-roundtrip.integration.test.js"
+  ],
+  "changes_applied": [
+    "Applied the remaining Admin/API/admin-usage.js Influx 5 writePoints point-object payload compatibility repair.",
+    "Moved the Influx active-stream timestamp out of fields and into the point timestamp so Influx line protocol no longer writes a Date string as a field.",
+    "Added a minimal Admin API root readiness response in planned app.js scope so the declared startup health URL returns 200 in API-only mode.",
+    "Preserved prior in-scope dependency, Solr, MongoDB 7, frontend metrics constructor, and generated-test changes from the resumed working tree."
+  ],
+  "changes_skipped": [
+    {
+      "file_path": "tv-radio-admin/Utilities/package.json",
+      "reason": "ChangePlan explicitly leaves optimist at 0.6.1 unless scope is expanded; no Utilities dependency replacement was made."
+    },
+    {
+      "file_path": "tv-radio-frontend/logger.js",
+      "reason": "Frontend startup failed in this unplanned file with winston.transports.Logstash is not a constructor. The file is outside ordered_changes/planned_files/generated tests, so executor stopped instead of expanding the diff."
+    }
+  ],
+  "executor_check_results": [
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$dirs=@('tv-radio-admin/Admin/API','tv-radio-admin/Common','tv-radio-admin/Search','tv-radio-admin/Ingest','tv-radio-admin/Export','tv-radio-admin/CLI','tv-radio-admin/Utilities','tv-radio-frontend'); foreach($d in $dirs){ Push-Location $d; npm.cmd install --no-package-lock --no-audit --no-fund; if($LASTEXITCODE -ne 0){ Pop-Location; exit $LASTEXITCODE }; Pop-Location }\"",
+      "purpose": "setup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "npm reported all declared package directories up to date; no package-lock files were created.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio",
+      "command": "node --check tv-radio-admin/Search/search-index-solr.js && node --check tv-radio-admin/Common/solr-helpers.js && node --check tv-radio-frontend/solr-search.js && node --check tv-radio-admin/Search/build.js",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList 'app.js' -PassThru -WindowStyle Hidden -RedirectStandardOutput 'C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8080.out.log' -RedirectStandardError 'C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8080.err.log'; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri 'http://localhost:8080/' -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and !$p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+      "purpose": "startup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Admin API bounded startup reached http://localhost:8080/ successfully after Influx payload and root readiness repairs.",
+      "repair_attempts": 2,
+      "health_check_url": "http://localhost:8080/",
+      "health_check_outcome": "passed",
+      "health_check_repair_rounds": 0
+    },
+    {
+      "working_directory": "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$p=Start-Process node -ArgumentList 'app.js' -PassThru -WindowStyle Hidden -RedirectStandardOutput 'C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8082.out.log' -RedirectStandardError 'C:\\Users\\OEM\\legacy-upgrade-system\\.codex\\upgrade-runs\\tv-radio\\20260801-172225-startup\\startup-8082.err.log'; try { $deadline=(Get-Date).AddSeconds(45); do { try { $r=Invoke-WebRequest -UseBasicParsing -Uri 'http://localhost:8082/' -TimeoutSec 2; if($r.StatusCode -lt 500){ exit 0 } } catch {}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); exit 1 } finally { if($p -and !$p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+      "purpose": "startup",
+      "outcome": "failed",
+      "exit_status": 1,
+      "output": "Frontend startup failed before listening. stderr: TypeError: winston.transports.Logstash is not a constructor at tv-radio-frontend/logger.js:118:21, during require from tv-radio-frontend/app.js:5:14.",
+      "repair_attempts": 0,
+      "health_check_url": "http://localhost:8082/",
+      "health_check_outcome": "failed",
+      "health_check_repair_rounds": 0
+    }
+  ],
+  "executor_repairs_applied": [
+    {
+      "file_path": "tv-radio-admin/Admin/API/admin-usage.js",
+      "reason": "Admin API startup failed under Influx 5 because writePoints was still using the old measurement plus nested values/tags signature, then sent time as an invalid field.",
+      "summary": "Converted active stream metrics to a point-object writePoints payload with measurement, timestamp, fields, and tags.",
+      "command": "Admin API bounded startup",
+      "repair_round": 1
+    },
+    {
+      "file_path": "tv-radio-admin/Admin/API/app.js",
+      "reason": "The declared Admin API health URL was /, but API-only mode returned 404 and caused the bounded Invoke-WebRequest wrapper to fail.",
+      "summary": "Added a minimal API-only root readiness route returning 200 OK.",
+      "command": "Admin API bounded startup",
+      "repair_round": 2
+    }
+  ],
+  "executor_repair_rounds": 2,
+  "failure_summary": "Execution stopped at the frontend startup command. The process fails in tv-radio-frontend/logger.js with TypeError: winston.transports.Logstash is not a constructor. That file is outside the approved ChangePlan planned/generated file set, so no repair or commit was created.",
+  "execution_notes": "The executor did not run the remaining CLI index-maintenance commands because the required frontend startup check failed first. Startup logs were redirected to the artifact directory and were not committed."
+}

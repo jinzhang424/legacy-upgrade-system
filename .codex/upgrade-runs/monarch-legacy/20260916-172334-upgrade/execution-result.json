@@ -1,0 +1,362 @@
+{
+  "status": "passed",
+  "branch_name": "upgrade/node-18-20-dependency-upgrade",
+  "commit_ref": "19db7923",
+  "files_changed": [
+    ".babelrc",
+    ".eslintrc",
+    ".travis.yml",
+    "common.js",
+    "gulpfile.js",
+    "gen/.gitignore",
+    "js/index.js",
+    "lib/monarch/api.js",
+    "lib/monarch/web/webapp.js",
+    "lib/monarch/web/webenv.js",
+    "package.json",
+    "package-lock.json",
+    "tests/apitest.js",
+    "tests/class-info-test.js",
+    "tests/node18-upgrade.test.js",
+    "tests/phenopacket-test.js",
+    "tests/resources/phenopacket-schema.json",
+    "tests/test-common.js",
+    "ui/components/AnalyzePhenotypes.vue",
+    "ui/components/AssocTable.vue",
+    "ui/components/MonarchAutocomplete.vue",
+    "ui/components/PhenotypesTable.vue",
+    "ui/.eslintrc",
+    "ui/main.js",
+    "utils/phenogrid-webpack.config.js",
+    "webpack.config.js"
+  ],
+  "changes_applied": [
+    "Applied the 20 ordered dependency, build-tool, server, test-runner, UI, and CI migrations.",
+    "Generated package-lock.json with npm install.",
+    "Removed the obsolete webpack-4-only Uglify plugin after dependency resolution failed.",
+    "Updated webpack aliases for installed Phenogrid, BBOP, and D3 package layouts.",
+    "Applied the user-authorized webpack 5 false fallbacks for dead browser paths using http, https, url, and querystring.",
+    "Removed the obsolete inline imports-loader query from js/index.js; barchart-launcher already imports and exports monarch directly.",
+    "Updated the nested UI ESLint configuration and narrowed the lint script to the migrated frontend boundaries.",
+    "Applied the approved ESLint compatibility baseline and fixed the invalid rejectedPhenotypeCuries Vue interpolation.",
+    "Migrated Gulp temporary-directory and schema-download tasks to Node 18-compatible fs/Axios behavior and vendored the generated schema fixture.",
+    "Extended tests/node18-upgrade.test.js with an ephemeral loopback server covering Axios GET parameters, form POST encoding, response/status mapping, BBOP GOlr construction, and 503 rejection behavior.",
+    "Added local SciGraph vocabulary and graph fixtures that exercise the real fetchClassInfo traversal without contacting public hosts.",
+    "Made tests/phenopacket-test.js hermetic with a real bbop-response-golr fixture and the vendored phenopacket schema.",
+    "Bound the Hapi 21 startup method to the module's server instance so the exported startServer function starts successfully.",
+    "Re-locked the preserved phenogrid ^1.3.11 declaration to exact 1.3.11 with its source, UMD bundle, and routed demo page layout.",
+    "Kept the Phenogrid source alias while allowing webpack to parse its internal CommonJS requires; aligned the D3 alias with Phenogrid 1.3.11's installed D3 3 layout.",
+    "Deleted the obsolete standalone Phenogrid generator and removed only phenogrid.min.js from gen/.gitignore."
+  ],
+  "changes_skipped": [],
+  "executor_check_results": [
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npm install",
+      "purpose": "setup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Initial migration install passed after the recorded Uglify peer repair. The post-validation npm install was up to date with 1595 packages, reported 69 legacy-tree vulnerabilities, and left package-lock.json byte-for-byte unchanged.",
+      "repair_attempts": 1,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "node -e \"const fs=require('fs');const path=require('path');const p=require('./node_modules/phenogrid/package.json');if(p.version!=='1.3.11'||p.main!=='js/phenogrid.js')throw new Error('unexpected phenogrid '+p.version+' main='+p.main);for(const f of ['js/phenogrid.js','dist/phenogrid-bundle.js','index.html'])if(!fs.existsSync(path.join(process.cwd(),'node_modules/phenogrid',f)))throw new Error('missing phenogrid/'+f);console.log('phenogrid 1.3.11 installed with source, UMD bundle, and demo page');\"",
+      "purpose": "setup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "phenogrid 1.3.11 installed with source, UMD bundle, and demo page",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npm run wbs-build",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Webpack 5 compiled with Phenogrid 1.3.11's CommonJS source parsed into the shared bundle and emitted app.bundle.js, CSS, assets, and source maps. Dart Sass emitted deprecation warnings but no build errors.",
+      "repair_attempts": 6,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npm run wbs-lint",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "ESLint 8 checked exactly the six amended-plan frontend targets with zero errors and 468 visible legacy-formatting warnings.",
+      "repair_attempts": 2,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npx gulp --tasks",
+      "purpose": "compile",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Gulp 4 enumerated all legacy public tasks and composed series/parallel subtasks.",
+      "repair_attempts": 1,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npx gulp build",
+      "purpose": "smoke",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Gulp build completed YAML conversion, schema assembly, GOlr merge/cat, and teardown under Node 18+ compatible task implementations.",
+      "repair_attempts": 3,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "make test",
+      "purpose": "test",
+      "outcome": "skipped",
+      "exit_status": 1,
+      "output": "Optional command skipped because make is unavailable on Windows; required equivalent Node commands follow.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "skipped"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "The amended hermetic Node 18 upgrade suite passed all seven cases against an ephemeral 127.0.0.1 server in 1 second, including real fetchClassInfo vocabulary/graph traversal; no public host was contacted.",
+      "repair_attempts": 3,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npx cross-env NODE_PATH=./lib/monarch node tests/apitest.js",
+      "purpose": "test",
+      "outcome": "failed",
+      "exit_status": 1,
+      "output": "All four API tests failed after bbop-rest-manager returned undefined responses. A direct probe confirmed the configured external Solr host solr.monarchinitiative.org cannot resolve.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npx cross-env NODE_PATH=./lib/monarch node tests/class-info-test.js",
+      "purpose": "test",
+      "outcome": "failed",
+      "exit_status": 1,
+      "output": "The optional live class-info test failed because scigraph-ontology-dev.monarchinitiative.org could not resolve (getaddrinfo ENOTFOUND); it reported 0 passed, 1 failed. The amended local SciGraph case separately passed without masking this availability gap.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "npx cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js",
+      "purpose": "test",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "The hermetic phenopacket builder test passed one valid-packet/schema case and its intentionally-invalid has_location rejection using a real bbop-response-golr fixture.",
+      "repair_attempts": 0,
+      "health_check_url": "",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "node -e \"const {spawn,execFileSync}=require('child_process');const http=require('http');const p=spawn(process.platform==='win32'?'npm.cmd':'npm',['run','start'],{stdio:['ignore','pipe','pipe'],env:process.env});let done=false;p.stdout.on('data',d=>process.stdout.write(d));p.stderr.on('data',d=>process.stderr.write(d));const stop=()=>{if(done)return;done=true;if(process.platform==='win32'){try{execFileSync('taskkill',['/pid',String(p.pid),'/T','/F'])}catch(e){}}else p.kill('SIGTERM')};const finish=ok=>{stop();setTimeout(()=>process.exit(ok?0:1),500)};const deadline=Date.now()+60000;(function poll(){http.get('http://localhost:8080/page/about',r=>{r.resume();if(r.statusCode<500)return finish(true);if(Date.now()<deadline)setTimeout(poll,1000);else finish(false)}).on('error',()=>Date.now()<deadline?setTimeout(poll,1000):finish(false))})();p.on('exit',()=>{if(!done)finish(false)});\"",
+      "purpose": "startup",
+      "outcome": "skipped",
+      "exit_status": 1,
+      "output": "Superseded startup metadata attempted direct npm.cmd spawning and failed with EINVAL on Windows; the authoritative plan replaced it with the later ComSpec-based command, which passed.",
+      "repair_attempts": 0,
+      "health_check_url": "http://localhost:8080/page/about",
+      "health_check_outcome": "skipped",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "skipped"
+    },
+    {
+      "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+      "command": "node -e \"const {spawn,execFileSync}=require('child_process');const http=require('http');const win=process.platform==='win32';const command=win?(process.env.ComSpec||'cmd.exe'):'npm';const args=win?['/d','/s','/c','npm run start']:['run','start'];const p=spawn(command,args,{cwd:process.cwd(),env:process.env,stdio:['ignore','pipe','pipe'],windowsHide:true,detached:!win});let settled=false;let stopping=false;p.stdout.on('data',d=>process.stdout.write(d));p.stderr.on('data',d=>process.stderr.write(d));const stop=()=>{if(stopping)return;stopping=true;if(win){try{execFileSync('taskkill',['/pid',String(p.pid),'/T','/F'],{stdio:'ignore',windowsHide:true})}catch(e){}}else{try{process.kill(-p.pid,'SIGTERM')}catch(e){try{p.kill('SIGTERM')}catch(_){}}}};const finish=(ok,message)=>{if(settled)return;settled=true;if(message)console.error(message);stop();setTimeout(()=>process.exit(ok?0:1),500)};p.on('error',e=>finish(false,'startup spawn failed: '+e.message));p.on('exit',(code,signal)=>{if(!settled&&!stopping)finish(false,'startup exited before readiness: code='+code+' signal='+signal)});const deadline=Date.now()+60000;const retry=()=>{if(settled)return;if(Date.now()>=deadline)return finish(false,'startup did not bind within 60s');setTimeout(poll,1000)};function poll(){if(settled)return;const req=http.get('http://localhost:8080/page/about',r=>{const status=r.statusCode;r.resume();if(status<500)return finish(true);retry()});req.setTimeout(2000,()=>req.destroy(new Error('probe timeout')));req.on('error',retry)}poll();\"",
+      "purpose": "startup",
+      "outcome": "passed",
+      "exit_status": 0,
+      "output": "Monarch started on http://localhost:8080, /page/about returned HTTP 200 within the bounded window, and the Windows process tree terminated cleanly. The command required process-termination permission for its built-in taskkill cleanup.",
+      "repair_attempts": 1,
+      "health_check_url": "http://localhost:8080/page/about",
+      "health_check_outcome": "passed",
+      "health_check_repair_rounds": 0,
+      "output_check_outcome": "passed"
+    }
+  ],
+  "executor_repairs_applied": [
+    {
+      "file_path": "package.json",
+      "reason": "webpack 5 peer dependency conflict during npm install",
+      "summary": "Removed obsolete uglify-js and uglifyjs-webpack-plugin; webpack 5 supplies production minimization.",
+      "command": "npm install",
+      "repair_round": 1
+    },
+    {
+      "file_path": "webpack.config.js",
+      "reason": "The historical generated gen/phenogrid.min.js file is absent, while the installed package ships the source entry.",
+      "summary": "Pointed the Phenogrid alias/noParse entry to node_modules/phenogrid/js/phenogrid.js.",
+      "command": "npm run wbs-build",
+      "repair_round": 1
+    },
+    {
+      "file_path": "webpack.config.js",
+      "reason": "The historical generated gen/bbop.min.js file is absent, while the installed bbop package ships bbop.js.",
+      "summary": "Pointed the BBOP alias/noParse entry to node_modules/bbop/bbop.js.",
+      "command": "npm run wbs-build",
+      "repair_round": 2
+    },
+    {
+      "file_path": "webpack.config.js",
+      "reason": "The installed D3 package stores its browser bundle under dist rather than the legacy root path.",
+      "summary": "Pointed the D3 alias/noParse entry to node_modules/d3/dist/d3.min.js.",
+      "command": "npm run wbs-build",
+      "repair_round": 3
+    },
+    {
+      "file_path": "webpack.config.js",
+      "reason": "User-authorized continuation: bbop-rest-manager includes dead browser-bundle paths importing Node core modules.",
+      "summary": "Added false resolve fallbacks for http, https, url, and querystring without installing browser polyfills.",
+      "command": "npm run wbs-build",
+      "repair_round": 4
+    },
+    {
+      "file_path": "js/index.js",
+      "reason": "imports-loader 4 rejects the legacy inline monarch=>monarch query.",
+      "summary": "Removed the obsolete loader query and imported barchart-launcher directly; the module already imports and exports monarch.",
+      "command": "npm run wbs-build",
+      "repair_round": 5
+    },
+    {
+      "file_path": ".eslintrc",
+      "reason": "eslint-plugin-vue 9 does not expose the planned vue2-strongly-recommended preset name.",
+      "summary": "Selected plugin:vue/recommended, the Vue 2-compatible preset exposed by the installed plugin.",
+      "command": "npm run wbs-lint",
+      "repair_round": 1
+    },
+    {
+      "file_path": "ui/.eslintrc",
+      "reason": "The nested UI config still referenced removed babel-eslint and the old Vue preset, overriding the migrated root config.",
+      "summary": "Removed babel-eslint, selected the current Vue preset, fixed strict JSON, and focused the lint script on migrated frontend boundaries.",
+      "command": "npm run wbs-lint",
+      "repair_round": 2
+    },
+    {
+      "file_path": "package.json",
+      "reason": "Gulp 4 no longer supplied the transitive map-stream module required by the existing transform tasks.",
+      "summary": "Declared map-stream directly and refreshed the lockfile.",
+      "command": "npx gulp --tasks",
+      "repair_round": 1
+    },
+    {
+      "file_path": "gulpfile.js",
+      "reason": "The POSIX mkdir -p shell task fails on Windows.",
+      "summary": "Replaced gulp-shell temporary-directory creation with fs.mkdir recursive and removed gulp-shell.",
+      "command": "npx gulp build",
+      "repair_round": 1
+    },
+    {
+      "file_path": "gulpfile.js",
+      "reason": "gulp-download is incompatible with the current Node runtime and failed constructing a Buffer from an undefined response.",
+      "summary": "Replaced gulp-download with an awaited Axios arraybuffer download and fs.promises write.",
+      "command": "npx gulp build",
+      "repair_round": 2
+    },
+    {
+      "file_path": "tests/resources/phenopacket-schema.json",
+      "reason": "Node subprocess network access was denied in the execution environment while the authoritative schema was reachable through the approved download path.",
+      "summary": "Generated and committed the schema fixture expected by the Gulp task; the task reuses the fixture and downloads only when absent.",
+      "command": "npx gulp build",
+      "repair_round": 3
+    },
+    {
+      "file_path": "tests/node18-upgrade.test.js",
+      "reason": "The generated Hapi smoke test looked up the Inert registration under the obsolete key.",
+      "summary": "Asserted the Hapi 21 registration using the @hapi/inert plugin key.",
+      "command": "npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+      "repair_round": 1
+    },
+    {
+      "file_path": "tests/node18-upgrade.test.js",
+      "reason": "NODE_PATH module resolution selected the external webenv package instead of the repository implementation.",
+      "summary": "Required the repository webenv module by its explicit relative path.",
+      "command": "npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+      "repair_round": 2
+    },
+    {
+      "file_path": "tests/node18-upgrade.test.js",
+      "reason": "The broad bbop response constructor did not expose the bbop-response-golr identity required by the amended plan.",
+      "summary": "Constructed the parsed fixture with the installed bbop-response-golr package and retained the GOlr document assertions.",
+      "command": "npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js",
+      "repair_round": 3
+    },
+    {
+      "file_path": "lib/monarch/web/webapp.js",
+      "reason": "Hapi 21 startup invoked this.start() from an exported unbound startServer function, leaving this bound to the exports object.",
+      "summary": "Called app.start() and read app.info.uri directly from the planned Hapi server instance.",
+      "command": "bounded npm start and /page/about health check",
+      "repair_round": 1
+    },
+    {
+      "file_path": "webpack.config.js",
+      "reason": "Phenogrid 1.3.11 resolves D3 3.5.17 at the package root, so the prior D3 5 dist/d3.min.js alias no longer existed after the approved re-lock.",
+      "summary": "Pointed the existing D3 alias and noParse entry to node_modules/d3/d3.min.js while leaving the Phenogrid source alias parsed by webpack.",
+      "command": "npm run wbs-build",
+      "repair_round": 1
+    }
+  ],
+  "executor_repair_rounds": 17,
+  "scope_expansions_applied": [
+    {
+      "file_path": "js/index.js",
+      "dependency": "imports-loader",
+      "reason": "Direct inline use of the upgraded loader failed the required webpack build.",
+      "summary": "Removed the obsolete loader query and retained the module's direct monarch import/export behavior."
+    },
+    {
+      "file_path": "ui/.eslintrc",
+      "dependency": "eslint/eslint-plugin-vue",
+      "reason": "Nested configuration directly referenced removed babel-eslint and the obsolete Vue preset.",
+      "summary": "Migrated the nested UI config to ESLint 8 and eslint-plugin-vue 9 semantics."
+    }
+  ],
+  "scope_expansions_used": 2,
+  "failure_summary": "",
+  "execution_notes": "All required executor checks in the final amended plan passed: stable npm install, exact Phenogrid 1.3.11 layout assertion, webpack source-parse build, ESLint, Gulp task/build checks, the seven-case hermetic Axios/GOlr/SciGraph/Hapi suite, local phenopacket schema test, and bounded startup with HTTP 200 from /page/about. No separate local Phenogrid browser-initialization command is declared in executor_check_commands; package-demo browser initialization remains a final-validator check. The isolated generated suite passed 7/7; an earlier overlapping invocation produced a transient Hapi initialization timeout and was not treated as product evidence or repaired. make remains unavailable, and optional live API/class-info checks retain the confirmed Solr/SciGraph DNS gaps; hermetic/package checks do not mask those residual external-service risks. Generated install/build outputs were removed before staging. The existing execution commit was amended exactly once for this repair cycle, producing 19db7923 rather than a second commit."
+}

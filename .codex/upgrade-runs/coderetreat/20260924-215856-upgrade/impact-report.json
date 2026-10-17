@@ -1,0 +1,2828 @@
+{
+  "upgrade_description": "Repository-wide independent-kata modernization to Gradle 8.10.2, Java 17 source compatibility on Java 21, specified Java dependencies, and the specified Node 22 TypeScript/Jest/Mocha toolchain while preserving kata isolation.",
+  "affected_files": [
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Assert;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility",
+          "confidence": "high",
+          "reason": "Malformed 1.10 source level must be normalized for the requested Java 17 compilation target."
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/src/test/java/chartsmart/ChartSmartTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 7,
+          "end_line": 7,
+          "symbol_or_pattern": "import org.junit.jupiter.api.Test;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "import static org.junit.jupiter.api.Assertions.*;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility",
+          "confidence": "high",
+          "reason": "Malformed 1.10 source level must be normalized for the requested Java 17 compilation target."
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/src/test/java/com/glidedrose/GildedRoseTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.jupiter.api.Test;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "import static org.junit.jupiter.api.Assertions.assertEquals;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "high",
+      "reason": "The Jest configuration imports ts-jest through a legacy subpath that is unavailable in ts-jest 29.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "pathsToModuleNameMapper",
+          "matched_api": "ts-jest/utils",
+          "confidence": "high",
+          "reason": "The ts-jest 29 package exports the helper from its main entry point, not ts-jest/utils."
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "transform",
+          "matched_api": "ts-jest",
+          "confidence": "high",
+          "reason": "Jest transformation configuration directly consumes ts-jest and must be validated with the aligned major."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package-lock.json",
+      "change_type": "modify",
+      "usage_type": "transitive_dependency",
+      "risk_level": "medium",
+      "reason": "The npm lockfile contains the resolved dependency graph for all requested Node package changes and must be regenerated as a unit.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The TypeScript test toolchain versions and rimraf scripts are explicitly targeted for upgrade.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "precompile",
+          "matched_api": "rimraf CLI glob handling",
+          "confidence": "high",
+          "reason": "rimraf 5 requires explicit --glob syntax for these glob-pattern arguments."
+        },
+        {
+          "start_line": 8,
+          "end_line": 8,
+          "symbol_or_pattern": "pretest",
+          "matched_api": "rimraf CLI glob handling",
+          "confidence": "high",
+          "reason": "rimraf 5 requires explicit --glob syntax for these glob-pattern arguments."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "@types/jest",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "Jest type declarations must align with Jest 29."
+        },
+        {
+          "start_line": 21,
+          "end_line": 21,
+          "symbol_or_pattern": "jest",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "Jest crosses major versions from 27 to 29."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "mocha",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "Mocha crosses major versions from 9 to 10."
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "ramda",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "Ramda crosses from 0.28 to the requested 0.30 line."
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "rimraf",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "rimraf crosses major versions from 3 to 5 and changes CLI glob behavior."
+        },
+        {
+          "start_line": 28,
+          "end_line": 28,
+          "symbol_or_pattern": "ts-jest",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "ts-jest must move from 27 to 29 with Jest 29."
+        },
+        {
+          "start_line": 31,
+          "end_line": 31,
+          "symbol_or_pattern": "typescript",
+          "matched_api": "npm devDependency",
+          "confidence": "high",
+          "reason": "TypeScript crosses major versions from 4 to 5."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/test/golden-master-text-test.ts",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "TypeScript source directly consumes an upgraded test/runtime type surface and must remain covered by the requested workflows.",
+      "locations": [
+        {
+          "start_line": 19,
+          "end_line": 19,
+          "symbol_or_pattern": "process.argv",
+          "matched_api": "@types/node",
+          "confidence": "high",
+          "reason": "Direct usage found by GitNexus-assisted and line-aware text search."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/test/jest/gilded-rose.spec.ts",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "TypeScript source directly consumes an upgraded test/runtime type surface and must remain covered by the requested workflows.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "describe/it/expect",
+          "matched_api": "Jest globals",
+          "confidence": "high",
+          "reason": "Direct usage found by GitNexus-assisted and line-aware text search."
+        },
+        {
+          "start_line": 7,
+          "end_line": 7,
+          "symbol_or_pattern": "expect(...).toBe",
+          "matched_api": "Jest matcher",
+          "confidence": "high",
+          "reason": "Direct usage found by GitNexus-assisted and line-aware text search."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/test/mocha/gilded-rose.spec.ts",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "TypeScript source directly consumes an upgraded test/runtime type surface and must remain covered by the requested workflows.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "import { expect } from 'chai'",
+          "matched_api": "Chai 4",
+          "confidence": "high",
+          "reason": "Direct usage found by GitNexus-assisted and line-aware text search."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "describe/it",
+          "matched_api": "Mocha globals",
+          "confidence": "high",
+          "reason": "Direct usage found by GitNexus-assisted and line-aware text search."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/movierental/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/movierental/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/movierental/java/src/test/java/movierental/CustomerTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Assert;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 30,
+          "end_line": 30,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 30,
+          "end_line": 30,
+          "symbol_or_pattern": "org.mockito",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/src/test/java/tddmicroexercises/leaderboard/LeaderboardTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "import static org.junit.Assert.assertEquals;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "import static org.junit.Assert.assertTrue;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/src/test/java/tddmicroexercises/leaderboard/RaceTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Assert;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/src/test/java/tddmicroexercises/telemetrysystem/TelemetryDiagnosticControlsTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlPagesConverterTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import static org.junit.Assert.*;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 7,
+          "end_line": 7,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/src/test/java/tddmicroexercises/textconvertor/HtmlTextConverterTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import static org.junit.Assert.*;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/src/test/java/tddmicroexercises/tirepressuremonitoringsystem/TestAlarm.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.*;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "import static org.junit.Assert.*;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility",
+          "confidence": "high",
+          "reason": "Malformed 1.10 source level must be normalized for the requested Java 17 compilation target."
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/tennis/java/src/test/java/tennis/TennisTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.jupiter.api.Assertions;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.jupiter.params.ParameterizedTest;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "import org.junit.jupiter.params.provider.MethodSource;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "refactoring/trivia/java/src/test/java/com/adaptionsoft/games/trivia/SomeTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import static org.junit.Assert.*;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/src/test/java/bowlinggame/BowlingGameTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Assert;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/gameoflife/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/gameoflife/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/gameoflife/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/gameoflife/java/src/test/java/gameoflife/GameOfLifeTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Assert;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility",
+          "confidence": "high",
+          "reason": "Malformed 1.10 source level must be normalized for the requested Java 17 compilation target."
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/minesweeper/java/src/test/java/minesweeper/MineSweeperTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.jupiter.api.Test;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "import static org.junit.jupiter.api.Assertions.assertTrue;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "sourceCompatibility",
+          "matched_api": "Java source compatibility",
+          "confidence": "high",
+          "reason": "Configured Java source level differs from the requested Java 17 target."
+        },
+        {
+          "start_line": 24,
+          "end_line": 24,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 25,
+          "end_line": 25,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 26,
+          "end_line": 26,
+          "symbol_or_pattern": "org.junit.jupiter",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/src/test/java/org/rpg/DummyTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.jupiter.api.Test;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import static org.junit.jupiter.api.Assertions.fail;",
+          "matched_api": "JUnit Jupiter",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 17,
+          "end_line": 17,
+          "symbol_or_pattern": "jcenter()",
+          "matched_api": "Gradle repository declaration",
+          "confidence": "high",
+          "reason": "The configured repository is permanently unavailable."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "symbol_or_pattern": "org.slf4j:slf4j-api",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 29,
+          "end_line": 29,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.jar",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "The existing Gradle wrapper predates 8.10.2 and cannot be relied on with the Java 21 runtime.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle wrapper distribution",
+          "confidence": "high",
+          "reason": "Wrapper distribution must move to Gradle 8.10.2."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradlew",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradlew.bat",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "medium",
+      "reason": "Generated Gradle wrapper companion belongs to the wrapper upgrade as a whole.",
+      "locations": []
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "change_type": "modify",
+      "usage_type": "configuration",
+      "risk_level": "high",
+      "reason": "Gradle build configuration is in scope for Java 17 and requested dependency/repository syntax modernization.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "java plugin",
+          "matched_api": "sourceCompatibility",
+          "confidence": "high",
+          "reason": "This Java project has no explicit sourceCompatibility and requires Java 17 configuration."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "compile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "com.google.guava",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 10,
+          "end_line": 10,
+          "symbol_or_pattern": "junit:junit",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        },
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "testCompile",
+          "matched_api": "Gradle dependency configuration",
+          "confidence": "high",
+          "reason": "This dependency configuration was removed in Gradle 7 and blocks Gradle 8.10.2."
+        },
+        {
+          "start_line": 11,
+          "end_line": 11,
+          "symbol_or_pattern": "org.mockito:mockito-core:2.2.0",
+          "matched_api": "declared dependency",
+          "confidence": "high",
+          "reason": "Declared version is below the requested target."
+        }
+      ]
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/src/test/java/stringcalculator/StringCalculatorTest.java",
+      "change_type": "modify",
+      "usage_type": "direct_usage",
+      "risk_level": "low",
+      "reason": "JUnit test source is a direct consumer to compile and execute during validation; no incompatible source API was identified.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "import org.junit.Assert;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        },
+        {
+          "start_line": 4,
+          "end_line": 4,
+          "symbol_or_pattern": "import org.junit.Test;",
+          "matched_api": "JUnit 4",
+          "confidence": "high",
+          "reason": "Direct test-framework import is covered by the requested dependency upgrade."
+        }
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "repo:coderetreat",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "repository root"
+      },
+      {
+        "id": "runtime:java",
+        "version": "21",
+        "type": "external_package",
+        "version_source": "user-provided target runtime"
+      },
+      {
+        "id": "gradle-wrapper",
+        "version": "3.1-7.4.1",
+        "type": "external_package",
+        "version_source": "12 gradle-wrapper.properties files"
+      },
+      {
+        "id": "java-source-level",
+        "version": "implicit, 1.8, or malformed 1.10",
+        "type": "internal",
+        "version_source": "22 build.gradle files"
+      },
+      {
+        "id": "org.slf4j:slf4j-api",
+        "version": "1.7.12",
+        "type": "external_package",
+        "version_source": "Gradle build files"
+      },
+      {
+        "id": "junit:junit",
+        "version": "4.12",
+        "type": "external_package",
+        "version_source": "Gradle build files"
+      },
+      {
+        "id": "org.junit.jupiter:junit-jupiter-api",
+        "version": "5.8.2",
+        "type": "external_package",
+        "version_source": "Gradle build files"
+      },
+      {
+        "id": "org.junit.jupiter:junit-jupiter-engine",
+        "version": "5.8.2",
+        "type": "external_package",
+        "version_source": "Gradle build files"
+      },
+      {
+        "id": "org.junit.jupiter:junit-jupiter-params",
+        "version": "5.8.2",
+        "type": "external_package",
+        "version_source": "Gradle build files"
+      },
+      {
+        "id": "org.mockito:mockito-core",
+        "version": "2.2.0/2.2.6",
+        "type": "external_package",
+        "version_source": "Gradle build files"
+      },
+      {
+        "id": "com.google.guava:guava",
+        "version": "19.0",
+        "type": "external_package",
+        "version_source": "tdd/stringcalculator/java/build.gradle"
+      },
+      {
+        "id": "com.approvaltests:approvaltests",
+        "version": "14.0.0",
+        "type": "external_package",
+        "version_source": "refactoring/chartsmart/java/build.gradle"
+      },
+      {
+        "id": "npm:@types/chai",
+        "version": "^4.3.0",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:@types/jest",
+        "version": "^27.4.1",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:@types/mocha",
+        "version": "^9.1.0",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:@types/node",
+        "version": "^17.0.23",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:chai",
+        "version": "^4.3.6",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:jest",
+        "version": "^27.5.1",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:jest-extended-snapshot",
+        "version": "^1.1.5",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:mocha",
+        "version": "^9.2.2",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:nyc",
+        "version": "~15.1.0",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:ramda",
+        "version": "^0.28.0",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:rimraf",
+        "version": "~3.0.2",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:source-map-support",
+        "version": "^0.5.21",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:ts-jest",
+        "version": "^27.1.4",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:ts-node",
+        "version": "^10.7.0",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:tsconfig-paths",
+        "version": "^3.14.1",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "npm:typescript",
+        "version": "^4.6.3",
+        "type": "external_package",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      },
+      {
+        "id": "gradle-build:algorithm/dijkstra",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "algorithm/dijkstra/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:refactoring/chartsmart/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "refactoring/chartsmart/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:refactoring/gildedrose/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "refactoring/gildedrose/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:refactoring/movierental",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "refactoring/movierental/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:refactoring/racingcar/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "refactoring/racingcar/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:refactoring/tennis/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "refactoring/tennis/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:refactoring/trivia/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "refactoring/trivia/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:tdd/bowlinggame",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "tdd/bowlinggame/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:tdd/gameoflife",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "tdd/gameoflife/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:tdd/minesweeper/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "tdd/minesweeper/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:tdd/rpg-combat/java",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "tdd/rpg-combat/java/settings.gradle and build.gradle"
+      },
+      {
+        "id": "gradle-build:tdd/stringcalculator",
+        "version": "unknown",
+        "type": "internal",
+        "version_source": "tdd/stringcalculator/settings.gradle and build.gradle"
+      },
+      {
+        "id": "npm-project:refactoring/gildedrose/js",
+        "version": "1.0.0",
+        "type": "internal",
+        "version_source": "refactoring/gildedrose/js/package.json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:algorithm/dijkstra",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:algorithm/dijkstra",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:algorithm/dijkstra",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:algorithm/dijkstra",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:refactoring/chartsmart/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:refactoring/chartsmart/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:refactoring/chartsmart/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:refactoring/chartsmart/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:refactoring/gildedrose/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:refactoring/gildedrose/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:refactoring/gildedrose/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:refactoring/gildedrose/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:refactoring/movierental",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:refactoring/movierental",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:refactoring/movierental",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:refactoring/movierental",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:refactoring/racingcar/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:refactoring/tennis/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:refactoring/tennis/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:refactoring/tennis/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:refactoring/tennis/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:refactoring/trivia/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:refactoring/trivia/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:refactoring/trivia/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:refactoring/trivia/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:tdd/bowlinggame",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:tdd/bowlinggame",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:tdd/bowlinggame",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:tdd/bowlinggame",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:tdd/gameoflife",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:tdd/gameoflife",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:tdd/gameoflife",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:tdd/gameoflife",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:tdd/minesweeper/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:tdd/minesweeper/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:tdd/minesweeper/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:tdd/minesweeper/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:tdd/rpg-combat/java",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:tdd/rpg-combat/java",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:tdd/rpg-combat/java",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:tdd/rpg-combat/java",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "gradle-build:tdd/stringcalculator",
+        "relationship": "contains independent Gradle build"
+      },
+      {
+        "from": "gradle-build:tdd/stringcalculator",
+        "to": "gradle-wrapper",
+        "relationship": "executes with"
+      },
+      {
+        "from": "gradle-build:tdd/stringcalculator",
+        "to": "runtime:java",
+        "relationship": "runs on"
+      },
+      {
+        "from": "gradle-build:tdd/stringcalculator",
+        "to": "java-source-level",
+        "relationship": "compiles with"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "npm-project:refactoring/gildedrose/js",
+        "relationship": "contains independent npm project"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:@types/chai",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:@types/jest",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:@types/mocha",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:@types/node",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:chai",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:jest",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:jest-extended-snapshot",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:mocha",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:nyc",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:ramda",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:rimraf",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:source-map-support",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:ts-jest",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:ts-node",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:tsconfig-paths",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "npm-project:refactoring/gildedrose/js",
+        "to": "npm:typescript",
+        "relationship": "devDependency"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "org.slf4j:slf4j-api",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "junit:junit",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "org.junit.jupiter:junit-jupiter-api",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "org.junit.jupiter:junit-jupiter-engine",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "org.junit.jupiter:junit-jupiter-params",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "org.mockito:mockito-core",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "com.google.guava:guava",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "repo:coderetreat",
+        "to": "com.approvaltests:approvaltests",
+        "relationship": "declares in one or more independent Gradle builds"
+      },
+      {
+        "from": "gradle-build:algorithm/dijkstra",
+        "to": "subproject:algorithm/dijkstra:java",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:tdd/bowlinggame",
+        "to": "subproject:tdd/bowlinggame:java",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:tdd/gameoflife",
+        "to": "subproject:tdd/gameoflife:java",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:tdd/stringcalculator",
+        "to": "subproject:tdd/stringcalculator:java",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "subproject:refactoring/racingcar/java:leaderboard",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "subproject:refactoring/racingcar/java:telemetrysystem",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "subproject:refactoring/racingcar/java:textconverter",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "subproject:refactoring/racingcar/java:tirepressuremonitoringsystem",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/racingcar/java",
+        "to": "subproject:refactoring/racingcar/java:turnticketdispenser",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/chartsmart/java",
+        "to": "subproject:refactoring/chartsmart/java:java (nominal empty subproject)",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/gildedrose/java",
+        "to": "subproject:refactoring/gildedrose/java:java (nominal empty subproject)",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:refactoring/tennis/java",
+        "to": "subproject:refactoring/tennis/java:java (nominal empty subproject)",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:tdd/minesweeper/java",
+        "to": "subproject:tdd/minesweeper/java:java (nominal empty subproject)",
+        "relationship": "includes"
+      },
+      {
+        "from": "gradle-build:tdd/rpg-combat/java",
+        "to": "subproject:tdd/rpg-combat/java:java (nominal empty subproject)",
+        "relationship": "includes"
+      }
+    ]
+  },
+  "risk_summary": {
+    "total_affected_files": 93,
+    "high_risk_count": 33,
+    "breaking_changes": [
+      "Gradle 8 removes compile and testCompile configurations used by multiple builds.",
+      "jcenter() is unavailable and prevents legacy builds from resolving dependencies.",
+      "Gradle 3.1 through 7.4.1 wrappers are below the requested 8.10.2 baseline and are not a supported Java 21 execution baseline.",
+      "Several build scripts use malformed sourceCompatibility = 1.10; every Java project must explicitly compile for Java 17.",
+      "rimraf 5 no longer treats glob-pattern CLI arguments like rimraf 3; the two cleanup scripts require --glob.",
+      "Jest and ts-jest must share major 29, and ts-jest 29 removes the ts-jest/utils helper import path.",
+      "Mockito crosses from 2.x to 5.x and requires Java 11+, which the Java 21 runtime satisfies but still warrants full test execution.",
+      "TypeScript crosses from 4.x to 5.5.x and Mocha from 9.x to 10.6.x, so both independent JS test workflows require validation."
+    ],
+    "notes": "The 12 wrapper roots define the independent Gradle validation units. Their complete included-project trees were audited, including all 22 build.gradle files and the five racingcar child builds."
+  },
+  "coverage_notes": "GitNexus was enabled and used for indexed build/test discovery, with rg supplying exact line locations where graph results lacked import/config detail. All 12 Gradle roots, 22 build.gradle files, 10 settings.gradle files, 12 wrapper property files and wrapper companions, the sole package.json under the requested trees, its package-lock.json, Jest config, and direct Java/TypeScript test consumers were scanned. The active settings trees include four root+java kata builds, racingcar with five real child build scripts, and five settings files whose active java include points to a nominal empty subproject without its own build.gradle; those inherited empty projects still run under their root wrapper. No database, search engine, broker, cache, container image, connection string, or other external service configuration was found in XML/YAML/conf/ini/Docker/Gradle/JSON scans, so no external_service node or live verification is required. refactoring/gildedrose/package-lock.json was inspected and is an orphaned empty parent-level lockfile (no package.json there), distinct from the in-scope JS lockfile. No excluded paths were supplied. Source direct-usage files are low-risk validation surfaces unless explicitly identified as incompatible; binary/generated wrapper companions intentionally have empty locations."
+}

@@ -1,0 +1,1611 @@
+{
+  "upgrade_description": "Upgrade every independent coderetreat kata and complete Gradle module tree to Gradle 8.10.2, Java 21 runtime with sourceCompatibility 17, specified Java dependencies and modern repository/configuration syntax; upgrade refactoring/gildedrose/js for Node 22 with the specified TypeScript/Jest/Mocha toolchain while preserving kata independence.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes legacy configurations and JCenter is unavailable.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle repository and dependency configurations; org.slf4j:slf4j-api; junit:junit"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17 after the Java plugin, replace jcenter() with mavenCentral(), replace compile/testCompile with implementation/testImplementation, and set SLF4J to 2.0.13 and JUnit 4 to 4.13.2 without changing project structure.",
+      "validation_evidence": [
+        "The dijkstra root clean build succeeds on Java 21 through its Gradle 8.10.2 wrapper.",
+        "The file contains the target repository, compatibility, configurations, and versions."
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The included module must use Gradle 8-compatible test configuration.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile junit:junit:4.12",
+          "matched_api": "junit:junit"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17 and replace testCompile with testImplementation while updating JUnit 4 to 4.13.2.",
+      "validation_evidence": [
+        "The root dijkstra build executes this included java subproject and passes."
+      ]
+    },
+    {
+      "sequence": 3,
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Malformed compatibility and older Jupiter modules conflict with the target.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 26,
+          "symbol_or_pattern": "sourceCompatibility and dependencies",
+          "matched_api": "Gradle Java compatibility; JUnit Jupiter; ApprovalTests"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17 and update junit-jupiter-api and junit-jupiter-engine to 5.10.3; retain ApprovalTests unchanged.",
+      "validation_evidence": [
+        "chartsmart clean build passes with JUnit Platform on Java 21."
+      ]
+    },
+    {
+      "sequence": 4,
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Malformed compatibility and older Jupiter modules conflict with the target.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 25,
+          "symbol_or_pattern": "sourceCompatibility and Jupiter dependencies",
+          "matched_api": "Gradle Java compatibility; JUnit Jupiter"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17 and update junit-jupiter-api and junit-jupiter-engine to 5.10.3.",
+      "validation_evidence": [
+        "gildedrose Java clean build passes with JUnit Platform on Java 21."
+      ]
+    },
+    {
+      "sequence": 5,
+      "file_path": "refactoring/movierental/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gradle 8 removes legacy configurations and JCenter is unavailable.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate compile/testCompile to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit 4 to 4.13.2.",
+      "validation_evidence": [
+        "The movierental root clean build passes across its included java module."
+      ]
+    },
+    {
+      "sequence": 6,
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The included module uses removed testCompile.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile junit:junit:4.12",
+          "matched_api": "junit:junit"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17, migrate testCompile to testImplementation, and update JUnit 4 to 4.13.2.",
+      "validation_evidence": [
+        "The movierental root build executes the included module and passes."
+      ]
+    },
+    {
+      "sequence": 7,
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The five-subproject root crosses Gradle, SLF4J, JUnit, and Mockito compatibility boundaries.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 30,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4; mockito-core"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate compile/testCompile to implementation/testImplementation, and update SLF4J 2.0.13, JUnit 4.13.2, and Mockito 5.12.0.",
+      "validation_evidence": [
+        "The racingcar root clean build passes all five included subprojects."
+      ]
+    },
+    {
+      "sequence": 8,
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Included module independently repeats obsolete repository/configuration declarations.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Racingcar aggregate build passes leaderboard tests."
+      ]
+    },
+    {
+      "sequence": 9,
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Included module independently repeats obsolete repository/configuration declarations.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Racingcar aggregate build passes telemetrysystem tests."
+      ]
+    },
+    {
+      "sequence": 10,
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Included module independently repeats obsolete repository/configuration declarations.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Racingcar aggregate build passes textconverter tests."
+      ]
+    },
+    {
+      "sequence": 11,
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Included module independently repeats obsolete repository/configuration declarations.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Racingcar aggregate build passes tirepressuremonitoringsystem tests."
+      ]
+    },
+    {
+      "sequence": 12,
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Included module independently repeats obsolete repository/configuration declarations.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Racingcar aggregate build passes turnticketdispenser tests."
+      ]
+    },
+    {
+      "sequence": 13,
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Malformed compatibility and older Jupiter modules conflict with the target.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 26,
+          "symbol_or_pattern": "sourceCompatibility and Jupiter dependencies",
+          "matched_api": "Gradle Java compatibility; JUnit Jupiter"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17 and update junit-jupiter-api, junit-jupiter-engine, and junit-jupiter-params to 5.10.3.",
+      "validation_evidence": [
+        "Tennis clean build passes with JUnit Platform."
+      ]
+    },
+    {
+      "sequence": 14,
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The build uses removed testCompile and legacy JavaExec main assignment.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile junit:junit:4.12",
+          "matched_api": "junit:junit"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17, migrate testCompile to testImplementation, update JUnit to 4.13.2, and replace the JavaExec main assignment with mainClass = javaMainClass for Gradle 8.",
+      "validation_evidence": [
+        "Trivia clean build passes and Gradle configures runGameRunner without removed-property errors."
+      ]
+    },
+    {
+      "sequence": 15,
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The root moves from Gradle 3.1 and obsolete dependency/repository syntax.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Bowlinggame clean build passes its full included module tree."
+      ]
+    },
+    {
+      "sequence": 16,
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The included module uses removed testCompile.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 9,
+          "symbol_or_pattern": "testCompile junit:junit:4.12",
+          "matched_api": "junit:junit"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17, migrate testCompile to testImplementation, and update JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Bowlinggame aggregate build executes the included java module and passes."
+      ]
+    },
+    {
+      "sequence": 17,
+      "file_path": "tdd/gameoflife/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The root needs the requested source level and JUnit target.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 26,
+          "symbol_or_pattern": "repositories/dependencies",
+          "matched_api": "Gradle Java plugin; junit:junit"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17 and update JUnit 4 to 4.13.2, retaining existing Gradle 8-compatible configurations and Maven Central.",
+      "validation_evidence": [
+        "Gameoflife clean build passes the included java module."
+      ]
+    },
+    {
+      "sequence": 18,
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The included module needs the requested source and JUnit levels.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 9,
+          "symbol_or_pattern": "repositories/dependencies",
+          "matched_api": "Gradle Java plugin; junit:junit"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17 and update JUnit 4 to 4.13.2.",
+      "validation_evidence": [
+        "Gameoflife aggregate build executes the included module and passes."
+      ]
+    },
+    {
+      "sequence": 19,
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Malformed compatibility and older Jupiter modules conflict with the target.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 25,
+          "symbol_or_pattern": "sourceCompatibility and Jupiter dependencies",
+          "matched_api": "Gradle Java compatibility; JUnit Jupiter"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17 and update junit-jupiter-api and junit-jupiter-engine to 5.10.3.",
+      "validation_evidence": [
+        "Minesweeper clean build passes with JUnit Platform."
+      ]
+    },
+    {
+      "sequence": 20,
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Compatibility and Jupiter modules are below requested targets.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 26,
+          "symbol_or_pattern": "sourceCompatibility and Jupiter dependencies",
+          "matched_api": "Gradle Java compatibility; JUnit Jupiter"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17 and update junit-jupiter-api, junit-jupiter-engine, and junit-jupiter-params to 5.10.3.",
+      "validation_evidence": [
+        "RPG Combat clean build passes with JUnit Platform."
+      ]
+    },
+    {
+      "sequence": 21,
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The root moves from Gradle 3.1 and obsolete dependency/repository syntax.",
+      "locations": [
+        {
+          "start_line": 17,
+          "end_line": 29,
+          "symbol_or_pattern": "jcenter/compile/testCompile dependencies",
+          "matched_api": "Gradle; slf4j-api; JUnit 4"
+        }
+      ],
+      "change_description": "Set sourceCompatibility = 17, use mavenCentral(), migrate to implementation/testImplementation, and update SLF4J to 2.0.13 and JUnit to 4.13.2.",
+      "validation_evidence": [
+        "Stringcalculator clean build passes its full included module tree."
+      ]
+    },
+    {
+      "sequence": 22,
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The included module crosses Gradle, Guava, JUnit, and Mockito compatibility boundaries.",
+      "locations": [
+        {
+          "start_line": 9,
+          "end_line": 11,
+          "symbol_or_pattern": "compile/testCompile declarations",
+          "matched_api": "guava; junit:junit; mockito-core"
+        }
+      ],
+      "change_description": "Add sourceCompatibility = 17; migrate compile to implementation and testCompile to testImplementation; update Guava to 33.2.1-jre, JUnit to 4.13.2, and Mockito to 5.12.0.",
+      "validation_evidence": [
+        "Stringcalculator aggregate build passes with the upgraded Guava and Mockito APIs."
+      ]
+    },
+    {
+      "sequence": 23,
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The Node 22 toolchain and both test runners are controlled by this manifest.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 11,
+          "symbol_or_pattern": "npm scripts",
+          "matched_api": "rimraf; jest; mocha"
+        },
+        {
+          "start_line": 16,
+          "end_line": 31,
+          "symbol_or_pattern": "devDependencies",
+          "matched_api": "TypeScript/Jest/Mocha/Node/Ramda/Rimraf toolchain"
+        }
+      ],
+      "change_description": "Rewrite precompile and pretest as `rimraf --glob app/**/*.js test/**/*.js`; set TypeScript ^5.5.4, Jest ^29.7.0, ts-jest ^29.2.5, @types/jest ^29.5.12, Mocha ^10.6.0, @types/mocha ^10.0.7, @types/node ^22.5.4, ts-node ^10.9.2, tsconfig-paths ^4.2.0, rimraf ^5.0.10, Ramda ^0.30.1, and Chai ^4.5.0; retain unrelated dependencies and CommonJS test setup.",
+      "validation_evidence": [
+        "npm install succeeds on Node 22.",
+        "npm run test:jest and npm run test:mocha both pass.",
+        "Chai remains on major 4 and Jest/ts-jest remain on major 29."
+      ]
+    },
+    {
+      "sequence": 24,
+      "file_path": "refactoring/gildedrose/js/package-lock.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The lock graph must match the upgraded direct dependency ranges under Node 22.",
+      "locations": [
+        {
+          "start_line": 12,
+          "end_line": 27,
+          "symbol_or_pattern": "root package devDependencies",
+          "matched_api": "npm lockfile v2 dependency graph"
+        }
+      ],
+      "change_description": "Regenerate with npm install after package.json is updated; do not hand-edit transitive entries, and ensure the root package dependency specs match package.json.",
+      "validation_evidence": [
+        "npm install completes without lock mismatch and both test suites pass using the locked graph."
+      ]
+    },
+    {
+      "sequence": 25,
+      "file_path": "refactoring/gildedrose/js/jest.config.ts",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "ts-jest 29 removed the ts-jest/utils subpath.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 13,
+          "symbol_or_pattern": "ts-jest/utils and transform configuration",
+          "matched_api": "ts-jest"
+        }
+      ],
+      "change_description": "Import pathsToModuleNameMapper from the ts-jest package root, preserving the existing mapper invocation and Jest configuration.",
+      "validation_evidence": [
+        "Jest loads the TypeScript config without module-resolution errors and all tests pass."
+      ]
+    },
+    {
+      "sequence": 26,
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and the dijkstra build passes."
+      ]
+    },
+    {
+      "sequence": 27,
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and chartsmart passes."
+      ]
+    },
+    {
+      "sequence": 28,
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and gildedrose Java passes."
+      ]
+    },
+    {
+      "sequence": 29,
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and movierental passes."
+      ]
+    },
+    {
+      "sequence": 30,
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Requested wrapper target for the five-module build.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and all racingcar subprojects pass."
+      ]
+    },
+    {
+      "sequence": 31,
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and tennis passes."
+      ]
+    },
+    {
+      "sequence": 32,
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and trivia passes."
+      ]
+    },
+    {
+      "sequence": 33,
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The wrapper crosses from Gradle 3.1 to 8.10.2.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip; verify bootstrap explicitly because of the large jump.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and bowlinggame passes."
+      ]
+    },
+    {
+      "sequence": 34,
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and gameoflife passes."
+      ]
+    },
+    {
+      "sequence": 35,
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and minesweeper passes."
+      ]
+    },
+    {
+      "sequence": 36,
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Requested wrapper target.",
+      "locations": [
+        {
+          "start_line": 3,
+          "end_line": 3,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and RPG Combat passes."
+      ]
+    },
+    {
+      "sequence": 37,
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The wrapper crosses from Gradle 3.1 to 8.10.2.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 6,
+          "symbol_or_pattern": "distributionUrl",
+          "matched_api": "Gradle Wrapper"
+        }
+      ],
+      "change_description": "Change only the distribution URL version to gradle-8.10.2-all.zip; verify bootstrap explicitly because of the large jump.",
+      "validation_evidence": [
+        "gradlew --version reports 8.10.2 and stringcalculator passes."
+      ]
+    },
+    {
+      "sequence": 38,
+      "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The Gradle 8.10.2 validation run reaches test initialization and Java rejects the reserved top-level `java` namespace with SecurityException: Prohibited package name: java.dijkstra.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "package java.dijkstra;",
+          "matched_api": "Java package declaration and Gradle test class loading"
+        }
+      ],
+      "change_description": "Replace only `package java.dijkstra;` with `package dijkstra;` so the test aligns with the existing production declaration `package dijkstra;`. Both files already reside under matching src/main/java/dijkstra and src/test/java/dijkstra paths, and no imports or other references to java.dijkstra exist, so do not move files or modify the production class.",
+      "validation_evidence": [
+        "The algorithm/dijkstra aggregate clean build completes without SecurityException and runs the included java subproject tests.",
+        "A bounded repository search under algorithm/dijkstra finds no remaining package or import reference to java.dijkstra.",
+        "The production and test declarations both use the legal dijkstra package and remain in matching dijkstra directories."
+      ]
+    }
+  ],
+  "planned_files": [
+    "algorithm/dijkstra/build.gradle",
+    "algorithm/dijkstra/java/build.gradle",
+    "refactoring/chartsmart/java/build.gradle",
+    "refactoring/gildedrose/java/build.gradle",
+    "refactoring/movierental/build.gradle",
+    "refactoring/movierental/java/build.gradle",
+    "refactoring/racingcar/java/build.gradle",
+    "refactoring/racingcar/java/leaderboard/build.gradle",
+    "refactoring/racingcar/java/telemetrysystem/build.gradle",
+    "refactoring/racingcar/java/textconverter/build.gradle",
+    "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+    "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+    "refactoring/tennis/java/build.gradle",
+    "refactoring/trivia/java/build.gradle",
+    "tdd/bowlinggame/build.gradle",
+    "tdd/bowlinggame/java/build.gradle",
+    "tdd/gameoflife/build.gradle",
+    "tdd/gameoflife/java/build.gradle",
+    "tdd/minesweeper/java/build.gradle",
+    "tdd/rpg-combat/java/build.gradle",
+    "tdd/stringcalculator/build.gradle",
+    "tdd/stringcalculator/java/build.gradle",
+    "refactoring/gildedrose/js/package.json",
+    "refactoring/gildedrose/js/package-lock.json",
+    "refactoring/gildedrose/js/jest.config.ts",
+    "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+    "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+    "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+    "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "org.slf4j:slf4j-api",
+      "from_version": "1.7.12",
+      "to_version": "2.0.13"
+    },
+    {
+      "file_path": "algorithm/dijkstra/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "algorithm/dijkstra/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api and engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/build.gradle",
+      "dependency": "org.junit.jupiter:junit-jupiter-api and engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/movierental/build.gradle",
+      "dependency": "org.slf4j:slf4j-api and junit:junit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "refactoring/movierental/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/build.gradle",
+      "dependency": "SLF4J / JUnit / Mockito",
+      "from_version": "1.7.12 / 4.12 / 2.2.6",
+      "to_version": "2.0.13 / 4.13.2 / 5.12.0"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "refactoring/tennis/java/build.gradle",
+      "dependency": "org.junit.jupiter api/engine/params",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "refactoring/trivia/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/java/build.gradle",
+      "dependency": "junit:junit",
+      "from_version": "4.12",
+      "to_version": "4.13.2"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/build.gradle",
+      "dependency": "org.junit.jupiter api/engine",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/build.gradle",
+      "dependency": "org.junit.jupiter api/engine/params",
+      "from_version": "5.8.2",
+      "to_version": "5.10.3"
+    },
+    {
+      "file_path": "tdd/stringcalculator/build.gradle",
+      "dependency": "SLF4J / JUnit",
+      "from_version": "1.7.12 / 4.12",
+      "to_version": "2.0.13 / 4.13.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/java/build.gradle",
+      "dependency": "Guava / JUnit / Mockito",
+      "from_version": "19.0 / 4.12 / 2.2.0",
+      "to_version": "33.2.1-jre / 4.13.2 / 5.12.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "typescript",
+      "from_version": "^4.6.3",
+      "to_version": "^5.5.4"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "jest / ts-jest / @types/jest",
+      "from_version": "^27.5.1 / ^27.1.4 / ^27.4.1",
+      "to_version": "^29.7.0 / ^29.2.5 / ^29.5.12"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "mocha / @types/mocha",
+      "from_version": "^9.2.2 / ^9.1.0",
+      "to_version": "^10.6.0 / ^10.0.7"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "@types/node / ts-node / tsconfig-paths",
+      "from_version": "^17.0.23 / ^10.7.0 / ^3.14.1",
+      "to_version": "^22.5.4 / ^10.9.2 / ^4.2.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package.json",
+      "dependency": "rimraf / ramda / chai",
+      "from_version": "~3.0.2 / ^0.28.0 / ^4.3.6",
+      "to_version": "^5.0.10 / ^0.30.1 / ^4.5.0"
+    },
+    {
+      "file_path": "refactoring/gildedrose/js/package-lock.json",
+      "dependency": "npm resolved dependency graph",
+      "from_version": "current lock graph",
+      "to_version": "graph generated from approved package.json under Node 22"
+    },
+    {
+      "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "6.8.3",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "3.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.2",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "7.4.1",
+      "to_version": "8.10.2"
+    },
+    {
+      "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+      "dependency": "Gradle wrapper",
+      "from_version": "3.1",
+      "to_version": "8.10.2"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "main",
+      "master"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "algorithm/dijkstra",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/chartsmart/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/movierental",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/racingcar/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/tennis/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/trivia/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/bowlinggame",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/gameoflife",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/minesweeper/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/rpg-combat/java",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "tdd/stringcalculator",
+        "command": ".\\gradlew.bat clean build --no-daemon",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm install",
+        "purpose": "setup",
+        "timeout_seconds": 600,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm install && npm run test:jest",
+        "purpose": "test",
+        "timeout_seconds": 900,
+        "required": true
+      },
+      {
+        "working_directory": "refactoring/gildedrose/js",
+        "command": "npm run test:mocha",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true
+      }
+    ],
+    "build_commands": [
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm install\""
+    ],
+    "startup_commands": [],
+    "startup_health_check_urls": [],
+    "existing_test_commands": [
+      "powershell -NoProfile -Command \"Set-Location 'algorithm/dijkstra'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/chartsmart/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/gildedrose/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/movierental'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/racingcar/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/tennis/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/trivia/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/bowlinggame'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/gameoflife'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/minesweeper/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/rpg-combat/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/stringcalculator'; .\\gradlew.bat clean build --no-daemon\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm install && npm run test:jest\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm run test:mocha\""
+    ],
+    "generated_test_commands": [
+      "powershell -NoProfile -Command \"Set-Location 'tdd/bowlinggame'; .\\gradlew.bat --version\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm run compile\"",
+      "powershell -NoProfile -Command \"Set-Location 'refactoring/racingcar/java'; .\\gradlew.bat clean build --no-daemon\"",
+      "powershell -NoProfile -Command \"Set-Location 'tdd/stringcalculator'; .\\gradlew.bat clean build --no-daemon\"",
+      "cmd /d /s /c \"cd /d refactoring\\gildedrose\\js && npm install && npm run test:jest && npm run test:mocha\""
+    ],
+    "generated_test_files": [],
+    "content_checks": [
+      {
+        "file_path": "algorithm/dijkstra/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "implementation 'org.slf4j:slf4j-api:2.0.13'",
+          "testImplementation 'junit:junit:4.13.2'",
+          "version: '5.12.0'"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/leaderboard/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/telemetrysystem/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/textconverter/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/tirepressuremonitoringsystem/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/turnticketdispenser/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/tennis/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "refactoring/trivia/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "testImplementation 'junit:junit:4.13.2'",
+          "mainClass = javaMainClass"
+        ],
+        "must_not_contain": [
+          "    testCompile '",
+          "    main = javaMainClass"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "testImplementation 'junit:junit:4.13.2'"
+        ],
+        "must_not_contain": [
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "testImplementation \"junit:junit:4.13.2\""
+        ],
+        "must_not_contain": [
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "testImplementation \"junit:junit:4.13.2\""
+        ],
+        "must_not_contain": [
+          "junit:junit:4.12"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.10",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "version: '5.10.3'"
+        ],
+        "must_not_contain": [
+          "sourceCompatibility = 1.8",
+          "version: '5.8.2'"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "mavenCentral()",
+          "2.0.13",
+          "4.13.2"
+        ],
+        "must_not_contain": [
+          "jcenter()",
+          "    compile '",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/java/build.gradle",
+        "must_contain": [
+          "sourceCompatibility = 17",
+          "version: '33.2.1-jre'",
+          "testImplementation 'junit:junit:4.13.2'",
+          "testImplementation 'org.mockito:mockito-core:5.12.0'"
+        ],
+        "must_not_contain": [
+          "    compile group",
+          "    testCompile '"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/package.json",
+        "must_contain": [
+          "\"precompile\": \"rimraf --glob app/**/*.js test/**/*.js\"",
+          "\"pretest\": \"rimraf --glob app/**/*.js test/**/*.js\"",
+          "\"typescript\": \"^5.5.4\"",
+          "\"jest\": \"^29.7.0\"",
+          "\"ts-jest\": \"^29.2.5\"",
+          "\"@types/jest\": \"^29.5.12\"",
+          "\"mocha\": \"^10.6.0\"",
+          "\"@types/mocha\": \"^10.0.7\"",
+          "\"@types/node\": \"^22.5.4\"",
+          "\"ts-node\": \"^10.9.2\"",
+          "\"tsconfig-paths\": \"^4.2.0\"",
+          "\"rimraf\": \"^5.0.10\"",
+          "\"ramda\": \"^0.30.1\"",
+          "\"chai\": \"^4.5.0\""
+        ],
+        "must_not_contain": [
+          "\"chai\": \"^5",
+          "rimraf app/**/*.js test/**/*.js\""
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/js/jest.config.ts",
+        "must_contain": [
+          "from  \"ts-jest\""
+        ],
+        "must_not_contain": [
+          "ts-jest/utils"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/chartsmart/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/gildedrose/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/movierental/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/racingcar/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/tennis/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "refactoring/trivia/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-6.8.3-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/bowlinggame/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-3.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/gameoflife/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.2-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/minesweeper/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/rpg-combat/java/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-7.4.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "tdd/stringcalculator/gradle/wrapper/gradle-wrapper.properties",
+        "must_contain": [
+          "gradle-8.10.2-all.zip"
+        ],
+        "must_not_contain": [
+          "gradle-3.1-all.zip"
+        ]
+      },
+      {
+        "file_path": "algorithm/dijkstra/java/src/test/java/dijkstra/DijkstraAlgorithmTest.java",
+        "must_contain": [
+          "package dijkstra;"
+        ],
+        "must_not_contain": [
+          "package java.dijkstra;"
+        ]
+      }
+    ],
+    "key_pages": [],
+    "key_user_flows": [],
+    "external_service_checks": [],
+    "success_criteria": [
+      "All 38 planned files contain only the approved independent-kata build/toolchain and Dijkstra package-compatibility changes.",
+      "Every one of the 12 Gradle wrapper roots reports Gradle 8.10.2 and completes clean build, which executes every included subproject.",
+      "All 22 build.gradle files use sourceCompatibility 17; no active jcenter(), compile, or testCompile declaration remains.",
+      "Requested Java dependency versions are present and Mockito/Guava consumers pass tests.",
+      "The two recorded smoke commands pass: the Bowling Game wrapper reports Gradle 8.10.2 on Java 21, and Gilded Rose JavaScript compiles on Node 22 while exercising the rimraf 5 precompile cleanup.",
+      "The three recorded integration commands pass: the Racing Car aggregate build covers all five included subprojects, String Calculator tests cover the upgraded Guava and Mockito dependencies, and a clean npm install is followed by passing Jest and Mocha suites.",
+      "Existing kata suites provide the required behavior coverage for this build-only upgrade; no generated test file or cross-kata test harness is required.",
+      "npm install succeeds under Node 22 and the regenerated package-lock.json matches package.json.",
+      "Both npm run test:jest and npm run test:mocha pass; rimraf cleanup succeeds with --glob; Chai remains major 4.",
+      "No external service, datastore, startup/browser, or cross-kata coupling is introduced.",
+      "The Dijkstra production and test sources both declare the legal dijkstra package, no java.dijkstra declaration/reference remains, and the aggregate Dijkstra build passes under Gradle 8.10.2.",
+      "Any additional repair file is changed only after a declared executor check demonstrates an upgrade-induced failure, is the smallest direct repair needed for that failure, is recorded in execution-result.json, and does not address unrelated pre-existing defects or introduce broad refactoring."
+    ],
+    "scope_expansion_limit": 25
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "The current ImpactReport is authoritative. All reported ranges plus minimal context were inspected for all 56 affected files. The 22 short build.gradle files were read in full where necessary to place sourceCompatibility, confirm JUnit Platform configuration, and account for Gradle 8 script compatibility; package.json and jest.config.ts were also read in full because their complete script/config structure is needed. The 19 reported Java/TypeScript test consumers require no proactive text edit: their JUnit 4.13.2, JUnit Jupiter 5.10.3, Jest 29, Mocha 10, and Chai 4 API usages remain source-compatible, so they are validation surfaces exercised by the declared builds rather than planned files. All 37 actual planned files come from the ImpactReport. The user-supplied npm commands are preserved exactly in executor_check_commands; npm install is also an explicit bounded setup step, and the final existing_test_commands use cmd wrappers to retain the exact compound workflow from the repository root. The user described Gradle validation as a coverage requirement rather than an exact command, so `.\\gradlew.bat clean build --no-daemon` is inferred for each of the 12 wrapper roots; `build` includes tests and automatically covers every settings.gradle subproject, including all five Racing Car modules. There are no startup commands, pages, flows, databases, search indexes, brokers, or external services. A scope expansion budget of 3 files is pre-authorized only when a declared bounded command fails because an unplanned file directly uses a dependency already named in expected_dependency_changes; it does not authorize cross-kata edits, unrelated fixes, new dependencies, or refactors. Exact npm patch selections are deterministic members of the requested caret ranges. Stage 4 then applied all original 37 edits but stopped before committing when the first declared Gradle check failed during Dijkstra test initialization with `SecurityException: Prohibited package name: java.dijkstra`. Targeted inspection established that `algorithm/dijkstra/java/src/main/java/dijkstra/DijkstraAlgorithm.java` already declares legal `package dijkstra;`, both main and test files already occupy matching `.../java/dijkstra` paths, and no import/reference to `java.dijkstra` exists; only line 1 of the test file requires repair, so no source move or production edit is planned. The executor must resume from the existing 37 uncommitted planned edits, apply this 38th planned change, rerun the complete unchanged validation matrix, and create the single final commit only after all checks pass. The user explicitly authorized fixing errors encountered. Accordingly, the earlier 3-file dependency-call-only allowance is superseded by a 25-file bounded allowance for additional files only when a declared executor check proves a failure was caused or exposed by this Gradle/Java/dependency/Node upgrade. Each such repair must be minimal and documented; unrelated pre-existing defects, speculative cleanup, cross-kata coupling, new scope unrelated to an upgraded component, and broad refactors remain prohibited.",
+  "plan_summary": "Resume the 37 applied build/toolchain edits, add the legal Dijkstra test package repair as planned file 38, then run the unchanged 12-build Gradle and npm validation matrix; bounded additional repairs are authorized only for further upgrade-induced failures demonstrated by those checks."
+}

@@ -1,0 +1,114 @@
+{
+  "decision": "rejected",
+  "confidence_score": 0.10085042016806725,
+  "confidence_factors": [{"category":"repair_rounds","amount":0.5,"reason":"Two repair rounds applied the required correctness multiplier of 0.5 to the full evidence score."}],
+  "base_ref": "master",
+  "git_diff_summary": {
+    "changed_files": [".babelrc",".eslintrc",".travis.yml","common.js","gen/.gitignore","gulpfile.js","js/index.js","js/search_results.js","lib/monarch/api.js","lib/monarch/web/webapp.js","lib/monarch/web/webenv.js","package-lock.json","package.json","tests/apitest.js","tests/class-info-test.js","tests/node18-upgrade.test.js","tests/phenopacket-test.js","tests/resources/phenopacket-schema.json","tests/test-common.js","ui/.eslintrc","ui/components/AnalyzePhenotypes.vue","ui/components/AssocTable.vue","ui/components/MonarchAutocomplete.vue","ui/components/PhenotypesTable.vue","ui/main.js","utils/phenogrid-webpack.config.js","webpack.config.js"],
+    "planned_files_touched": ["package.json","package-lock.json",".babelrc",".eslintrc","webpack.config.js","common.js","gulpfile.js","lib/monarch/api.js","lib/monarch/web/webenv.js","lib/monarch/web/webapp.js","tests/test-common.js","tests/apitest.js","tests/class-info-test.js","tests/phenopacket-test.js","tests/node18-upgrade.test.js","ui/main.js","ui/components/AnalyzePhenotypes.vue","ui/components/AssocTable.vue","ui/components/MonarchAutocomplete.vue","ui/components/PhenotypesTable.vue","ui/.eslintrc",".travis.yml","utils/phenogrid-webpack.config.js","gen/.gitignore"],
+    "unexpected_files": ["js/index.js","js/search_results.js","tests/resources/phenopacket-schema.json"],
+    "missing_planned_files": [],
+    "dependency_changes_verified": ["package.json: Node >=18; @hapi/hapi 21; @hapi/inert 7; Babel 7; webpack 5 toolchain; Sass; ESLint 8; Vue 2.7; Bootstrap 5; Axios 1; dayjs; Gulp 4; Mocha 10; Mustache 4; Underscore 1.13; xml2js 0.6; cross-env; js-yaml; Phenogrid ^1.3.11","package-lock.json: lockfile v3 with phenogrid 1.3.11 tarball and declared integrity","Removed: hapi, inert, request, wait.for, moment, node-sass, bootstrap-vue, Babel 6, extract-text-webpack-plugin, eslint-loader"],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {"file_path":"package.json","outcome":"passed","detail":"All required manifest strings present and forbidden legacy dependencies/scripts absent."},
+    {"file_path":"package-lock.json","outcome":"passed","detail":"Phenogrid 1.3.11 resolution, tarball, and integrity match; 1.5.5 resolution absent."},
+    {"file_path":".eslintrc","outcome":"passed","detail":"Required compatibility baseline present without disabling named correctness rules."},
+    {"file_path":"ui/.eslintrc","outcome":"passed","detail":"Extends root config and contains the four planned warning overrides."},
+    {"file_path":".babelrc","outcome":"passed","detail":"Uses @babel/preset-env; forbidden Babel 6 names absent."},
+    {"file_path":"webpack.config.js","outcome":"passed","detail":"Webpack 5, Sass, asset modules, devMiddleware, and parsed Phenogrid source alias present; forbidden legacy configuration absent."},
+    {"file_path":"gen/.gitignore","outcome":"passed","detail":"bbop.min.js retained; phenogrid.min.js removed."},
+    {"file_path":"common.js","outcome":"passed","detail":"dayjs present; moment absent."},
+    {"file_path":"gulpfile.js","outcome":"passed","detail":"Gulp 4 composition, js-yaml load, and Buffer.from present; legacy APIs absent."},
+    {"file_path":"lib/monarch/api.js","outcome":"passed","detail":"Axios and async implementation present; request/wait.for absent."},
+    {"file_path":"lib/monarch/web/webenv.js","outcome":"passed","detail":"Async Hapi handler and h.response present; wait.for/reply absent."},
+    {"file_path":"lib/monarch/web/webapp.js","outcome":"passed","detail":"@hapi modules, awaited registration/start, and parseStringPromise present; legacy imports absent."},
+    {"file_path":"tests/test-common.js","outcome":"passed","detail":"Async runner present; wait.for fiber runner absent."},
+    {"file_path":"tests/node18-upgrade.test.js","outcome":"passed","detail":"Declared loopback Axios, Hapi, GOlr, and SciGraph markers present with no public service URL."},
+    {"file_path":"tests/phenopacket-test.js","outcome":"passed","detail":"Hermetic BBOP response/schema assertions present; live Solr setup absent."},
+    {"file_path":"ui/main.js","outcome":"passed","detail":"Vue and Bootstrap 5 CSS present; BootstrapVue absent."},
+    {"file_path":"ui/components/AnalyzePhenotypes.vue","outcome":"passed","detail":"Native controls and deterministic rejected-curie rendering present; BootstrapVue elements absent."},
+    {"file_path":"ui/components/AssocTable.vue","outcome":"passed","detail":"Native table/pagination present; BootstrapVue table/pagination absent."},
+    {"file_path":"ui/components/MonarchAutocomplete.vue","outcome":"passed","detail":"Native checkboxes present; BootstrapVue group/tooltip directives absent."},
+    {"file_path":"ui/components/PhenotypesTable.vue","outcome":"passed","detail":"Native table/pagination present; BootstrapVue table/pagination absent."},
+    {"file_path":".travis.yml","outcome":"passed","detail":"Node 18/20 and build/lint commands present; Trusty, Node 6, and pinned geckodriver absent."}
+  ],
+  "command_results": [
+    {"type":"build","command":"npm install","outcome":"passed","exit_status":0,"output":"Installed 1594 packages; no npm ERR! or ERESOLVE. Audit reported 69 vulnerabilities and legacy deprecations."},
+    {"type":"build","command":"node -e [verify installed phenogrid 1.3.11 source, UMD bundle, and index.html]","outcome":"passed","exit_status":0,"output":"phenogrid 1.3.11 installed with source, UMD bundle, and demo page"},
+    {"type":"build","command":"npm run wbs-build","outcome":"passed","exit_status":0,"output":"webpack 5.111.0 compiled with 22 Sass/dependency deprecation warnings and no forbidden error marker; repeated after repairs."},
+    {"type":"build","command":"npx gulp --tasks","outcome":"passed","exit_status":0,"output":"Listed all planned public Gulp 4 tasks."},
+    {"type":"build","command":"npx gulp build","outcome":"passed","exit_status":0,"output":"All composed tasks completed without async-completion or TypeError marker."},
+    {"type":"startup","command":"node -e [bounded npm run start launcher from ChangePlan]","outcome":"passed","exit_status":0,"output":"Hapi started at localhost:8080 and /page/about returned 200. Exact orphaned port-owning child was stopped after wrapper exit on Windows.","health_check_outcome":"failed"},
+    {"type":"existing_test","command":"npm run wbs-lint","outcome":"passed","exit_status":0,"output":"468 legacy warnings, 0 errors; repeated after repairs."},
+    {"type":"existing_test","command":"make test","outcome":"failed","exit_status":1,"output":"GNU make is absent: make is not recognized."},
+    {"type":"existing_test","command":"npx cross-env NODE_PATH=./lib/monarch node tests/apitest.js","outcome":"failed","exit_status":1,"output":"0 passed, 4 failed because live Solr response was unavailable; no UnhandledPromiseRejection."},
+    {"type":"existing_test","command":"npx cross-env NODE_PATH=./lib/monarch node tests/class-info-test.js","outcome":"failed","exit_status":1,"output":"0 passed, 1 failed: ENOTFOUND scigraph-ontology-dev.monarchinitiative.org."},
+    {"type":"existing_test","command":"npx cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js","outcome":"passed","exit_status":0,"output":"1 passed, 0 failed."},
+    {"type":"generated_test","command":"npx cross-env NODE_PATH=./lib/monarch mocha tests/node18-upgrade.test.js","outcome":"passed","exit_status":0,"output":"7 passing: Hapi/Inert, async GET/POST, Axios GET/form/non-2xx, GOlr, and loopback SciGraph; repeated after repairs."}
+  ],
+  "repairs_applied": [
+    {"file_path":"js/index.js","reason":"Automated /page/about load crashed while reading window.d3.version, aborting the shared bundle.","summary":"Assigned imported d3 to window.d3 before legacy logging; rebuild removed this error and the consequent missing InitMonarchBBOPHandler error."},
+    {"file_path":"lib/monarch/web/webapp.js","reason":"/phenogrid_config.js returned 500 because a static route retained Hapi 16 reply/config APIs.","summary":"Migrated to options.cache and returned h.response(body) with MIME type; endpoint now returns 200 and analyze page has no console errors."}
+  ],
+  "repair_rounds": 2,
+  "browser_check_results": [
+    {"url":"http://localhost:8080/page/about","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":["genome.cshlp.org embed: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin"],"description":"Startup URL rendered; strict console gate failed on out-of-scope embed."},
+    {"url":"http://localhost:8080/page/about","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":["genome.cshlp.org embed: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin"],"description":"Key page rendered; repaired shared bundle was clean apart from third-party embed."},
+    {"url":"http://localhost:8080/","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[],"description":"Welcome page rendered."},
+    {"url":"http://localhost:8080/disease/DOID_14692","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":[],"description":"Application Error page: ENOTFOUND scigraph-data-dev."},
+    {"url":"http://localhost:8080/disease/MONDO:0008199#overview","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":[],"description":"Application Error page: ENOTFOUND scigraph-data-dev."},
+    {"url":"http://localhost:8080/gene/NCBIGene:6469#overview","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":[],"description":"Application Error page: ENOTFOUND scigraph-data-dev."},
+    {"url":"http://localhost:8080/disease/MONDO:0007113#compare","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":[],"description":"Application Error page: ENOTFOUND scigraph-data-dev; no Phenogrid SVG."},
+    {"url":"http://localhost:8080/page/phenogrid","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":["Five beta OwlSim CORS blocks","Five net::ERR_FAILED resource errors"],"description":"Outer page/iframe title rendered, but demo stayed Loading and created no SVG."},
+    {"url":"http://localhost:8080/node_modules/phenogrid/index.html","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":["Five beta OwlSim CORS blocks","Five net::ERR_FAILED resource errors"],"description":"Index exists, but shipped demo hardcodes live beta service and never initializes SVG."},
+    {"url":"http://localhost:8080/search/twist","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[],"description":"Search shell rendered with Search Results: twist and Searching status."},
+    {"url":"http://localhost:8080/about/sources","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[],"description":"Data Sources page rendered."},
+    {"url":"http://localhost:8080/disease/MONDO:0002497.json","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":[],"description":"HTML Error page instead of JSON because scigraph-data-dev could not resolve."}
+  ],
+  "key_flow_results": [
+    {"name":"autocomplete submit","outcome":"failed","console_errors_captured":["Twitter syndication HTTP 429"],"detail":"Reached Search Results: food, but selenium_id_loaded absent, 0 matches, and required result text absent."},
+    {"name":"autocomplete select","outcome":"failed","console_errors_captured":["Twitter syndication HTTP 429"],"detail":"Typed BRCA1; no autocomplete option appeared, so selection/detail assertions could not proceed."},
+    {"name":"phenotype analyze","outcome":"failed","console_errors_captured":[],"detail":"Typed microa; no Microalbuminuria option appeared. Repaired phenogrid_config 500 did not recur on final load."},
+    {"name":"phenotype compare gene list","outcome":"failed","console_errors_captured":[],"detail":"Typed Microalbuminuria; no option appeared, so remaining fixed steps could not proceed."},
+    {"name":"phenogrid package initialization","outcome":"failed","console_errors_captured":["Five beta OwlSim CORS blocks","Five net::ERR_FAILED errors"],"detail":"Titles matched, but no phenogrid_container1_svg and five Loading indicators remained."},
+    {"name":"phenogrid interaction","outcome":"failed","console_errors_captured":[],"detail":"Compare URL rendered Error due SciGraph DNS; no SVG/control available."}
+  ],
+  "external_service_check_results": [
+    {"service":"SciGraph ontology","outcome":"failed","detail":"curl exit 6: host could not resolve; configured endpoint matched."},
+    {"service":"SciGraph data","outcome":"failed","detail":"curl exit 6: host could not resolve; configured endpoint matched."},
+    {"service":"Solr/GOlr","outcome":"failed","detail":"curl exit 6: solr-dev host could not resolve; configured endpoint matched."},
+    {"service":"Solr/GOlr beta-production live API coverage","outcome":"failed","detail":"curl exit 6: production Solr host could not resolve; configured endpoint matched."},
+    {"service":"OwlSim","outcome":"failed","detail":"Exited 0 but returned modern Monarch HTML, not OwlSim JSON contract."},
+    {"service":"Biolink API","outcome":"passed","detail":"Configured API root resolved and returned FastAPI Swagger UI/OpenAPI surface."},
+    {"service":"Blogger RSS","outcome":"passed","detail":"Configured URL returned RSS XML with channel/items."}
+  ],
+  "console_error_results": [
+    {"error":"TypeError reading version at js/index.js","source":"automated","scope":"in_scope","outcome":"fixed","detail":"Explicit d3 global assignment fixed webpack runtime."},
+    {"error":"InitMonarchBBOPHandler is not defined","source":"automated","scope":"in_scope","outcome":"fixed","detail":"Consequence of earlier bundle abort; disappeared after d3 repair."},
+    {"error":"HTTP 500 loading /phenogrid_config.js","source":"automated","scope":"in_scope","outcome":"fixed","detail":"Migrated remaining static handler to Hapi 21 response API."},
+    {"error":"CORS blocked beta.monarchinitiative.org/simsearch/phenotype in Phenogrid 1.3.11 demo","source":"automated","scope":"in_scope","outcome":"unresolved","detail":"Approved package index hardcodes live beta service; hermetic repair requires undeclared fixture/vendored rewrite."},
+    {"error":"net::ERR_FAILED for beta OwlSim simsearch","source":"automated","scope":"in_scope","outcome":"unresolved","detail":"Repeated for five examples; no SVG initialized."},
+    {"error":"genome.cshlp.org NotSameOrigin","source":"automated","scope":"out_of_scope","outcome":"out_of_scope","detail":"Pre-existing third-party publication embed."},
+    {"error":"Twitter syndication HTTP 429","source":"automated","scope":"out_of_scope","outcome":"out_of_scope","detail":"Third-party social widget rate limiting."}
+  ],
+  "final_commit_ref": "8de30399",
+  "rejection_reasons": [
+    "Required Phenogrid 1.3.11 demo initialization fails on hardcoded cross-origin beta OwlSim requests and never creates phenogrid_container1_svg.",
+    "Startup /page/about strict browser gate captures a third-party embed console error.",
+    "All six declared key flows fail; live data paths cannot complete and local Phenogrid does not initialize.",
+    "Multiple key pages render Error due unavailable SciGraph data; JSON target does not return JSON.",
+    "Existing commands fail: make unavailable, apitest 4/4 failed, class-info failed.",
+    "Five of seven external checks fail or return incompatible content.",
+    "Two in-scope Phenogrid demo console-error types remain unresolved.",
+    "Three support files are outside literal planned/generated file lists, though directly related to declared changes."
+  ],
+  "recommendations": [
+    "Amend the plan to choose a genuinely hermetic Phenogrid demo fixture/wrapper or explicitly classify the package demo as OwlSim-dependent.",
+    "Restore or replace SciGraph, Solr/GOlr, and OwlSim endpoints/contracts, then rerun all service-backed pages and flows.",
+    "Decide through plan amendment whether the genome publication embed must be changed or exempted from the startup console gate.",
+    "Run the aggregate Makefile suite where GNU Make is installed after services are restored.",
+    "Explicitly add js/index.js, js/search_results.js, and tests/resources/phenopacket-schema.json to revised plan scope."
+  ]
+}

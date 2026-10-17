@@ -1,0 +1,1946 @@
+﻿{
+    "upgrade_description":  "Upgrade any outdated dependencies found in the tv-radio repo packages: tv-radio-admin/Admin/API, tv-radio-admin/CLI, tv-radio-admin/Common, tv-radio-admin/Export, tv-radio-admin/Ingest, tv-radio-admin/Search, tv-radio-admin/Utilities if present, and tv-radio-frontend. Do not modify tv-radio-admin/shared-config.js or tv-radio-frontend/config.js because they are gitignored local config files. Also preserve AGENTS.md, CLAUDE.md, .gitignore, and .claude/skills/gitnexus/** if GitNexus indexing touches them; these are not part of the upgrade.",
+    "ordered_changes":  [
+                            {
+                                "sequence":  1,
+                                "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Admin API manifest pins a legacy Express 4.9, Socket.IO 1.x, JWT, body parsing, metrics, cache, XML, and media stack; multiple current targets are major-version upgrades.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  17,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async \u003e=0.2.9, body-parser 1.9.0, compression 1.4.3, cron 1.0.6, express 4.9.5, fluent-ffmpeg 2.0.0-rc3, jsonwebtoken ^5.4.0, memcached 2.2.0, minimist 1.1.0, influx 4.0.0, socket.io 1.1.0, socketio-jwt ^4.3.1, xml2js 0.4.4"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to async 3.2.6, body-parser 2.3.0, compression 1.8.1, cron 4.4.0, express 5.2.1, fluent-ffmpeg 2.1.3, jsonwebtoken 9.0.3, memcached 2.2.2, minimist 1.2.8, influx 5.12.0, socket.io 4.8.3, socketio-jwt 4.6.2 only if still used after the app.js rewrite, and xml2js 0.6.2. If app.js replaces socketio-jwt with inline jsonwebtoken middleware, remove socketio-jwt from this manifest instead of retaining an unused dependency.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  2,
+                                "file_path":  "tv-radio-admin/CLI/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "CLI manifest includes old async/minimist and pace; Chapman index smoke depends on this package.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async \u003e=0.2.9, minimist 1.1.0, pace 0.0.4"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to async 3.2.6 and minimist 1.2.8. Retain pace 0.0.4 because the impact report found no newer registry target.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/CLI/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  3,
+                                "file_path":  "tv-radio-admin/Common/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Common package owns MongoDB and media-probing wrappers used by admin, CLI, ingest, export, and search flows.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "mongodb ^2.2.24, async \u003e=0.2.9, fluent-ffmpeg 2.0.0-rc3"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to mongodb 7.5.0, async 3.2.6, and fluent-ffmpeg 2.1.3. Keep the existing Common callback API surface by adapting internals rather than changing callers.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Common/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  4,
+                                "file_path":  "tv-radio-admin/Export/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Export package uses old archive, XML, FTP, stream buffer, and async packages in Primo export flows.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async \u003e=0.2.9, xmlbuilder ~2.6.1, archiver ~0.14, stream-buffers 2.1.0, ftp ~0.3.8"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to async 3.2.6, xmlbuilder 15.1.1, archiver 8.0.0, stream-buffers 3.0.3, and ftp 0.3.10.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Export/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  5,
+                                "file_path":  "tv-radio-admin/Ingest/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Ingest package uses the pre-1.0 csv API and xml2js parser wrappers across Chapman import paths.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  8,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async \u003e=0.2.9, xml2js 0.4.4, csv 0.4.0"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to async 3.2.6, xml2js 0.6.2, and csv 6.6.1.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Ingest/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  6,
+                                "file_path":  "tv-radio-admin/Search/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Search package uses old async and moment versions in Solr indexing and date normalization flows.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async \u003e=0.2.9, moment 2.8.2"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to async 3.2.6 and moment 2.30.1.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Search/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  7,
+                                "file_path":  "tv-radio-frontend/package.json",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Frontend manifest pins legacy Express, MongoDB, templating, media, mail, metrics, Socket.IO client, logging, and deprecated packages.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  5,
+                                                      "end_line":  25,
+                                                      "symbol_or_pattern":  "dependencies",
+                                                      "matched_api":  "async \u003e=0.2.9, body-parser 1.9.0, express 4.9.5, gc-stats ^1.0.0, handlebars 3.0.0, influx 4.0.0, memcached 2.2.0, minimist 1.1.0, moment 2.10.2, mongodb ^2.0.0, nodemailer 1.4.0, on-finished ^2.2.0, request ^2.87.0, send 0.12.2, sharp ^0.14.1, socket.io-client 1.1.0, uglify-js ^2.4.17, uuid 2.0.1, walk ^2.3.9, winston ^1.0.1, winston-logstash ^0.3.0"
+                                                  }
+                                              ],
+                                "change_description":  "Update dependencies to async 3.2.6, body-parser 2.3.0, express 5.2.1, gc-stats 1.4.1, handlebars 4.7.9, influx 5.12.0, memcached 2.2.2, minimist 1.2.8, moment 2.30.1, mongodb 7.5.0, nodemailer 9.0.3, on-finished 2.4.1, request 2.88.2, send 1.2.1, sharp 0.35.3, socket.io-client 4.8.3, uglify-js 3.19.3, uuid 14.0.1, walk 2.3.15, winston 3.19.0, and winston-logstash 2.0.5.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/package.json.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  8,
+                                "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Primary Admin API entry point uses Express, body-parser, compression, Socket.IO, socketio-jwt, jsonwebtoken, and minimist APIs directly; validation requires root and auth-status routes to continue returning 200.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  9,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "express, body-parser, compression, socket.io, jsonwebtoken, socketio-jwt, minimist"
+                                                  },
+                                                  {
+                                                      "start_line":  21,
+                                                      "end_line":  21,
+                                                      "symbol_or_pattern":  "socketio(server, {path})",
+                                                      "matched_api":  "socket.io server constructor"
+                                                  },
+                                                  {
+                                                      "start_line":  26,
+                                                      "end_line":  28,
+                                                      "symbol_or_pattern":  "app.use/bodyParser",
+                                                      "matched_api":  "compression middleware, bodyParser.json, bodyParser.urlencoded"
+                                                  },
+                                                  {
+                                                      "start_line":  40,
+                                                      "end_line":  41,
+                                                      "symbol_or_pattern":  "express.static.mime.define",
+                                                      "matched_api":  "Express static MIME API"
+                                                  },
+                                                  {
+                                                      "start_line":  54,
+                                                      "end_line":  54,
+                                                      "symbol_or_pattern":  "socketiojwt.authorize",
+                                                      "matched_api":  "socketio-jwt authorization middleware"
+                                                  },
+                                                  {
+                                                      "start_line":  162,
+                                                      "end_line":  164,
+                                                      "symbol_or_pattern":  "jwt.sign",
+                                                      "matched_api":  "jsonwebtoken.sign"
+                                                  }
+                                              ],
+                                "change_description":  "Replace Express 4/Socket.IO 1 era startup code with Express 5 and Socket.IO 4 compatible forms. Remove express.static.mime.define lines 40-41 without adding a config dependency. Keep compression and body parsing middleware active using Express 5/body-parser 2 compatible calls. Rewrite io.use authorization at line 54 as Socket.IO 4 middleware that verifies JWTs with jsonwebtoken.verify against sharedConfig.JWT_TOKEN_SECRET, accepting token values from handshake auth/query/header for backward compatibility; then remove the socketio-jwt require if unused. Keep jwt.sign at lines 162-164 but ensure jsonwebtoken 9 receives a plain object payload and the expiresIn option remains seconds-compatible.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/app.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  9,
+                                "file_path":  "tv-radio-admin/Admin/API/cache-provider.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Admin API cache provider wraps memcached and async operations used by title caching flows.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "memcached, async"
+                                                  },
+                                                  {
+                                                      "start_line":  37,
+                                                      "end_line":  37,
+                                                      "symbol_or_pattern":  "async.parallel",
+                                                      "matched_api":  "async parallel"
+                                                  },
+                                                  {
+                                                      "start_line":  85,
+                                                      "end_line":  85,
+                                                      "symbol_or_pattern":  "async.eachLimit",
+                                                      "matched_api":  "async eachLimit"
+                                                  }
+                                              ],
+                                "change_description":  "Keep the Memcached constructor and callback contract; async 3 still supports parallel and eachLimit callbacks. Confirm done callbacks are always invoked once and no promise conversion is needed.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/cache-provider.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  10,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-usage.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Admin usage metrics integrate InfluxDB client and async queueing; metrics smoke is not explicit but API startup loads this module.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  8,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "influx, async"
+                                                  },
+                                                  {
+                                                      "start_line":  258,
+                                                      "end_line":  258,
+                                                      "symbol_or_pattern":  "influx(config.metrics.config)",
+                                                      "matched_api":  "influx client factory"
+                                                  },
+                                                  {
+                                                      "start_line":  288,
+                                                      "end_line":  288,
+                                                      "symbol_or_pattern":  "metricsClient.writePoints",
+                                                      "matched_api":  "influx writePoints"
+                                                  }
+                                              ],
+                                "change_description":  "Update Influx usage for influx 5.12 while preserving metrics optionality. Instantiate the client with the current influx package API used by config.metrics.config, and adapt writePoints so errors are logged and callbacks still drain the async queue.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/admin-usage.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  11,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-media-scan.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Media scan scheduler uses cron and async APIs directly.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "cron.CronJob, async"
+                                                  },
+                                                  {
+                                                      "start_line":  305,
+                                                      "end_line":  305,
+                                                      "symbol_or_pattern":  "new CronJob",
+                                                      "matched_api":  "cron CronJob constructor"
+                                                  }
+                                              ],
+                                "change_description":  "Verify cron 4 object constructor usage remains valid for cronTime/onTick/start. If cron 4 requires named imports, keep CronJob require updated at lines 6-7 and preserve the schedule expression at line 306.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/admin-media-scan.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  12,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-unisat.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "UniSat admin flow uses Express route handlers, cron schedules, and async callbacks.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  9,
+                                                      "end_line":  11,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "express, cron.CronJob, async"
+                                                  },
+                                                  {
+                                                      "start_line":  265,
+                                                      "end_line":  277,
+                                                      "symbol_or_pattern":  "new CronJob",
+                                                      "matched_api":  "cron CronJob constructor"
+                                                  }
+                                              ],
+                                "change_description":  "Verify Express route handler imports and cron 4 CronJob object construction. Preserve delayed Date scheduling and start:true behavior in both CronJob constructions at lines 265-277 and the following constructor.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/admin-unisat.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  13,
+                                "file_path":  "tv-radio-admin/Admin/API/admin-titles-common.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Shared title media functions use fluent-ffmpeg, async, and Express response helpers.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "fluent-ffmpeg, async, express"
+                                                  },
+                                                  {
+                                                      "start_line":  136,
+                                                      "end_line":  146,
+                                                      "symbol_or_pattern":  "ffmpeg(...).seekInput(...).output(...)",
+                                                      "matched_api":  "fluent-ffmpeg command chain"
+                                                  },
+                                                  {
+                                                      "start_line":  440,
+                                                      "end_line":  488,
+                                                      "symbol_or_pattern":  "ffmpeg(path); async.eachLimit",
+                                                      "matched_api":  "fluent-ffmpeg and async eachLimit"
+                                                  }
+                                              ],
+                                "change_description":  "Upgrade fluent-ffmpeg usage to 2.1.3 without changing exported function signatures. Preserve FFMPEG_BIN_PATH/FFPROBE_BIN_PATH handling, seekInput/output/noAudio/outputOptions flow for thumbnail creation, and ffprobe callback behavior before async.eachLimit thumbnail generation.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/admin-titles-common.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  14,
+                                "file_path":  "tv-radio-admin/Admin/API/unisat-record-processing.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "UniSat processing uses xml2js parser instances and async loops for import processing.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  7,
+                                                      "end_line":  8,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "xml2js, async"
+                                                  },
+                                                  {
+                                                      "start_line":  135,
+                                                      "end_line":  213,
+                                                      "symbol_or_pattern":  "async.eachLimit",
+                                                      "matched_api":  "async eachLimit"
+                                                  },
+                                                  {
+                                                      "start_line":  267,
+                                                      "end_line":  269,
+                                                      "symbol_or_pattern":  "new xml2js.Parser().parseString",
+                                                      "matched_api":  "xml2js Parser.parseString"
+                                                  }
+                                              ],
+                                "change_description":  "Keep async.eachLimit traversal semantics and update xml2js parser calls only as needed for xml2js 0.6.2. Preserve new xml2js.Parser().parseString callback behavior and error logging.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Admin/API/unisat-record-processing.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  15,
+                                "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Core MongoDB abstraction uses MongoDB driver 2.x callback APIs, collection methods removed or changed in modern driver versions, GridFSBucket, and async control flow.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  2,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "mongodb, MongoClient, GridFSBucket, async"
+                                                  },
+                                                  {
+                                                      "start_line":  77,
+                                                      "end_line":  77,
+                                                      "symbol_or_pattern":  "async.series",
+                                                      "matched_api":  "async series"
+                                                  },
+                                                  {
+                                                      "start_line":  138,
+                                                      "end_line":  138,
+                                                      "symbol_or_pattern":  "MongoClient.connect(..., callback)",
+                                                      "matched_api":  "mongodb MongoClient.connect callback API"
+                                                  },
+                                                  {
+                                                      "start_line":  174,
+                                                      "end_line":  350,
+                                                      "symbol_or_pattern":  "collection count/update/remove/insert callbacks",
+                                                      "matched_api":  "mongodb collection legacy APIs"
+                                                  },
+                                                  {
+                                                      "start_line":  519,
+                                                      "end_line":  637,
+                                                      "symbol_or_pattern":  "GridFSBucket and async.eachLimit",
+                                                      "matched_api":  "mongodb GridFSBucket, async eachLimit"
+                                                  }
+                                              ],
+                                "change_description":  "Modernize the MongoDB abstraction for driver 7.5 while preserving every exported callback-style method. Store both MongoClient and db after await/promise MongoClient.connect; remove deprecated options autoReconnect and keep valid SSL/connect/socket options. Replace count with countDocuments/estimatedDocumentCount as appropriate, ensureIndex with createIndex, update/remove/insert with updateOne/updateMany/deleteOne/deleteMany/insertOne/insertMany, cursor.each with forEach/toArray wrappers, cursor.count with countDocuments for the original query, findAndModify with findOneAndUpdate, and new Buffer with Buffer.from. Preserve GridFSBucket usage, but wrap delete/openUploadStream/find operations so callbacks fire exactly once.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Common/directdb-mongo.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  16,
+                                "file_path":  "tv-radio-admin/Common/directdb-mongo-backup.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "MongoDB backup flow uses old driver BSON and cursor/collection callback APIs.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  3,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "mongodb, async, mongo.BSON"
+                                                  },
+                                                  {
+                                                      "start_line":  21,
+                                                      "end_line":  75,
+                                                      "symbol_or_pattern":  "collection.count/find stream",
+                                                      "matched_api":  "mongodb collection/cursor APIs"
+                                                  }
+                                              ],
+                                "change_description":  "Adapt BSON access for mongodb 7 by using the exported BSON implementation or requiring bson if available through mongodb. Replace collection.count with estimatedDocumentCount/countDocuments and replace find().stream() with the modern cursor stream API while keeping pause/resume, progress, serialize, and safe completion behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Common/directdb-mongo-backup.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  17,
+                                "file_path":  "tv-radio-admin/Common/record-media-scan.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Shared record media scan uses deprecated fluent-ffmpeg plus MongoDB provider access and async queues.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  7,
+                                                      "end_line":  8,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "fluent-ffmpeg, async"
+                                                  },
+                                                  {
+                                                      "start_line":  27,
+                                                      "end_line":  27,
+                                                      "symbol_or_pattern":  "ffmpeg(path)",
+                                                      "matched_api":  "fluent-ffmpeg command factory"
+                                                  },
+                                                  {
+                                                      "start_line":  188,
+                                                      "end_line":  279,
+                                                      "symbol_or_pattern":  "async.queue",
+                                                      "matched_api":  "async queue"
+                                                  },
+                                                  {
+                                                      "start_line":  369,
+                                                      "end_line":  526,
+                                                      "symbol_or_pattern":  "ffmpegInst.ffprobe",
+                                                      "matched_api":  "fluent-ffmpeg ffprobe"
+                                                  }
+                                              ],
+                                "change_description":  "Keep fluent-ffmpeg 2.1.3 ffprobe behavior and async queue semantics. Where MongoDB bulk operations interact with driver 7, ensure initializeUnorderedBulkOp usage still works or replace with bulkWrite while preserving queued batching and Solr update ordering.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Common/record-media-scan.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  18,
+                                "file_path":  "tv-radio-admin/CLI/chapman.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Chapman CLI smoke depends on minimist argument parsing and pace progress behavior while invoking ingest/search/export flows.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "minimist, pace"
+                                                  },
+                                                  {
+                                                      "start_line":  389,
+                                                      "end_line":  420,
+                                                      "symbol_or_pattern":  "pace(...).op/charm.end",
+                                                      "matched_api":  "pace progress bar"
+                                                  },
+                                                  {
+                                                      "start_line":  609,
+                                                      "end_line":  618,
+                                                      "symbol_or_pattern":  "pace(totalItems).op",
+                                                      "matched_api":  "pace progress bar"
+                                                  }
+                                              ],
+                                "change_description":  "Update minimist with no argument contract change and keep pace progress usage. Ensure pacebar.charm.end is guarded because pace 0.0.4 is retained and may not expose charm when output is non-interactive.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/CLI/chapman.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  19,
+                                "file_path":  "tv-radio-admin/CLI/backup.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "low",
+                                "rationale":  "Backup helper uses async and pace; primarily transitively affected through Common MongoDB upgrade.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "async, pace"
+                                                  },
+                                                  {
+                                                      "start_line":  24,
+                                                      "end_line":  58,
+                                                      "symbol_or_pattern":  "pace(...).op",
+                                                      "matched_api":  "pace progress bar"
+                                                  }
+                                              ],
+                                "change_description":  "Keep async and pace behavior; no API rewrite is expected beyond compatibility with the Common MongoDB backup changes.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/CLI/backup.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  20,
+                                "file_path":  "tv-radio-admin/Export/primo-export.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Primo export uses archiver 0.x, ftp, stream-buffers, and async flow control; archiver target is a major-version jump.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "stream-buffers, archiver, async, ftp"
+                                                  },
+                                                  {
+                                                      "start_line":  272,
+                                                      "end_line":  395,
+                                                      "symbol_or_pattern":  "async.forEachLimit, new ftp, ftpConnection.put/connect",
+                                                      "matched_api":  "async and ftp client APIs"
+                                                  },
+                                                  {
+                                                      "start_line":  461,
+                                                      "end_line":  529,
+                                                      "symbol_or_pattern":  "archiver(\u0027tar\u0027).append/finalize",
+                                                      "matched_api":  "archiver tar API"
+                                                  },
+                                                  {
+                                                      "start_line":  577,
+                                                      "end_line":  616,
+                                                      "symbol_or_pattern":  "archiver(\u0027tar\u0027).append/finalize",
+                                                      "matched_api":  "archiver tar API"
+                                                  }
+                                              ],
+                                "change_description":  "Adapt archiver 8 tar/gzip creation while preserving append/finalize/abort and stream completion behavior. Keep ftp 0.3.10 event/callback behavior, update async.forEachLimit calls only if needed, and verify stream-buffers getContents still returns data before file and FTP writes.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Export/primo-export.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  21,
+                                "file_path":  "tv-radio-admin/Export/dublincore-exporter.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Dublin Core exporter builds XML with old xmlbuilder APIs.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "xmlbuilder"
+                                                  },
+                                                  {
+                                                      "start_line":  396,
+                                                      "end_line":  459,
+                                                      "symbol_or_pattern":  "xmlBuilder.create",
+                                                      "matched_api":  "xmlbuilder create"
+                                                  }
+                                              ],
+                                "change_description":  "Update xmlbuilder import/API for 15.1.1. Preserve create/att/ele/end output structure and pretty formatting for OAI-PMH XML; if the old package name now exposes create through a default/named property, adapt the require at lines 1-2.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Export/dublincore-exporter.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  22,
+                                "file_path":  "tv-radio-admin/Ingest/csv-processor.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "CSV processor uses csv 0.4 APIs that are incompatible with current csv 6.x module layout and streaming API.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  3,
+                                                      "end_line":  3,
+                                                      "symbol_or_pattern":  "require(\"csv\")",
+                                                      "matched_api":  "csv package"
+                                                  },
+                                                  {
+                                                      "start_line":  10,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "csv.parse(options)",
+                                                      "matched_api":  "csv parse"
+                                                  },
+                                                  {
+                                                      "start_line":  28,
+                                                      "end_line":  28,
+                                                      "symbol_or_pattern":  "csv.parse().from.path",
+                                                      "matched_api":  "csv legacy from.path chain"
+                                                  }
+                                              ],
+                                "change_description":  "Replace csv 0.4 parser usage with csv 6 parser import, e.g. require(\"csv-parse\") or the csv package parse export as installed by csv 6. Pipe fs.createReadStream(filePath) into the parser and emit the same row processing callbacks; do not resurrect the commented csv.parse().from.path chain.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Ingest/csv-processor.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  23,
+                                "file_path":  "tv-radio-admin/Ingest/ingest.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Main ingest coordinator passes csv/xml2js/async into importers and is covered by the Chapman index smoke.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  2,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "csv, xml2js, async"
+                                                  },
+                                                  {
+                                                      "start_line":  27,
+                                                      "end_line":  27,
+                                                      "symbol_or_pattern":  "xml2js: xml2js",
+                                                      "matched_api":  "xml2js dependency injection"
+                                                  },
+                                                  {
+                                                      "start_line":  66,
+                                                      "end_line":  176,
+                                                      "symbol_or_pattern":  "async.waterfall",
+                                                      "matched_api":  "async waterfall"
+                                                  },
+                                                  {
+                                                      "start_line":  382,
+                                                      "end_line":  463,
+                                                      "symbol_or_pattern":  "async.queue/forEachLimit",
+                                                      "matched_api":  "async queue and forEachLimit"
+                                                  }
+                                              ],
+                                "change_description":  "Update csv module injection for csv 6 while keeping INGEST_MODULES keys stable for processors. Keep async.waterfall, queue, and forEachLimit callback semantics under async 3; no caller-facing promise conversion.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Ingest/ingest.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  24,
+                                "file_path":  "tv-radio-admin/Ingest/attacher.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Attacher flow uses csv/xml2js/async and injects parser dependencies into PBCore attachers.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  3,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "csv, xml2js, async"
+                                                  },
+                                                  {
+                                                      "start_line":  18,
+                                                      "end_line":  18,
+                                                      "symbol_or_pattern":  "xml2js: xml2js",
+                                                      "matched_api":  "xml2js dependency injection"
+                                                  },
+                                                  {
+                                                      "start_line":  67,
+                                                      "end_line":  71,
+                                                      "symbol_or_pattern":  "async.queue/forEachLimit",
+                                                      "matched_api":  "async queue and forEachLimit"
+                                                  }
+                                              ],
+                                "change_description":  "Update csv/xml2js/async dependency injection to match Ingest changes and keep ATTACH_MODULES keys stable. Preserve async queue/forEachLimit callback behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Ingest/attacher.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  25,
+                                "file_path":  "tv-radio-admin/Search/build.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Search build uses async queues and parallel/series flows while rebuilding Solr indexes.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(\"async\")",
+                                                      "matched_api":  "async"
+                                                  },
+                                                  {
+                                                      "start_line":  76,
+                                                      "end_line":  76,
+                                                      "symbol_or_pattern":  "async.queue",
+                                                      "matched_api":  "async queue"
+                                                  },
+                                                  {
+                                                      "start_line":  256,
+                                                      "end_line":  639,
+                                                      "symbol_or_pattern":  "async.series/parallel",
+                                                      "matched_api":  "async series and parallel"
+                                                  }
+                                              ],
+                                "change_description":  "Keep async 3 callback control-flow. Review queue drain behavior and any async.parallel callbacks touched by MongoDB abstraction changes; do not run geodata, courses, or subjects Chapman commands for validation.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Search/build.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  26,
+                                "file_path":  "tv-radio-admin/Search/search-index-solr.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "low",
+                                "rationale":  "Solr adapter uses moment date formatting; moment upgrade is minor within v2.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  4,
+                                                      "symbol_or_pattern":  "require(\"moment\")",
+                                                      "matched_api":  "moment"
+                                                  },
+                                                  {
+                                                      "start_line":  948,
+                                                      "end_line":  1013,
+                                                      "symbol_or_pattern":  "moment(date).toISOString",
+                                                      "matched_api":  "moment date parsing/formatting"
+                                                  }
+                                              ],
+                                "change_description":  "Update moment to 2.30.1 with no behavior change. Preserve toISOString output for full and partial date normalization.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Search/search-index-solr.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  27,
+                                "file_path":  "tv-radio-admin/Search/record-processor.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "low",
+                                "rationale":  "Record processor uses moment for indexed_date conversion.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  3,
+                                                      "end_line":  3,
+                                                      "symbol_or_pattern":  "require(\"moment\")",
+                                                      "matched_api":  "moment"
+                                                  },
+                                                  {
+                                                      "start_line":  32,
+                                                      "end_line":  32,
+                                                      "symbol_or_pattern":  "moment(doc.date_s).toISOString",
+                                                      "matched_api":  "moment date parsing/formatting"
+                                                  }
+                                              ],
+                                "change_description":  "Update moment to 2.30.1 with no behavior change. Preserve indexed_date_d generation from doc.date_s.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-admin/Search/record-processor.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  28,
+                                "file_path":  "tv-radio-frontend/app.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Frontend entry point loads Express, body-parser, handlebars, socket.io-client, uglify-js, async, and dynamic routes; frontend smoke validates this server.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  16,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "express, body-parser, minimist, handlebars, socket.io-client, uglify-js, async"
+                                                  },
+                                                  {
+                                                      "start_line":  21,
+                                                      "end_line":  21,
+                                                      "symbol_or_pattern":  "app.use(bodyParser.json())",
+                                                      "matched_api":  "body-parser middleware"
+                                                  },
+                                                  {
+                                                      "start_line":  42,
+                                                      "end_line":  50,
+                                                      "symbol_or_pattern":  "handlebars.compile and require.extensions",
+                                                      "matched_api":  "handlebars compile"
+                                                  },
+                                                  {
+                                                      "start_line":  80,
+                                                      "end_line":  80,
+                                                      "symbol_or_pattern":  "socketioClient(config.ADMIN_NOTIFICATION.server)",
+                                                      "matched_api":  "socket.io-client connection"
+                                                  },
+                                                  {
+                                                      "start_line":  87,
+                                                      "end_line":  127,
+                                                      "symbol_or_pattern":  "async.series",
+                                                      "matched_api":  "async series"
+                                                  },
+                                                  {
+                                                      "start_line":  170,
+                                                      "end_line":  187,
+                                                      "symbol_or_pattern":  "uglify.minify and response.send",
+                                                      "matched_api":  "uglify-js minify, Express response"
+                                                  }
+                                              ],
+                                "change_description":  "Make the Express 5 startup path load successfully. Keep bodyParser.json or replace with express.json. Keep handlebars compile/require.extensions behavior compatible with handlebars 4. Update socket.io-client call at line 80 for v4 compatibility. Keep async.series initialization. Update uglify-js 3 minify call so input file paths are read/minified correctly and response sends ug.code/ug.map only after checking for ug.error.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/app.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  29,
+                                "file_path":  "tv-radio-frontend/app-media.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Frontend media app uses Express, minimist, socket.io-client, and metrics modules.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  4,
+                                                      "end_line":  10,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "express, minimist, socket.io-client"
+                                                  },
+                                                  {
+                                                      "start_line":  42,
+                                                      "end_line":  42,
+                                                      "symbol_or_pattern":  "socketioClient(config.ADMIN_NOTIFICATION.server)",
+                                                      "matched_api":  "socket.io-client connection"
+                                                  }
+                                              ],
+                                "change_description":  "Update socket.io-client v4 connection usage for ADMIN_NOTIFICATION while preserving minimist parsing and Express startup behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/app-media.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  30,
+                                "file_path":  "tv-radio-frontend/db-provider.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Frontend MongoDB provider uses driver 2.x callback APIs and removed GridStore class.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  5,
+                                                      "symbol_or_pattern":  "require(\"mongodb\")",
+                                                      "matched_api":  "mongodb MongoClient, GridStore, ReadPreference"
+                                                  },
+                                                  {
+                                                      "start_line":  64,
+                                                      "end_line":  64,
+                                                      "symbol_or_pattern":  "MongoClient.connect(..., callback)",
+                                                      "matched_api":  "mongodb MongoClient.connect callback API"
+                                                  },
+                                                  {
+                                                      "start_line":  90,
+                                                      "end_line":  116,
+                                                      "symbol_or_pattern":  "collection.insert/update/aggregate callbacks",
+                                                      "matched_api":  "mongodb collection APIs"
+                                                  },
+                                                  {
+                                                      "start_line":  135,
+                                                      "end_line":  135,
+                                                      "symbol_or_pattern":  "new GridStore",
+                                                      "matched_api":  "mongodb GridStore"
+                                                  }
+                                              ],
+                                "change_description":  "Modernize frontend MongoDB usage for driver 7 while preserving DBProvider callback methods. Remove GridStore usage and implement getFileAndMetadata with GridFSBucket.openDownloadStreamByName/find metadata. Replace callback MongoClient.connect with promise/client.db handling, insert/update with insertOne/updateOne, and aggregate callback usage with toArray or a callback bridge.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/db-provider.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  31,
+                                "file_path":  "tv-radio-frontend/cache-provider.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "low",
+                                "rationale":  "Frontend cache provider instantiates memcached directly.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "require(\"memcached\")",
+                                                      "matched_api":  "memcached"
+                                                  },
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "new Memcached(...)",
+                                                      "matched_api":  "memcached constructor"
+                                                  }
+                                              ],
+                                "change_description":  "Keep Memcached constructor and poolSize behavior; memcached 2.2.2 should remain callback-compatible.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/cache-provider.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  32,
+                                "file_path":  "tv-radio-frontend/logger.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Logger uses Winston 1.x constructor style and winston-logstash transport integration; target Winston 3 has a different creation/transport model.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "winston, on-finished, winston-logstash"
+                                                  },
+                                                  {
+                                                      "start_line":  18,
+                                                      "end_line":  33,
+                                                      "symbol_or_pattern":  "new (winston.Logger)",
+                                                      "matched_api":  "winston Logger constructor"
+                                                  },
+                                                  {
+                                                      "start_line":  118,
+                                                      "end_line":  118,
+                                                      "symbol_or_pattern":  "new (winston.transports.Logstash)",
+                                                      "matched_api":  "winston-logstash transport"
+                                                  },
+                                                  {
+                                                      "start_line":  219,
+                                                      "end_line":  219,
+                                                      "symbol_or_pattern":  "onFinished(response, callback)",
+                                                      "matched_api":  "on-finished"
+                                                  }
+                                              ],
+                                "change_description":  "Rewrite Winston 1 logger construction to winston.createLogger for general/access/clientErrors. Update console transport construction and winston-logstash 2 transport registration/import so _createLogstashTransportInstance returns a valid transport or a safe no-op fallback when disabled. Preserve on-finished response logging at line 219.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/logger.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  33,
+                                "file_path":  "tv-radio-frontend/metrics.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Frontend metrics module uses influx client, async queue, and deprecated gc-stats native package.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  6,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "influx, async, gc-stats"
+                                                  },
+                                                  {
+                                                      "start_line":  39,
+                                                      "end_line":  39,
+                                                      "symbol_or_pattern":  "influx(config.METRICS.config)",
+                                                      "matched_api":  "influx client factory"
+                                                  },
+                                                  {
+                                                      "start_line":  47,
+                                                      "end_line":  47,
+                                                      "symbol_or_pattern":  "async.queue",
+                                                      "matched_api":  "async queue"
+                                                  }
+                                              ],
+                                "change_description":  "Update influx client creation for influx 5.12 and make gc-stats optional-safe: if requiring gc-stats fails or returns unsupported hooks on the runtime Node version, disable GC metrics without breaking startup. Preserve async.queue metric flushing behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/metrics.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  34,
+                                "file_path":  "tv-radio-frontend/media/generic-media.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Generic media streaming uses send and on-finished around response streams.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  7,
+                                                      "end_line":  9,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "on-finished, send"
+                                                  },
+                                                  {
+                                                      "start_line":  162,
+                                                      "end_line":  180,
+                                                      "symbol_or_pattern":  "send(request,...).pipe; onFinished",
+                                                      "matched_api":  "send stream and on-finished"
+                                                  },
+                                                  {
+                                                      "start_line":  753,
+                                                      "end_line":  801,
+                                                      "symbol_or_pattern":  "response.send",
+                                                      "matched_api":  "Express response send"
+                                                  }
+                                              ],
+                                "change_description":  "Verify send 1.2/on-finished behavior. Preserve pseudo-stream override and monitoring pipe, but adapt to any changed send internals so media response streaming and OPTIONS responses still complete.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/media/generic-media.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  35,
+                                "file_path":  "tv-radio-frontend/media/title-thumbnails.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Title thumbnail route uses sharp callback chain and send dependency.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "sharp, send"
+                                                  },
+                                                  {
+                                                      "start_line":  77,
+                                                      "end_line":  90,
+                                                      "symbol_or_pattern":  "sharp(file).resize(...).toFormat(...).toBuffer(callback)",
+                                                      "matched_api":  "sharp callback pipeline"
+                                                  }
+                                              ],
+                                "change_description":  "Convert sharp(file).resize(...).toFormat(...).toBuffer(callback) to a sharp 0.35 promise or async callback bridge. Preserve response status 200, image/jpeg content type, cache headers, error logging, and requestCommon failure behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/media/title-thumbnails.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  36,
+                                "file_path":  "tv-radio-frontend/media/unisat-thumbnails.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "UniSat thumbnail route uses sharp callback chain and send dependency.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "sharp, send"
+                                                  },
+                                                  {
+                                                      "start_line":  75,
+                                                      "end_line":  87,
+                                                      "symbol_or_pattern":  "sharp(file).resize(...).toFormat(...).toBuffer(callback)",
+                                                      "matched_api":  "sharp callback pipeline"
+                                                  }
+                                              ],
+                                "change_description":  "Convert sharp thumbnail generation to the same promise/callback bridge used for title thumbnails. Preserve status/content-type/error behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/media/unisat-thumbnails.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  37,
+                                "file_path":  "tv-radio-frontend/media/programme-media.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Programme thumbnail route uses sharp callback chain and send dependency.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  6,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "sharp, send"
+                                                  },
+                                                  {
+                                                      "start_line":  76,
+                                                      "end_line":  89,
+                                                      "symbol_or_pattern":  "sharp(file).resize(...).toFormat(...).toBuffer(callback)",
+                                                      "matched_api":  "sharp callback pipeline"
+                                                  }
+                                              ],
+                                "change_description":  "Convert sharp thumbnail generation to the same promise/callback bridge used for title thumbnails. Preserve status/content-type/cache/error behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/media/programme-media.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  38,
+                                "file_path":  "tv-radio-frontend/content/feedback/client-feedback.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "high",
+                                "rationale":  "Feedback routes use nodemailer 1.x transport creation, deprecated request, uuid v2, async, and handlebars templates.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  13,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "handlebars, nodemailer, uuid, async, request"
+                                                  },
+                                                  {
+                                                      "start_line":  594,
+                                                      "end_line":  594,
+                                                      "symbol_or_pattern":  "nodemailer.createTransport",
+                                                      "matched_api":  "nodemailer transport"
+                                                  },
+                                                  {
+                                                      "start_line":  659,
+                                                      "end_line":  659,
+                                                      "symbol_or_pattern":  "request(requestOptions,...)",
+                                                      "matched_api":  "request"
+                                                  }
+                                              ],
+                                "change_description":  "Update nodemailer.createTransport for nodemailer 9 and preserve callback send behavior in the surrounding mail flow. Update uuid usage for uuid 14, replacing uuid.v4/default access as required. Keep request at latest deprecated 2.88.2 unless replacing line 659 with built-in https can be done locally without changing behavior.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/content/feedback/client-feedback.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  39,
+                                "file_path":  "tv-radio-frontend/handlebars-helpers.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Global frontend Handlebars helpers also use moment formatting.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  1,
+                                                      "end_line":  2,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "handlebars, moment"
+                                                  },
+                                                  {
+                                                      "start_line":  14,
+                                                      "end_line":  113,
+                                                      "symbol_or_pattern":  "handlebars.registerHelper and moment(...)",
+                                                      "matched_api":  "handlebars helpers, moment date formatting"
+                                                  }
+                                              ],
+                                "change_description":  "Keep handlebars 4 helper registration and moment 2.30 formatting behavior. Verify helpers returning strings/dates are not affected by strict escaping changes.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/handlebars-helpers.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  40,
+                                "file_path":  "tv-radio-frontend/handlebars-partials.js",
+                                "change_type":  "modify",
+                                "estimated_risk":  "medium",
+                                "rationale":  "Partial loader uses walk and Handlebars partial compilation/registration APIs.",
+                                "locations":  [
+                                                  {
+                                                      "start_line":  3,
+                                                      "end_line":  7,
+                                                      "symbol_or_pattern":  "require(...)",
+                                                      "matched_api":  "walk"
+                                                  },
+                                                  {
+                                                      "start_line":  42,
+                                                      "end_line":  66,
+                                                      "symbol_or_pattern":  "handlebars.compile/registerPartial",
+                                                      "matched_api":  "handlebars compile and registerPartial"
+                                                  },
+                                                  {
+                                                      "start_line":  83,
+                                                      "end_line":  130,
+                                                      "symbol_or_pattern":  "handlebars.partials and walk",
+                                                      "matched_api":  "handlebars partials, walk traversal"
+                                                  }
+                                              ],
+                                "change_description":  "Keep walk 2.3.15 traversal and handlebars 4 partial registration. Ensure precompilePartialHelper still compiles string partials and registerPartial receives the resolved template source.",
+                                "validation_evidence":  [
+                                                            "Diff touches only the listed locations or directly adjacent compatibility helpers in tv-radio-frontend/handlebars-partials.js.",
+                                                            "No changes are made to tv-radio-admin/shared-config.js or tv-radio-frontend/config.js.",
+                                                            "Declared validation commands complete successfully after this change."
+                                                        ]
+                            },
+                            {
+                                "sequence":  41,
+                                "file_path":  "tv-radio-admin/Admin/API/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            },
+                            {
+                                "sequence":  42,
+                                "file_path":  "tv-radio-admin/CLI/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            },
+                            {
+                                "sequence":  43,
+                                "file_path":  "tv-radio-admin/Common/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            },
+                            {
+                                "sequence":  44,
+                                "file_path":  "tv-radio-admin/Export/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            },
+                            {
+                                "sequence":  45,
+                                "file_path":  "tv-radio-admin/Ingest/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            },
+                            {
+                                "sequence":  46,
+                                "file_path":  "tv-radio-admin/Search/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            },
+                            {
+                                "sequence":  47,
+                                "file_path":  "tv-radio-frontend/package-lock.json",
+                                "change_type":  "create",
+                                "estimated_risk":  "medium",
+                                "rationale":  "npm install on current npm creates a package-lock.json for the upgraded manifest; approving the generated lockfile keeps the final working tree constrained to planned files.",
+                                "locations":  [
+
+                                              ],
+                                "change_description":  "Create this lockfile only through npm install after the corresponding package.json has been updated. Do not hand-edit lockfile contents; it must resolve the dependency versions declared in the sibling package.json.",
+                                "validation_evidence":  [
+                                                            "Lockfile package name matches sibling package.json.",
+                                                            "Lockfile dependency versions resolve the planned target versions.",
+                                                            "No unrelated package directories receive lockfiles."
+                                                        ]
+                            }
+                        ],
+    "planned_files":  [
+                          "tv-radio-admin/Admin/API/package.json",
+                          "tv-radio-admin/CLI/package.json",
+                          "tv-radio-admin/Common/package.json",
+                          "tv-radio-admin/Export/package.json",
+                          "tv-radio-admin/Ingest/package.json",
+                          "tv-radio-admin/Search/package.json",
+                          "tv-radio-frontend/package.json",
+                          "tv-radio-admin/Admin/API/app.js",
+                          "tv-radio-admin/Admin/API/cache-provider.js",
+                          "tv-radio-admin/Admin/API/admin-usage.js",
+                          "tv-radio-admin/Admin/API/admin-media-scan.js",
+                          "tv-radio-admin/Admin/API/admin-unisat.js",
+                          "tv-radio-admin/Admin/API/admin-titles-common.js",
+                          "tv-radio-admin/Admin/API/unisat-record-processing.js",
+                          "tv-radio-admin/Common/directdb-mongo.js",
+                          "tv-radio-admin/Common/directdb-mongo-backup.js",
+                          "tv-radio-admin/Common/record-media-scan.js",
+                          "tv-radio-admin/CLI/chapman.js",
+                          "tv-radio-admin/CLI/backup.js",
+                          "tv-radio-admin/Export/primo-export.js",
+                          "tv-radio-admin/Export/dublincore-exporter.js",
+                          "tv-radio-admin/Ingest/csv-processor.js",
+                          "tv-radio-admin/Ingest/ingest.js",
+                          "tv-radio-admin/Ingest/attacher.js",
+                          "tv-radio-admin/Search/build.js",
+                          "tv-radio-admin/Search/search-index-solr.js",
+                          "tv-radio-admin/Search/record-processor.js",
+                          "tv-radio-frontend/app.js",
+                          "tv-radio-frontend/app-media.js",
+                          "tv-radio-frontend/db-provider.js",
+                          "tv-radio-frontend/cache-provider.js",
+                          "tv-radio-frontend/logger.js",
+                          "tv-radio-frontend/metrics.js",
+                          "tv-radio-frontend/media/generic-media.js",
+                          "tv-radio-frontend/media/title-thumbnails.js",
+                          "tv-radio-frontend/media/unisat-thumbnails.js",
+                          "tv-radio-frontend/media/programme-media.js",
+                          "tv-radio-frontend/content/feedback/client-feedback.js",
+                          "tv-radio-frontend/handlebars-helpers.js",
+                          "tv-radio-frontend/handlebars-partials.js",
+                          "tv-radio-admin/Admin/API/package-lock.json",
+                          "tv-radio-admin/CLI/package-lock.json",
+                          "tv-radio-admin/Common/package-lock.json",
+                          "tv-radio-admin/Export/package-lock.json",
+                          "tv-radio-admin/Ingest/package-lock.json",
+                          "tv-radio-admin/Search/package-lock.json",
+                          "tv-radio-frontend/package-lock.json"
+                      ],
+    "expected_dependency_changes":  [
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "body-parser",
+                                            "from_version":  "1.9.0",
+                                            "to_version":  "2.3.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "compression",
+                                            "from_version":  "1.4.3",
+                                            "to_version":  "1.8.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "cron",
+                                            "from_version":  "1.0.6",
+                                            "to_version":  "4.4.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "express",
+                                            "from_version":  "4.9.5",
+                                            "to_version":  "5.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "fluent-ffmpeg",
+                                            "from_version":  "2.0.0-rc3",
+                                            "to_version":  "2.1.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "jsonwebtoken",
+                                            "from_version":  "^5.4.0",
+                                            "to_version":  "9.0.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "memcached",
+                                            "from_version":  "2.2.0",
+                                            "to_version":  "2.2.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "influx",
+                                            "from_version":  "4.0.0",
+                                            "to_version":  "5.12.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "socket.io",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "4.8.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "socketio-jwt",
+                                            "from_version":  "^4.3.1",
+                                            "to_version":  "4.6.2 or removed if app.js no longer requires it"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Admin/API/package.json",
+                                            "dependency":  "xml2js",
+                                            "from_version":  "0.4.4",
+                                            "to_version":  "0.6.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/CLI/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "dependency":  "mongodb",
+                                            "from_version":  "^2.2.24",
+                                            "to_version":  "7.5.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Common/package.json",
+                                            "dependency":  "fluent-ffmpeg",
+                                            "from_version":  "2.0.0-rc3",
+                                            "to_version":  "2.1.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "xmlbuilder",
+                                            "from_version":  "~2.6.1",
+                                            "to_version":  "15.1.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "archiver",
+                                            "from_version":  "~0.14",
+                                            "to_version":  "8.0.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "stream-buffers",
+                                            "from_version":  "2.1.0",
+                                            "to_version":  "3.0.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Export/package.json",
+                                            "dependency":  "ftp",
+                                            "from_version":  "~0.3.8",
+                                            "to_version":  "0.3.10"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "dependency":  "xml2js",
+                                            "from_version":  "0.4.4",
+                                            "to_version":  "0.6.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Ingest/package.json",
+                                            "dependency":  "csv",
+                                            "from_version":  "0.4.0",
+                                            "to_version":  "6.6.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Search/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-admin/Search/package.json",
+                                            "dependency":  "moment",
+                                            "from_version":  "2.8.2",
+                                            "to_version":  "2.30.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "async",
+                                            "from_version":  "\u003e= 0.2.9",
+                                            "to_version":  "3.2.6"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "body-parser",
+                                            "from_version":  "1.9.0",
+                                            "to_version":  "2.3.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "express",
+                                            "from_version":  "4.9.5",
+                                            "to_version":  "5.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "gc-stats",
+                                            "from_version":  "^1.0.0",
+                                            "to_version":  "1.4.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "handlebars",
+                                            "from_version":  "3.0.0",
+                                            "to_version":  "4.7.9"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "influx",
+                                            "from_version":  "4.0.0",
+                                            "to_version":  "5.12.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "memcached",
+                                            "from_version":  "2.2.0",
+                                            "to_version":  "2.2.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "minimist",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "1.2.8"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "moment",
+                                            "from_version":  "2.10.2",
+                                            "to_version":  "2.30.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "mongodb",
+                                            "from_version":  "^2.0.0",
+                                            "to_version":  "7.5.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "nodemailer",
+                                            "from_version":  "1.4.0",
+                                            "to_version":  "9.0.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "on-finished",
+                                            "from_version":  "^2.2.0",
+                                            "to_version":  "2.4.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "request",
+                                            "from_version":  "^2.87.0",
+                                            "to_version":  "2.88.2"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "send",
+                                            "from_version":  "0.12.2",
+                                            "to_version":  "1.2.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "sharp",
+                                            "from_version":  "^0.14.1",
+                                            "to_version":  "0.35.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "socket.io-client",
+                                            "from_version":  "1.1.0",
+                                            "to_version":  "4.8.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "uglify-js",
+                                            "from_version":  "^2.4.17",
+                                            "to_version":  "3.19.3"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "uuid",
+                                            "from_version":  "2.0.1",
+                                            "to_version":  "14.0.1"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "walk",
+                                            "from_version":  "^2.3.9",
+                                            "to_version":  "2.3.15"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "winston",
+                                            "from_version":  "^1.0.1",
+                                            "to_version":  "3.19.0"
+                                        },
+                                        {
+                                            "file_path":  "tv-radio-frontend/package.json",
+                                            "dependency":  "winston-logstash",
+                                            "from_version":  "^0.3.0",
+                                            "to_version":  "2.0.5"
+                                        }
+                                    ],
+    "validation":  {
+                       "base_branch_candidates":  [
+                                                      "main",
+                                                      "master"
+                                                  ],
+                       "executor_check_commands":  [
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Common",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Ingest",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Search",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Export",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  300,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "npm install",
+                                                           "purpose":  "setup",
+                                                           "timeout_seconds":  420,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                                           "command":  "node --check app.js",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "node --check chapman.js",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "node --check app.js",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "node --check app-media.js",
+                                                           "purpose":  "compile",
+                                                           "timeout_seconds":  30,
+                                                           "required":  true
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\Admin\\API",
+                                                           "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = \u0027Stop\u0027; $out = \u0027startup-admin-api.out.log\u0027; $err = \u0027startup-admin-api.err.log\u0027; Remove-Item -LiteralPath $out,$err -Force -ErrorAction SilentlyContinue; $p = Start-Process -FilePath \u0027node\u0027 -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u00278080\u0027,\u0027--verbose\u0027,\u0027--interface\u0027) -WorkingDirectory (Get-Location) -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden; try { $deadline = (Get-Date).AddSeconds(60); $ok = $false; do { Start-Sleep -Milliseconds 500; if($p.HasExited){ throw \u0027Admin API process exited before health checks passed\u0027 }; try { $r1 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 3; $r2 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/api/auth/status\u0027 -TimeoutSec 3; if($r1.StatusCode -eq 200 -and $r2.StatusCode -eq 200){ $ok = $true; break }; if($r1.StatusCode -ge 400 -or $r2.StatusCode -ge 400){ throw \u0027Admin API health check returned status \u003e=400\u0027 } } catch { if((Get-Date) -ge $deadline){ throw } } } while((Get-Date) -lt $deadline); if(-not $ok){ throw \u0027Admin API health checks did not pass before timeout\u0027 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                           "purpose":  "startup",
+                                                           "timeout_seconds":  75,
+                                                           "required":  true,
+                                                           "health_check_url":  "http://localhost:8080/"
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-frontend",
+                                                           "command":  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = \u0027Stop\u0027; $out = \u0027startup-frontend.out.log\u0027; $err = \u0027startup-frontend.err.log\u0027; Remove-Item -LiteralPath $out,$err -Force -ErrorAction SilentlyContinue; $p = Start-Process -FilePath \u0027node\u0027 -ArgumentList @(\u0027app.js\u0027) -WorkingDirectory (Get-Location) -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden; try { $deadline = (Get-Date).AddSeconds(75); $ok = $false; do { Start-Sleep -Milliseconds 500; if($p.HasExited){ throw \u0027Frontend process exited before health checks passed\u0027 }; try { $r1 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 3; $r2 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/about\u0027 -TimeoutSec 3; if($r1.StatusCode -eq 200 -and $r2.StatusCode -eq 200 -and $r2.Content -and $r2.Content.Length -gt 0){ $ok = $true; break }; if($r1.StatusCode -ge 400 -or $r2.StatusCode -ge 400){ throw \u0027Frontend health check returned status \u003e=400\u0027 } } catch { if((Get-Date) -ge $deadline){ throw } } } while((Get-Date) -lt $deadline); if(-not $ok){ throw \u0027Frontend health checks did not pass before timeout or /about body was empty\u0027 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                           "purpose":  "startup",
+                                                           "timeout_seconds":  90,
+                                                           "required":  true,
+                                                           "health_check_url":  "http://localhost:8082/"
+                                                       },
+                                                       {
+                                                           "working_directory":  "C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\tv-radio-admin\\CLI",
+                                                           "command":  "node chapman.js index --verbose",
+                                                           "purpose":  "smoke",
+                                                           "timeout_seconds":  240,
+                                                           "required":  true
+                                                       }
+                                                   ],
+                       "build_commands":  [
+                                              "tv-radio-admin/Admin/API: node --check app.js",
+                                              "tv-radio-admin/CLI: node --check chapman.js",
+                                              "tv-radio-frontend: node --check app.js",
+                                              "tv-radio-frontend: node --check app-media.js"
+                                          ],
+                       "startup_commands":  [
+                                                "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = \u0027Stop\u0027; $out = \u0027startup-admin-api.out.log\u0027; $err = \u0027startup-admin-api.err.log\u0027; Remove-Item -LiteralPath $out,$err -Force -ErrorAction SilentlyContinue; $p = Start-Process -FilePath \u0027node\u0027 -ArgumentList @(\u0027app.js\u0027,\u0027--port\u0027,\u00278080\u0027,\u0027--verbose\u0027,\u0027--interface\u0027) -WorkingDirectory (Get-Location) -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden; try { $deadline = (Get-Date).AddSeconds(60); $ok = $false; do { Start-Sleep -Milliseconds 500; if($p.HasExited){ throw \u0027Admin API process exited before health checks passed\u0027 }; try { $r1 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/\u0027 -TimeoutSec 3; $r2 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8080/api/auth/status\u0027 -TimeoutSec 3; if($r1.StatusCode -eq 200 -and $r2.StatusCode -eq 200){ $ok = $true; break }; if($r1.StatusCode -ge 400 -or $r2.StatusCode -ge 400){ throw \u0027Admin API health check returned status \u003e=400\u0027 } } catch { if((Get-Date) -ge $deadline){ throw } } } while((Get-Date) -lt $deadline); if(-not $ok){ throw \u0027Admin API health checks did not pass before timeout\u0027 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\"",
+                                                "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = \u0027Stop\u0027; $out = \u0027startup-frontend.out.log\u0027; $err = \u0027startup-frontend.err.log\u0027; Remove-Item -LiteralPath $out,$err -Force -ErrorAction SilentlyContinue; $p = Start-Process -FilePath \u0027node\u0027 -ArgumentList @(\u0027app.js\u0027) -WorkingDirectory (Get-Location) -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden; try { $deadline = (Get-Date).AddSeconds(75); $ok = $false; do { Start-Sleep -Milliseconds 500; if($p.HasExited){ throw \u0027Frontend process exited before health checks passed\u0027 }; try { $r1 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/\u0027 -TimeoutSec 3; $r2 = Invoke-WebRequest -UseBasicParsing -Uri \u0027http://localhost:8082/about\u0027 -TimeoutSec 3; if($r1.StatusCode -eq 200 -and $r2.StatusCode -eq 200 -and $r2.Content -and $r2.Content.Length -gt 0){ $ok = $true; break }; if($r1.StatusCode -ge 400 -or $r2.StatusCode -ge 400){ throw \u0027Frontend health check returned status \u003e=400\u0027 } } catch { if((Get-Date) -ge $deadline){ throw } } } while((Get-Date) -lt $deadline); if(-not $ok){ throw \u0027Frontend health checks did not pass before timeout or /about body was empty\u0027 } } finally { if($p -and -not $p.HasExited){ Stop-Process -Id $p.Id -Force } }\""
+                                            ],
+                       "startup_health_check_urls":  [
+                                                         "http://localhost:8080/",
+                                                         "http://localhost:8082/"
+                                                     ],
+                       "existing_test_commands":  [
+                                                      "tv-radio-admin/CLI: node chapman.js index --verbose"
+                                                  ],
+                       "generated_test_commands":  [
+                                                       "node \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\upgrade-tests\\upgrade-startup-smoke.test.js\"",
+                                                       "node \"C:\\Users\\OEM\\legacy-upgrade-system\\projects\\tv-radio\\upgrade-tests\\upgrade-compat-integration.test.js\""
+                                                   ],
+                       "generated_test_files":  [
+                                                    "upgrade-tests/upgrade-startup-smoke.test.js",
+                                                    "upgrade-tests/upgrade-compat-integration.test.js"
+                                                ],
+                       "content_checks":  [
+                                              {
+                                                  "file_path":  "tv-radio-admin/shared-config.js",
+                                                  "must_contain":  [
+
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "__PLANNED_CHANGE_SENTINEL__"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/config.js",
+                                                  "must_contain":  [
+
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "__PLANNED_CHANGE_SENTINEL__"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Admin/API/app.js",
+                                                  "must_contain":  [
+                                                                       "jwt.sign"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "express.static.mime.define",
+                                                                           "socketiojwt.authorize"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Common/directdb-mongo.js",
+                                                  "must_contain":  [
+                                                                       "MongoClient.connect",
+                                                                       "GridFSBucket"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "autoReconnect",
+                                                                           "new Buffer(",
+                                                                           "ensureIndex(",
+                                                                           ".findAndModify("
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/db-provider.js",
+                                                  "must_contain":  [
+                                                                       "MongoClient.connect"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "GridStore",
+                                                                           "collection(table).insert(",
+                                                                           "collection(table).update("
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/logger.js",
+                                                  "must_contain":  [
+                                                                       "winston.createLogger"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "new (winston.Logger)"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-admin/Ingest/csv-processor.js",
+                                                  "must_contain":  [
+                                                                       "fs.createReadStream"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "from.path"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/media/title-thumbnails.js",
+                                                  "must_contain":  [
+                                                                       "toBuffer"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "toBuffer(function"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/media/unisat-thumbnails.js",
+                                                  "must_contain":  [
+                                                                       "toBuffer"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "toBuffer(function"
+                                                                       ]
+                                              },
+                                              {
+                                                  "file_path":  "tv-radio-frontend/media/programme-media.js",
+                                                  "must_contain":  [
+                                                                       "toBuffer"
+                                                                   ],
+                                                  "must_not_contain":  [
+                                                                           "toBuffer(function"
+                                                                       ]
+                                              }
+                                          ],
+                       "success_criteria":  [
+                                                "Only planned_files and validation.generated_test_files are changed, except ignored node_modules or transient startup log files that must not be staged.",
+                                                "tv-radio-admin/shared-config.js and tv-radio-frontend/config.js are not modified.",
+                                                "AGENTS.md, CLAUDE.md, .gitignore, and .claude/skills/gitnexus/** remain at pre-run state if GitNexus is re-indexed.",
+                                                "All expected_dependency_changes are present in the relevant package.json files and generated lockfiles resolve those versions.",
+                                                "Admin API bounded startup returns exactly 200 for http://localhost:8080/ and http://localhost:8080/api/auth/status; any status \u003e=400 fails.",
+                                                "Frontend bounded startup returns exactly 200 for http://localhost:8082/ and exactly 200 with non-empty body for http://localhost:8082/about; any status \u003e=400 fails.",
+                                                "Chapman smoke command node chapman.js index --verbose exits 0. Do not run geodata, courses, or subjects Chapman commands.",
+                                                "MongoDB driver 7 changes preserve exported callback APIs for existing callers.",
+                                                "Sharp, Winston, UglifyJS, CSV, Archiver, Socket.IO, and JWT compatibility changes preserve existing route and response behavior.",
+                                                "Generated startup smoke test exits 0 after dependency setup and verifies key entrypoints parse plus Admin API/frontend startup contracts remain present.",
+                                                "Generated compatibility integration test exits 0 after dependency setup and verifies expected dependency pins, lockfiles, and upgraded cross-component API contracts."
+                                            ]
+                   },
+    "rollback_strategy":  "Revert the single final execution commit created by the executor.",
+    "planning_notes":  "ImpactReport was treated as authoritative. Source inspection was limited to the reported location ranges plus minimal surrounding context; app.js lines 127-240 and content/feedback/client-feedback.js lines 28-65 were additionally inspected to select /about as the frontend non-static content startup route. No whole-file reads were required beyond small package manifests. Scope expansions: create package-lock.json files for Admin/API, CLI, Common, Export, Ingest, Search, and frontend because npm install on current npm will create them after package.json upgrades and the final working tree must contain only approved files. Utilities package is intentionally not planned for modification because the impact report states optimist 0.6.1 has no newer registry version. Inferred setup commands were added for Common, Ingest, Search, and Export because Chapman CLI and Admin/frontend runtime paths load sibling modules whose dependencies resolve from those package directories. Startup ports and required paths came from user_health_check_urls: Admin API primary / on 8080 plus /api/auth/status, frontend primary / on 8082 plus /about selected from tv-radio-frontend/content/feedback. The run-specific override is encoded: startup health checks require exact 200 and treat any HTTP status \u003e=400 as failure. No plan entry modifies tv-radio-admin/shared-config.js, tv-radio-frontend/config.js, AGENTS.md, CLAUDE.md, .gitignore, or .claude/skills/gitnexus/**.",
+    "plan_summary":  "Plan upgrades seven package manifests plus line-aware compatibility edits across Admin API, Common MongoDB/media helpers, CLI, Export, Ingest, Search, and frontend. It approves generated lockfiles for upgraded packages, preserves public callback contracts, and declares setup, compile, bounded startup, and Chapman smoke validation commands."
+}
