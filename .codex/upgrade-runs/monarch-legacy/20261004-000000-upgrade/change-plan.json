@@ -1,0 +1,1573 @@
+{
+  "upgrade_description": "Upgrade monarch-app dependencies for Node 18/20 LTS using Vue 2.7, @hapi/hapi 21, Babel 7, webpack 5/dev-server 5, Dart Sass, ESLint 8, Bootstrap 5, axios 1, dayjs, Gulp 4, and the requested runtime/test library versions; validate both legacy and USE_SPA proxy-backed browser workflows.",
+  "ordered_changes": [
+    {
+      "sequence": 1,
+      "file_path": "package.json",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The manifest is the authoritative dependency and portable-command surface.",
+      "locations": [
+        {
+          "start_line": 6,
+          "end_line": 40,
+          "symbol_or_pattern": "scripts",
+          "matched_api": "npm build/dev/lint/test/fixture/audit scripts"
+        },
+        {
+          "start_line": 55,
+          "end_line": 58,
+          "symbol_or_pattern": "engines",
+          "matched_api": "Node/npm floors"
+        },
+        {
+          "start_line": 63,
+          "end_line": 146,
+          "symbol_or_pattern": "dependencies",
+          "matched_api": "all requested major upgrades"
+        }
+      ],
+      "change_description": "Retain the implemented Node >=18 dependency/toolchain upgrade and Windows-safe cross-env/rimraf/concurrently commands. Preserve npm run dev and mng-legacy-dev. Add narrow scripts test:portable, test:upgrade, audit:axios, fixture:services, fixture:backend, fixture:standard, and fixture:spa that invoke the explicitly planned Node test/fixture files; no production URL is changed.",
+      "validation_evidence": [
+        "npm install succeeds",
+        "npm ls has no invalid or unmet dependency",
+        "all named scripts resolve on Windows and POSIX"
+      ]
+    },
+    {
+      "sequence": 2,
+      "file_path": "package-lock.json",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "The committed npm lock is required for reproducible Node 18/20 resolution.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 20034,
+          "symbol_or_pattern": "lockfileVersion and packages",
+          "matched_api": "npm resolved dependency graph"
+        }
+      ],
+      "change_description": "Regenerate only through npm install after package.json is final. Preserve axios 1, Hapi 21, webpack 5/dev-server 5, Vue 2.7.16, Bootstrap 5 and Sass; ensure direct legacy request, moment, node-sass, hapi, inert, Babel 6 and bootstrap-vue packages are absent.",
+      "validation_evidence": [
+        "lockfile parses",
+        "npm ls passes",
+        "axios 0.x is absent"
+      ]
+    },
+    {
+      "sequence": 3,
+      "file_path": ".npmrc",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "Legacy transitive packages expose peer ranges incompatible with the intentionally retained Vue 2.7/webpack 5 bridge.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 1,
+          "symbol_or_pattern": "legacy-peer-deps=true",
+          "matched_api": "npm peer resolution"
+        }
+      ],
+      "change_description": "Retain the repository-local legacy-peer-deps=true compatibility setting discovered during execution. It must be the only setting and must not suppress npm ls validation or the focused Axios audit assertion.",
+      "validation_evidence": [
+        "npm install completes without a command-line peer override",
+        "npm ls reports no invalid or unmet dependency"
+      ]
+    },
+    {
+      "sequence": 4,
+      "file_path": ".babelrc",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Babel 6 names do not load under Babel 7.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 6,
+          "symbol_or_pattern": "presets/plugins",
+          "matched_api": "@babel/preset-env and transform-runtime"
+        }
+      ],
+      "change_description": "Retain @babel/preset-env with modules:false and bugfixes:true plus @babel/plugin-transform-runtime; keep obsolete Babel 6 shorthand and syntax-dynamic-import removed.",
+      "validation_evidence": [
+        "both webpack builds pass"
+      ]
+    },
+    {
+      "sequence": 5,
+      "file_path": ".eslintrc",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "ESLint 8 requires the Babel 7 parser and valid JSON.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 29,
+          "symbol_or_pattern": "root ESLint config",
+          "matched_api": "@babel/eslint-parser"
+        }
+      ],
+      "change_description": "Retain the parser replacement and valid JSON commas; do not broaden lint suppressions.",
+      "validation_evidence": [
+        "configuration parses under ESLint 8"
+      ]
+    },
+    {
+      "sequence": 6,
+      "file_path": "ui/.eslintrc",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The legacy UI-local ESLint config must remain parseable if selected directly.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 36,
+          "symbol_or_pattern": "UI ESLint config",
+          "matched_api": "@babel/eslint-parser"
+        }
+      ],
+      "change_description": "Retain the Babel parser replacement and valid JSON cleanup; this is a runtime-discovered compatibility file, not a bulk style rewrite.",
+      "validation_evidence": [
+        "ESLint can load this config"
+      ]
+    },
+    {
+      "sequence": 7,
+      "file_path": "wbs.eslintrc",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "The former wpsrc lint target did not cover the active Vue application.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 18,
+          "symbol_or_pattern": "portable UI lint config",
+          "matched_api": "ESLint 8 plus Vue 2"
+        }
+      ],
+      "change_description": "Keep a minimal valid ESLint 8/Vue 2 config for ui .js/.vue sources using @babel/eslint-parser, and only the two documented Vue compatibility rule exceptions.",
+      "validation_evidence": [
+        "npm run wbs-lint exits 0"
+      ]
+    },
+    {
+      "sequence": 8,
+      "file_path": "webpack.config.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Webpack 5, dev-server 5, Sass, Bootstrap and both standard/SPA proxy branches converge here.",
+      "locations": [
+        {
+          "start_line": 8,
+          "end_line": 25,
+          "symbol_or_pattern": "imports and mode detection",
+          "matched_api": "webpack 5/Sass/MiniCssExtract"
+        },
+        {
+          "start_line": 220,
+          "end_line": 310,
+          "symbol_or_pattern": "Vue/Babel/SCSS rules",
+          "matched_api": "Vue 2.7 and Dart Sass"
+        },
+        {
+          "start_line": 324,
+          "end_line": 380,
+          "symbol_or_pattern": "assets/fallback/aliases",
+          "matched_api": "webpack 5 modules and Bootstrap 5"
+        },
+        {
+          "start_line": 385,
+          "end_line": 445,
+          "symbol_or_pattern": "devServer proxy",
+          "matched_api": "webpack-dev-server 5"
+        }
+      ],
+      "change_description": "Retain the completed webpack-5 migration: asset modules, resolve fallbacks, MiniCssExtract, Dart Sass in both SCSS paths, Vue loader, Bootstrap 5 aliases, and ordered homogeneous proxy contexts for standard and USE_SPA. Add a test-only compile-time MONARCH_FIXTURE_BASE definition sourced from the same-named environment variable and defaulting to an empty string; production builds with the variable absent must compile to existing service URLs. Keep proxy target localhost:8080, port 8081 and the distinct standard root proxy/SPA index bypass.",
+      "validation_evidence": [
+        "npm run wbs-build passes",
+        "npm run mng-build passes",
+        "smoke test loads both proxy branches",
+        "fixture build contains localhost:18080 only when explicitly enabled"
+      ]
+    },
+    {
+      "sequence": 9,
+      "file_path": "gulpfile.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Gulp 3 task arrays and POSIX shell tasks are removed in Gulp 4/Windows.",
+      "locations": [
+        {
+          "start_line": 15,
+          "end_line": 41,
+          "symbol_or_pattern": "imports/YAML conversion",
+          "matched_api": "https, js-yaml 4, Buffer.from"
+        },
+        {
+          "start_line": 121,
+          "end_line": 243,
+          "symbol_or_pattern": "task functions/registration",
+          "matched_api": "gulp.series and gulp.parallel"
+        }
+      ],
+      "change_description": "Retain named Gulp 4 functions, deterministic series/parallel ordering, fs.mkdirSync/fs.rmSync portability, redirect-aware HTTPS schema download, js-yaml load and Buffer.from. prepare-config must avoid the external schema download used only by full assemble.",
+      "validation_evidence": [
+        "npm run start prestart completes",
+        "generated golr config is valid JSON"
+      ]
+    },
+    {
+      "sequence": 10,
+      "file_path": "common.js",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Build banners must no longer import removed moment.",
+      "locations": [
+        {
+          "start_line": 11,
+          "end_line": 17,
+          "symbol_or_pattern": "getInfos",
+          "matched_api": "dayjs format"
+        }
+      ],
+      "change_description": "Retain dayjs replacement with the existing formatted current date behavior.",
+      "validation_evidence": [
+        "build banner generation succeeds"
+      ]
+    },
+    {
+      "sequence": 11,
+      "file_path": "lib/monarch/api.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Core synchronous engine paths previously depended on request and wait.for.",
+      "locations": [
+        {
+          "start_line": 35,
+          "end_line": 40,
+          "symbol_or_pattern": "HTTP client setup",
+          "matched_api": "axios and sync-http"
+        },
+        {
+          "start_line": 85,
+          "end_line": 90,
+          "symbol_or_pattern": "fetchUrlImplementation",
+          "matched_api": "synchronous GET bridge"
+        },
+        {
+          "start_line": 3191,
+          "end_line": 3211,
+          "symbol_or_pattern": "fetchUrlWithExchangeObject",
+          "matched_api": "URLSearchParams GET/POST bridge"
+        }
+      ],
+      "change_description": "Retain the axios-backed synchronous bridge and repeated form/query value encoding. Preserve Buffer body/status semantics consumed by GOLR, SciGraph and OwlSim. Do not change configured service URLs or silently convert non-2xx responses into successes.",
+      "validation_evidence": [
+        "portable fixture suite exercises GET and repeated form values",
+        "legacy direct tests pass against fixtures"
+      ]
+    },
+    {
+      "sequence": 12,
+      "file_path": "lib/monarch/axios-worker.js",
+      "change_type": "create",
+      "estimated_risk": "high",
+      "rationale": "A child process is the narrow bridge between synchronous legacy engine APIs and promise-only Axios 1.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 34,
+          "symbol_or_pattern": "stdin request worker",
+          "matched_api": "Axios 1 arraybuffer transport"
+        }
+      ],
+      "change_description": "Keep the single-request stdin/stdout JSON protocol, timeout, unbounded body limits, raw arraybuffer response, base64 body and status/header mapping. Errors must go to stderr with nonzero exit.",
+      "validation_evidence": [
+        "fixture contract tests cover success, non-2xx preservation and failure"
+      ]
+    },
+    {
+      "sequence": 13,
+      "file_path": "lib/monarch/sync-http.js",
+      "change_type": "create",
+      "estimated_risk": "high",
+      "rationale": "Legacy call sites require synchronous return values without wait.for fibers.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 64,
+          "symbol_or_pattern": "request/get/post/create",
+          "matched_api": "spawnSync Axios worker"
+        }
+      ],
+      "change_description": "Keep the bounded spawnSync bridge, 50 MiB buffer, platform-hidden child, URLSearchParams repeated value support, Axios client validation and explicit error propagation.",
+      "validation_evidence": [
+        "portable fixture suite verifies GET and form POST"
+      ]
+    },
+    {
+      "sequence": 14,
+      "file_path": "lib/monarch/web/webenv.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Hapi 21 removed reply callbacks and route config syntax.",
+      "locations": [
+        {
+          "start_line": 149,
+          "end_line": 172,
+          "symbol_or_pattern": "wrapResponse",
+          "matched_api": "Hapi response toolkit"
+        },
+        {
+          "start_line": 258,
+          "end_line": 318,
+          "symbol_or_pattern": "wrapRouteGet/wrapRoutePost",
+          "matched_api": "promise-returning Hapi handlers"
+        }
+      ],
+      "change_description": "Retain h.response/code/type and h.redirect mappings, route options, returned Promises, and error-handler propagation with no wait.for dependency.",
+      "validation_evidence": [
+        "backend fixture stack serves below 500",
+        "root/search/detail pages render"
+      ]
+    },
+    {
+      "sequence": 15,
+      "file_path": "lib/monarch/web/webapp.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The backend server and RSS fetch cross Hapi/Inert/request major boundaries.",
+      "locations": [
+        {
+          "start_line": 130,
+          "end_line": 205,
+          "symbol_or_pattern": "imports/server construction",
+          "matched_api": "@hapi/hapi, @hapi/inert, axios"
+        },
+        {
+          "start_line": 216,
+          "end_line": 280,
+          "symbol_or_pattern": "server/static routes",
+          "matched_api": "Hapi.server and response toolkit"
+        },
+        {
+          "start_line": 2605,
+          "end_line": 2620,
+          "symbol_or_pattern": "blog fetch",
+          "matched_api": "sync HTTP bridge"
+        },
+        {
+          "start_line": 4914,
+          "end_line": 4926,
+          "symbol_or_pattern": "startServer",
+          "matched_api": "async Inert registration/start"
+        }
+      ],
+      "change_description": "Retain the Hapi 21/Inert 7 lifecycle and axios bridge. External RSS unavailability may produce the existing explicit warning and no blog data, but route/client errors must remain visible. Preserve ports, routes and production service selection.",
+      "validation_evidence": [
+        "npm run start binds 8080",
+        "fixture-backed pages return below 500"
+      ]
+    },
+    {
+      "sequence": 16,
+      "file_path": "lib/monarch/web/webapp_launcher.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Startup rejection handling is required and deterministic fixtures need an opt-in config seam.",
+      "locations": [
+        {
+          "start_line": 30,
+          "end_line": 66,
+          "symbol_or_pattern": "config selection and startServer",
+          "matched_api": "MONARCH_CONFIG_FILE plus async rejection"
+        }
+      ],
+      "change_description": "Retain async start rejection handling. Add MONARCH_CONFIG_FILE as an explicit optional path used only when set; otherwise keep dev/beta/production/cgrb selection byte-for-byte equivalent. Resolve the override, require an existing JSON file, log that it is an override, and never write it.",
+      "validation_evidence": [
+        "ordinary npm run start still selects conf/server_config_dev.json",
+        "fixture runner selects tests/fixtures/server_config.json"
+      ]
+    },
+    {
+      "sequence": 17,
+      "file_path": "tests/test-common.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Direct Node test equivalence and fixture isolation converge in the shared harness.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 31,
+          "symbol_or_pattern": "getTestEngine",
+          "matched_api": "MONARCH_CONFIG_FILE test config"
+        },
+        {
+          "start_line": 54,
+          "end_line": 62,
+          "symbol_or_pattern": "runTests",
+          "matched_api": "direct synchronous Node exit code"
+        }
+      ],
+      "change_description": "Retain removal of wait.for and direct process.exitCode. Make getTestEngine select process.env.MONARCH_CONFIG_FILE when present and otherwise retain conf/server_config_dev.json.",
+      "validation_evidence": [
+        "class-info direct Node test passes against fixture"
+      ]
+    },
+    {
+      "sequence": 18,
+      "file_path": "tests/apitest.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The Makefile API target hardcodes live configuration and must be runnable portably against fixtures.",
+      "locations": [
+        {
+          "start_line": 138,
+          "end_line": 155,
+          "symbol_or_pattern": "main test configuration",
+          "matched_api": "MONARCH_CONFIG_FILE"
+        }
+      ],
+      "change_description": "As an explicit remediation scope expansion, honor MONARCH_CONFIG_FILE before the existing production option and retain every test/export. Do not weaken assertions or skip live-dependent cases.",
+      "validation_evidence": [
+        "run-portable-tests logs and passes tests/apitest.js"
+      ]
+    },
+    {
+      "sequence": 19,
+      "file_path": "tests/phenopacket-test.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The Makefile phenopacket target hardcodes beta configuration.",
+      "locations": [
+        {
+          "start_line": 55,
+          "end_line": 72,
+          "symbol_or_pattern": "main test configuration",
+          "matched_api": "MONARCH_CONFIG_FILE"
+        }
+      ],
+      "change_description": "As an explicit remediation scope expansion, honor MONARCH_CONFIG_FILE while retaining schema validation and all assertions.",
+      "validation_evidence": [
+        "run-portable-tests logs and passes tests/phenopacket-test.js"
+      ]
+    },
+    {
+      "sequence": 20,
+      "file_path": "tests/upgrade-toolchain-smoke.test.js",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "The already-generated smoke test is required evidence and no later test-generation stage will run.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 98,
+          "symbol_or_pattern": "Node 18/20 upgrade smoke checks",
+          "matched_api": "dependency/proxy/Sass assertions"
+        }
+      ],
+      "change_description": "Preserve the registered 3-test smoke suite. Extend only if needed to assert that the fixture base defaults empty and that both standard/SPA configs accept the explicit fixture value without altering proxy contexts.",
+      "validation_evidence": [
+        "npx mocha reports all smoke tests passing"
+      ]
+    },
+    {
+      "sequence": 21,
+      "file_path": "tests/fixtures/server_config.json",
+      "change_type": "create",
+      "estimated_risk": "low",
+      "rationale": "The backend needs deterministic test-only endpoints without editing production config.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 20,
+          "symbol_or_pattern": "fixture server configuration",
+          "matched_api": "localhost:18080 service bases"
+        }
+      ],
+      "change_description": "Create a dev-shaped config whose SciGraph, SciGraph-data, GOLR, search, OwlSim, Biolink and RSS/service bases point to exact http://127.0.0.1:18080 fixture prefixes. This file is selected only via MONARCH_CONFIG_FILE.",
+      "validation_evidence": [
+        "all URLs are loopback port 18080",
+        "production conf files have no diff"
+      ]
+    },
+    {
+      "sequence": 22,
+      "file_path": "tests/fixtures/monarch-service-fixture.js",
+      "change_type": "create",
+      "estimated_risk": "high",
+      "rationale": "Retired/unreachable Monarch services otherwise make proxy and rendering validation nondeterministic.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 260,
+          "symbol_or_pattern": "fixture HTTP server and contracts",
+          "matched_api": "GOLR/SciGraph/OwlSim/Biolink"
+        }
+      ],
+      "change_description": "Implement a dependency-free Node HTTP server defaulting to 127.0.0.1:18080 with GET /__health, /__requests and POST /__reset plus graceful SIGINT/SIGTERM close. Serve minimal deterministic JSON contracts for GOLR/search Solr select (responseHeader, response.numFound/start/docs, facet_counts), SciGraph graph/vocabulary/dynamic, OwlSim search/score/compare/profile, and Biolink autocomplete/entity/association/graph routes. Include BRCA1 HGNC:1100, MONDO:0007254, HP:0001250/HP:0004322, evidence/references, ExAC-like values and at least two sortable association rows. Log method/path/query/body for contract assertions; unknown fixture routes return JSON 404.",
+      "validation_evidence": [
+        "fixture health returns fixture-ready",
+        "contract test validates schemas and request log",
+        "server exits cleanly and releases 18080"
+      ]
+    },
+    {
+      "sequence": 23,
+      "file_path": "tests/run-fixture-stack.js",
+      "change_type": "create",
+      "estimated_risk": "high",
+      "rationale": "A bounded cross-platform lifecycle is needed for backend, standard dev and USE_SPA validation.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 240,
+          "symbol_or_pattern": "fixture stack process manager",
+          "matched_api": "npm run start/dev/mng-legacy-dev"
+        }
+      ],
+      "change_description": "Implement modes backend, standard and spa. Start the fixture service, set MONARCH_CONFIG_FILE=tests/fixtures/server_config.json and MONARCH_FIXTURE_BASE=http://127.0.0.1:18080, then spawn the exact npm run start, npm run dev, or npm run mng-legacy-dev command. Poll fixture /__health plus app http://localhost:8080/ and, for dev modes, http://localhost:8081/ and /status. A --check option must additionally probe autocomplete/searchapi/score/compare and representative pages, print FIXTURE_STACK_OK mode=<mode>, then tear down. On timeout, signal, or child failure, capture output and recursively terminate child trees (taskkill /T on Windows; process-group signal on POSIX) and release 18080/8080/8081.",
+      "validation_evidence": [
+        "three --check modes exit 0",
+        "ports are free after each run",
+        "logs show exact underlying npm command"
+      ]
+    },
+    {
+      "sequence": 24,
+      "file_path": "tests/run-portable-tests.js",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "GNU make is unavailable on Windows but its three Node targets are explicit.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 180,
+          "symbol_or_pattern": "portable Makefile-equivalent runner",
+          "matched_api": "apitest/class-info/phenopacket"
+        }
+      ],
+      "change_description": "Start the fixture service ephemerally, set NODE_PATH using path.delimiter plus MONARCH_CONFIG_FILE, and sequentially spawn process.execPath for tests/apitest.js, tests/class-info-test.js and tests/phenopacket-test.js with inherited output. Preserve exact selection and fail on any nonzero result. Query /__requests, require fixture request count >0, print PORTABLE_TEST_SUMMARY passed=3 failed=0 requests=<n>, and always stop the fixture.",
+      "validation_evidence": [
+        "portable suite passes on Windows",
+        "output proves all three exact files ran"
+      ]
+    },
+    {
+      "sequence": 25,
+      "file_path": "tests/remediation-fixture.test.js",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "Minimum external-service response shapes and override safety require automated assertions.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 220,
+          "symbol_or_pattern": "fixture contract tests",
+          "matched_api": "local service schemas and default-off overrides"
+        }
+      ],
+      "change_description": "Create Mocha tests that start the fixture on an ephemeral/18080 port, call every declared GOLR/SciGraph/OwlSim/Biolink minimum contract, assert deterministic IDs/row counts/repeated query capture, and stop it in after hooks. Assert production conf/server_config_dev.json and default ui server configuration still contain their original live hosts, while the explicit fixture configuration resolves only to loopback.",
+      "validation_evidence": [
+        "Mocha passes with no open handles",
+        "request count and IDs are asserted"
+      ]
+    },
+    {
+      "sequence": 26,
+      "file_path": "tests/assert-axios-audit.js",
+      "change_type": "create",
+      "estimated_risk": "medium",
+      "rationale": "npm audit currently reports unrelated legacy advisories; user intent is specifically to prove Axios 0.x/CVEs are gone.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 180,
+          "symbol_or_pattern": "focused npm audit assertion",
+          "matched_api": "npm audit --json and Axios package graph"
+        }
+      ],
+      "change_description": "Spawn the exact npm audit --json command, accept its nonzero status as advisory data, parse and write the complete unmodified JSON to the required --report path, and report total advisory counts. Fail only if package-lock/node_modules resolves any axios 0.x or the audit vulnerabilities/advisories/actions identify axios; otherwise print AXIOS_AUDIT_OK with installed version and total count. Fail on malformed/missing audit JSON or inability to inspect Axios.",
+      "validation_evidence": [
+        "full audit JSON artifact exists",
+        "AXIOS_AUDIT_OK printed",
+        "Axios installed major is 1"
+      ]
+    },
+    {
+      "sequence": 27,
+      "file_path": "templates/search_results.mustache",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "A commented Axios 0.16 CDN remains misleading audit evidence and risks reactivation.",
+      "locations": [
+        {
+          "start_line": 83,
+          "end_line": 87,
+          "symbol_or_pattern": "obsolete CDN block",
+          "matched_api": "axios 0.16.1"
+        }
+      ],
+      "change_description": "Retain deletion of the stale polyfill/Vue/Axios CDN block; bundled Axios 1 is the only Axios source.",
+      "validation_evidence": [
+        "file contains no axios@0."
+      ]
+    },
+    {
+      "sequence": 28,
+      "file_path": "js/Analyze.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Webpack 5 no longer tolerates the previous mixed CommonJS/ES module boundary reliably.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 5,
+          "symbol_or_pattern": "AnalyzeInit export",
+          "matched_api": "ES module named export"
+        },
+        {
+          "start_line": 848,
+          "end_line": 851,
+          "symbol_or_pattern": "module.exports removal",
+          "matched_api": "ES module interop"
+        }
+      ],
+      "change_description": "Retain the named ES export and remove duplicate CommonJS export without changing analysis behavior.",
+      "validation_evidence": [
+        "both builds compile",
+        "phenotype flow calls AnalyzeInit"
+      ]
+    },
+    {
+      "sequence": 29,
+      "file_path": "js/barchart-launcher.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Tree-shaking and strict module handling exposed unused/mixed exports.",
+      "locations": [
+        {
+          "start_line": 20,
+          "end_line": 32,
+          "symbol_or_pattern": "graph-config imports",
+          "matched_api": "ES imports"
+        },
+        {
+          "start_line": 264,
+          "end_line": 275,
+          "symbol_or_pattern": "chart exports",
+          "matched_api": "ES named exports"
+        }
+      ],
+      "change_description": "Retain removal of unused graph-config imports and convert CommonJS exports to named ES exports; preserve the six consumed graph functions/object.",
+      "validation_evidence": [
+        "overview bundle compiles",
+        "gene/disease chart flow renders"
+      ]
+    },
+    {
+      "sequence": 30,
+      "file_path": "js/exac_gene_summary.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The ExAC summary module crossed a mixed-module boundary under webpack 5.",
+      "locations": [
+        {
+          "start_line": 91,
+          "end_line": 91,
+          "symbol_or_pattern": "createExaxGeneSummaryTable export",
+          "matched_api": "ES named export"
+        }
+      ],
+      "change_description": "Retain named ES export without altering Axios data/render logic.",
+      "validation_evidence": [
+        "gene ExAC summary renders or deterministic no-data state"
+      ]
+    },
+    {
+      "sequence": 31,
+      "file_path": "js/exac_table.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "The ExAC table module crossed a mixed-module boundary under webpack 5.",
+      "locations": [
+        {
+          "start_line": 140,
+          "end_line": 140,
+          "symbol_or_pattern": "createExacTable export",
+          "matched_api": "ES named export"
+        }
+      ],
+      "change_description": "Retain named ES export without altering table/data behavior.",
+      "validation_evidence": [
+        "gene ExAC table renders and controls respond"
+      ]
+    },
+    {
+      "sequence": 32,
+      "file_path": "js/index.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "The legacy entry joins D3, jQuery, Bootstrap, graph and ExAC modules under webpack 5.",
+      "locations": [
+        {
+          "start_line": 14,
+          "end_line": 20,
+          "symbol_or_pattern": "D3 import/global",
+          "matched_api": "modular D3 namespace"
+        },
+        {
+          "start_line": 133,
+          "end_line": 141,
+          "symbol_or_pattern": "barchart import",
+          "matched_api": "direct ES import"
+        }
+      ],
+      "change_description": "Retain namespace D3 import/window exposure and direct barchart import after removing imports-loader. Preserve jQuery-before-plugins ordering and all workflow imports.",
+      "validation_evidence": [
+        "standard build passes",
+        "overview/ExAC flows have no module initialization error"
+      ]
+    },
+    {
+      "sequence": 33,
+      "file_path": "js/overview.js",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Overview consumers now import named ES exports.",
+      "locations": [
+        {
+          "start_line": 514,
+          "end_line": 521,
+          "symbol_or_pattern": "overview exports",
+          "matched_api": "ES named exports"
+        }
+      ],
+      "change_description": "Retain named exports for ontology browser, launch, literature and gene-description functions with no network behavior change.",
+      "validation_evidence": [
+        "gene/disease/phenotype overview checks render"
+      ]
+    },
+    {
+      "sequence": 34,
+      "file_path": "js/search_results.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "Search results must compile as a consistent ES module with Axios 1.",
+      "locations": [
+        {
+          "start_line": 218,
+          "end_line": 220,
+          "symbol_or_pattern": "InitSearchResults export",
+          "matched_api": "ES named export"
+        }
+      ],
+      "change_description": "Retain named export and existing Axios response handling. Do not replace deterministic fixture behavior with production fallback logic.",
+      "validation_evidence": [
+        "BRCA1 search results render fixture row and no console error"
+      ]
+    },
+    {
+      "sequence": 35,
+      "file_path": "ui/components/AnalyzePhenotypes.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue 2.7 template compilation rejects the legacy spread interpolation.",
+      "locations": [
+        {
+          "start_line": 41,
+          "end_line": 41,
+          "symbol_or_pattern": "rejectedPhenotypeCuries message",
+          "matched_api": "Vue template expression"
+        }
+      ],
+      "change_description": "Retain join-based interpolation so rejected values render deterministically.",
+      "validation_evidence": [
+        "SPA phenotype route compiles and renders"
+      ]
+    },
+    {
+      "sequence": 36,
+      "file_path": "ui/components/AssocTable.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue 2.7 requires stable keys on evidence/reference/source v-for nodes.",
+      "locations": [
+        {
+          "start_line": 88,
+          "end_line": 132,
+          "symbol_or_pattern": "association detail loops",
+          "matched_api": "Vue v-for keys"
+        }
+      ],
+      "change_description": "Retain stable keys for evidence, references and sources without changing table data, paging, sorting or expanded-row behavior.",
+      "validation_evidence": [
+        "fixture association table shows two rows and controls update"
+      ]
+    },
+    {
+      "sequence": 37,
+      "file_path": "ui/components/FooterAll.vue",
+      "change_type": "modify",
+      "estimated_risk": "low",
+      "rationale": "Malformed template markup blocks Vue 2.7 compilation.",
+      "locations": [
+        {
+          "start_line": 1,
+          "end_line": 4,
+          "symbol_or_pattern": "container opening tag",
+          "matched_api": "Vue template HTML"
+        },
+        {
+          "start_line": 55,
+          "end_line": 55,
+          "symbol_or_pattern": "file terminator",
+          "matched_api": "newline"
+        }
+      ],
+      "change_description": "Retain the missing closing bracket fix and final newline only.",
+      "validation_evidence": [
+        "SPA build compiles"
+      ]
+    },
+    {
+      "sequence": 38,
+      "file_path": "ui/components/MonarchAutocomplete.vue",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "Vue 2.7 lint/template checks require keyed loops and type-correct String defaults.",
+      "locations": [
+        {
+          "start_line": 162,
+          "end_line": 168,
+          "symbol_or_pattern": "exampleSearches v-for",
+          "matched_api": "Vue key"
+        },
+        {
+          "start_line": 208,
+          "end_line": 218,
+          "symbol_or_pattern": "String props",
+          "matched_api": "empty-string defaults"
+        }
+      ],
+      "change_description": "Retain deterministic example key and empty-string defaults for String props; preserve debounce, selection and emitted values.",
+      "validation_evidence": [
+        "BRCA1 autocomplete suggestion is selectable"
+      ]
+    },
+    {
+      "sequence": 39,
+      "file_path": "ui/index.ejs",
+      "change_type": "modify",
+      "estimated_risk": "medium",
+      "rationale": "html-webpack-plugin 5 removed legacy webpackConfig/assetsByChunkName template assumptions.",
+      "locations": [
+        {
+          "start_line": 12,
+          "end_line": 16,
+          "symbol_or_pattern": "CSS asset tag",
+          "matched_api": "htmlWebpackPlugin.files.css"
+        },
+        {
+          "start_line": 74,
+          "end_line": 78,
+          "symbol_or_pattern": "JS asset tag",
+          "matched_api": "htmlWebpackPlugin.files.js"
+        }
+      ],
+      "change_description": "Retain htmlWebpackPlugin.files-based asset references for non-dev builds and injection behavior in dev.",
+      "validation_evidence": [
+        "mng-build index references emitted CSS/JS"
+      ]
+    },
+    {
+      "sequence": 40,
+      "file_path": "ui/main.js",
+      "change_type": "modify",
+      "estimated_risk": "high",
+      "rationale": "BootstrapVue 2 cannot coexist with Bootstrap 5 while Vue remains 2.7.",
+      "locations": [
+        {
+          "start_line": 5,
+          "end_line": 31,
+          "symbol_or_pattern": "imports",
+          "matched_api": "BootstrapVue removal"
+        },
+        {
+          "start_line": 31,
+          "end_line": 267,
+          "symbol_or_pattern": "Bootstrap5VueCompat",
+          "matched_api": "Vue 2 Bootstrap 5 compatibility components"
+        },
+        {
+          "start_line": 268,
+          "end_line": 272,
+          "symbol_or_pattern": "plugin registration",
+          "matched_api": "Vue.use compatibility layer"
+        }
+      ],
+      "change_description": "Retain the narrowly scoped Vue 2 compatibility plugin for only used b-* components/directive, including v-model/change events, scoped cell/row-detail slots, pagination and modal show/hide. Do not add Vue 3/bootstrap-vue-next or broaden into a redesign.",
+      "validation_evidence": [
+        "SPA build/lint pass",
+        "autocomplete, phenotype and association flows have no missing-component error"
+      ]
+    }
+  ],
+  "planned_files": [
+    "package.json",
+    "package-lock.json",
+    ".npmrc",
+    ".babelrc",
+    ".eslintrc",
+    "ui/.eslintrc",
+    "wbs.eslintrc",
+    "webpack.config.js",
+    "gulpfile.js",
+    "common.js",
+    "lib/monarch/api.js",
+    "lib/monarch/axios-worker.js",
+    "lib/monarch/sync-http.js",
+    "lib/monarch/web/webenv.js",
+    "lib/monarch/web/webapp.js",
+    "lib/monarch/web/webapp_launcher.js",
+    "tests/test-common.js",
+    "tests/apitest.js",
+    "tests/phenopacket-test.js",
+    "tests/upgrade-toolchain-smoke.test.js",
+    "tests/fixtures/server_config.json",
+    "tests/fixtures/monarch-service-fixture.js",
+    "tests/run-fixture-stack.js",
+    "tests/run-portable-tests.js",
+    "tests/remediation-fixture.test.js",
+    "tests/assert-axios-audit.js",
+    "templates/search_results.mustache",
+    "js/Analyze.js",
+    "js/barchart-launcher.js",
+    "js/exac_gene_summary.js",
+    "js/exac_table.js",
+    "js/index.js",
+    "js/overview.js",
+    "js/search_results.js",
+    "ui/components/AnalyzePhenotypes.vue",
+    "ui/components/AssocTable.vue",
+    "ui/components/FooterAll.vue",
+    "ui/components/MonarchAutocomplete.vue",
+    "ui/index.ejs",
+    "ui/main.js"
+  ],
+  "expected_dependency_changes": [
+    {
+      "file_path": "package.json",
+      "dependency": "node",
+      "from_version": ">= 6.11.2",
+      "to_version": ">=18"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "hapi",
+      "from_version": "^16.6.2",
+      "to_version": "removed; @hapi/hapi ^21"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "inert",
+      "from_version": "^4.2.1",
+      "to_version": "removed; @hapi/inert ^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "babel-core/babel-preset-env/babel-loader",
+      "from_version": "6.x/1.x/^7.1.4",
+      "to_version": "@babel/core ^7, @babel/preset-env ^7, babel-loader ^9"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "babel-eslint/Babel 6 plugins",
+      "from_version": "babel-eslint ^8.2.3 and Babel 6 plugins",
+      "to_version": "@babel/eslint-parser ^7, @babel/plugin-transform-runtime ^7, @babel/runtime ^7"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "webpack/webpack-cli/webpack-dev-server",
+      "from_version": "^4.17.2/^3.1.0/^3.1.8",
+      "to_version": "^5/^5/^5"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "extract-text-webpack-plugin",
+      "from_version": "^4.0.0-beta.0",
+      "to_version": "removed; mini-css-extract-plugin ^2"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "node-sass/sass-loader",
+      "from_version": "node-sass ^4.9.3/sass-loader ^7.1.0",
+      "to_version": "sass ^1 and webpack-5-compatible sass-loader"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "eslint/eslint-config-airbnb-base",
+      "from_version": "^5.5.0/^13.1.0",
+      "to_version": "^8/^15"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "vue/vue-template-compiler",
+      "from_version": "^2.5.17/^2.5.17",
+      "to_version": "matching 2.7.x versions"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "bootstrap/bootstrap-vue/popper.js",
+      "from_version": "^4.1.3/^2.0.0-rc.11/^1.14.4",
+      "to_version": "bootstrap ^5; remove bootstrap-vue and popper.js; add @popperjs/core ^2"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "axios/request",
+      "from_version": "axios ^0.18.0 and request ^2.88.0",
+      "to_version": "axios ^1; remove request"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "moment/dayjs",
+      "from_version": "moment ^2.22.2",
+      "to_version": "remove moment; add dayjs ^1"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "gulp",
+      "from_version": "^3.9.1",
+      "to_version": "^4"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "mocha",
+      "from_version": "^5.2.0",
+      "to_version": "^10"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "mustache",
+      "from_version": "^2.3.2",
+      "to_version": "^4"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "underscore",
+      "from_version": "^1.9.1",
+      "to_version": "^1.13"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "xml2js",
+      "from_version": "^0.4.19",
+      "to_version": "^0.6"
+    },
+    {
+      "file_path": "package.json",
+      "dependency": "cross-env/concurrently/rimraf",
+      "from_version": "absent",
+      "to_version": "current Node-18-compatible major releases"
+    }
+  ],
+  "validation": {
+    "base_branch_candidates": [
+      "master",
+      "main"
+    ],
+    "executor_check_commands": [
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm install",
+        "purpose": "setup",
+        "timeout_seconds": 900,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "npm ERR!",
+            "ERESOLVE",
+            "EBADENGINE"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm run wbs-build",
+        "purpose": "compile",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "Module build failed",
+            "ValidationError",
+            "ERROR in",
+            "Cannot find module"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm run mng-build",
+        "purpose": "compile",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "Module build failed",
+            "ValidationError",
+            "ERROR in",
+            "Cannot find module"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "node tests/run-fixture-stack.js backend --check",
+        "purpose": "startup",
+        "timeout_seconds": 300,
+        "required": true,
+        "health_check_url": "http://localhost:8080/",
+        "expected_output_checks": {
+          "must_not_contain": [
+            "EADDRINUSE",
+            "UnhandledPromiseRejection",
+            "FIXTURE_STACK_FAILED",
+            "ERROR in"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "node tests/run-fixture-stack.js standard --check",
+        "purpose": "startup",
+        "timeout_seconds": 600,
+        "required": true,
+        "health_check_url": "http://localhost:8081/",
+        "expected_output_checks": {
+          "must_not_contain": [
+            "EADDRINUSE",
+            "Invalid options object",
+            "FIXTURE_STACK_FAILED",
+            "ERROR in",
+            "[HPM] Error"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "node tests/run-fixture-stack.js spa --check",
+        "purpose": "startup",
+        "timeout_seconds": 600,
+        "required": true,
+        "health_check_url": "http://localhost:8081/",
+        "expected_output_checks": {
+          "must_not_contain": [
+            "EADDRINUSE",
+            "Invalid options object",
+            "FIXTURE_STACK_FAILED",
+            "ERROR in",
+            "[HPM] Error"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm run wbs-lint",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "Parsing error",
+            "Configuration for rule",
+            "Definition for rule"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npx mocha tests/upgrade-toolchain-smoke.test.js tests/remediation-fixture.test.js",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "failing",
+            "AssertionError",
+            "open handle"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "node tests/run-portable-tests.js",
+        "purpose": "test",
+        "timeout_seconds": 600,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "failed=1",
+            "failed=2",
+            "failed=3",
+            "PORTABLE_TEST_FAILED",
+            "[ERR/"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "node tests/assert-axios-audit.js --report \"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\.codex\\upgrade-runs\\monarch-legacy\\20261004-000000-upgrade\\npm-audit.json\"",
+        "purpose": "test",
+        "timeout_seconds": 300,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "AXIOS_AUDIT_FAILED",
+            "axios@0.",
+            "Axios advisory remains"
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "npm ls axios webpack webpack-dev-server vue vue-template-compiler bootstrap sass @hapi/hapi",
+        "purpose": "smoke",
+        "timeout_seconds": 180,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "invalid",
+            "deduped invalid",
+            "UNMET DEPENDENCY",
+            "axios@0."
+          ]
+        }
+      },
+      {
+        "working_directory": "C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\projects\\monarch-legacy",
+        "command": "git diff --exit-code master...HEAD -- .gitignore",
+        "purpose": "smoke",
+        "timeout_seconds": 30,
+        "required": true,
+        "expected_output_checks": {
+          "must_not_contain": [
+            "diff --git a/.gitignore"
+          ]
+        }
+      }
+    ],
+    "build_commands": [
+      "npm run wbs-build",
+      "npm run mng-build"
+    ],
+    "startup_commands": [
+      "node tests/run-fixture-stack.js backend",
+      "node tests/run-fixture-stack.js standard",
+      "node tests/run-fixture-stack.js spa"
+    ],
+    "startup_health_check_urls": [
+      "http://localhost:8080/",
+      "http://localhost:8081/",
+      "http://localhost:8081/"
+    ],
+    "existing_test_commands": [
+      "npm run wbs-lint",
+      "node tests/run-portable-tests.js",
+      "node tests/assert-axios-audit.js --report \"C:\\Users\\jinzh\\P4P\\legacy-upgrade-system\\.codex\\upgrade-runs\\monarch-legacy\\20261004-000000-upgrade\\npm-audit.json\"",
+      "npm ls axios webpack webpack-dev-server vue vue-template-compiler bootstrap sass @hapi/hapi"
+    ],
+    "generated_test_commands": [
+      "npx mocha tests/upgrade-toolchain-smoke.test.js",
+      "npx mocha tests/remediation-fixture.test.js"
+    ],
+    "generated_test_files": [
+      "tests/upgrade-toolchain-smoke.test.js",
+      "tests/remediation-fixture.test.js"
+    ],
+    "content_checks": [
+      {
+        "file_path": "package.json",
+        "must_contain": [
+          "\"node\": \">=18\"",
+          "\"axios\": \"^1.7.7\"",
+          "\"vue\": \"2.7.16\"",
+          "\"webpack-dev-server\": \"^5.1.0\"",
+          "\"test:portable\": \"node tests/run-portable-tests.js\"",
+          "\"audit:axios\": \"node tests/assert-axios-audit.js\""
+        ],
+        "must_not_contain": [
+          "\"axios\": \"^0.",
+          "\"request\":",
+          "\"moment\":",
+          "\"node-sass\":",
+          "\"bootstrap-vue\":"
+        ]
+      },
+      {
+        "file_path": ".npmrc",
+        "must_contain": [
+          "legacy-peer-deps=true"
+        ],
+        "must_not_contain": [
+          "audit=false",
+          "ignore-scripts=true"
+        ]
+      },
+      {
+        "file_path": "webpack.config.js",
+        "must_contain": [
+          "const sass = require('sass')",
+          "implementation: sass",
+          "proxy: [{",
+          "MONARCH_FIXTURE_BASE"
+        ],
+        "must_not_contain": [
+          "node-sass",
+          "extract-text-webpack-plugin",
+          "contentBase:",
+          "config.devServer.proxy = {"
+        ]
+      },
+      {
+        "file_path": "lib/monarch/web/webapp_launcher.js",
+        "must_contain": [
+          "MONARCH_CONFIG_FILE",
+          "webapp.startServer().catch"
+        ],
+        "must_not_contain": [
+          "process.env.MONARCH_CONFIG_FILE ="
+        ]
+      },
+      {
+        "file_path": "tests/fixtures/server_config.json",
+        "must_contain": [
+          "http://127.0.0.1:18080/solr/golr/",
+          "http://127.0.0.1:18080/owlsim",
+          "http://127.0.0.1:18080/api/"
+        ],
+        "must_not_contain": [
+          "monarchinitiative.org"
+        ]
+      },
+      {
+        "file_path": "tests/fixtures/monarch-service-fixture.js",
+        "must_contain": [
+          "/__health",
+          "/__requests",
+          "HGNC:1100",
+          "MONDO:0007254",
+          "HP:0001250"
+        ],
+        "must_not_contain": [
+          "https://solr-dev.monarchinitiative.org"
+        ]
+      },
+      {
+        "file_path": "tests/run-fixture-stack.js",
+        "must_contain": [
+          "FIXTURE_STACK_OK",
+          "npm run start",
+          "npm run dev",
+          "npm run mng-legacy-dev"
+        ],
+        "must_not_contain": [
+          "shell: true"
+        ]
+      },
+      {
+        "file_path": "tests/run-portable-tests.js",
+        "must_contain": [
+          "tests/apitest.js",
+          "tests/class-info-test.js",
+          "tests/phenopacket-test.js",
+          "PORTABLE_TEST_SUMMARY"
+        ],
+        "must_not_contain": [
+          "make test"
+        ]
+      },
+      {
+        "file_path": "tests/assert-axios-audit.js",
+        "must_contain": [
+          "npm audit --json",
+          "AXIOS_AUDIT_OK",
+          "--report"
+        ],
+        "must_not_contain": [
+          "process.exit(0); // ignore"
+        ]
+      },
+      {
+        "file_path": "templates/search_results.mustache",
+        "must_contain": [
+          "{{{includes.footer}}}"
+        ],
+        "must_not_contain": [
+          "axios@0.16.1"
+        ]
+      },
+      {
+        "file_path": "conf/server_config_dev.json",
+        "must_contain": [
+          "https://solr-dev.monarchinitiative.org/solr/golr/",
+          "https://beta.monarchinitiative.org/owlsim",
+          "https://api-dev.monarchinitiative.org/api/"
+        ],
+        "must_not_contain": [
+          "127.0.0.1:18080"
+        ]
+      },
+      {
+        "file_path": "ui/monarchAccess/servers.js",
+        "must_contain": [
+          "MONARCH_FIXTURE_BASE",
+          "https://api-dev.monarchinitiative.org/api/"
+        ],
+        "must_not_contain": [
+          "MONARCH_FIXTURE_BASE ="
+        ]
+      }
+    ],
+    "key_pages": [
+      {
+        "url": "http://localhost:8080/",
+        "description": "Backend fixture mode root; browser-renderable Hapi page, checked before dev-server modes."
+      },
+      {
+        "url": "http://localhost:8081/",
+        "description": "Standard and USE_SPA roots; run each fixture stack separately and require zero console errors."
+      },
+      {
+        "url": "http://localhost:8081/search/BRCA1",
+        "description": "Standard fixture search page; must show deterministic BRCA1/HGNC:1100 result."
+      },
+      {
+        "url": "http://localhost:8081/analyze/phenotype",
+        "description": "Standard phenotype analysis route with local OwlSim contracts."
+      },
+      {
+        "url": "http://localhost:8081/analyze/phenotypes",
+        "description": "USE_SPA phenotype analysis route with local OwlSim/Biolink contracts."
+      },
+      {
+        "url": "http://localhost:8081/gene/HGNC:1100",
+        "description": "Standard BRCA1 overview covering association/evidence and ExAC widgets."
+      },
+      {
+        "url": "http://localhost:8081/disease/MONDO:0007254",
+        "description": "Representative disease overview against deterministic fixture data."
+      },
+      {
+        "url": "http://localhost:8081/phenotype/HP:0001250",
+        "description": "Representative phenotype overview against deterministic fixture data."
+      }
+    ],
+    "key_user_flows": [
+      {
+        "name": "Search, autocomplete, results",
+        "url": "http://localhost:8081/",
+        "steps": [
+          "Launch node tests/run-fixture-stack.js standard and wait for FIXTURE_READY plus APP_READY",
+          "enter BRCA1 in navbar search",
+          "select the HGNC:1100 BRCA1 suggestion",
+          "verify /search/BRCA1 shows the deterministic result and non-empty result count",
+          "verify fixture /__requests records /autocomplete and /solr/search requests",
+          "check browser console has zero errors"
+        ],
+        "description": "Validates the real standard webpack proxy and Axios/Vue search path with no live-service dependency."
+      },
+      {
+        "name": "Phenotype similarity",
+        "url": "http://localhost:8081/analyze/phenotypes",
+        "steps": [
+          "Launch node tests/run-fixture-stack.js spa",
+          "enter HP:0001250 and HP:0004322",
+          "submit similarity analysis",
+          "verify deterministic OwlSim match rows/score or phenogrid area appears",
+          "verify fixture request log preserves repeated phenotype parameters",
+          "check console has zero errors"
+        ],
+        "description": "Validates USE_SPA, Vue compatibility, phenotype controls and OwlSim request encoding."
+      },
+      {
+        "name": "Association and evidence table",
+        "url": "http://localhost:8081/gene/HGNC:1100",
+        "steps": [
+          "Launch standard fixture stack",
+          "open association/evidence section",
+          "verify two fixture rows with evidence and references",
+          "change sort order and filter then use pagination when shown",
+          "confirm visible row order/content changes and console remains clean"
+        ],
+        "description": "Validates AssocTable keys, table compatibility components and GOLR response shape."
+      },
+      {
+        "name": "ExAC charts and table",
+        "url": "http://localhost:8081/gene/HGNC:1100",
+        "steps": [
+          "open BRCA1 fixture page",
+          "verify ExAC summary values and chart/table render",
+          "exercise one chart/table control",
+          "verify no D3/module/Axios console error"
+        ],
+        "description": "Validates modular D3 exports and ExAC Axios paths."
+      },
+      {
+        "name": "Gene, disease and phenotype overviews",
+        "url": "http://localhost:8081/gene/HGNC:1100",
+        "steps": [
+          "verify BRCA1 heading and overview widget",
+          "navigate to /disease/MONDO:0007254 and verify deterministic label/content",
+          "navigate to /phenotype/HP:0001250 and verify deterministic label/content",
+          "check each page for zero console errors"
+        ],
+        "description": "Validates legacy entry initialization, Bootstrap/jQuery/Vue coexistence and SciGraph/Biolink contracts."
+      }
+    ],
+    "external_service_checks": [
+      {
+        "service": "Monarch GOLR dev service",
+        "live_check_command_or_request": "curl.exe --location --max-time 30 \"https://solr-dev.monarchinitiative.org/solr/golr/select?q=*:*&rows=0&wt=json\"",
+        "expected_match_file": "conf/server_config_dev.json; ui/monarchAccess/servers.js",
+        "mismatch_description": "DNS failure/unreachability is external and must not fail the upgrade. Only an unintended repository URL change or a malformed request relative to the local fixture contract is a regression."
+      },
+      {
+        "service": "Monarch SciGraph dev service",
+        "live_check_command_or_request": "curl.exe --location --max-time 30 \"https://scigraph-ontology-dev.monarchinitiative.org/scigraph/graph/DOID:4\"",
+        "expected_match_file": "conf/server_config_dev.json; ui/monarchAccess/servers.js",
+        "mismatch_description": "DNS failure/unreachability is external. Repository URL drift or local fixture contract failure is a regression."
+      },
+      {
+        "service": "Monarch OwlSim dev service",
+        "live_check_command_or_request": "curl.exe --location --max-time 45 \"https://beta.monarchinitiative.org/owlsim/searchByAttributeSet?a=HP:0001250&target=OMIM&limit=1\"",
+        "expected_match_file": "conf/server_config_dev.json; ui/monarchAccess/servers.js",
+        "mismatch_description": "Redirect to HTML, retirement or unreachability is external. Lost repeated query parameters or failure against the JSON fixture is a regression."
+      },
+      {
+        "service": "Monarch Biolink dev service",
+        "live_check_command_or_request": "curl.exe --location --max-time 30 \"https://api-dev.monarchinitiative.org/api/bioentity/gene/HGNC:1100\"",
+        "expected_match_file": "conf/server_config_dev.json; ui/monarchAccess/servers.js",
+        "mismatch_description": "The observed legacy 404/retirement is external. Repository URL drift, Axios response-shape breakage or failure against the local Biolink fixture is a regression."
+      }
+    ],
+    "success_criteria": [
+      "npm install completes on Node 18 or 20 and npm ls reports no invalid or unmet dependency.",
+      "Standard and USE_SPA webpack builds, lint, the preserved 3/3 smoke suite and the new fixture contract suite pass.",
+      "The backend, exact npm run dev, and exact npm run mng-legacy-dev launch beneath the fixture runner, bind 8080/8081, answer their browser roots below 500, proxy the declared paths, and release all ports after cleanup.",
+      "The portable runner executes exactly apitest.js, class-info-test.js and phenopacket-test.js with fixture data and reports passed=3 failed=0; GNU make is not required on Windows.",
+      "npm audit --json is executed and its complete result is saved even when unrelated advisories produce exit 1; validation fails only for Axios 0.x or an Axios advisory, and AXIOS_AUDIT_OK proves Axios 1.",
+      "Search/autocomplete/results, phenotype similarity, association/evidence, ExAC and gene/disease/phenotype overview flows show deterministic fixture content with zero browser console errors in the applicable standard or USE_SPA stack.",
+      "Live GOLR/SciGraph DNS failures, OwlSim HTML redirects and legacy Biolink 404s are recorded as external-service state, never repaired by changing production URLs or services.",
+      "conf/server_config_dev.json and default UI live hosts remain unchanged; fixture routing is opt-in and loopback-only.",
+      "Every current master...HEAD tracked file is represented in ordered_changes/planned_files, while .claude/, .gitnexus/, AGENTS.md and CLAUDE.md remain untouched user-owned files.",
+      ".gitignore has no final diff. webpack.make.js, Makefile and ui/style/monarch-ng.scss remain unchanged unless a declared command proves a direct upgraded-dependency failure; current active scripts/configuration require no edit to them.",
+      "The final diff is limited to planned files plus at most two authorized direct-call-site scope expansions and is committed as one execution commit."
+    ],
+    "scope_expansion_limit": 2
+  },
+  "rollback_strategy": "Revert the single final execution commit created by the executor.",
+  "planning_notes": "The ImpactReport is authoritative. This remediation plan reconciles all 32 files in the current master...HEAD diff and adds explicit test-only fixture/audit/portable-test work because no separate test-generation stage will run after execution. Current build/start results, smoke 3/3, lint, dependency tree and clean root/search/analyze console checks are accepted evidence but remain repeatable commands. Whole files package.json, webpack.config.js, the existing smoke test, server_config_dev.json and the small current diff hunks were inspected because cross-cutting script/proxy/module behavior could not be planned safely from isolated report ranges. Runtime-discovered compatibility files in the current diff are .npmrc, ui/.eslintrc, wbs.eslintrc, webapp_launcher.js, axios-worker.js, sync-http.js, the ES-module conversion files, Vue template fixes and ui/index.ejs; they are authoritative planned work, not speculative cleanup. tests/apitest.js and tests/phenopacket-test.js are explicit remediation scope expansions needed only to select the local config for the exact Makefile-equivalent Node tests. The new fixture, lifecycle, audit and contract-test files are explicit remediation scope expansions justified by final validation and are fully planned here. webpack.make.js is not referenced by package scripts and changing it would be speculative; Makefile is POSIX-only but its exact three Node targets are preserved through run-portable-tests.js; ui/style/monarch-ng.scss already compiles with Bootstrap 5/Dart Sass. Those three original planned-but-unchanged files are review-only/conditional and must remain unchanged unless a bounded declared command proves a direct failure, in which case the two-file scope-expansion budget applies. The fixture uses only loopback port 18080, production application ports remain 8080/8081, overrides default off, and cleanup is mandatory. External service state is never mutated. .claude/, .gitnexus/, AGENTS.md and CLAUDE.md are user-owned exclusions; .gitignore must have no final diff.",
+  "plan_summary": "Forty current and remediation changes preserve the completed Node 18/20 dependency/toolchain migration, reconcile every tracked diff file, and add an opt-in loopback fixture, portable direct tests, focused Axios audit assertion and bounded standard/USE_SPA browser validation. Production service URLs and fallback behavior remain unchanged; retired live-service failures are classified as external."
+}

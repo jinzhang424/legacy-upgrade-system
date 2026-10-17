@@ -1,0 +1,93 @@
+{
+  "decision": "rejected",
+  "confidence_score": 0.07,
+  "confidence_factors": [
+    {"category":"repair_rounds","amount":0.5,"reason":"Three repair rounds were required, applying the validator correctness multiplier of 0.5."},
+    {"category":"generated_tests","amount":0.05,"reason":"The generated smoke test validates configuration structure but does not execute every upgraded runtime workflow."},
+    {"category":"behavioral_coverage","amount":0.05,"reason":"Successful loads prove absence of JavaScript errors, but live-service retirement prevented value-level verification of entity tables and charts."}
+  ],
+  "base_ref": "master",
+  "git_diff_summary": {
+    "changed_files": [".babelrc",".eslintrc",".npmrc","common.js","gulpfile.js","js/Analyze.js","js/barchart-launcher.js","js/exac_gene_summary.js","js/exac_table.js","js/index.js","js/overview.js","js/search_results.js","lib/monarch/api.js","lib/monarch/axios-worker.js","lib/monarch/sync-http.js","lib/monarch/web/webapp.js","lib/monarch/web/webapp_launcher.js","lib/monarch/web/webenv.js","package-lock.json","package.json","templates/search_results.mustache","tests/test-common.js","tests/upgrade-toolchain-smoke.test.js","ui/.eslintrc","ui/components/AnalyzePhenotypes.vue","ui/components/AssocTable.vue","ui/components/FooterAll.vue","ui/components/MonarchAutocomplete.vue","ui/index.ejs","ui/main.js","wbs.eslintrc","webpack.config.js"],
+    "planned_files_touched": ["package.json","package-lock.json",".babelrc",".eslintrc","webpack.config.js","gulpfile.js","common.js","lib/monarch/web/webenv.js","lib/monarch/web/webapp.js","lib/monarch/api.js","js/index.js","ui/main.js","templates/search_results.mustache"],
+    "unexpected_files": [".npmrc","js/Analyze.js","js/barchart-launcher.js","js/exac_gene_summary.js","js/exac_table.js","js/overview.js","js/search_results.js","lib/monarch/axios-worker.js","lib/monarch/sync-http.js","lib/monarch/web/webapp_launcher.js","tests/test-common.js","ui/.eslintrc","ui/components/AnalyzePhenotypes.vue","ui/components/AssocTable.vue","ui/components/FooterAll.vue","ui/components/MonarchAutocomplete.vue","ui/index.ejs","wbs.eslintrc"],
+    "missing_planned_files": ["webpack.make.js","Makefile","ui/style/monarch-ng.scss"],
+    "dependency_changes_verified": ["Node >=18; Hapi/Inert; Babel 7; webpack 5 toolchain; Dart Sass; ESLint 8; Vue 2.7/compiler match; Bootstrap 5; Axios 1; Day.js; Gulp 4; Mocha 10; Mustache 4; Underscore 1.13; xml2js 0.6; lockfile"],
+    "dependency_changes_missing": []
+  },
+  "content_check_results": [
+    {"file_path":"package.json","outcome":"passed","detail":"All required versions/replacements present; deprecated direct dependencies absent."},
+    {"file_path":".babelrc","outcome":"passed","detail":"Babel 7 preset and runtime plugin present."},
+    {"file_path":"webpack.config.js","outcome":"passed","detail":"Dart Sass, webpack 5, and homogeneous proxy arrays present."},
+    {"file_path":"gulpfile.js","outcome":"passed","detail":"Gulp 4 series/parallel and Buffer.from present."},
+    {"file_path":"common.js","outcome":"passed","detail":"Day.js replacement present."},
+    {"file_path":"lib/monarch/web/webenv.js","outcome":"passed","detail":"Hapi 21 promise handlers, response toolkit, and route options present."},
+    {"file_path":"lib/monarch/web/webapp.js","outcome":"passed","detail":"Hapi/Inert 21 lifecycle and Axios adapter present."},
+    {"file_path":"lib/monarch/api.js","outcome":"passed","detail":"Axios-backed adapter and URLSearchParams form encoding present."},
+    {"file_path":"ui/main.js","outcome":"passed","detail":"Vue/router/table registration present and BootstrapVue removed."},
+    {"file_path":"templates/search_results.mustache","outcome":"passed","detail":"Footer preserved and Axios 0.16 CDN removed."}
+  ],
+  "command_results": [
+    {"type":"build","command":"npm run wbs-build","outcome":"passed","exit_status":0,"output":"webpack 5 compiled successfully; Sass/dependency warnings only."},
+    {"type":"build","command":"npm run mng-build","outcome":"passed","exit_status":0,"output":"USE_SPA webpack 5 build compiled successfully; warnings only."},
+    {"type":"startup","command":"npm run start","outcome":"passed","exit_status":0,"output":"Hapi bound localhost:8080; root returned 200 after external RSS fallback."},
+    {"type":"startup","command":"npm run dev","outcome":"passed","exit_status":0,"output":"Backend and webpack-dev-server bound 8080/8081; /status proxied 200 and root browser loaded with zero console errors."},
+    {"type":"startup","command":"npm run mng-legacy-dev","outcome":"passed","exit_status":0,"output":"USE_SPA backend/dev server bound; literal and glob HPM proxy groups created; root browser loaded with zero console errors."},
+    {"type":"existing_test","command":"npm run wbs-lint","outcome":"passed","exit_status":0,"output":"ESLint 8 completed without parser/configuration errors."},
+    {"type":"existing_test","command":"make test","outcome":"failed","exit_status":1,"output":"GNU Make on Windows could not execute POSIX NODE_PATH assignment/which node."},
+    {"type":"existing_test","command":"npx cross-env NODE_PATH=./lib/monarch node tests/apitest.js","outcome":"failed","exit_status":1,"output":"GOLR returned no usable response; downstream bbop response lacked response.docs."},
+    {"type":"existing_test","command":"npx cross-env NODE_PATH=./lib/monarch node tests/class-info-test.js","outcome":"failed","exit_status":1,"output":"DNS ENOTFOUND scigraph-ontology-dev.monarchinitiative.org."},
+    {"type":"existing_test","command":"npx cross-env NODE_PATH=./lib/monarch node tests/phenopacket-test.js","outcome":"failed","exit_status":1,"output":"GOLR returned no usable response; downstream bbop response lacked response.docs."},
+    {"type":"existing_test","command":"npm audit --json","outcome":"failed","exit_status":1,"output":"Audit ran and found 61 legacy/transitive advisories; no Axios 0.x installation/advisory was reported."},
+    {"type":"existing_test","command":"npm ls axios webpack webpack-dev-server vue vue-template-compiler bootstrap sass","outcome":"passed","exit_status":0,"output":"Axios 1.20.0, webpack 5.111.1, dev-server 5.2.6, Vue/compiler 2.7.16, Bootstrap 5.3.8, Sass 1.105.0; no invalid peers."},
+    {"type":"generated_test","command":"npx mocha tests/upgrade-toolchain-smoke.test.js","outcome":"passed","exit_status":0,"output":"3 passing: dependency replacements, standard/SPA homogeneous proxy contexts, and both Dart Sass loader paths."}
+  ],
+  "repairs_applied": [
+    {"file_path":"js/Analyze.js","reason":"Webpack 5 browser error rejected CommonJS exports in an ESM-imported module.","summary":"Converted AnalyzeInit to a named ESM export."},
+    {"file_path":"package.json","reason":"Build-mode asset manifest raced backend startup in both dev scripts.","summary":"Delete webpack-assets.json after the prebuild so backend waits for the dev-server manifest."},
+    {"file_path":"js/index.js","reason":"D3 has no default export under the webpack 5 module interpretation.","summary":"Use a namespace D3 import and expose it on window before legacy consumers run."}
+  ],
+  "repair_rounds": 3,
+  "browser_check_results": [
+    {"url":"http://localhost:8080/","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[]},
+    {"url":"http://localhost:8081/","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[]},
+    {"url":"http://localhost:8081/","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[]},
+    {"url":"http://localhost:8081/search/BRCA1","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[]},
+    {"url":"http://localhost:8081/analyze/phenotypes","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[]},
+    {"url":"http://localhost:8081/analyze/phenotype","navigation_outcome":"loaded","content_rendered":true,"console_errors_captured":[]},
+    {"url":"http://localhost:8081/gene/HGNC:1100","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":["Rendered application error page because live entity services were unavailable."]},
+    {"url":"http://localhost:8081/disease/MONDO:0007254","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":["Rendered application error page because live entity services were unavailable."]},
+    {"url":"http://localhost:8081/phenotype/HP:0001250","navigation_outcome":"loaded","content_rendered":false,"console_errors_captured":["Rendered application error page because live entity services were unavailable."]}
+  ],
+  "key_flow_results": [
+    {"name":"Search to autocomplete to results","outcome":"passed","console_errors_captured":[],"detail":"Entered BRCA1 and submitted; navigated to /search/BRCA1 with no console errors. Results remained loading because the live search service was unavailable."},
+    {"name":"Phenotype similarity analysis","outcome":"failed","console_errors_captured":[],"detail":"SPA route rendered without JavaScript errors, but live OwlSim endpoint redirected to unrelated HTML and a real comparison could not be verified."},
+    {"name":"Association/evidence table browsing","outcome":"failed","console_errors_captured":[],"detail":"Representative gene route rendered the application error page because GOLR/SciGraph were unavailable."},
+    {"name":"Gene/variant population data (ExAC) summary charts","outcome":"failed","console_errors_captured":[],"detail":"Representative gene route could not obtain entity data, so charts/table controls were unavailable."},
+    {"name":"General overview page","outcome":"failed","console_errors_captured":[],"detail":"Disease and phenotype routes rendered the application error page because configured live services were unavailable."}
+  ],
+  "external_service_check_results": [
+    {"service":"Monarch GOLR dev service","outcome":"failed","detail":"DNS could not resolve solr-dev.monarchinitiative.org; classified as an external dependency issue."},
+    {"service":"Monarch SciGraph dev service","outcome":"failed","detail":"DNS could not resolve scigraph-ontology-dev.monarchinitiative.org; classified as an external dependency issue."},
+    {"service":"Monarch OwlSim dev service","outcome":"failed","detail":"Legacy OwlSim URL redirected to current Monarch HTML rather than parseable OwlSim JSON; external service retirement."},
+    {"service":"Monarch Biolink dev service","outcome":"failed","detail":"Representative legacy API URL returned HTTP 404; external service retirement."}
+  ],
+  "console_error_results": [
+    {"error":"Webpack rejected module.exports in js/Analyze.js","source":"automated","scope":"in_scope","outcome":"fixed","detail":"Converted to ESM named export; subsequent standard and SPA root loads had zero console errors."},
+    {"error":"Unexpected token '<' loading /dist/app.bundle.js through dev proxy","source":"automated","scope":"in_scope","outcome":"fixed","detail":"Removed stale build asset manifest before concurrent dev startup."},
+    {"error":"Cannot read properties of undefined (reading version) in js/index.js","source":"automated","scope":"in_scope","outcome":"fixed","detail":"Changed D3 default import to namespace import; subsequent root loads had zero console errors."}
+  ],
+  "final_commit_ref": "ac4c1f1d",
+  "rejection_reasons": [
+    "Required direct legacy tests fail because retired/unreachable GOLR and SciGraph services provide no usable data.",
+    "Three required entity key pages render the application's error page rather than entity content.",
+    "Four key workflows cannot be completed because their live service data is unavailable.",
+    "All four declared external-service checks failed or returned a retired/non-contract endpoint response.",
+    "Several concrete planned files were unchanged and numerous runtime-discovered expansion files remain outside the original planned list."
+  ],
+  "recommendations": [
+    "Provide reachable replacement GOLR, SciGraph, OwlSim, and Biolink development endpoints or approved local fixtures, then rerun Stage 5.",
+    "After services are available, repeat entity-page, phenotype comparison, association-table, ExAC chart, and overview workflows.",
+    "Review the remaining webpack/Sass/Vue-loader warnings separately; they did not produce console errors but indicate future maintenance work."
+  ]
+}
